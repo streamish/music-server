@@ -47,14 +47,9 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataType.DATE,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
-    folder_id: {
-      type: DataType.INTEGER,
+    folder_path: {
+      type: DataType.STRING(500),
       allowNull: true,
-      references: {
-        model: 'folders',
-        key: 'id',
-      },
-      onDelete: 'CASCADE',
     },
     genre_id: {
       type: DataType.INTEGER,

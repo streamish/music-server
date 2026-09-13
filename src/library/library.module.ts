@@ -9,6 +9,7 @@ import {
 import { LibraryAlbumService } from './album.service';
 import { LibraryArtistService } from './artist.service';
 import { LibraryComposerService } from './composer.service';
+import { LibraryFolderService } from './library.folders';
 import { LibraryService } from './library.service';
 import { LibraryTrackService } from './track.service';
 import { Module } from '@nestjs/common';
@@ -18,7 +19,14 @@ import { SequelizeModule } from '@nestjs/sequelize';
   imports: [
     SequelizeModule.forFeature([AlbumEntity, AlbumArtistEntity, ArtistEntity, ComposerEntity, FileEntity, GenreEntity]),
   ],
-  providers: [LibraryService, LibraryAlbumService, LibraryArtistService, LibraryComposerService, LibraryTrackService],
+  providers: [
+    LibraryService,
+    LibraryAlbumService,
+    LibraryArtistService,
+    LibraryComposerService,
+    LibraryFolderService,
+    LibraryTrackService,
+  ],
   exports: [LibraryService],
 })
 export class LibraryModule {}

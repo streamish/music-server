@@ -1,19 +1,17 @@
-import { ContentTypeEnum } from 'src/types/enums';
-import { FolderEntity, RootPathEntity } from 'src/database/entities';
-import { InjectModel } from '@nestjs/sequelize';
+import { ContentTypeEnum, TrackSortFieldEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
-import { Op } from 'sequelize';
 import { SynologyFolderDataDto, SynologyFolderDto, SynologySongDto } from './dtos';
+import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { sep } from 'node:path';
 import type { LibraryTrackDto } from 'src/library/dtos';
 
-function folderToRow(folder: FolderEntity): SynologyFolderDto {
+function folderToRow(folder: UserTreeItemDto): SynologyFolderDto {
   return {
     id: `dir_${folder.id}`,
     is_personal: false,
-    path: folder.folderPath,
-    title: folder.folderPath.split(sep).pop() || folder.folderPath,
+    path: folder.folder || '',
+    title: folder.folder?.split(sep).pop() || folder.folder || '',
     type: ContentTypeEnum.FOLDER,
   };
 }
@@ -54,29 +52,18 @@ function fileToRow(track: LibraryTrackDto): SynologySongDto {
 
 @Injectable()
 export class SynologyFolderService {
-  constructor(
-    @InjectModel(FolderEntity)
-    private readonly folderEntity: typeof FolderEntity,
-    private readonly libraryService: LibraryService,
-    @InjectModel(RootPathEntity)
-    private readonly rootPathEntity: typeof RootPathEntity,
-  ) {}
+  constructor(private readonly libraryService: LibraryService) {}
 
   async listRootFolders(accountId: number, offset: number, limit: number): Promise<SynologyFolderDataDto> {
-    const folders = await this.folderEntity.findAll({
-      where: {
-        accountId,
-        isRoot: true,
-      },
-      order: [['folderPath', 'ASC']],
-      offset,
-      limit,
-    });
+    const folderTree = await this.libraryService.listFolders(accountId);
     return {
-      items: folders.map(folderToRow),
-      folder_total: folders.length,
+      items: folderTree
+        .map((folderTreeItem) => folderToRow(folderTreeItem))
+        .splice(offset)
+        .slice(0, limit),
+      folder_total: folderTree.length,
       offset,
-      total: folders.length,
+      total: folderTree.length,
     };
   }
 
@@ -86,69 +73,53 @@ export class SynologyFolderService {
     offset: number,
     limit: number,
   ): Promise<SynologyFolderDataDto> {
-    const startingFolder = await this.folderEntity.findOne({
-      where: {
-        id: folderId,
-        accountId,
-      },
-    });
+    function findItem(treeItem: UserTreeItemDto) {
+      const result = treeItem.id === folderId ? treeItem : null;
+      if (result) {
+        return result;
+      }
+      if (treeItem.children) {
+        for (let i = 0, len = treeItem.children.length; i < len; i += 1) {
+          const child = treeItem.children[i];
+          if (child?.folder) {
+            const found = findItem(child);
+            if (found) {
+              return found;
+            }
+          }
+        }
+      }
+      return null;
+    }
+    const folderTree = await this.libraryService.listFolders(accountId);
+    const startingFolder = folderTree.map(findItem).find((item) => item !== null);
     if (!startingFolder) {
-      throw new Error(`Folder with ID ${folderId} not found`);
+      throw new Error(`Folder with id ${folderId} not found`);
     }
-    // find the root path entity that matches the basePath
-    const rootPath = await this.rootPathEntity.findByPk(startingFolder.rootPathId);
-    if (!rootPath) {
-      throw new Error(`No root path found for base path: ${startingFolder.folderPath}`);
-    }
-    const stemParts = startingFolder.folderPath.split(sep).filter((part) => part.length > 0);
-    const pathContents: (SynologyFolderDto | SynologySongDto)[] = [];
-    // folder contents
-    const folders = await this.folderEntity.findAll({
-      where: {
-        accountId,
-        folderPath: {
-          [Op.like]: `${startingFolder.folderPath}/%`,
-        },
-        isRoot: false,
-        rootPathId: startingFolder.rootPathId,
+    const folderTotal = startingFolder.children ? startingFolder.children.length : 0;
+    const pathContents = startingFolder.children || [];
+    const folderItems = pathContents.filter((item) => item?.folder).map(folderToRow);
+    const filePaths = pathContents.filter((item) => item?.file).map((file) => file.fullPath);
+    const fileItems = await this.libraryService.listTracks(
+      accountId,
+      {
+        filePath: `${startingFolder.fullPath}/`,
       },
-    });
-    for (let i = 0, len = folders.length; i < len; i += 1) {
-      const subFolder = folders[i];
-      if (subFolder) {
-        const folderPath = subFolder.folderPath
-          .split(sep)
-          .filter((part) => part.length > 0)
-          .slice(0, stemParts.length + 1)
-          .join(sep)
-          .substring(rootPath.rootPath.length);
-        // check if unique
-        const existing = pathContents.find((item) => item.path === folderPath);
-        if (!existing) {
-          const row = folderToRow(subFolder);
-          row.path = folderPath;
-          pathContents.push(row);
-        }
-      }
-    }
-    const folderTotal = pathContents.length;
-    // file contents
-    const relativeFilePath = startingFolder.folderPath.replace(rootPath.rootPath, '');
-    const files = await this.libraryService.listTracks(accountId, { filePath: relativeFilePath }, offset, limit);
-    for (let i = 0, len = files.items.length; i < len; i += 1) {
-      const file = files.items[i];
-      if (file) {
-        if (file.filePath.lastIndexOf(sep) === relativeFilePath.length) {
-          pathContents.push(fileToRow(file));
-        }
-      }
-    }
+      0,
+      100_000,
+      TrackSortFieldEnum.TITLE,
+    );
+    const fileItemsMapped = fileItems.items
+      .filter((track) => {
+        return filePaths.indexOf(track.filePath) > -1;
+      })
+      .map(fileToRow);
     return {
       folder_total: folderTotal,
       id: `dir_${startingFolder.id}`,
-      items: pathContents.slice(offset, offset + limit),
+      items: [...folderItems, ...fileItemsMapped].slice(offset, offset + limit),
       offset,
-      total: pathContents.length,
+      total: startingFolder.children.length,
     };
   }
 }

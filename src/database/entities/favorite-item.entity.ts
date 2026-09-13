@@ -3,7 +3,6 @@ import { AlbumEntity } from './album.entity';
 import { ArtistEntity } from './artist.entity';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
 import { ComposerEntity } from './composer.entity';
-import { FolderEntity } from './folder.entity';
 import { GenreEntity } from './genre.entity';
 import { PlaylistEntity } from './playlist.entity';
 
@@ -105,22 +104,13 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
   declare createdAt: Date;
 
   /**
-   * The folder ID if a folder is pinned
+   * The folder path if a folder is pinned
    */
   @Column({
-    type: DataType.INTEGER,
-    references: {
-      model: FolderEntity,
-      key: 'id',
-    },
+    type: DataType.STRING,
     allowNull: true,
-    onDelete: 'CASCADE',
   })
-  @ForeignKey(() => FolderEntity)
-  declare folderId?: number;
-
-  @BelongsTo(() => FolderEntity)
-  declare folder: FolderEntity;
+  declare folderPath: string;
 
   /**
    * The genre ID if a genre is pinned

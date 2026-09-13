@@ -17,10 +17,12 @@ import { LibraryArtistDto, LibraryArtistWithTracksDto } from './dtos/library.art
 import { LibraryArtistService } from './artist.service';
 import { LibraryComposerDto, LibraryComposerWithTracksDto, LibraryTrackDto } from './dtos';
 import { LibraryComposerService } from './composer.service';
+import { LibraryFolderService } from './library.folders';
 import { LibraryGenreDto, LibraryGenreWithTracksDto } from './dtos/library.genre.dto';
 import { LibraryTrackService } from './track.service';
 import { Op, OrderItem, Sequelize } from 'sequelize';
 import { TrackFilters } from './types/track-filter';
+import { UserTreeItemDto } from 'src/api/user/folder-structure/folder-structure.dto';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
 import sequelize from 'sequelize/lib/sequelize';
 import type { AlbumFilters } from './types/album-filter';
@@ -39,6 +41,7 @@ export class LibraryService {
     private readonly albumService: LibraryAlbumService,
     private readonly artistService: LibraryArtistService,
     private readonly composerService: LibraryComposerService,
+    private readonly libraryFolderService: LibraryFolderService,
     @InjectModel(GenreEntity)
     private readonly genreEntity: typeof GenreEntity,
     @InjectModel(FileEntity)
@@ -374,6 +377,10 @@ export class LibraryService {
         })
         .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length > 0).length > 0),
     };
+  }
+
+  async listFolders(accountId: number): Promise<UserTreeItemDto[]> {
+    return this.libraryFolderService.getTreeStructure(accountId);
   }
 
   /**
