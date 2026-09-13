@@ -39,7 +39,7 @@ jobs:
         run: npm run prettier -- --check
 
       - name: Start backend
-        run: npm run start:test # > "$RUNNER_TEMP/backend.log" 2>&1 &
+        run: npm run start:test > "$RUNNER_TEMP/backend.log" 2>&1 &
 
       - name: Wait for backend to start
         run: |
@@ -65,8 +65,8 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
-          if [ -f "$RUNNER_TEMP/api.log" ]; then
-            tail -n 200 "$RUNNER_TEMP/api.log" || true
+          if [ -f "$RUNNER_TEMP/backend.log" ]; then
+            tail -n 200 "$RUNNER_TEMP/backend.log" || true
           else
-            echo "No api.log found at $RUNNER_TEMP/api.log"
+            echo "No backend.log found at $RUNNER_TEMP/backend.log"
           fi
