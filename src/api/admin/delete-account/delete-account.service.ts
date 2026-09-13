@@ -17,7 +17,7 @@ export class AdminDeleteAccountService {
     // verify own password
     const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
     if (!isAdminPasswordValid) {
-      throw new BadRequestException(ErrorCodes.INVALID_PASSWORD_ERROR);
+      throw new BadRequestException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     }
     // Prevent an admin from deleting their own account if there is no other
     // administrator

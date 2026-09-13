@@ -24,7 +24,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Patch, Query, UseGuards } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 
@@ -37,6 +37,7 @@ export class AdminUpdateUserRolesController {
   constructor(private readonly updateRolesService: AdminUpdateUserRolesService) {}
 
   @Patch('update-user-roles')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update user roles',
     description: [

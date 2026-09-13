@@ -1,7 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Post, Scope, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Scope, UseGuards } from '@nestjs/common';
 import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
@@ -22,6 +22,7 @@ export class UserUpdatePasswordController {
   constructor(private readonly resetPasswordService: UserUpdatePasswordService) {}
 
   @Post('update-password')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Reset password',
     description: [

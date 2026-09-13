@@ -24,7 +24,7 @@ export class AdminCreateAccountService {
     // verify own password
     const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
     if (!isAdminPasswordValid) {
-      throw new NotFoundException(ErrorCodes.INVALID_PASSWORD_ERROR);
+      throw new NotFoundException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     }
     // verify roles are provided
     if (!roles.length) {

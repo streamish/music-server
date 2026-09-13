@@ -61,21 +61,21 @@ describe('/api/admin/delete-account', () => {
     it('should reject missing admin password', async () => {
       const account = await adminApi.createTestAccount();
       const { error } = await adminApi.deleteAccount('', account.id);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
       deleteAccounts.push(account.id);
     });
 
     it('should reject invalid admin password length', async () => {
       const account = await adminApi.createTestAccount();
       const { error } = await adminApi.deleteAccount('x'.repeat(256), account.id);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR);
       deleteAccounts.push(account.id);
     });
 
     it('should reject invalid admin password', async () => {
       const account = await adminApi.createTestAccount();
       const { error } = await adminApi.deleteAccount('wrong-password', account.id);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
       deleteAccounts.push(account.id);
     });
   });

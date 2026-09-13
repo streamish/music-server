@@ -68,17 +68,17 @@ describe('/api/admin/reset-user-password', () => {
 
     it('should reject missing admin password', async () => {
       const { error } = await adminApi.resetUserPassword(1, '', 'new-password');
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     });
 
     it('should reject invalid admin password length', async () => {
       const { error } = await adminApi.resetUserPassword(1, 'x'.repeat(256), 'new-password');
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR);
     });
 
     it('should reject invalid admin password', async () => {
       const { error } = await adminApi.resetUserPassword(1, 'wrong-password', 'new-password');
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     });
   });
 

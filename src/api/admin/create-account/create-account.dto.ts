@@ -9,9 +9,9 @@ export class AdminCreateAccountBodyDto {
   /**
    * The administrator's password to authorize the change
    */
-  @IsString({ message: ErrorCodes.INVALID_PASSWORD_ERROR })
-  @Length(1, 255, { message: ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR })
-  @IsNotEmpty({ message: ErrorCodes.INVALID_PASSWORD_ERROR })
+  @IsString({ message: ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR })
+  @Length(1, 255, { message: ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR })
+  @IsNotEmpty({ message: ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR })
   declare adminPassword: string;
 
   /**
@@ -50,13 +50,15 @@ export class AdminCreateAccountBadRequestResponseDto extends BadRequestResponseD
   @ApiProperty({
     isArray: true,
     enum: [
+      ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR,
+      ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR,
+      ErrorCodes.INVALID_PASSWORD_ERROR,
+      ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR,
       ErrorCodes.INVALID_ROLE_ERROR,
       ErrorCodes.INVALID_USER_ROLE_ERROR,
       ErrorCodes.INVALID_USERNAME_ERROR,
       ErrorCodes.INVALID_USERNAME_LENGTH_ERROR,
       ErrorCodes.INVALID_USERNAME_NOT_UNIQUE_ERROR,
-      ErrorCodes.INVALID_PASSWORD_ERROR,
-      ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR,
     ],
     enumName: 'AdminCreateAccountBadRequestErrorMessageEnum',
   })

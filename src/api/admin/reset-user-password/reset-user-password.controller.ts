@@ -24,7 +24,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Post, Query, Scope, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Query, Scope, UseGuards } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 
@@ -38,6 +38,7 @@ export class AdminResetUserPasswordController {
   constructor(private readonly resetPasswordService: AdminResetUserPasswordService) {}
 
   @Post('reset-user-password')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Reset user password',
     description: [

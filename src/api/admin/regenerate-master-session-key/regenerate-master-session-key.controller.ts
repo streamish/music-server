@@ -9,8 +9,8 @@ import { AccountEntity } from 'src/database/entities';
 import { AdminRegenerateMasterSessionKeyResponseDto } from './regenerate-master-session-key.dto';
 import { AdminRegenerateMasterSessionKeyService } from './regenerate-master-session-key.service';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiCreatedResponse, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Post, Scope, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, HttpCode, HttpStatus, Post, Scope, UseGuards } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 
@@ -24,6 +24,7 @@ export class AdminRegenerateMasterSessionKeyController {
   constructor(private readonly regenerateMasterSessionKeyService: AdminRegenerateMasterSessionKeyService) {}
 
   @Post('regenerate-master-session-key')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Invalidate all user sessions',
     description: [
@@ -35,7 +36,7 @@ export class AdminRegenerateMasterSessionKeyController {
   @AllowedRoles([UserRoleEnum.ADMIN])
   @ApiBearerAuth(JWT_TOKEN)
   @ApiHeader(JWT_TOKEN_HEADER)
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: AdminRegenerateMasterSessionKeyResponseDto,
     description: 'Master session key regenerated successfully',
   })

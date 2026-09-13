@@ -7223,7 +7223,7 @@ export interface operations {
     requestBody?: never;
     responses: {
       /** @description Master session key regenerated successfully */
-      201: {
+      200: {
         headers: {
           [name: string]: unknown;
         };
@@ -7250,14 +7250,6 @@ export interface operations {
     responses: {
       /** @description Session key regenerated successfully */
       200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminRegenerateUserSessionKeyResponseDto'];
-        };
-      };
-      201: {
         headers: {
           [name: string]: unknown;
         };
@@ -7297,14 +7289,6 @@ export interface operations {
     responses: {
       /** @description Password reset successfully */
       200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminResetUserPasswordResponseDto'];
-        };
-      };
-      201: {
         headers: {
           [name: string]: unknown;
         };
@@ -8717,14 +8701,6 @@ export interface operations {
           'application/json': components['schemas']['UserUpdatePasswordResponseDto'];
         };
       };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserUpdatePasswordResponseDto'];
-        };
-      };
       /** @description Invalid request data or additional requirements not met */
       400: {
         headers: {
@@ -9492,13 +9468,15 @@ export interface operations {
   };
 }
 export enum AdminCreateAccountBadRequestErrorMessageEnum {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
   invalid_role_error = 'invalid-role-error',
   invalid_user_role_error = 'invalid-user-role-error',
   invalid_username_error = 'invalid-username-error',
   invalid_username_length_error = 'invalid-username-length-error',
   invalid_username_not_unique_error = 'invalid-username-not-unique-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
 }
 export enum AdminCreateRootPathBadRequestErrorMessageEnum {
   root_path_does_not_exist_error = 'root-path-does-not-exist-error',
@@ -9508,9 +9486,11 @@ export enum AdminCreateRootPathNotFoundErrorMessageEnum {
   account_not_found_error = 'account-not-found-error',
 }
 export enum AdminDeleteAccountBadRequestErrorMessageEnum {
+  account_only_admin_error = 'account-only-admin-error',
   invalid_account_id_error = 'invalid-account-id-error',
   invalid_account_error = 'invalid-account-error',
-  account_only_admin_error = 'account-only-admin-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
   invalid_password_error = 'invalid-password-error',
   invalid_password_length_error = 'invalid-password-length-error',
 }
@@ -9534,6 +9514,8 @@ export enum AdminRegenerateUserSessionKeyNotFoundErrorMessageEnum {
   account_not_found_error = 'account-not-found-error',
 }
 export enum AdminResetUserPasswordBadRequestErrorMessageEnum {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
   invalid_password_error = 'invalid-password-error',
   invalid_password_length_error = 'invalid-password-length-error',
   invalid_new_password_error = 'invalid-new-password-error',
@@ -9550,8 +9532,12 @@ export enum AdminUpdateRootPathNotFoundErrorMessageEnum {
   root_path_not_found_error = 'root-path-not-found-error',
 }
 export enum AdminUpdateUserRolesBadRequestErrorMessageEnum {
-  invalid_user_role_error = 'invalid-user-role-error',
   account_only_admin_error = 'account-only-admin-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+  invalid_user_role_error = 'invalid-user-role-error',
 }
 export enum AdminUpdateUserRolesNotFoundErrorMessageEnum {
   account_not_found_error = 'account-not-found-error',
