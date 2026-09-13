@@ -5,7 +5,6 @@ import { GuestStreamFileNotFoundResponseDto, GuestStreamFileQueryDto } from './s
 import { GuestStreamFileService } from './stream-file.service';
 import { getAudioContentType } from 'src/utils/strings';
 import { readFileSync } from 'node:fs';
-import { sep } from 'node:path';
 import type { Request, Response } from 'express';
 
 const emptyBuffer = Buffer.alloc(0);
@@ -37,7 +36,7 @@ export class GuestStreamFileController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const streamInfo = await this.streamFileService.getStream(query.id);
-    const fileType = streamInfo.path.split(sep).pop();
+    const fileType = streamInfo.path.split('.').pop();
     const eTag = `file-${query.id}-${streamInfo.updatedAt?.getTime() || ''}`;
     response.set({
       'Content-Disposition': `inline; filename="track.${query.id}.${fileType}"`,

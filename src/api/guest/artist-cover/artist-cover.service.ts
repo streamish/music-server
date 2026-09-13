@@ -1,4 +1,4 @@
-import { AlbumArtistEntity, LinkedArtistEntity } from 'src/database/entities';
+import { AlbumArtistEntity, FileEntity, LinkedArtistEntity } from 'src/database/entities';
 import { AlbumEntity } from 'src/database/entities/album.entity';
 import { CoverImage } from 'src/types/cover-image';
 import { InjectModel } from '@nestjs/sequelize/dist/common/sequelize.decorators';
@@ -35,12 +35,18 @@ export class GuestArtistCoverService {
         attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
         include: [
           {
-            attributes: ['albumId', 'artistId'],
-            model: LinkedArtistEntity,
-            where: {
-              artistId,
-            },
-            required: true,
+            model: FileEntity,
+            attributes: ['id'],
+            include: [
+              {
+                attributes: ['artistId'],
+                model: LinkedArtistEntity,
+                where: {
+                  artistId,
+                },
+                required: true,
+              },
+            ],
           },
         ],
         where: {

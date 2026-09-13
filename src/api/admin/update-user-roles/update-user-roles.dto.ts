@@ -58,7 +58,12 @@ export class AdminUpdateUserRolesBadRequestResponseDto extends BadRequestRespons
    */
   @ApiProperty({
     isArray: true,
-    enum: [ErrorCodes.INVALID_USER_ROLE_ERROR, ErrorCodes.ACCOUNT_ONLY_ADMIN_ERROR],
+    enum: [
+      ErrorCodes.INVALID_USER_ROLE_ERROR,
+      ErrorCodes.ACCOUNT_ONLY_ADMIN_ERROR,
+      ErrorCodes.INVALID_PASSWORD_ERROR,
+      ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR,
+    ],
     enumName: 'AdminUpdateUserRolesBadRequestErrorMessageEnum',
     default: ErrorCodes.INVALID_USER_ROLE_ERROR,
   })
