@@ -73,17 +73,17 @@ describe('/api/admin/update-user-roles', () => {
 
     it('should reject missing admin password', async () => {
       const { error } = await adminApi.updateUserRoles(1, '', [UserRoleEnum.user]);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     });
 
     it('should reject invalid admin password length', async () => {
       const { error } = await adminApi.updateUserRoles(1, 'x'.repeat(256), [UserRoleEnum.user]);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR);
     });
 
     it('should reject invalid admin password', async () => {
       const { error } = await adminApi.updateUserRoles(1, 'wrong-password', [UserRoleEnum.user]);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     });
   });
 

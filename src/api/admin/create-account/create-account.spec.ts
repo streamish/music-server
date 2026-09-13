@@ -95,7 +95,7 @@ describe('/api/admin/create-account', () => {
       const password = 'test123';
       const roles = [UserRoleEnum.user];
       const { error } = await adminApi.createAccount('', username, password, roles);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     });
 
     it('should reject invalid admin password length', async () => {
@@ -103,7 +103,7 @@ describe('/api/admin/create-account', () => {
       const password = 'test123';
       const roles = [UserRoleEnum.user];
       const { error } = await adminApi.createAccount('x'.repeat(256), username, password, roles);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR);
     });
 
     it('should reject invalid admin password', async () => {
@@ -111,7 +111,7 @@ describe('/api/admin/create-account', () => {
       const password = 'test123';
       const roles = [UserRoleEnum.user];
       const { error } = await adminApi.createAccount('wrong-password', username, password, roles);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     });
   });
 
