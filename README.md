@@ -42,6 +42,46 @@ The goal of this server is to be a multi-client backend that allows existing mus
 
 ✖️ means unsupported by the app
 
+## Docker Image
+
+This is the official docker image combining [music-server](https://github.com/musiclib/music-server) and [music-webui](https://github.com/musiclib/music-webui). Internally it builds the `music-server` backend and the `music-webui` frontend and uses Nginx to serve the frontend and proxy the backend off the same port.
+
+```bash
+$ docker run \
+  -p 8000:8000 \
+  -v /my/music:/music:ro \
+  -v /my/data:/data:rw \
+  -e DEFAULT_ADMIN_USERNAME=admin \
+  -e DEFAULT_ADMIN_PASSWORD=admin \
+  -e DISABLE_DEFAULT_USER=true \
+  -e SYNOLOGY_AUDIOSTATION_ENABLED=true \
+  -e QNAP_MUSICSTATION_ENABLED=true \
+  streamish/music
+```
+
+| Variable                  | Default value | Description                                                         |
+| ------------------------- | ------------- | ------------------------------------------------------------------- |
+| `DEFAULT_ADMIN_USERNAME`  | `admin`       | The username for the default administrator account                  |
+| `DEFAULT_ADMIN_PASSWORD`  | `admin`       | The password for the default administrator account                  |
+| `DEFAULT_ADMIN_ROOT_PATH` |               | Comma-separated list of paths for the default administrator account |
+| `DISABLE_DEFAULT_USER`    | false         | Set to `true` to disable creating the default normal user account   |
+| `DEFAULT_USER_USERNAME`   | `user`        | The username for the default normal user account                    |
+| `DEFAULT_USER_PASSWORD`   | `user`        | The password for the default normal user account                    |
+| `DEFAULT_USER_ROOT_PATH`  |               | Comma-separated list of paths for the default normal user account   |
+
+You can enable API compatibility:
+
+| Variable                        | Default value | Description                                                      |
+| ------------------------------- | ------------- | ---------------------------------------------------------------- |
+| `SYNOLOGY_AUDIOSTATION_ENABLED` | false         | Set to `true` to enable Synology Audio Station API compatibility |
+| `QNAP_MUSICSTATION_ENABLED`     | false         | Set to `true` to enable QNAP Music Station API compatibility     |
+
+You can enable Swagger API interface for the backend APIs:
+
+| Variable          | Default value | Description                                   |
+| ----------------- | ------------- | --------------------------------------------- |
+| `SWAGGER_ENABLED` | false         | Set to `true` to enable Swagger documentation |
+
 ## Managing your metadata
 
 This software does not modify your music files in any way. It reads the metadata from your music files and stores it in a database for faster access. The quality of your library's presentation is going to depend on this information being structured, organized and correct. [MusicBrainz Picard](https://picard.musicbrainz.org/) can help you with that.
