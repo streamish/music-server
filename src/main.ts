@@ -133,7 +133,7 @@ async function bootstrap() {
     });
   }
   const address = process.env.SERVER_ADDRESS || '127.0.0.1';
-  const port = process.env.SERVER_PORT || 3000;
+  const port = process.env.SERVER_PORT || 7000;
   await app.listen(port, address);
   logger.log(`API server is running on http://${address}:${port}`);
 }
