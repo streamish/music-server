@@ -93,6 +93,7 @@ export class IndexerService {
         await this.scanQueuedPaths();
       }
     }
+    this.addLogEntry(0, 0, 'Finished test indexing');
   }
 
   /**
