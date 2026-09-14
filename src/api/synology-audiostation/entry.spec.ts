@@ -214,9 +214,9 @@ describe('/webapi/AudioStation/entry.cgi', () => {
         },
       ]);
       expect(items.length).toBeGreaterThan(0);
-      expect(items.some((item) => item.type.toString() === SynologyPinTypeEnum.folder && item.name === 'root-1')).toBe(
-        true,
-      );
+      expect(
+        items.some((item) => item.type.toString() === SynologyPinTypeEnum.folder && item.name === 'Artist 1'),
+      ).toBe(true);
     });
 
     it('should favorite nested folder', async () => {

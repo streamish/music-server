@@ -5,7 +5,6 @@ import {
   ComposerEntity,
   FavoriteItemEntity,
   FileEntity,
-  FolderEntity,
   GenreEntity,
   LinkedArtistEntity,
   LinkedComposerEntity,
@@ -19,6 +18,7 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from '@nes
 import { ConfigService } from 'src/config/config.service';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
+import { LibraryService } from 'src/library/library.service';
 import { Op } from 'sequelize';
 import { SessionRestrictionEnum } from 'src/types/enums';
 import {
@@ -30,6 +30,7 @@ import {
   SynologyEntrySignInDataDto,
 } from './dtos';
 import { SynologyPinTypeEnum } from './enums';
+import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { readFileSync } from 'node:fs';
 import { replaceDoubleQuotes } from 'src/utils/strings';
 import { sep } from 'node:path';
@@ -44,7 +45,7 @@ function pinnedItemToRow(item: FavoriteItemEntity): SynologyEntryPinItemDto {
       artist: item.artist?.name,
       composer: item.composer?.name,
       genre: item.genre?.name,
-      folder: item.folderId ? `dir_${item.folderId}` : undefined,
+      folder: item.folderPath ? `dir_${item.folderPath}` : undefined,
       playlist: item.playlist?.name,
     },
     name:
@@ -52,7 +53,7 @@ function pinnedItemToRow(item: FavoriteItemEntity): SynologyEntryPinItemDto {
       item.artist?.name ||
       item.composer?.name ||
       item.genre?.name ||
-      item.folder?.folderPath.split(sep).pop() ||
+      item.folderPath?.split(sep).pop() ||
       item.playlist?.name ||
       (item.allSongs ? 'All songs' : undefined) ||
       (item.randomHundred ? 'Random 100' : undefined) ||
@@ -63,7 +64,7 @@ function pinnedItemToRow(item: FavoriteItemEntity): SynologyEntryPinItemDto {
       (item.artistId ? SynologyPinTypeEnum.ARTIST : '') ||
       (item.composerId ? SynologyPinTypeEnum.COMPOSER : '') ||
       (item.genreId ? SynologyPinTypeEnum.GENRE : '') ||
-      (item.folderId ? SynologyPinTypeEnum.FOLDER : '') ||
+      (item.folderPath ? SynologyPinTypeEnum.FOLDER : '') ||
       (item.playlistId ? SynologyPinTypeEnum.PLAYLIST : '') ||
       (item.allSongs ? SynologyPinTypeEnum.ALBUM : '') ||
       (item.randomHundred ? SynologyPinTypeEnum.RANDOM_100 : '') ||
@@ -89,13 +90,12 @@ export class SynologyEntryService {
     private readonly composerEntity: typeof ComposerEntity,
     @InjectModel(FileEntity)
     private readonly fileEntity: typeof FileEntity,
-    @InjectModel(FolderEntity)
-    private readonly folderEntity: typeof FolderEntity,
     @Inject(ConfigService) private readonly configService: ConfigService,
     @InjectModel(GenreEntity)
     private readonly genreEntity: typeof GenreEntity,
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
+    private readonly libraryService: LibraryService,
     @InjectModel(PlaylistEntity)
     private readonly playlistEntity: typeof PlaylistEntity,
     @InjectModel(PlaylistItemEntity)
@@ -348,12 +348,6 @@ export class SynologyEntryService {
           as: 'genre',
         },
         {
-          model: FolderEntity,
-          attributes: ['folderPath'],
-          required: false,
-          as: 'folder',
-        },
-        {
           model: PlaylistEntity,
           attributes: ['name'],
           required: false,
@@ -376,6 +370,28 @@ export class SynologyEntryService {
   }
 
   async createPinnedItem(accountId: number, items: SynologyEntryNewPinItemDto[]): Promise<SynologyEntryPinsDataDto> {
+    let tree: UserTreeItemDto[] | undefined;
+    function findTreeItem(id: number, branch: UserTreeItemDto[]): UserTreeItemDto | undefined {
+      if (!branch) {
+        return undefined;
+      }
+      for (let i = 0, len = branch.length; i < len; i += 1) {
+        const item = branch[i];
+        if (item) {
+          if (item.id === id) {
+            return item;
+          }
+          if (item.children) {
+            const found = findTreeItem(id, item.children);
+            if (found) {
+              return found;
+            }
+          }
+        }
+      }
+      return undefined;
+    }
+
     for (let i = 0, len = items.length; i < len; i += 1) {
       const item = items[i];
       if (item) {
@@ -383,7 +399,7 @@ export class SynologyEntryService {
         let artistId;
         let composerId;
         let genreId;
-        let folderId;
+        let folderPath;
         let playlistId;
         if (item.criteria.album && item.criteria.album_artist) {
           // eslint-disable-next-line no-await-in-loop
@@ -402,22 +418,13 @@ export class SynologyEntryService {
           genreId = await this.getGenreId(accountId, item.criteria.genre);
         }
         if (item.type === 'folder') {
-          // eslint-disable-next-line no-await-in-loop
-          const folder = await this.folderEntity.findOne({
-            attributes: ['id'],
-            where: {
-              accountId,
-              id: item.criteria.folder,
-            },
-          });
-          if (!folder) {
-            throw new NotFoundException({
-              success: false,
-              message: 'Folder not found',
-              folderId: item.criteria.folder,
-            });
+          if (!tree) {
+            // eslint-disable-next-line no-await-in-loop
+            tree = await this.libraryService.listFolders(accountId);
           }
-          folderId = folder.id;
+          const itemId = Number.parseInt(item.criteria.folder || '1', 10);
+          const treeItem = findTreeItem(itemId, tree);
+          folderPath = treeItem?.folder || '';
         }
         if (item.type === 'playlist') {
           // eslint-disable-next-line no-await-in-loop
@@ -445,7 +452,7 @@ export class SynologyEntryService {
           artistId,
           composerId,
           genreId,
-          folderId,
+          folderPath,
           playlistId,
           randomHundred: item.type === SynologyPinTypeEnum.RANDOM_100,
           recentlyAdded: item.type === SynologyPinTypeEnum.RECENTLY_ADDED,

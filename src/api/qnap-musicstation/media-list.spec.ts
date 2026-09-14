@@ -311,9 +311,10 @@ describe('/musicstation/api/medialist_api.php', () => {
       desc: SortDirectionEnum.desc,
     });
     expect(error).toBeUndefined();
-    expect(data?.datas.data.length).toBe(2);
-    expect(data?.datas.data[0]?.FileName).toBe('root-1');
-    expect(data?.datas.data[1]?.FileName).toBe('root-2');
+    expect(data?.datas.data.length).toBe(3);
+    expect(data?.datas.data[0]?.FileName).toBe('Artist 1');
+    expect(data?.datas.data[1]?.FileName).toBe('Artist 2');
+    expect(data?.datas.data[2]?.FileName).toBe('Artist 3');
   });
 
   it('should list folder contents', async () => {
@@ -336,7 +337,7 @@ describe('/musicstation/api/medialist_api.php', () => {
     });
     expect(error).toBeUndefined();
     expect(data?.datas.data.length).toBe(2);
-    expect(data?.datas.data[0]?.FileName).toBe('Artist 1');
-    expect(data?.datas.data[1]?.FileName).toBe('Artist 2');
+    expect(data?.datas.data[0]?.FileName).toBe('Album 1');
+    expect(data?.datas.data[1]?.FileName).toBe('Album 2');
   });
 });

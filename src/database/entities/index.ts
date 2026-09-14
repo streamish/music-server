@@ -6,7 +6,6 @@ import { ComposerEntity } from './composer.entity';
 import { FavoriteItemEntity } from './favorite-item.entity';
 import { FileCustomDataEntity } from './file-custom-data.entity';
 import { FileEntity } from './file.entity';
-import { FolderEntity } from './folder.entity';
 import { GenreEntity } from './genre.entity';
 import { IndexerConfigurationEntity } from './indexer-configuration.entity';
 import { LinkedArtistEntity } from './linked-artist.entity';
@@ -30,7 +29,6 @@ export {
   FavoriteItemEntity,
   FileEntity,
   FileCustomDataEntity,
-  FolderEntity,
   GenreEntity,
   IndexerConfigurationEntity,
   LinkedArtistEntity,
@@ -55,7 +53,6 @@ export const entitiesList = [
   AlbumEntity,
   FileEntity,
   FileCustomDataEntity,
-  FolderEntity,
   ArtistEntity,
   ComposerEntity,
   GenreEntity,

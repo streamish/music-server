@@ -3,10 +3,8 @@ import {
   AlbumEntity,
   ArtistEntity,
   FileEntity,
-  FolderEntity,
   GenreEntity,
   LinkedGenreEntity,
-  RootPathEntity,
 } from 'src/database/entities';
 import {
   AlbumSortFieldEnum,
@@ -19,7 +17,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryArtistDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
-import { Op } from 'sequelize';
+import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { sep } from 'path';
 
 function songToRow(track: LibraryTrackDto) {
@@ -76,15 +74,15 @@ function artistToRow(artist: LibraryArtistDto) {
   };
 }
 
-function folderToRow(folder: FolderEntity, segmentName: string) {
+function folderToRow(folder: UserTreeItemDto) {
   return {
-    Title: segmentName,
-    FileName: segmentName,
-    FilePath: folder.folderPath,
+    Title: folder.folder?.split(sep).pop() || folder.folder || '',
+    FileName: folder.folder?.split(sep).pop() || folder.folder || '',
+    FilePath: folder.folder,
     FileType: 'folder',
     LinkID: folder.id,
     ImagePath: `api/mediacover_api.php?folderId=${folder.id}`,
-    prefix: folder.folderPath,
+    prefix: folder.folder,
   };
 }
 
@@ -97,11 +95,7 @@ export class QnapMediaListService {
     private readonly artistEntity: typeof ArtistEntity,
     @InjectModel(GenreEntity)
     private readonly genreEntity: typeof GenreEntity,
-    @InjectModel(FolderEntity)
-    private readonly folderEntity: typeof FolderEntity,
     private readonly libraryService: LibraryService,
-    @InjectModel(RootPathEntity)
-    private readonly rootPathEntity: typeof RootPathEntity,
   ) {}
 
   private async getAlbum(accountId: number, albumId: number) {
@@ -291,81 +285,60 @@ export class QnapMediaListService {
   }
 
   async listRootFolders(accountId: number) {
-    const folders = await this.folderEntity.findAll({
-      where: {
-        accountId,
-        isRoot: true,
-      },
-      order: [['folderPath', 'ASC']],
-    });
+    const folderTree = await this.libraryService.listFolders(accountId);
     return {
       datas: {
-        data: folders.map((folder) => folderToRow(folder, folder.folderPath.split(sep).pop() || folder.folderPath)),
+        data: folderTree.map(folderToRow),
       },
     };
   }
 
   async listFolders(accountId: number, folderId: number) {
-    const startingFolder = await this.folderEntity.findOne({
-      where: {
-        id: folderId,
-        accountId,
-      },
-    });
+    function findItem(treeItem: UserTreeItemDto) {
+      const result = treeItem.id === folderId ? treeItem : null;
+      if (result) {
+        return result;
+      }
+      if (treeItem.children) {
+        for (let i = 0, len = treeItem.children.length; i < len; i += 1) {
+          const child = treeItem.children[i];
+          if (child?.folder) {
+            const found = findItem(child);
+            if (found) {
+              return found;
+            }
+          }
+        }
+      }
+      return null;
+    }
+    const folderTree = await this.libraryService.listFolders(accountId);
+    const startingFolder = folderTree.map(findItem).find((item) => item !== null);
     if (!startingFolder) {
-      throw new Error(`Folder with ID ${folderId} not found`);
+      throw new Error(`Folder with id ${folderId} not found`);
     }
-    // find the root path entity that matches the basePath
-    const rootPath = await this.rootPathEntity.findByPk(startingFolder.rootPathId);
-    if (!rootPath) {
-      throw new Error(`No root path found for base path: ${startingFolder.folderPath}`);
-    }
-    const stemParts = startingFolder.folderPath.split(sep).filter((part) => part.length > 0);
-    type FolderType = ReturnType<typeof folderToRow>;
-    type FileType = ReturnType<typeof songToRow>;
-    const pathContents: (FolderType | FileType)[] = [];
-    // folder contents
-    const folders = await this.folderEntity.findAll({
-      where: {
-        accountId,
-        folderPath: {
-          [Op.like]: `${startingFolder.folderPath}/%`,
-        },
-        isRoot: false,
-        rootPathId: startingFolder.rootPathId,
+    const pathContents = startingFolder.children || [];
+    const files = await this.libraryService.listTracks(
+      accountId,
+      {
+        filePath: startingFolder.folder,
       },
-    });
-    for (let i = 0, len = folders.length; i < len; i += 1) {
-      const subFolder = folders[i];
-      if (subFolder) {
-        const folderPath = subFolder.folderPath
-          .split(sep)
-          .filter((part) => part.length > 0)
-          .slice(0, stemParts.length + 1)
-          .join(sep)
-          .substring(rootPath.rootPath.length);
-        const lastSegment = folderPath.split(sep).pop() || folderPath;
-        // check if unique
-        const existing = pathContents.find((item) => (item as FolderType).FileName === lastSegment);
-        if (!existing) {
-          pathContents.push(folderToRow(subFolder, lastSegment));
-        }
-      }
-    }
-    // file contents
-    const relativeFilePath = startingFolder.folderPath.replace(rootPath.rootPath, '');
-    const files = await this.libraryService.listTracks(accountId, { filePath: relativeFilePath }, 0, 100_000);
-    for (let i = 0, len = files.items.length; i < len; i += 1) {
-      const file = files.items[i];
-      if (file) {
-        if (file.filePath.lastIndexOf(sep) === relativeFilePath.length) {
-          pathContents.push(songToRow(file));
-        }
-      }
-    }
+      0,
+      100_000,
+      TrackSortFieldEnum.TITLE,
+    );
+    const fileItems = files.items
+      .filter((track) => {
+        return (
+          track.filePath.startsWith(startingFolder.folder) &&
+          track.filePath.lastIndexOf('/') === startingFolder.folder.length
+        );
+      })
+      .map(songToRow);
+    const folderItems = pathContents.map(folderToRow);
     return {
       datas: {
-        data: pathContents,
+        data: [...folderItems, ...fileItems],
       },
     };
   }

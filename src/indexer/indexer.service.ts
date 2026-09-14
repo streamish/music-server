@@ -2,7 +2,7 @@ import { ConfigService } from 'src/config/config.service';
 import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { FSWatcher, readdir, stat, watch } from 'node:fs';
-import { FileEntity, FolderEntity, IndexerConfigurationEntity, RootPathEntity } from 'src/database/entities';
+import { FileEntity, IndexerConfigurationEntity, RootPathEntity } from 'src/database/entities';
 import { IAudioMetadata, IOptions } from 'src/types/music-metadata';
 import { IndexAlbumService } from './index-album.service';
 import { IndexArtistService } from './index-artist.service';
@@ -61,8 +61,6 @@ export class IndexerService {
     private readonly indexFileService: IndexFileService,
     @InjectModel(FileEntity)
     private readonly fileEntity: typeof FileEntity,
-    @InjectModel(FolderEntity)
-    private readonly folderEntity: typeof FolderEntity,
     @InjectModel(IndexerConfigurationEntity)
     private readonly indexerConfigurationEntity: typeof IndexerConfigurationEntity,
     @InjectModel(RootPathEntity)
@@ -95,6 +93,7 @@ export class IndexerService {
         await this.scanQueuedPaths();
       }
     }
+    this.addLogEntry(0, 0, 'Finished test indexing');
   }
 
   /**
@@ -274,22 +273,6 @@ export class IndexerService {
       `root path contains ${uniqueFolderPaths.length} folders with ${filesToScan.length} files`,
     );
     // remove deleted folders and files from the database
-    const deletedFolders = await this.folderEntity.destroy({
-      where: {
-        accountId: rootPath.accountId,
-        folderPath: {
-          [Op.notIn]: uniqueFolderPaths,
-        },
-        rootPathId: rootPath.id,
-      },
-    });
-    if (deletedFolders) {
-      await this.addLogEntry(
-        rootPath.accountId,
-        rootPath.id,
-        `deleted ${deletedFolders} stale folder references from the database`,
-      );
-    }
     const deletedFiles = await this.fileEntity.destroy({
       where: {
         accountId: rootPath.accountId,
@@ -310,8 +293,6 @@ export class IndexerService {
     await this.checkFile(rootPath, filesToScan, filesToUpdate);
     // start the metadata scanning to update the database with the latest file information
     await this.updateFile(rootPath, filesToUpdate);
-    // update the folder tree for the root path
-    await this.updateFolders(rootPath, uniqueFolderPaths);
   }
 
   /**
@@ -564,44 +545,6 @@ export class IndexerService {
       this.logger.error('transaction error synchronizing file', error);
       this.addLogEntry(rootPath.accountId, rootPath.id, `error synchronizing file ${error}`);
       await transaction.rollback();
-    }
-  }
-
-  async updateFolders(rootPath: RootPathEntity, uniqueFolderPaths: string[]): Promise<void> {
-    if (await this.isDisabled()) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
-      return;
-    }
-    if (!uniqueFolderPaths.length) {
-      return;
-    }
-    const folderItem = uniqueFolderPaths.shift();
-    if (!folderItem) {
-      return;
-    }
-    await this.synchronizeFolder(rootPath, folderItem);
-    await this.updateFolders(rootPath, uniqueFolderPaths);
-  }
-
-  async synchronizeFolder(rootPath: RootPathEntity, folderPath: string): Promise<void> {
-    if (await this.isDisabled()) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
-      return;
-    }
-    const existing = await this.folderEntity.findOne({
-      where: {
-        folderPath,
-        accountId: rootPath.accountId,
-      },
-    });
-    if (!existing) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, `adding folder ${folderPath}`);
-      await this.folderEntity.create({
-        accountId: rootPath.accountId,
-        folderPath,
-        isRoot: folderPath === rootPath.rootPath,
-        rootPathId: rootPath.id,
-      } as FolderEntity);
     }
   }
 }
