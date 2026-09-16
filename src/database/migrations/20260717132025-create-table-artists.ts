@@ -3,6 +3,15 @@ import { QueryInterface } from 'sequelize';
 
 export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.createTable('artists', {
+    account_id: {
+      type: DataType.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'accounts',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
     created_at: {
       type: DataType.DATE,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
