@@ -70,6 +70,7 @@ export class LibraryComposerService {
     const queryFilter = {
       where: {
         accountId,
+        ...(filters?.composerIds ? { id: filters?.composerIds } : {}),
       },
       include: [
         {
