@@ -14,3 +14,4 @@ export const api: ReturnType<typeof createClient<paths>> = createClient<paths>({
 export * from './test-helper.api.admin';
 export * from './test-helper.api.user';
 export * from './test-helper.api.guest';
+export * from './test-helper.api.test';

@@ -28,6 +28,11 @@ export const SYNOLOGY_AUDIOSTATION_APIS = 'Synology AudioStation APIs';
 export const QNAP_MUSICSTATION_APIS = 'QNAP Music Station APIs';
 
 /**
+ * The "test" endpoints for test-helpers such as duplicating user accounts.
+ */
+export const TEST_APIS = 'Test APIs';
+
+/**
  * The JWT token key for authenticating on Swagger.  This token is a base64-encoded string that is reversible in the
  * browser.  It is signed with a secret constructed from a platform-level token, account-level token, and random
  * session token
