@@ -353,6 +353,7 @@ export class QnapMediaListService {
     const offset = (currentPage - 1) * pageSize;
     const genres = await this.libraryService.listTrackGenres(
       accountId,
+      {},
       offset,
       pageSize,
       sortBy.toLowerCase() as GenreSortFieldEnum,

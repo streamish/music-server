@@ -9,6 +9,7 @@ export class UserListTrackGenresWithTracksService {
   async listGenresWithTracks(accountId: number, query: UserListTrackGenresWithTracksQueryDto) {
     const data = await this.libraryService.listTrackGenresWithTracks(
       accountId,
+      {},
       query.offset || 0,
       query.limit || 100_000,
       query.sortField,

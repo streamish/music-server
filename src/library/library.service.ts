@@ -570,8 +570,19 @@ export class LibraryService {
     };
   }
 
+  /**
+   * Lists track genres for a given account with pagination and sorting options.
+   * @param {number} accountId The user performing the search
+   * @param {GenreFilters} filter The filters to apply when querying for genres
+   * @param {number} offset The offset for pagination
+   * @param {number} limit The maximum number of items to return
+   * @param {GenreSortFieldEnum} sortField The field to sort by
+   * @param {SortDirectionEnum} sortDirection The direction to sort (ASC or DESC)
+   * @returns {Promise<ListResult<LibraryGenreDto>>} The list of track genres
+   */
   async listTrackGenres(
     accountId: number,
+    filter: GenreFilters,
     offset: number,
     limit: number,
     sortField?: GenreSortFieldEnum,
@@ -588,6 +599,7 @@ export class LibraryService {
       where: {
         accountId,
         isDefault: false,
+        ...(filter.genreIds ? { id: filter.genreIds } : {}),
       },
       attributes: ['id', 'name'],
       order: [[Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']],
@@ -605,14 +617,27 @@ export class LibraryService {
     };
   }
 
+  /**
+   * Lists track genres along with their associated tracks for a given account with pagination and sorting
+   * options.  If the track lists are not required then the `listTrackGenres` method will provide better
+   * performance.
+   * @param {number} accountId The user performing the search
+   * @param {GenreFilters} filter The filters to apply when querying for genres
+   * @param {number} offset The offset for pagination
+   * @param {number} limit The maximum number of items to return
+   * @param {GenreSortFieldEnum} sortField The field to sort by
+   * @param {SortDirectionEnum} sortDirection The direction to sort (ASC or DESC)
+   * @returns {Promise<ListResult<LibraryGenreWithTracksDto>>} The list of track genres with their albums and tracks
+   */
   async listTrackGenresWithTracks(
     accountId: number,
+    filter: GenreFilters,
     offset: number,
     limit: number,
     sortField?: GenreSortFieldEnum,
     sortDirection?: SortDirectionEnum,
   ): Promise<ListResult<LibraryGenreWithTracksDto>> {
-    const genres = await this.listTrackGenres(accountId, offset, limit, sortField, sortDirection);
+    const genres = await this.listTrackGenres(accountId, filter, offset, limit, sortField, sortDirection);
     const albumIndex = {};
     const albums = await this.listAlbumsWithTracks(
       accountId,
@@ -665,7 +690,7 @@ export class LibraryService {
             albums: albumIndex[genre.id] || [],
           };
         })
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length > 0).length > 0),
+        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
       total: genres.total,
     };
   }
