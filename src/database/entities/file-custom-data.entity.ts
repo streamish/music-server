@@ -47,6 +47,7 @@ export class FileCustomDataEntity extends Model<FileCustomDataEntity> {
       model: FileEntity,
       key: 'id',
     },
+    onDelete: 'CASCADE',
   })
   @ForeignKey(() => FileEntity)
   declare fileId: number;

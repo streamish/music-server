@@ -28,7 +28,6 @@ export class AdminDeleteAccountService {
         throw new BadRequestException(ErrorCodes.ACCOUNT_ONLY_ADMIN_ERROR);
       }
     }
-
     const account = await this.accountEntity.findByPk(deleteAccountId);
     if (!account) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);

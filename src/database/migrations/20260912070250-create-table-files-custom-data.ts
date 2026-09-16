@@ -20,6 +20,7 @@ export async function up(queryInterface: QueryInterface) {
         model: 'files',
         key: 'id',
       },
+      onDelete: 'CASCADE',
     },
     genres: DataTypes.STRING(1000),
     id: {

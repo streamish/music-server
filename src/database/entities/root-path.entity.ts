@@ -21,6 +21,7 @@ export class RootPathEntity extends Model<RootPathEntity> {
       key: 'id',
     },
     allowNull: true,
+    onDelete: 'CASCADE',
   })
   @ForeignKey(() => AccountEntity)
   declare accountId: number;

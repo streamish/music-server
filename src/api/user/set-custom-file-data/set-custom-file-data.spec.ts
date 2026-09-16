@@ -1,34 +1,38 @@
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi } from '../../../test-helper';
+import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/set-custom-file-data', () => {
-  const deleteCustomData: number[] = [];
+  let accountId: number;
   let userApi: UserApi;
   let trackId: number;
 
   beforeAll(async () => {
-    userApi = await createUserApi(USER_USERNAME, USER_PASSWORD);
-    const { data: trackData } = await userApi.listTracks({
+    const newUsername = `user-${Date.now()}`;
+    const newAccount = await testApi.duplicateAccount(USER_USERNAME, newUsername);
+    if (!newAccount.data?.accountId) {
+      throw new Error('Failed to create new account');
+    }
+    accountId = newAccount.data.accountId;
+    userApi = await createUserApi(newUsername, USER_PASSWORD);
+    const { data: albumData } = await userApi.listAlbumsWithTracks({
       offset: 0,
-      limit: 100_000,
+      limit: 1,
     });
-    const track = trackData?.tracks[0];
+    if (!albumData?.albums?.[0]) {
+      throw new Error('Album not found');
+    }
+    const album = albumData.albums[0];
+    const track = album.tracks?.[0];
     if (!track) {
       throw new Error('Track not found');
     }
     trackId = track.id;
-  });
+  }, 120_000);
 
   afterAll(async () => {
-    for (let i = 0, len = deleteCustomData.length; i < len; i += 1) {
-      const id = deleteCustomData[i];
-      if (id) {
-        // eslint-disable-next-line no-await-in-loop
-        await userApi.deleteCustomFileData(id);
-      }
-    }
-  });
+    await testApi.deleteAccount(accountId);
+  }, 120_000);
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
@@ -56,7 +60,7 @@ describe('/api/user/set-custom-file-data', () => {
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
-    });
+    }, 120_000);
   });
 
   describe('errors', () => {
@@ -74,7 +78,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_FILE_ID_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid album artists length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -90,7 +94,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_ARTISTS_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid album title length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -106,7 +110,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_TITLE_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid artists length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -122,7 +126,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ARTISTS_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid comment length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -138,7 +142,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_COMMENT_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid composers length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -154,7 +158,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_COMPOSERS_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid disc number', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -170,7 +174,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_DISC_NUMBER_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid disc number range', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -186,7 +190,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_DISC_NUMBER_RANGE_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid genres length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -202,7 +206,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_GENRES_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid title length', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -218,7 +222,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_TITLE_LENGTH_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid track number range', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -234,7 +238,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 2026,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_NUMBER_RANGE_ERROR);
-    });
+    }, 120_000);
 
     it('should reject invalid year range', async () => {
       const { error } = await userApi.setCustomFileData(trackId, {
@@ -250,7 +254,7 @@ describe('/api/user/set-custom-file-data', () => {
         year: 32230,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_YEAR_RANGE_ERROR);
-    });
+    }, 120_000);
   });
 
   describe('success', () => {
@@ -296,7 +300,6 @@ describe('/api/user/set-custom-file-data', () => {
       expect(track.genres.map((genre) => genre.name).join(', ')).toBe('Custom genres');
       expect(track.trackNumber).toBe(7);
       expect(track.year).toBe(1950);
-      deleteCustomData.push(trackId);
-    });
+    }, 120_000);
   });
 });

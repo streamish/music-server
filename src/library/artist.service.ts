@@ -79,6 +79,7 @@ export class LibraryArtistService {
     const queryFilter = {
       where: {
         accountId,
+        ...(filters?.artistIds ? { id: filters?.artistIds } : {}),
       },
       include: [
         {
@@ -148,6 +149,7 @@ export class LibraryArtistService {
     const queryFilter = {
       where: {
         accountId,
+        ...(filters?.artistIds ? { id: filters?.artistIds } : {}),
       },
       include: [
         {

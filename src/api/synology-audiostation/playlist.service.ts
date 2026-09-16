@@ -171,7 +171,6 @@ export class SynologyPlaylistService {
         } as PlaylistItemEntity);
       }
     });
-    const transaction = await this.playlistItemEntity.sequelize?.transaction();
     await this.playlistItemEntity.update(
       {
         position: this.playlistItemEntity.sequelize?.literal(`position + ${insertData.length}`),
@@ -183,20 +182,9 @@ export class SynologyPlaylistService {
             [Op.gte]: body.offset,
           },
         },
-        transaction,
       },
     );
-    await this.playlistItemEntity.bulkCreate(insertData, {
-      transaction,
-    });
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (error) {
-        await transaction.rollback();
-        throw error;
-      }
-    }
+    await this.playlistItemEntity.bulkCreate(insertData);
   }
 
   async createPlaylist(accountId: number, body: SynologyPlaylistCreateNormalBodyDto) {
@@ -211,42 +199,23 @@ export class SynologyPlaylistService {
   }
 
   async createSmartPlaylist(accountId: number, body: SynologyPlaylistCreateSmartBodyDto) {
-    const transaction = await this.playlistEntity.sequelize?.transaction();
-    const playlist = await this.playlistEntity.create(
-      {
-        accountId,
-        name: replaceDoubleQuotes(body.name),
-        rulesConjugal: body.conj_rule,
-        type: PlaylistTypeEnum.SMART,
-      } as PlaylistEntity,
-      {
-        transaction,
-      },
-    );
+    const playlist = await this.playlistEntity.create({
+      accountId,
+      name: replaceDoubleQuotes(body.name),
+      rulesConjugal: body.conj_rule,
+      type: PlaylistTypeEnum.SMART,
+    } as PlaylistEntity);
     for (let i = 0, len = body.rules_json.length; i < len; i += 1) {
       const rule = body.rules_json[i];
       if (rule) {
         // eslint-disable-next-line no-await-in-loop
-        await this.playlistSmartRuleEntity.create(
-          {
-            playlistId: playlist.id,
-            field: rule.fieldName,
-            operation: rule.operationName,
-            value: rule.tagval,
-            interval: rule.intervalName,
-          } as PlaylistSmartRuleEntity,
-          {
-            transaction,
-          },
-        );
-      }
-    }
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (error) {
-        await transaction.rollback();
-        throw error;
+        await this.playlistSmartRuleEntity.create({
+          playlistId: playlist.id,
+          field: rule.fieldName,
+          operation: rule.operationName,
+          value: rule.tagval,
+          interval: rule.intervalName,
+        } as PlaylistSmartRuleEntity);
       }
     }
     return {
@@ -477,7 +446,6 @@ export class SynologyPlaylistService {
     });
     const insertAt = Math.min(Math.max(body.offset, 0), remainingItems.length);
     const newOrder = [...remainingItems.slice(0, insertAt), ...movingItems, ...remainingItems.slice(insertAt)];
-    const transaction = await this.playlistItemEntity.sequelize?.transaction();
     for (let i = 0; i < newOrder.length; i += 1) {
       const item = newOrder[i];
       if (item) {
@@ -491,17 +459,8 @@ export class SynologyPlaylistService {
               id: item.id,
               playlistId: playlist.id,
             },
-            transaction,
           },
         );
-      }
-    }
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (error) {
-        await transaction.rollback();
-        throw error;
       }
     }
   }
@@ -527,14 +486,12 @@ export class SynologyPlaylistService {
     if (deleteItems.length === 0) {
       throw new Error(`Playlist item with offset ${body.offset} not found in playlist ${body.id}`);
     }
-    const transaction = await this.playlistItemEntity.sequelize?.transaction();
     await this.playlistItemEntity.destroy({
       where: {
         id: {
           [Op.in]: deleteItems,
         },
       },
-      transaction,
     });
     for (let i = body.offset - 1 + body.limit; i < items.length; i += 1) {
       const nextItem = items[i];
@@ -548,17 +505,8 @@ export class SynologyPlaylistService {
             where: {
               id: nextItem.id,
             },
-            transaction,
           },
         );
-      }
-    }
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (error) {
-        await transaction.rollback();
-        throw error;
       }
     }
   }
@@ -582,7 +530,6 @@ export class SynologyPlaylistService {
 
   async updateSmartPlaylist(accountId: number, body: SynologyPlaylistUpdateSmartBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    const transaction = await this.playlistEntity.sequelize?.transaction();
     await this.playlistEntity.update(
       {
         name: replaceDoubleQuotes(body.name),
@@ -593,41 +540,27 @@ export class SynologyPlaylistService {
         where: {
           id: playlist.id,
         },
-        transaction,
       },
     );
     await this.playlistSmartRuleEntity.destroy({
       where: {
         playlistId: playlist.id,
       },
-      transaction,
     });
     for (let i = 0, len = body.rules_json.length; i < len; i += 1) {
       const rule = body.rules_json[i];
       if (rule) {
         // eslint-disable-next-line no-await-in-loop
-        await this.playlistSmartRuleEntity.create(
-          {
-            playlistId: playlist.id,
-            field: rule.fieldName,
-            operation: rule.operationName,
-            value: rule.tagval,
-            interval: rule.intervalName,
-          } as PlaylistSmartRuleEntity,
-          {
-            transaction,
-          },
-        );
+        await this.playlistSmartRuleEntity.create({
+          playlistId: playlist.id,
+          field: rule.fieldName,
+          operation: rule.operationName,
+          value: rule.tagval,
+          interval: rule.intervalName,
+        } as PlaylistSmartRuleEntity);
       }
     }
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (error) {
-        await transaction.rollback();
-        throw error;
-      }
-    }
+
     return {
       id: `playlist_personal_smart/${body.name}`,
     };

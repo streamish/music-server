@@ -13,6 +13,10 @@ export type ComposerFilters = {
    */
   addedBefore?: Date;
   /**
+   * Optional filter for specific composer IDs. Only composers with matching IDs will be included in the results.
+   */
+  composerIds?: number[];
+  /**
    * Optional filter for a case-insensitive partial-match against the composer's name.
    */
   filter?: string;

@@ -300,6 +300,7 @@ export class IndexerService {
    * @param {number} fileId The ID of the file
    */
   async scanFile(fileId: number) {
+    this.logger.log(`manually scanning file with ID ${fileId}`);
     const file = await this.fileEntity.findByPk(fileId, {
       attributes: ['filePath', 'rootPathId', 'fileSize'],
     });
@@ -314,12 +315,12 @@ export class IndexerService {
     const filesToScan = [
       {
         path: filePath,
-        lastModified: new Date(),
+        lastModified: new Date(1970, 0, 1),
         size: file.fileSize,
       },
     ];
     const filesToUpdate: FileUpdateItem[] = [];
-    await this.checkFile(rootPath, filesToScan, filesToUpdate);
+    await this.checkFile(rootPath, filesToScan, filesToUpdate, true);
     const fileToUpdate = filesToUpdate[0];
     if (!fileToUpdate) {
       throw new Error(ErrorCodes.FILE_NOT_FOUND_ERROR);
@@ -390,10 +391,16 @@ export class IndexerService {
    * @param {RootPathEntity} rootPath The indexer root path being scanned
    * @param {FileItem[]} filesToScan Array of files to be scanned
    * @param {FileUpdateItem[]} filesToUpdate Array of files that have been added or modified
+   * @param {boolean} [overrideScannerStatus] Optional flag to ensure a scan occurs on manual changes
    * @returns {Promise<void>}
    */
-  async checkFile(rootPath: RootPathEntity, filesToScan: FileItem[], filesToUpdate: FileUpdateItem[]): Promise<void> {
-    if (await this.isDisabled()) {
+  async checkFile(
+    rootPath: RootPathEntity,
+    filesToScan: FileItem[],
+    filesToUpdate: FileUpdateItem[],
+    overrideScannerStatus?: boolean,
+  ): Promise<void> {
+    if (overrideScannerStatus !== true && (await this.isDisabled())) {
       await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
     }
@@ -517,15 +524,10 @@ export class IndexerService {
       return;
     }
     await this.addLogEntry(rootPath.accountId, rootPath.id, `saving track ${relativePath}`);
-    const transaction = await this.fileEntity.sequelize?.transaction();
-    if (!transaction) {
-      this.logger.error('transaction not available synchronizing file');
-      return;
-    }
-    const fileDetail = await this.indexFileService.updateFile(embeddedData, fileId, rootPath.accountId, transaction);
-    await this.indexArtistService.updateArtists(embeddedData, rootPath.accountId, fileDetail, transaction);
-    await this.indexComposerService.updateComposers(embeddedData, rootPath.accountId, fileDetail, transaction);
-    await this.indexGenreService.updateGenres(embeddedData, rootPath.accountId, fileDetail, transaction);
+    const fileDetail = await this.indexFileService.updateFile(embeddedData, fileId, rootPath.accountId);
+    await this.indexArtistService.updateArtists(embeddedData, rootPath.accountId, fileDetail);
+    await this.indexComposerService.updateComposers(embeddedData, rootPath.accountId, fileDetail);
+    await this.indexGenreService.updateGenres(embeddedData, rootPath.accountId, fileDetail);
     await this.fileEntity.update(
       {
         fileMtime,
@@ -536,15 +538,7 @@ export class IndexerService {
         where: {
           id: fileId,
         },
-        transaction,
       },
     );
-    try {
-      await transaction.commit();
-    } catch (error) {
-      this.logger.error('transaction error synchronizing file', error);
-      this.addLogEntry(rootPath.accountId, rootPath.id, `error synchronizing file ${error}`);
-      await transaction.rollback();
-    }
   }
 }

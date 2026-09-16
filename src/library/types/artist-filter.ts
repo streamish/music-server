@@ -13,12 +13,16 @@ export type ArtistFilters = {
    */
   addedBefore?: Date;
   /**
+   * Optional filter for retrieving specific artists.
+   */
+  artistIds?: number[];
+  /**
    * Optional filter for a case-insensitive partial-match against the artist's name.
    */
   filter?: string;
   /**
    * Optional filter for the genre(s), which will do a case-insensitive match against the
-   * genres associated with an album.
+   * genres associated with an artist.
    */
   genre?: string[];
 };

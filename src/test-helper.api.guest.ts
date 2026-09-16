@@ -4,7 +4,7 @@ import { api } from './test-helper';
  * Creates an unauthenticated guest API client
  * @returns Object with shortcut functions for Guest APIs
  */
-export function GuestApi() {
+export function createGuestApi() {
   return {
     async createSession(username: string, password: string, expiresDays?: number) {
       return api.POST(`/api/guest/create-session`, {
@@ -18,4 +18,4 @@ export function GuestApi() {
   };
 }
 
-export const guestApi = GuestApi();
+export const guestApi = createGuestApi();

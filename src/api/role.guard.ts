@@ -68,8 +68,17 @@ export class RoleGuard implements CanActivate {
               throw new UnauthorizedException(ErrorCodes.AUTHORIZATION_ERROR);
             }
           }
-          request.user = user;
-          request.session = session;
+          request.user = {
+            id: user.id,
+            username: user.username,
+            roles: user.roles,
+          };
+          request.session = {
+            id: session.id,
+            restrictSession: session.restrictSession,
+            expiresAt: session.expiresAt,
+            endedAt: session.endedAt,
+          };
         }
       } catch (error) {
         this.logger.error('Error verifying JWT token:', error instanceof Error ? error.message : error);

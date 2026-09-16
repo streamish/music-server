@@ -12,15 +12,13 @@ import {
 import { Body, Controller, Put, Query, UseGuards } from '@nestjs/common';
 import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
-import {
-  UserDeleteCustomFileDataNotFoundResponseDto,
-  UserDeleteCustomFileDataResponseDto,
-} from '../delete-custom-file-data/delete-custom-file-data.dto';
 import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetCustomFileDataBadRequestResponseDto,
   UserSetCustomFileDataBodyDto,
+  UserSetCustomFileDataNotFoundResponseDto,
   UserSetCustomFileDataQueryDto,
+  UserSetCustomFileDataResponseDto,
 } from './set-custom-file-data.dto';
 import { UserSetCustomFileDataService } from './set-custom-file-data.service';
 
@@ -46,11 +44,11 @@ export class UserSetCustomFileDataController {
   @ApiHeader(JWT_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'Custom data set successfully',
-    type: UserDeleteCustomFileDataResponseDto,
+    type: UserSetCustomFileDataResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'File not found',
-    type: UserDeleteCustomFileDataNotFoundResponseDto,
+    type: UserSetCustomFileDataNotFoundResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request failed',
