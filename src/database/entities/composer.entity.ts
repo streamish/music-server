@@ -1,4 +1,5 @@
-import { Column, DataType, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
+import { AccountEntity } from './account.entity';
+import { Column, DataType, ForeignKey, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
 import { LinkedComposerEntity } from './linked-composer.entity';
 
 /**
@@ -10,6 +11,21 @@ import { LinkedComposerEntity } from './linked-composer.entity';
   underscored: true,
 })
 export class ComposerEntity extends Model<ComposerEntity> {
+  /**
+   * The account ID the album belongs to.
+   */
+  @Column({
+    type: DataType.INTEGER,
+    references: {
+      model: AccountEntity,
+      key: 'id',
+    },
+    allowNull: true,
+    onDelete: 'CASCADE',
+  })
+  @ForeignKey(() => AccountEntity)
+  declare accountId?: number;
+
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This field should not be
    * specified if you are inserting and updating data.

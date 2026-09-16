@@ -17,10 +17,11 @@ export class IndexArtistService {
     private readonly linkedArtistEntity: typeof LinkedArtistEntity,
   ) {}
 
-  async insertOrRetrieveArtist(name: string, transaction?: Transaction): Promise<number> {
+  async insertOrRetrieveArtist(accountId: number, name: string, transaction?: Transaction): Promise<number> {
     const nameNormalized = normalizeString(name);
     const existing = await this.artistEntity.findOne({
       where: {
+        accountId,
         nameNormalized,
       },
       transaction,
@@ -30,6 +31,7 @@ export class IndexArtistService {
     }
     const artist = await this.artistEntity.create(
       {
+        accountId,
         name: sanitizeString(name),
         nameNormalized,
       } as ArtistEntity,
@@ -40,14 +42,19 @@ export class IndexArtistService {
     return artist.id;
   }
 
-  async updateArtists(embeddedData: IAudioMetadata, fileDetail: FileEntity, transaction?: Transaction) {
+  async updateArtists(
+    embeddedData: IAudioMetadata,
+    accountId: number,
+    fileDetail: FileEntity,
+    transaction?: Transaction,
+  ) {
     const artists =
       embeddedData?.common.artists || splitArray(embeddedData?.common.artist ? [embeddedData?.common.artist] : []);
     const validAssociationIds: number[] = [];
     for (let i = 0; i < artists.length; i += 1) {
       const name = artists[i]?.trim();
       if (name) {
-        const artistId = await this.insertOrRetrieveArtist(name, transaction);
+        const artistId = await this.insertOrRetrieveArtist(accountId, name, transaction);
         const existingAssociation = await this.linkedArtistEntity.findOne({
           where: {
             artistId,

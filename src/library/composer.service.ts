@@ -68,6 +68,9 @@ export class LibraryComposerService {
       });
     }
     const queryFilter = {
+      where: {
+        accountId,
+      },
       include: [
         {
           model: LinkedComposerEntity,

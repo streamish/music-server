@@ -1,5 +1,6 @@
+import { AccountEntity } from './account.entity';
 import { AlbumArtistEntity } from './album-artist.entity';
-import { Column, DataType, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
 import { LinkedArtistEntity } from './linked-artist.entity';
 
 /**
@@ -11,6 +12,21 @@ import { LinkedArtistEntity } from './linked-artist.entity';
   underscored: true,
 })
 export class ArtistEntity extends Model<ArtistEntity> {
+  /**
+   * The account ID the album belongs to.
+   */
+  @Column({
+    type: DataType.INTEGER,
+    references: {
+      model: AccountEntity,
+      key: 'id',
+    },
+    allowNull: true,
+    onDelete: 'CASCADE',
+  })
+  @ForeignKey(() => AccountEntity)
+  declare accountId?: number;
+
   @HasMany(() => AlbumArtistEntity)
   declare albumArtists: AlbumArtistEntity[];
 

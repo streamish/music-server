@@ -328,8 +328,8 @@ export class IndexerService {
     const albumPath = filePath.replace(rootPath.rootPath, '').split(sep).slice(0, 3).join(sep);
     await this.indexAlbumService.updateAlbum(rootPath, embeddedData, albumPath, rootPath.accountId);
     const fileDetail = await this.indexFileService.updateFile(embeddedData, fileId, rootPath.accountId);
-    await this.indexArtistService.updateArtists(embeddedData, fileDetail);
-    await this.indexComposerService.updateComposers(embeddedData, fileDetail);
+    await this.indexArtistService.updateArtists(embeddedData, rootPath.accountId, fileDetail);
+    await this.indexComposerService.updateComposers(embeddedData, rootPath.accountId, fileDetail);
     await this.indexGenreService.updateGenres(embeddedData, rootPath.accountId, fileDetail);
   }
 
@@ -523,8 +523,8 @@ export class IndexerService {
       return;
     }
     const fileDetail = await this.indexFileService.updateFile(embeddedData, fileId, rootPath.accountId, transaction);
-    await this.indexArtistService.updateArtists(embeddedData, fileDetail, transaction);
-    await this.indexComposerService.updateComposers(embeddedData, fileDetail, transaction);
+    await this.indexArtistService.updateArtists(embeddedData, rootPath.accountId, fileDetail, transaction);
+    await this.indexComposerService.updateComposers(embeddedData, rootPath.accountId, fileDetail, transaction);
     await this.indexGenreService.updateGenres(embeddedData, rootPath.accountId, fileDetail, transaction);
     await this.fileEntity.update(
       {
