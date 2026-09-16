@@ -66,7 +66,7 @@ export class AccountEntity extends Model<AccountEntity> {
 
   /**
    * The session token is a random UUID used as part of a secret token that verifies session
-   * information.  A change in this value invalidates all sessions belongong to this user
+   * information.  A change in this value invalidates all sessions belonging to this user
    * immediately.
    */
   @Column({
