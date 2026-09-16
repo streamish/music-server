@@ -9,6 +9,7 @@ import {
 import { ArtistEntity, ComposerEntity, FileEntity, GenreEntity } from 'src/database/entities';
 import { ComposerFilters } from './types/composer-filter';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { GenreFilters } from './types/genre-filter';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
@@ -37,15 +38,15 @@ export class LibraryService {
     private readonly artistEntity: typeof ArtistEntity,
     @InjectModel(ComposerEntity)
     private readonly composerEntity: typeof ComposerEntity,
+    @InjectModel(FileEntity)
+    private readonly fileEntity: typeof FileEntity,
+    @InjectModel(GenreEntity)
+    private readonly genreEntity: typeof GenreEntity,
 
     private readonly albumService: LibraryAlbumService,
     private readonly artistService: LibraryArtistService,
     private readonly composerService: LibraryComposerService,
     private readonly libraryFolderService: LibraryFolderService,
-    @InjectModel(GenreEntity)
-    private readonly genreEntity: typeof GenreEntity,
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
     private readonly trackService: LibraryTrackService,
   ) {}
 
@@ -236,7 +237,7 @@ export class LibraryService {
           name: replaceDoubleQuotes(artist.name),
           albums: albumIndex[artist.id] || [],
         }))
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length > 0).length > 0),
+        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
     };
   }
 
@@ -375,10 +376,15 @@ export class LibraryService {
             albums: albumIndex[composer.id] || [],
           };
         })
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length > 0).length > 0),
+        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
     };
   }
 
+  /**
+   * Lists all folders for a given account in a tree structure.
+   * @param {number} accountId The user performing the search
+   * @returns {Promise<UserTreeItemDto[]>} The tree structure of folders for the account
+   */
   async listFolders(accountId: number): Promise<UserTreeItemDto[]> {
     return this.libraryFolderService.getTreeStructure(accountId);
   }
@@ -566,7 +572,7 @@ export class LibraryService {
             albums: albumIndex[artist.id] || [],
           };
         })
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length > 0).length > 0),
+        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
     };
   }
 
@@ -695,6 +701,12 @@ export class LibraryService {
     };
   }
 
+  /**
+   * Rates the specified tracks for the given account.
+   * @param {number} accountId The ID of the account performing the rating
+   * @param {number[]} fileIds The IDs of the files (tracks) to be rated
+   * @param {RatingOrUnset} rating The rating value `0` `1` `2` `3` `4` `5` to be applied to the specified tracks
+   */
   async rateTracks(accountId: number, fileIds: number[], rating: RatingOrUnset): Promise<void> {
     const files = await this.fileEntity.findAll({
       where: {
@@ -719,14 +731,20 @@ export class LibraryService {
     );
   }
 
+  /**
+   * Retrieves the specified album along with its tracks.
+   * @param {number} accountId The ID of the account requesting the album
+   * @param {number} albumId The ID of the album to retrieve
+   * @returns {Promise<LibraryAlbumWithTracksDto>} The album with its tracks
+   */
   async retrieveAlbum(accountId: number, albumId: number): Promise<LibraryAlbumWithTracksDto> {
-    const matchingAlbumIds = await this.albumService.findMatchingAlbumIds({
+    const ownsAlbum = await this.fileEntity.findOne({
       where: {
         accountId,
-        id: albumId,
+        albumId,
       },
     });
-    if (!matchingAlbumIds || matchingAlbumIds.length === 0) {
+    if (!ownsAlbum) {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }
     const album = await this.albumService.listAlbumsWithTracksById([albumId], 0, 1);
@@ -734,5 +752,61 @@ export class LibraryService {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }
     return album.items[0];
+  }
+
+  /**
+   * Retrieves the specified album artist along with their albums and tracks.
+   * @param {number} accountId The ID of the account requesting the artist
+   * @param {number} artistId The ID of the artist to retrieve
+   * @returns {Promise<LibraryArtistWithTracksDto>} The artist with their albums and tracks
+   */
+  async retrieveAlbumArtist(accountId: number, artistId: number): Promise<LibraryArtistWithTracksDto> {
+    const artists = await this.listAlbumArtistsWithTracks(accountId, { artistIds: [artistId] }, 0, 1);
+    if (!artists?.items?.[0]) {
+      throw new NotFoundException(ErrorCodes.ARTIST_NOT_FOUND_ERROR);
+    }
+    return artists.items[0];
+  }
+
+  /**
+   * Retrieves the specified track artist along with their albums and tracks.
+   * @param {number} accountId The ID of the account requesting the artist
+   * @param {number} artistId The ID of the artist to retrieve
+   * @returns {Promise<LibraryArtistWithTracksDto>} The artist with their albums and tracks
+   */
+  async retrieveTrackArtist(accountId: number, artistId: number): Promise<LibraryArtistWithTracksDto> {
+    const artists = await this.listTrackArtistsWithTracks(accountId, { artistIds: [artistId] }, 0, 1);
+    if (!artists?.items?.[0]) {
+      throw new NotFoundException(ErrorCodes.ARTIST_NOT_FOUND_ERROR);
+    }
+    return artists.items[0];
+  }
+
+  /**
+   * Retrieves the specified track composer along with their albums and tracks.
+   * @param {number} accountId The ID of the account requesting the composer
+   * @param {number} composerId The ID of the composer to retrieve
+   * @returns {Promise<LibraryComposerWithTracksDto>} The composer with their albums and tracks
+   */
+  async retrieveTrackComposer(accountId: number, composerId: number): Promise<LibraryComposerWithTracksDto> {
+    const composers = await this.listComposersWithTracks(accountId, { composerIds: [composerId] }, 0, 1);
+    if (!composers?.items?.[0]) {
+      throw new NotFoundException(ErrorCodes.COMPOSER_NOT_FOUND_ERROR);
+    }
+    return composers.items[0];
+  }
+
+  /**
+   * Retrieves the specified track genre along with their albums and tracks.
+   * @param {number} accountId The ID of the account requesting the genre
+   * @param {number} genreId The ID of the genre to retrieve
+   * @returns {Promise<LibraryGenreWithTracksDto>} The genre with their albums and tracks
+   */
+  async retrieveTrackGenre(accountId: number, genreId: number): Promise<LibraryGenreWithTracksDto> {
+    const genres = await this.listTrackGenresWithTracks(accountId, { genreIds: [genreId] }, 0, 1);
+    if (!genres?.items?.[0]) {
+      throw new NotFoundException(ErrorCodes.GENRE_NOT_FOUND_ERROR);
+    }
+    return genres.items[0];
   }
 }

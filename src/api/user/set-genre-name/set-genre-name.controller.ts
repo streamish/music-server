@@ -1,4 +1,4 @@
-import { AccountEntity } from 'src/database/entities';
+import { AccountEntity } from 'src/database/entities/account.entity';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
 import {
   ApiBadRequestResponse,
@@ -9,33 +9,33 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
 import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetCustomFileDataBadRequestResponseDto,
-  UserSetCustomFileDataBodyDto,
   UserSetCustomFileDataNotFoundResponseDto,
-  UserSetCustomFileDataQueryDto,
   UserSetCustomFileDataResponseDto,
-} from './set-custom-file-data.dto';
-import { UserSetCustomFileDataService } from './set-custom-file-data.service';
+} from '../set-custom-file-data/set-custom-file-data.dto';
+import { UserSetGenreNameBodyDto, UserSetGenreNameQueryDto } from './set-genre-name.dto';
+import { UserSetGenreNameService } from './set-genre-name.service';
 
 @Controller({
   path: '/api/user',
 })
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
-export class UserSetCustomFileDataController {
-  constructor(private readonly setCustomFileDataService: UserSetCustomFileDataService) {}
+export class UserSetGenreNameController {
+  constructor(private readonly setGenreNameService: UserSetGenreNameService) {}
 
-  @Put('set-custom-file-data')
+  @Patch('set-genre-name')
   @ApiOperation({
-    summary: `Set custom data for a file in the user's account`,
+    summary: `Set custom name for a genre, overriding the name embedded in tracks.`,
     description: [
-      `Assigns custom data to a file, overriding the embedded data within it.`,
-      `The next indexing pass of the file will reflect the newly set custom data.`,
+      `Assigns a custom name to a genre, overriding the name embedded in tracks.`,
+      `This affects all tracks categorized under the previous genre name.`,
+      `The next indexing pass of the tracks will reflect the newly set custom name.`,
       JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
   })
@@ -54,12 +54,12 @@ export class UserSetCustomFileDataController {
     description: 'Request failed',
     type: UserSetCustomFileDataBadRequestResponseDto,
   })
-  async put(
+  async patch(
     @User() user: AccountEntity,
-    @Query() query: UserSetCustomFileDataQueryDto,
-    @Body() body: UserSetCustomFileDataBodyDto,
+    @Query() query: UserSetGenreNameQueryDto,
+    @Body() body: UserSetGenreNameBodyDto,
   ) {
-    await this.setCustomFileDataService.setCustomFileData(user.id, query.id, body);
+    await this.setGenreNameService.setGenreName(user.id, query.id, body.name);
     return {
       success: true,
     };

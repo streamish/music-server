@@ -25,16 +25,16 @@ export class UserSetCustomFileDataService {
     if (existingCustomData) {
       await this.fileCustomDataEntity.update(
         {
-          albumArtists: body.albumArtists || existingCustomData.albumArtists,
-          albumTitle: body.albumTitle || existingCustomData.albumTitle,
-          artists: body.artists || existingCustomData.artists,
-          comment: body.comment || existingCustomData.comment,
-          composers: body.composers || existingCustomData.composers,
-          discNumber: body.discNumber || existingCustomData.discNumber,
-          genres: body.genres || existingCustomData.genres,
-          title: body.title || existingCustomData.title,
-          trackNumber: body.trackNumber || existingCustomData.trackNumber,
-          year: body.year || existingCustomData.year,
+          albumArtists: body.albumArtists !== undefined ? body.albumArtists : existingCustomData.albumArtists,
+          albumTitle: body.albumTitle !== undefined ? body.albumTitle : existingCustomData.albumTitle,
+          artists: body.artists !== undefined ? body.artists : existingCustomData.artists,
+          comment: body.comment !== undefined ? body.comment : existingCustomData.comment,
+          composers: body.composers !== undefined ? body.composers : existingCustomData.composers,
+          discNumber: body.discNumber !== undefined ? body.discNumber : existingCustomData.discNumber,
+          genres: body.genres !== undefined ? body.genres : existingCustomData.genres,
+          title: body.title !== undefined ? body.title : existingCustomData.title,
+          trackNumber: body.trackNumber !== undefined ? body.trackNumber : existingCustomData.trackNumber,
+          year: body.year !== undefined ? body.year : existingCustomData.year,
         },
         { where: { id: fileId } },
       );

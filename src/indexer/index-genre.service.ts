@@ -21,6 +21,7 @@ export class IndexGenreService {
     const nameNormalized = normalizeString(name);
     const existing = await this.genreEntity.findOne({
       where: {
+        accountId,
         nameNormalized,
       },
       transaction,

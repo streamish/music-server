@@ -21,17 +21,22 @@ import { UserListTrackGenresWithTracksModule } from './list-track-genres-with-tr
 import { UserListTracksModule } from './list-tracks/list-tracks.module';
 import { UserRegenerateSessionKeyModule } from './regenerate-session-key/regenerate-session-key.module';
 import { UserRetrieveAlbumModule } from './retrieve-album/retrieve-album.module';
+import { UserSetAlbumCustomDataModule } from './set-album-custom-data/set-album-custom-data.module';
+import { UserSetArtistNameModule } from './set-artist-name/set-artist-name.module';
+import { UserSetComposerNameModule } from './set-composer-name/set-composer-name.module';
 import { UserSetCustomFileDataModule } from './set-custom-file-data/set-custom-file-data.module';
+import { UserSetGenreNameModule } from './set-genre-name/set-genre-name.module';
+import { UserSetTrackCustomDataModule } from './set-track-custom-data/set-track-custom-data.module';
 import { UserUpdatePasswordModule } from './update-password/update-password.module';
 
 @Module({
   imports: [
+    GuestGenreCoverModule,
     UserCreateRootPathModule,
     UserDeleteCustomFileDataModule,
     UserDeleteRootPathModule,
     UserEndSessionModule,
     UserFolderStructureModule,
-    GuestGenreCoverModule,
     UserListAlbumArtistsModule,
     UserListAlbumArtistsWithTracksModule,
     UserListAlbumsModule,
@@ -47,7 +52,12 @@ import { UserUpdatePasswordModule } from './update-password/update-password.modu
     UserListTracksModule,
     UserRegenerateSessionKeyModule,
     UserRetrieveAlbumModule,
+    UserSetAlbumCustomDataModule,
+    UserSetArtistNameModule,
+    UserSetComposerNameModule,
     UserSetCustomFileDataModule,
+    UserSetGenreNameModule,
+    UserSetTrackCustomDataModule,
     UserUpdatePasswordModule,
   ],
 })

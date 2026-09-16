@@ -1,4 +1,4 @@
-import { AccountEntity } from 'src/database/entities';
+import { AccountEntity } from 'src/database/entities/account.entity';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
 import {
   ApiBadRequestResponse,
@@ -9,33 +9,33 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
 import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
+import { UserSetComposerNameBodyDto, UserSetComposerNameQueryDto } from './set-composer-name.dto';
+import { UserSetComposerNameService } from './set-composer-name.service';
 import {
   UserSetCustomFileDataBadRequestResponseDto,
-  UserSetCustomFileDataBodyDto,
   UserSetCustomFileDataNotFoundResponseDto,
-  UserSetCustomFileDataQueryDto,
   UserSetCustomFileDataResponseDto,
-} from './set-custom-file-data.dto';
-import { UserSetCustomFileDataService } from './set-custom-file-data.service';
+} from '../set-custom-file-data/set-custom-file-data.dto';
 
 @Controller({
   path: '/api/user',
 })
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
-export class UserSetCustomFileDataController {
-  constructor(private readonly setCustomFileDataService: UserSetCustomFileDataService) {}
+export class UserSetComposerNameController {
+  constructor(private readonly setComposerNameService: UserSetComposerNameService) {}
 
-  @Put('set-custom-file-data')
+  @Patch('set-composer-name')
   @ApiOperation({
-    summary: `Set custom data for a file in the user's account`,
+    summary: `Set custom name for a composer, overriding the name embedded in tracks.`,
     description: [
-      `Assigns custom data to a file, overriding the embedded data within it.`,
-      `The next indexing pass of the file will reflect the newly set custom data.`,
+      `Assigns a custom name to a composer, overriding the name embedded in tracks.`,
+      `This affects all tracks the composer is credited on under the previous name.`,
+      `The next indexing pass of the tracks will reflect the newly set custom name.`,
       JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
   })
@@ -54,12 +54,12 @@ export class UserSetCustomFileDataController {
     description: 'Request failed',
     type: UserSetCustomFileDataBadRequestResponseDto,
   })
-  async put(
+  async patch(
     @User() user: AccountEntity,
-    @Query() query: UserSetCustomFileDataQueryDto,
-    @Body() body: UserSetCustomFileDataBodyDto,
+    @Query() query: UserSetComposerNameQueryDto,
+    @Body() body: UserSetComposerNameBodyDto,
   ) {
-    await this.setCustomFileDataService.setCustomFileData(user.id, query.id, body);
+    await this.setComposerNameService.setComposerName(user.id, query.id, body.name);
     return {
       success: true,
     };
