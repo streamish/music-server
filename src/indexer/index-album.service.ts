@@ -122,7 +122,7 @@ export class IndexAlbumService {
     for (let i = 0, len = albumArtists.length; i < len; i += 1) {
       const artist = albumArtists[i];
       if (artist) {
-        const artistId = await this.indexArtistService.insertOrRetrieveArtist(artist, transaction);
+        const artistId = await this.indexArtistService.insertOrRetrieveArtist(rootPath.accountId, artist, transaction);
         const existingAssociation = await this.albumArtistEntity.findOne({
           where: {
             albumId,

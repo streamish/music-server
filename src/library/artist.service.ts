@@ -77,6 +77,9 @@ export class LibraryArtistService {
       });
     }
     const queryFilter = {
+      where: {
+        accountId,
+      },
       include: [
         {
           model: AlbumArtistEntity,
@@ -143,6 +146,9 @@ export class LibraryArtistService {
       });
     }
     const queryFilter = {
+      where: {
+        accountId,
+      },
       include: [
         {
           model: LinkedArtistEntity,

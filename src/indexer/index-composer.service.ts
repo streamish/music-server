@@ -17,10 +17,11 @@ export class IndexComposerService {
     private readonly linkedComposerEntity: typeof LinkedComposerEntity,
   ) {}
 
-  async insertOrRetrieveComposer(name: string, transaction?: Transaction): Promise<number> {
+  async insertOrRetrieveComposer(accountId: number, name: string, transaction?: Transaction): Promise<number> {
     const nameNormalized = normalizeString(name);
     const existing = await this.composerEntity.findOne({
       where: {
+        accountId,
         nameNormalized,
       },
       transaction,
@@ -31,6 +32,7 @@ export class IndexComposerService {
     } else {
       const composer = await this.composerEntity.create(
         {
+          accountId,
           name: sanitizeString(name),
           nameNormalized,
         } as ComposerEntity,
@@ -43,13 +45,18 @@ export class IndexComposerService {
     return composerId;
   }
 
-  async updateComposers(embeddedData: IAudioMetadata, fileDetail: FileEntity, transaction?: Transaction) {
+  async updateComposers(
+    embeddedData: IAudioMetadata,
+    accountId: number,
+    fileDetail: FileEntity,
+    transaction?: Transaction,
+  ) {
     const composers = splitArray(embeddedData?.common.composer || []);
     const validAssociationIds: number[] = [];
     for (let i = 0; i < composers.length; i += 1) {
       const name = composers[i]?.trim();
       if (name) {
-        const composerId = await this.insertOrRetrieveComposer(name, transaction);
+        const composerId = await this.insertOrRetrieveComposer(accountId, name, transaction);
         const existingAssociation = await this.linkedComposerEntity.findOne({
           where: {
             composerId,
