@@ -193,6 +193,50 @@ async function regenerateSessionKey(params: RequestParams) {
   });
 }
 
+type SetAlbumCustomDataBodyDto =
+  paths['/api/user/set-album-custom-data']['patch']['requestBody']['content']['application/json'];
+
+async function setAlbumCustomData(params: RequestParams, albumCustomDataId: number, body: SetAlbumCustomDataBodyDto) {
+  return api.PATCH(`/api/user/set-album-custom-data`, {
+    body,
+    params: {
+      ...params,
+      query: {
+        id: albumCustomDataId,
+      },
+    },
+  });
+}
+
+type SetArtistNameBodyDto = paths['/api/user/set-artist-name']['patch']['requestBody']['content']['application/json'];
+
+async function setArtistName(params: RequestParams, artistId: number, body: SetArtistNameBodyDto) {
+  return api.PATCH(`/api/user/set-artist-name`, {
+    body,
+    params: {
+      ...params,
+      query: {
+        id: artistId,
+      },
+    },
+  });
+}
+
+type SetComposerNameBodyDto =
+  paths['/api/user/set-composer-name']['patch']['requestBody']['content']['application/json'];
+
+async function setComposerName(params: RequestParams, composerId: number, body: SetComposerNameBodyDto) {
+  return api.PATCH(`/api/user/set-composer-name`, {
+    body,
+    params: {
+      ...params,
+      query: {
+        id: composerId,
+      },
+    },
+  });
+}
+
 type SetCustomFileDataBodyDto =
   paths['/api/user/set-custom-file-data']['put']['requestBody']['content']['application/json'];
 
@@ -203,6 +247,35 @@ async function setCustomFileData(params: RequestParams, customFileDataId: number
       ...params,
       query: {
         id: customFileDataId,
+      },
+    },
+  });
+}
+
+type SetGenreNameBodyDto = paths['/api/user/set-genre-name']['patch']['requestBody']['content']['application/json'];
+
+async function setGenreName(params: RequestParams, genreId: number, body: SetGenreNameBodyDto) {
+  return api.PATCH(`/api/user/set-genre-name`, {
+    body,
+    params: {
+      ...params,
+      query: {
+        id: genreId,
+      },
+    },
+  });
+}
+
+type SetTrackCustomDataBodyDto =
+  paths['/api/user/set-track-custom-data']['patch']['requestBody']['content']['application/json'];
+
+async function setTrackCustomData(params: RequestParams, trackCustomDataId: number, body: SetTrackCustomDataBodyDto) {
+  return api.PATCH(`/api/user/set-track-custom-data`, {
+    body,
+    params: {
+      ...params,
+      query: {
+        id: trackCustomDataId,
       },
     },
   });
@@ -245,7 +318,15 @@ export type UserApi = {
   ) => ReturnType<typeof listTrackGenresWithTracks>;
   listTracks: (query?: ListTracksQueryDto) => ReturnType<typeof listTracks>;
   regenerateSessionKey: () => ReturnType<typeof regenerateSessionKey>;
+  setAlbumCustomData: (albumId: number, data: SetAlbumCustomDataBodyDto) => ReturnType<typeof setAlbumCustomData>;
+  setArtistName: (artistId: number, data: SetArtistNameBodyDto) => ReturnType<typeof setArtistName>;
+  setComposerName: (composerId: number, data: SetComposerNameBodyDto) => ReturnType<typeof setComposerName>;
   setCustomFileData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomFileData>;
+  setGenreName: (genreId: number, data: SetGenreNameBodyDto) => ReturnType<typeof setGenreName>;
+  setTrackCustomData: (
+    trackCustomDataId: number,
+    data: SetTrackCustomDataBodyDto,
+  ) => ReturnType<typeof setTrackCustomData>;
   updatePassword: (newPassword: string) => ReturnType<typeof updatePassword>;
 };
 
@@ -324,8 +405,23 @@ export async function createUserApi(username?: string, password?: string): Promi
     async regenerateSessionKey() {
       return regenerateSessionKey(params);
     },
+    async setAlbumCustomData(albumId: number, data: SetAlbumCustomDataBodyDto) {
+      return setAlbumCustomData(params, albumId, data);
+    },
+    async setArtistName(artistId: number, data: SetArtistNameBodyDto) {
+      return setArtistName(params, artistId, data);
+    },
+    async setComposerName(composerId: number, data: SetComposerNameBodyDto) {
+      return setComposerName(params, composerId, data);
+    },
+    async setGenreName(genreId: number, data: SetGenreNameBodyDto) {
+      return setGenreName(params, genreId, data);
+    },
     async setCustomFileData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
       return setCustomFileData(params, customFileDataId, data);
+    },
+    async setTrackCustomData(trackCustomDataId: number, data: SetTrackCustomDataBodyDto) {
+      return setTrackCustomData(params, trackCustomDataId, data);
     },
     async updatePassword(newPassword: string) {
       return updatePassword(params, newPassword);

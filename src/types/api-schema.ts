@@ -480,6 +480,50 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/test/delete-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete account
+     * @description Deletes an existing user account.
+     *     All files associated with the account will be removed.
+     *     The account will be permanently deleted.
+     */
+    delete: operations['TestDeleteAccountController_delete'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/duplicate-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Duplicate account
+     * @description Duplicates an existing user account with a new username.
+     *     All files associated with the original account will be copied to the new account.
+     *     The new account will be re-indexed after duplication.
+     */
+    post: operations['TestDuplicateAccountController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/user/create-root-path': {
     parameters: {
       query?: never;
@@ -989,6 +1033,78 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/user/set-album-custom-data': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Set custom data for an album in the user's account
+     * @description Assigns custom data to an album, overriding the embedded data within its tracks.
+     *     This affects all tracks within the album.
+     *     The next indexing pass of the album will reflect the newly set custom data.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    patch: operations['UserSetAlbumCustomDataController_patch'];
+    trace?: never;
+  };
+  '/api/user/set-artist-name': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Set custom name for an artist, overriding the name embedded in albums.
+     * @description Assigns a custom name to an artist, overriding the name embedded in albums.
+     *     This affects all tracks and albums the artist is credited on under the previous name.
+     *     The next indexing pass of the albums will reflect the newly set custom name.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    patch: operations['UserSetArtistNameController_patch'];
+    trace?: never;
+  };
+  '/api/user/set-composer-name': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Set custom name for a composer, overriding the name embedded in tracks.
+     * @description Assigns a custom name to a composer, overriding the name embedded in tracks.
+     *     This affects all tracks the composer is credited on under the previous name.
+     *     The next indexing pass of the tracks will reflect the newly set custom name.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    patch: operations['UserSetComposerNameController_patch'];
+    trace?: never;
+  };
   '/api/user/set-custom-file-data': {
     parameters: {
       query?: never;
@@ -1010,6 +1126,53 @@ export type paths = {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/api/user/set-genre-name': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Set custom name for a genre, overriding the name embedded in tracks.
+     * @description Assigns a custom name to a genre, overriding the name embedded in tracks.
+     *     This affects all tracks categorized under the previous genre name.
+     *     The next indexing pass of the tracks will reflect the newly set custom name.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    patch: operations['UserSetGenreNameController_patch'];
+    trace?: never;
+  };
+  '/api/user/set-track-custom-data': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Set custom data for a track in the user's account
+     * @description Assigns custom data to a track file, overriding the embedded data within it.
+     *     The next indexing pass of the file will reflect the newly set custom data.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    patch: operations['UserSetTrackCustomDataController_patch'];
     trace?: never;
   };
   '/api/user/update-password': {
@@ -6184,6 +6347,91 @@ export type components = {
        */
       success: boolean;
     };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    TestDeleteAccountNotFoundErrorMessage: TestDeleteAccountNotFoundErrorMessage;
+    TestDeleteAccountNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default internal-server-error
+       */
+      message: components['schemas']['TestDeleteAccountNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    TestDeleteAccountResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied while serving the request
+     * @enum {string}
+     */
+    TestDuplicateAccountBadRequestErrorMessageEnum: TestDuplicateAccountBadRequestErrorMessageEnum;
+    TestDuplicateAccountBadRequestResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied while serving the request
+       * @default bad-request-error
+       */
+      message: components['schemas']['TestDuplicateAccountBadRequestErrorMessageEnum'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    TestDuplicateAccountBodyDto: {
+      /** @description The new username for the duplicated account */
+      newUsername: string;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    TestDuplicateAccountNotFoundErrorMessage: TestDuplicateAccountNotFoundErrorMessage;
+    TestDuplicateAccountNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default internal-server-error
+       */
+      message: components['schemas']['TestDuplicateAccountNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    TestDuplicateAccountResponseDto: {
+      /** @description The ID of the newly created account */
+      accountId: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
     /** @enum {string} */
     TrackSortFieldEnum: TrackSortFieldEnum;
     /**
@@ -6851,6 +7099,87 @@ export type components = {
      *     applied during the execution of the request
      * @enum {string}
      */
+    UserSetAlbumCustomDataBadRequestErrorMessage: UserSetAlbumCustomDataBadRequestErrorMessage;
+    UserSetAlbumCustomDataBadRequestResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default invalid-album-id-error
+       */
+      message: components['schemas']['UserSetAlbumCustomDataBadRequestErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetAlbumCustomDataBodyDto: {
+      /**
+       * @description Assigns a new value to the album artists if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      artists: string;
+      /**
+       * @description Assigns a new value to the title of the album if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      title: string;
+      /**
+       * @description Assigns a new value to the year if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      year: number;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserSetAlbumCustomDataNotFoundErrorMessage: UserSetAlbumCustomDataNotFoundErrorMessage;
+    UserSetAlbumCustomDataNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default album-not-found-error
+       */
+      message: components['schemas']['UserSetAlbumCustomDataNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetAlbumCustomDataResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    UserSetArtistNameBodyDto: {
+      /**
+       * @description Assigns a new value to the artist name.  If an empty string is provided it will erase the
+       *     custom value.
+       */
+      name: string;
+    };
+    UserSetComposerNameBodyDto: {
+      /**
+       * @description Assigns a new value to the composer name.  If an empty string is provided it will erase the
+       *     custom value.
+       */
+      name: string;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
     UserSetCustomFileDataBadRequestErrorMessage: UserSetCustomFileDataBadRequestErrorMessage;
     UserSetCustomFileDataBadRequestResponseDto: {
       /** @description General description of the error class */
@@ -6858,7 +7187,7 @@ export type components = {
       /**
        * @description The error message(s) that occurred during the validation of the request data or additional requirements
        *     applied during the execution of the request
-       * @default internal-server-error
+       * @default invalid-file-id-error
        */
       message: components['schemas']['UserSetCustomFileDataBadRequestErrorMessage'][];
       /**
@@ -6868,16 +7197,151 @@ export type components = {
       success: boolean;
     };
     UserSetCustomFileDataBodyDto: {
-      albumArtists: string;
-      albumTitle: string;
-      artists: string;
-      comment: string;
-      composers: string;
-      discNumber: number;
-      genres: string;
+      /**
+       * @description Assigns a new value to the album artists if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      albumArtists?: string;
+      /**
+       * @description Assigns a new value to the album title if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      albumTitle?: string;
+      /**
+       * @description Assigns a new value to the track artists if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      artists?: string;
+      /**
+       * @description Assigns a new value to the comment if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      comment?: string;
+      /**
+       * @description Assigns a new value to the track composers if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      composers?: string;
+      /**
+       * @description Assigns a new value to the disc number if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      discNumber?: number;
+      /**
+       * @description Assigns a new value to the genres if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      genres?: string;
+      /**
+       * @description Assigns a new value to the title if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
       title?: string;
-      trackNumber: number;
+      /**
+       * @description Assigns a new value to the track number if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      trackNumber?: number;
+      /**
+       * @description Assigns a new value to the year if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
       year?: number;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserSetCustomFileDataNotFoundErrorMessage: UserSetCustomFileDataNotFoundErrorMessage;
+    UserSetCustomFileDataNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default file-not-found-error
+       */
+      message: components['schemas']['UserSetCustomFileDataNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetCustomFileDataResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    UserSetGenreNameBodyDto: {
+      /**
+       * @description Assigns a new value to the genre name.  If an empty string is provided it will erase the
+       *     custom value.
+       */
+      name: string;
+    };
+    UserSetTrackCustomDataBodyDto: {
+      /**
+       * @description Assigns a new value to the track artists if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      artists: string;
+      /**
+       * @description Assigns a new value to the comment if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      comment: string;
+      /**
+       * @description Assigns a new value to the track composers if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      composers: string;
+      /**
+       * @description Assigns a new value to the disc number if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      discNumber: number;
+      /**
+       * @description Assigns a new value to the genres if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      genres: string;
+      /**
+       * @description Assigns a new value to the title if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      title: string;
+      /**
+       * @description Assigns a new value to the track number if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      trackNumber: number;
+      /**
+       * @description Assigns a new value to the year if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      year: number;
     };
     UserTreeItemDto: {
       /**
@@ -7613,6 +8077,100 @@ export interface operations {
           'audio/mpeg': components['schemas']['GuestStreamFileNotFoundResponseDto'];
           'audio/ogg': components['schemas']['GuestStreamFileNotFoundResponseDto'];
           'audio/wav': components['schemas']['GuestStreamFileNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  TestDeleteAccountController_delete: {
+    parameters: {
+      query: {
+        /** @description The ID of the account */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestDeleteAccountResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestDeleteAccountNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  TestDuplicateAccountController_post: {
+    parameters: {
+      query: {
+        /** @description The username for the account to copy */
+        username: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TestDuplicateAccountBodyDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestDuplicateAccountResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestDuplicateAccountBadRequestResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestDuplicateAccountNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8628,6 +9186,150 @@ export interface operations {
       };
     };
   };
+  UserSetAlbumCustomDataController_patch: {
+    parameters: {
+      query: {
+        /** @description The ID of the album */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserSetAlbumCustomDataBodyDto'];
+      };
+    };
+    responses: {
+      /** @description Custom data set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAlbumCustomDataResponseDto'];
+        };
+      };
+      /** @description Request failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAlbumCustomDataBadRequestResponseDto'];
+        };
+      };
+      /** @description File not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAlbumCustomDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetArtistNameController_patch: {
+    parameters: {
+      query: {
+        /** @description The ID of the artist */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserSetArtistNameBodyDto'];
+      };
+    };
+    responses: {
+      /** @description Custom data set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataResponseDto'];
+        };
+      };
+      /** @description Request failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataBadRequestResponseDto'];
+        };
+      };
+      /** @description File not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetComposerNameController_patch: {
+    parameters: {
+      query: {
+        /** @description The ID of the composer */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserSetComposerNameBodyDto'];
+      };
+    };
+    responses: {
+      /** @description Custom data set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataResponseDto'];
+        };
+      };
+      /** @description Request failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataBadRequestResponseDto'];
+        };
+      };
+      /** @description File not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
   UserSetCustomFileDataController_put: {
     parameters: {
       query: {
@@ -8653,7 +9355,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserDeleteCustomFileDataResponseDto'];
+          'application/json': components['schemas']['UserSetCustomFileDataResponseDto'];
         };
       };
       /** @description Request failed */
@@ -8671,7 +9373,103 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserDeleteCustomFileDataNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetCustomFileDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetGenreNameController_patch: {
+    parameters: {
+      query: {
+        /** @description The ID of the genre */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserSetGenreNameBodyDto'];
+      };
+    };
+    responses: {
+      /** @description Custom data set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataResponseDto'];
+        };
+      };
+      /** @description Request failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataBadRequestResponseDto'];
+        };
+      };
+      /** @description File not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetTrackCustomDataController_patch: {
+    parameters: {
+      query: {
+        /** @description The ID of the file */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserSetTrackCustomDataBodyDto'];
+      };
+    };
+    responses: {
+      /** @description Custom data set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataResponseDto'];
+        };
+      };
+      /** @description Request failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataBadRequestResponseDto'];
+        };
+      };
+      /** @description File not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetCustomFileDataNotFoundResponseDto'];
         };
       };
     };
@@ -9690,6 +10488,20 @@ export enum SynologyPlaylistDeleteBodyDtoType {
   normal = 'normal',
   smart = 'smart',
 }
+export enum TestDeleteAccountNotFoundErrorMessage {
+  internal_server_error = 'internal-server-error',
+  not_found_error = 'not-found-error',
+}
+export enum TestDuplicateAccountBadRequestErrorMessageEnum {
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+  invalid_new_username_error = 'invalid-new-username-error',
+  invalid_new_username_length_error = 'invalid-new-username-length-error',
+}
+export enum TestDuplicateAccountNotFoundErrorMessage {
+  internal_server_error = 'internal-server-error',
+  not_found_error = 'not-found-error',
+}
 export enum TrackSortFieldEnum {
   date_added = 'date_added',
   artist = 'artist',
@@ -9839,6 +10651,18 @@ export enum UserRoleEnum {
   user = 'user',
   admin = 'admin',
 }
+export enum UserSetAlbumCustomDataBadRequestErrorMessage {
+  invalid_album_id_error = 'invalid-album-id-error',
+  invalid_artists_error = 'invalid-artists-error',
+  invalid_artists_length_error = 'invalid-artists-length-error',
+  invalid_title_error = 'invalid-title-error',
+  invalid_title_length_error = 'invalid-title-length-error',
+  invalid_year_error = 'invalid-year-error',
+  invalid_year_range_error = 'invalid-year-range-error',
+}
+export enum UserSetAlbumCustomDataNotFoundErrorMessage {
+  album_not_found_error = 'album-not-found-error',
+}
 export enum UserSetCustomFileDataBadRequestErrorMessage {
   invalid_file_id_error = 'invalid-file-id-error',
   invalid_album_artists_error = 'invalid-album-artists-error',
@@ -9861,6 +10685,9 @@ export enum UserSetCustomFileDataBadRequestErrorMessage {
   invalid_track_number_range_error = 'invalid-track-number-range-error',
   invalid_year_error = 'invalid-year-error',
   invalid_year_range_error = 'invalid-year-range-error',
+}
+export enum UserSetCustomFileDataNotFoundErrorMessage {
+  file_not_found_error = 'file-not-found-error',
 }
 export enum UserUpdatePasswordBadRequestErrorMessageEnum {
   invalid_password_error = 'invalid-password-error',
