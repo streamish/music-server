@@ -1,9 +1,7 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsInt, IsNumber, IsString } from 'class-validator';
-import { LibraryArtistDto } from './library.artist.dto';
-import { LibraryComposerDto } from './library.composer.dto';
-import { LibraryGenreDto } from './library.genre.dto';
+import { LibraryAssociationDto } from './library.association.dto';
 import { LibraryTrackDto } from './library.track.dto';
 import type { RatingOrUnset } from 'src/types';
 
@@ -12,16 +10,16 @@ export class LibraryAlbumDto {
    * The artist for the album, which is all the album artists in a comma-delimited list
    */
   @ApiProperty({
-    type: LibraryArtistDto,
+    type: LibraryAssociationDto,
     isArray: true,
   })
-  declare artists: LibraryArtistDto[];
+  declare artists: LibraryAssociationDto[];
 
   @ApiProperty({
-    type: LibraryComposerDto,
+    type: LibraryAssociationDto,
     isArray: true,
   })
-  declare composers: LibraryComposerDto[];
+  declare composers: LibraryAssociationDto[];
 
   /**
    * A color detected in the cover art image
@@ -66,10 +64,10 @@ export class LibraryAlbumDto {
   declare createdAt: Date;
 
   @ApiProperty({
-    type: LibraryGenreDto,
+    type: LibraryAssociationDto,
     isArray: true,
   })
-  declare genres: LibraryGenreDto[];
+  declare genres: LibraryAssociationDto[];
 
   /**
    * The internally-generated unique ID of the album
@@ -100,16 +98,10 @@ export class LibraryAlbumDto {
   declare year: number;
 }
 
-export class LibraryAlbumTrackDto extends OmitType(LibraryTrackDto, [
-  'albumArtists',
-  'albumId',
-  'albumTitle',
-] as const) {}
-
 export class LibraryAlbumWithTracksDto extends LibraryAlbumDto {
   /**
    * The list of tracks for the album
    */
   @ApiProperty() // not sure why but defining type + isArray results in LibraryAlbumWithTracksDto[][]
-  declare tracks: LibraryAlbumTrackDto[];
+  declare tracks: LibraryTrackDto[];
 }

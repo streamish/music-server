@@ -28,7 +28,7 @@ function songToRow(track: LibraryTrackDto): SynologySongDto {
         comment: replaceDoubleQuotes(track.comment || ''),
         composer: track.composers.map((composer) => composer.name).join(', '),
         disc: track.discNumber,
-        genre: track.genres.join(', '),
+        genre: track.genres.map((genre) => genre.name).join(', '),
         track: track.trackNumber,
         year: track.year,
       },

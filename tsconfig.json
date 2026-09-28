@@ -25,5 +25,7 @@
     "target": "ES2022",
     "types": ["node", "express"]
     // "incremental": true,
-  }
+  },
+  "exclude": ["node_modules", "dist", "**/test-helper.*.ts"],
+  "ignorePatterns": ["node_modules", "dist", "**/test-helper.*.ts"]
 }

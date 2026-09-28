@@ -77,7 +77,7 @@ describe('/api/user/set-custom-file-data', () => {
         trackNumber: 3,
         year: 2026,
       });
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_FILE_ID_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
     }, 120_000);
 
     it('should reject invalid album artists length', async () => {

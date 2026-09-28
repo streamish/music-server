@@ -1,21 +1,12 @@
 import {
-  AlbumArtistEntity,
-  AlbumEntity,
-  ArtistEntity,
-  FileEntity,
-  GenreEntity,
-  LinkedGenreEntity,
-} from 'src/database/entities';
-import {
   AlbumSortFieldEnum,
-  ArtistSortFieldEnum,
-  GenreSortFieldEnum,
+  AssociationSortFieldEnum,
+  AssociationTypeEnum,
   SortDirectionEnum,
   TrackSortFieldEnum,
 } from 'src/types/enums';
-import { InjectModel } from '@nestjs/sequelize';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { LibraryAlbumDto, LibraryArtistDto, LibraryTrackDto } from 'src/library/dtos';
+import { Injectable } from '@nestjs/common';
+import { LibraryAlbumDto, LibraryAssociationDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { sep } from 'path';
@@ -64,7 +55,7 @@ function albumToRow(album: LibraryAlbumDto) {
   };
 }
 
-function artistToRow(artist: LibraryArtistDto) {
+function artistToRow(artist: LibraryAssociationDto) {
   return {
     FileName: artist.name,
     FileType: 'artist',
@@ -88,104 +79,18 @@ function folderToRow(folder: UserTreeItemDto) {
 
 @Injectable()
 export class QnapMediaListService {
-  constructor(
-    @InjectModel(AlbumEntity)
-    private readonly albumEntity: typeof AlbumEntity,
-    @InjectModel(ArtistEntity)
-    private readonly artistEntity: typeof ArtistEntity,
-    @InjectModel(GenreEntity)
-    private readonly genreEntity: typeof GenreEntity,
-    private readonly libraryService: LibraryService,
-  ) {}
-
-  private async getAlbum(accountId: number, albumId: number) {
-    const album = await this.albumEntity.findOne({
-      attributes: ['id', 'title'],
-      include: [
-        {
-          attributes: ['albumId'],
-          model: AlbumArtistEntity,
-          required: true,
-          separate: true,
-          include: [
-            {
-              attributes: ['name'],
-              model: ArtistEntity,
-
-              required: true,
-            },
-          ],
-        },
-      ],
-      where: {
-        accountId,
-        id: albumId,
-      },
-    });
-    if (!album) {
-      throw new NotFoundException(`Album not found for id: ${albumId}`);
-    }
-    return album;
-  }
-
-  private async getArtist(accountId: number, artistId: number) {
-    const artist = await this.artistEntity.findOne({
-      attributes: ['id', 'name'],
-      where: {
-        id: artistId,
-      },
-      include: [
-        {
-          attributes: ['albumId'],
-          model: AlbumArtistEntity,
-          include: [
-            {
-              attributes: ['title'],
-              model: AlbumEntity,
-              where: {
-                accountId,
-              },
-            },
-          ],
-        },
-      ],
-    });
-    if (!artist) {
-      throw new NotFoundException(`Artist not found for id: ${artistId}`);
-    }
-    return artist;
-  }
-
-  private async getGenre(accountId: number, genreId: number) {
-    const genre = await this.genreEntity.findOne({
-      attributes: ['id', 'name'],
-      where: {
-        id: genreId,
-      },
-      include: [
-        {
-          attributes: ['fileId'],
-          model: LinkedGenreEntity,
-          include: [
-            {
-              model: FileEntity,
-              where: {
-                accountId,
-              },
-            },
-          ],
-          separate: true,
-        },
-      ],
-    });
-    if (!genre) {
-      throw new NotFoundException(`Genre not found for id: ${genreId}`);
-    }
-    return genre;
-  }
+  constructor(private readonly libraryService: LibraryService) {}
 
   async listRandomArtists(accountId: number, limit: number) {
-    const artists = await this.libraryService.listAlbumArtists(accountId, {}, 0, limit, ArtistSortFieldEnum.RANDOM);
+    const artists = await this.libraryService.listAlbumAssociations(
+      accountId,
+      {
+        isArtist: true,
+      },
+      0,
+      limit,
+      AssociationSortFieldEnum.RANDOM,
+    );
     return {
       datas: {
         data: artists.items.map(artistToRow),
@@ -210,12 +115,14 @@ export class QnapMediaListService {
     sortDirection: SortDirectionEnum,
   ) {
     const offset = (currentPage - 1) * pageSize;
-    const artists = await this.libraryService.listAlbumArtists(
+    const artists = await this.libraryService.listAlbumAssociations(
       accountId,
-      {},
+      {
+        isArtist: true,
+      },
       offset,
       pageSize,
-      sortBy.toLowerCase() as ArtistSortFieldEnum,
+      sortBy.toLowerCase() as AssociationSortFieldEnum,
       sortDirection,
     );
     return {
@@ -262,12 +169,11 @@ export class QnapMediaListService {
     sortBy: string,
     sortDirection: SortDirectionEnum,
   ) {
-    const artist = await this.getArtist(accountId, artistId);
     const offset = (currentPage - 1) * pageSize;
     const albums = await this.libraryService.listAlbums(
       accountId,
       {
-        artist: [artist.name],
+        artistIds: [artistId],
       },
       offset,
       pageSize,
@@ -279,7 +185,7 @@ export class QnapMediaListService {
         TotalCounts: albums.total,
         CurrPage: currentPage,
         PageSize: pageSize,
-        data: albums.items.filter((album) => album.artists.find((a) => a.name === artist.name)).map(albumToRow),
+        data: albums.items.filter((album) => album.artists.find((a) => a.id === artistId)).map(albumToRow),
       },
     };
   }
@@ -351,12 +257,14 @@ export class QnapMediaListService {
     sortDirection: SortDirectionEnum,
   ) {
     const offset = (currentPage - 1) * pageSize;
-    const genres = await this.libraryService.listTrackGenres(
+    const genres = await this.libraryService.listAlbumAssociationsViaTracks(
       accountId,
-      {},
+      {
+        isGenre: true,
+      },
       offset,
       pageSize,
-      sortBy.toLowerCase() as GenreSortFieldEnum,
+      sortBy.toLowerCase() as AssociationSortFieldEnum,
       sortDirection,
     );
     return {
@@ -403,52 +311,42 @@ export class QnapMediaListService {
   }
 
   async listTracksByAlbum(accountId: number, albumId: number) {
-    const album = await this.getAlbum(accountId, albumId);
-    const tracks = await this.libraryService.listTracks(
-      accountId,
-      {
-        album: album.title,
-        albumArtist: album.albumArtists?.map((linkedArtist) => linkedArtist?.artist?.name || '') || [],
-      },
-      0,
-      100_000,
-    );
+    const albums = await this.libraryService.retrieveAlbum(accountId, albumId);
+    const album = albums[0];
+    if (!album) {
+      throw new Error(`Album with id ${albumId} not found`);
+    }
     return {
       datas: {
-        data: tracks.items.map(songToRow),
+        data: album.tracks.map(songToRow),
       },
     };
   }
 
-  async listTracksByGenre(accountId: number, genreId: number) {
-    const genre = await this.getGenre(accountId, genreId);
-    const tracks = await this.libraryService.listTracks(
-      accountId,
-      {
-        genre: [genre.name],
-      },
-      0,
-      100_000,
-    );
+  async listTracksByGenre(accountId: number, genreId: number, pageSize: number, currentPage: number) {
+    const genres = await this.libraryService.retrieveTrackAssociation(accountId, genreId, AssociationTypeEnum.GENRE);
+    const genre = genres[0];
+    if (!genre) {
+      throw new Error(`Genre with id ${genreId} not found`);
+    }
+    const offset = (currentPage - 1) * pageSize;
+    const tracks = genre.albums.map((album) => album.tracks).flat();
+    const paginatedTracks = tracks.slice(offset, offset + pageSize);
     return {
       datas: {
-        data: tracks.items.map(songToRow),
+        data: paginatedTracks.map(songToRow),
+        TotalCounts: tracks.length,
+        CurrPage: currentPage,
+        PageSize: pageSize,
       },
     };
   }
 
-  async listTracksById(accountId: number, fileIds: number[]) {
-    const tracks = await this.libraryService.listTracks(
-      accountId,
-      {
-        fileIds,
-      },
-      0,
-      100_000,
-    );
+  async listTracksById(accountId: number, trackIds: number[]) {
+    const tracks = await this.libraryService.retrieveTrack(accountId, trackIds);
     return {
       datas: {
-        data: tracks.items.map(songToRow),
+        data: tracks.map(songToRow),
       },
     };
   }

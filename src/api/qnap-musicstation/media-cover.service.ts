@@ -1,7 +1,8 @@
-import { AlbumArtistEntity, AlbumEntity, ArtistEntity } from 'src/database/entities';
+import { AlbumEntity, AssociationEntity, AssociationLinkEntity } from 'src/database/entities';
 import { CoverImage } from 'src/types/cover-image';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Op } from 'sequelize';
 
 const emptyBuffer = Buffer.alloc(0);
 
@@ -18,10 +19,10 @@ export class QnapMediaCoverService {
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
    * @param {number} accountId The account ID for the user requesting the cover image.
-   * @param {string} albumArtist The name of the artist for which to retrieve the cover image.
+   * @param {number} associationId The association ID for the artist
    * @returns {Promise<CoverImage | undefined>} The album cover image.
    */
-  async getArtistCoverImage(accountId: number, artistId: number): Promise<CoverImage | undefined> {
+  async getArtistCoverImage(accountId: number, associationId: number): Promise<CoverImage | undefined> {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
@@ -29,22 +30,30 @@ export class QnapMediaCoverService {
       },
       include: [
         {
-          model: AlbumArtistEntity,
-          attributes: [],
+          model: AssociationLinkEntity,
           include: [
             {
-              model: ArtistEntity,
               attributes: [],
+              model: AssociationEntity,
               where: {
-                id: artistId,
+                associationId,
+                [Op.or]: [
+                  {
+                    isAlbumArtist: true,
+                  },
+                  {
+                    isTrackArtist: true,
+                  },
+                ],
               },
             },
           ],
         },
       ],
+      order: [['isAlbumArtist', 'asc']],
     });
     if (!album) {
-      throw new NotFoundException(`Cover image not found for artist ID: ${artistId}`);
+      throw new NotFoundException(`Cover image not found for association ID: ${associationId}`);
     }
     return album;
   }

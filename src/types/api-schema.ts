@@ -349,75 +349,6 @@ export type paths = {
     patch: operations['AdminUpdateUserRolesController_patch'];
     trace?: never;
   };
-  '/api/guest/album-cover': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images for albums
-     * @description This endpoint retrieves the cover image for a specified album.
-     *     The image comes from the first song in the album that contains an embedded image.
-     *     If the album has no cover image a default blank cover is returned.
-     *     The response supports Etag caching to optimize browser performance.
-     */
-    get: operations['GuestAlbumCoverController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/guest/artist-cover': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images for artists
-     * @description This endpoint retrieves the cover image for a specified artist.
-     *     The image comes from the first track that contains a cover and credits them as an album artist, falling back to the first track crediting them as a track artist.
-     *     If the artist has no cover image a default blank cover is returned.
-     *     The response supports Etag caching to optimize browser performance.
-     */
-    get: operations['GuestArtistCoverController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/guest/composer-cover': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images for composers
-     * @description This endpoint retrieves the cover image for a specified composer.
-     *     The image comes from the first song crediting them as a composer that contains an embedded image.
-     *     If the composer has no cover image a default blank cover is returned.
-     *     The response supports Etag caching to optimize browser performance.
-     */
-    get: operations['GuestComposerCoverController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/api/guest/create-session': {
     parameters: {
       query?: never;
@@ -434,46 +365,6 @@ export type paths = {
      *     Sessions are locked to the APIs that created them, these tokens cannot access QNAP or Synology APIs.
      */
     post: operations['GuestCreateSessionController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/guest/genre-cover': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images for genres
-     * @description This endpoint returns a placeholder image for all genres.
-     */
-    get: operations['GuestGenreCoverController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/guest/stream-file': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Serves audio files
-     * @description Downloads audio files from the music library to the client.  This is used to stream audio files for playback or to download for offline usage.  The audio files are streamed in their original format and the client is responsible for decoding and playing the audio.
-     */
-    get: operations['GuestStreamFileController_get'];
-    put?: never;
-    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -518,6 +409,51 @@ export type paths = {
      *     The new account will be re-indexed after duplication.
      */
     post: operations['TestDuplicateAccountController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/user/album-cover-image': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieves cover images for albums
+     * @description This endpoint retrieves the cover image for a specified album.
+     *     The image comes from the first track that contains a cover or a default blank cover.
+     *     The response supports Etag caching to optimize browser performance.
+     */
+    get: operations['UserAlbumCoverImageController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/user/association-cover-image': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieves cover images for associated artists, composers and genres
+     * @description This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified.
+     *     The image comes from the first track that contains a cover and credits them as an album artist, falling back to the first track crediting them as a track artist.
+     *     If the artist has no cover image a default blank cover is returned.
+     *     The response supports Etag caching to optimize browser performance.
+     */
+    get: operations['UserAssociationCoverImageController_get'];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -639,7 +575,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/user/list-album-artists': {
+  '/api/user/list-album-associations': {
     parameters: {
       query?: never;
       header?: never;
@@ -647,8 +583,8 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * List artists credited to albums
-     * @description Album artists are the artists attributed directly to the album, usually a subset of artists credited to tracks.
+     * List associations credited to albums
+     * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
      *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
      *
@@ -658,7 +594,7 @@ export type paths = {
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
-    get: operations['UserListAlbumArtistsController_get'];
+    get: operations['UserListAlbumAssociationsController_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -667,7 +603,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/user/list-album-artists-with-tracks': {
+  '/api/user/list-album-associations-with-tracks': {
     parameters: {
       query?: never;
       header?: never;
@@ -676,7 +612,7 @@ export type paths = {
     };
     /**
      * List artists credited to albums and return album/track data
-     * @description Album artists are the artists attributed directly to the album, usually a subset of artists credited to tracks.
+     * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
      *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
      *
@@ -686,7 +622,7 @@ export type paths = {
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
-    get: operations['UserListAlbumArtistsWithTracksController_get'];
+    get: operations['UserListAlbumAssociationsWithTracksController_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -800,7 +736,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/user/list-track-artists': {
+  '/api/user/list-track-associations': {
     parameters: {
       query?: never;
       header?: never;
@@ -808,8 +744,8 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * List artists credited to tracks
-     * @description Track artists are attributed directly to the tracks, there can be many credited to a single track.
+     * List track-associated artists, composers and genres
+     * @description Track associations are artists, composers and genres attributed directly to individual tracks.
      *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
      *
@@ -819,7 +755,7 @@ export type paths = {
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
-    get: operations['UserListTrackArtistsController_get'];
+    get: operations['UserListTrackAssociationsController_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -828,7 +764,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/user/list-track-artists-with-tracks': {
+  '/api/user/list-track-associations-with-tracks': {
     parameters: {
       query?: never;
       header?: never;
@@ -836,8 +772,8 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * List artists credited to tracks and return album/track data
-     * @description Track artists are attributed directly to the tracks, there can be many credited to a single track.
+     * List track-associated artists, composers and genres and return tracks.
+     * @description Track associations are artists, composers and genres attributed directly to individual tracks.
      *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
      *
@@ -847,114 +783,7 @@ export type paths = {
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
-    get: operations['UserListTrackArtistsWithTracksController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-track-composers': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List composers credited to tracks
-     * @description Track composers are attributed directly to the tracks, there can be many credited to a single track.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListTrackComposersController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-track-composers-with-tracks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List composers credited to tracks and return album/track data
-     * @description Track composers are attributed directly to the tracks, there can be many credited to a single track.
-     *     There are a variety of filtering options available for querying track composers.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListTrackComposersWithTracksController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-track-genres': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List genres associated with tracks
-     * @description Track genres are attributed directly to the tracks, there can be many credited to a single track.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListTrackGenresController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-track-genres-with-tracks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List genres associated with tracks and return album/track data
-     * @description Track genres are attributed directly to the tracks, there can be many credited to a single track.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListTrackGenresWithTracksController_get'];
+    get: operations['UserListTrackAssociationsWithTracksController_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1025,6 +854,28 @@ export type paths = {
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserRetrieveAlbumController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/user/retrieve-association': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieves single association
+     * @description Retrieves an association and its complete track list with all information necessary for viewing and playback.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    get: operations['UserRetrieveAssociationController_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1173,6 +1024,26 @@ export type paths = {
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetTrackCustomDataController_patch'];
+    trace?: never;
+  };
+  '/api/User/stream-file': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Serves audio files
+     * @description Downloads audio files from the music library to the client.  This is used to stream audio files for playback or to download for offline usage.  The audio files are streamed in their original format and the client is responsible for decoding and playing the audio.
+     */
+    get: operations['UserStreamFileController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   '/api/user/update-password': {
@@ -2281,7 +2152,24 @@ export type components = {
     /** @enum {string} */
     AlbumSortFieldEnum: AlbumSortFieldEnum;
     /** @enum {string} */
-    ArtistSortFieldEnum: ArtistSortFieldEnum;
+    AssociationSortFieldEnum: AssociationSortFieldEnum;
+    /** @enum {string} */
+    AssociationTypeEnum: AssociationTypeEnum;
+    AssociationWithCreditsDto: {
+      albumArtistCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
+      artistCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
+      composerCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
+      /**
+       * Format: date-time
+       * @description The date the artist was added to the library
+       */
+      createdAt: string;
+      genreCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
+      /** @description The internally-generated unique ID of the artist */
+      id: number;
+      /** @description The name of the artist. */
+      name: string;
+    };
     /**
      * @description A bad request occurred due to validation or other issues with the submitted data.
      * @enum {string}
@@ -2301,17 +2189,16 @@ export type components = {
        */
       success: boolean;
     };
-    /** @enum {string} */
-    ComposerSortFieldEnum: ComposerSortFieldEnum;
     /**
      * @description The content type, folder or file
      * @enum {string}
      */
     ContentTypeEnum: ContentTypeEnum;
-    /** @enum {string} */
+    /**
+     * @description The type of the file for the track, such as MP3, FLAC, etc.
+     * @enum {string}
+     */
     FileTypeEnum: FileTypeEnum;
-    /** @enum {string} */
-    GenreSortFieldEnum: GenreSortFieldEnum;
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
      *     applied while serving the request
@@ -2352,27 +2239,6 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    GuestStreamFileNotFoundErrorMessage: GuestStreamFileNotFoundErrorMessage;
-    GuestStreamFileNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default file-not-found-error
-       */
-      message: components['schemas']['GuestStreamFileNotFoundErrorMessage'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
      * @description An internal error occurred that isn't handled by the API and doesn't have a more specific error
      *     message defined.
      * @enum {string}
@@ -2395,8 +2261,8 @@ export type components = {
     };
     LibraryAlbumDto: {
       /** @description The artist for the album, which is all the album artists in a comma-delimited list */
-      artists: components['schemas']['LibraryArtistDto'][];
-      composers: components['schemas']['LibraryComposerDto'][];
+      artists: components['schemas']['LibraryAssociationDto'][];
+      composers: components['schemas']['LibraryAssociationDto'][];
       /** @description A color detected in the cover art image */
       coverImageDarkMuted?: string;
       /** @description A color detected in the cover art image */
@@ -2414,7 +2280,7 @@ export type components = {
        * @description The date the album was added to the library
        */
       createdAt: string;
-      genres: components['schemas']['LibraryGenreDto'][];
+      genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the album */
       id: number;
       /** @description The aggregate rating for the album, which is a value between 0 and 5 inclusive applied to tracks. */
@@ -2427,55 +2293,10 @@ export type components = {
       /** @description The year the album was released. */
       year: number;
     };
-    LibraryAlbumTrackDto: {
-      /** @description The list of artists for the track. */
-      artists: components['schemas']['LibraryArtistDto'][];
-      /** @description The comment or description associated with the track. */
-      comment: string;
-      /** @description The list of composers for the track. */
-      composers: components['schemas']['LibraryComposerDto'][];
-      /**
-       * @description The disc number of the track on the album or disc if there are multiple discs.  If this field is not
-       *     specified it is assumed to be a single-disc album.
-       */
-      discNumber: number;
-      /** @description The duration of the track in seconds. */
-      duration: number;
-      /** @description The bitrate of the audio file for the track, in Kb/s. */
-      fileBitRate: number;
-      /** @description The number of audio channels in the file for the track, such as 2 for stereo or 1 for mono. */
-      fileChannels: number;
-      /** @description The frequency or sample rate of the audio file for the track, in Hz. */
-      fileFrequency: number;
-      /** @description The file path of the file for the track. */
-      filePath: string;
-      /** @description The size of the file in bytes */
-      fileSize: number;
-      /**
-       * @description The type of the file for the track, such as MP3, FLAC, etc.
-       * @enum {string}
-       */
-      fileType: LibraryAlbumTrackDtoFileType;
-      /** @description The list of genres for the track. */
-      genres: components['schemas']['LibraryGenreDto'][];
-      /** @description The internally-generated unique ID of the track */
-      id: number;
-      /** @description The rating of the track which is a value between 0 and 5 inclusive applied to the track. */
-      rating: number;
-      /** @description The title of the track, which is usually the name of the song or piece of music. */
-      title: string;
-      /** @description The track number of the track on the album or disc if there are multiple discs. */
-      trackNumber: number;
-      /**
-       * @description The year of release of the track, often the same as the album except in "greatest hits"
-       *     and compilations.
-       */
-      year: number;
-    };
     LibraryAlbumWithTracksDto: {
       /** @description The artist for the album, which is all the album artists in a comma-delimited list */
-      artists: components['schemas']['LibraryArtistDto'][];
-      composers: components['schemas']['LibraryComposerDto'][];
+      artists: components['schemas']['LibraryAssociationDto'][];
+      composers: components['schemas']['LibraryAssociationDto'][];
       /** @description A color detected in the cover art image */
       coverImageDarkMuted?: string;
       /** @description A color detected in the cover art image */
@@ -2493,7 +2314,7 @@ export type components = {
        * @description The date the album was added to the library
        */
       createdAt: string;
-      genres: components['schemas']['LibraryGenreDto'][];
+      genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the album */
       id: number;
       /** @description The aggregate rating for the album, which is a value between 0 and 5 inclusive applied to tracks. */
@@ -2504,11 +2325,11 @@ export type components = {
        */
       title: string;
       /** @description The list of tracks for the album */
-      tracks: components['schemas']['LibraryAlbumTrackDto'][];
+      tracks: components['schemas']['LibraryTrackDto'][];
       /** @description The year the album was released. */
       year: number;
     };
-    LibraryArtistDto: {
+    LibraryAssociationDto: {
       /**
        * Format: date-time
        * @description The date the artist was added to the library
@@ -2519,7 +2340,7 @@ export type components = {
       /** @description The name of the artist. */
       name: string;
     };
-    LibraryArtistWithTracksDto: {
+    LibraryAssociationWithTracksDto: {
       /** @description The list of albums including tracks for the artist */
       albums: components['schemas']['LibraryAlbumWithTracksDto'][];
       /**
@@ -2532,57 +2353,31 @@ export type components = {
       /** @description The name of the artist. */
       name: string;
     };
-    LibraryComposerDto: {
-      /**
-       * Format: date-time
-       * @description The date the composer was added to the library
-       */
-      createdAt: string;
-      /** @description The internally-generated unique ID of the composer */
-      id: number;
-      /** @description The name of the composer. */
-      name: string;
-    };
-    LibraryComposerWithTracksDto: {
-      /** @description The list of albums including tracks for the composer */
-      albums: components['schemas']['LibraryAlbumWithTracksDto'][];
-      /**
-       * Format: date-time
-       * @description The date the composer was added to the library
-       */
-      createdAt: string;
-      /** @description The internally-generated unique ID of the composer */
-      id: number;
-      /** @description The name of the composer. */
-      name: string;
-    };
-    LibraryGenreDto: {
-      /** @description The internally-generated unique ID of the genre */
-      id: number;
-      /** @description The name of the genre. */
-      name: string;
-    };
-    LibraryGenreWithTracksDto: {
-      /** @description The list of albums including tracks for the genre */
-      albums: components['schemas']['LibraryAlbumWithTracksDto'][];
-      /** @description The internally-generated unique ID of the genre */
-      id: number;
-      /** @description The name of the genre. */
-      name: string;
-    };
     LibraryTrackDto: {
       /** @description The list of artists for the track. */
-      albumArtists: components['schemas']['LibraryArtistDto'][];
+      albumArtists: components['schemas']['LibraryAssociationDto'][];
+      /** @description A color detected in the cover art image */
+      albumCoverImageDarkMuted?: string;
+      /** @description A color detected in the cover art image */
+      albumCoverImageDarkVibrant?: string;
+      /** @description A color detected in the cover art image */
+      albumCoverImageLightMuted?: string;
+      /** @description A color detected in the cover art image */
+      albumCoverImageLightVibrant?: string;
+      /** @description A color detected in the cover art image */
+      albumCoverImageMuted?: string;
+      /** @description A color detected in the cover art image */
+      albumCoverImageVibrant?: string;
       /** @description The title of the album to which the track belongs. */
       albumId: number;
       /** @description The title of the album to which the track belongs. */
       albumTitle: string;
       /** @description The list of artists for the track. */
-      artists: components['schemas']['LibraryArtistDto'][];
+      artists: components['schemas']['LibraryAssociationDto'][];
       /** @description The comment or description associated with the track. */
       comment: string;
       /** @description The list of composers for the track. */
-      composers: components['schemas']['LibraryComposerDto'][];
+      composers: components['schemas']['LibraryAssociationDto'][];
       /**
        * @description The disc number of the track on the album or disc if there are multiple discs.  If this field is not
        *     specified it is assumed to be a single-disc album.
@@ -2602,11 +2397,11 @@ export type components = {
       fileSize: number;
       /**
        * @description The type of the file for the track, such as MP3, FLAC, etc.
-       * @enum {string}
+       * @example flac
        */
-      fileType: LibraryTrackDtoFileType;
+      fileType: components['schemas']['FileTypeEnum'];
       /** @description The list of genres for the track. */
-      genres: components['schemas']['LibraryGenreDto'][];
+      genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the track */
       id: number;
       /** @description The rating of the track which is a value between 0 and 5 inclusive applied to the track. */
@@ -6534,7 +6329,13 @@ export type components = {
        */
       success: boolean;
     };
-    UserListAlbumArtistsBadRequestResponseDto: {
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied while serving the request
+     * @enum {string}
+     */
+    UserListAlbumAssociationsBadRequestErrorMessage: UserListAlbumAssociationsBadRequestErrorMessage;
+    UserListAlbumAssociationsBadRequestResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
@@ -6542,16 +6343,16 @@ export type components = {
        *     applied while serving the request
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListTrackArtistsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListAlbumAssociationsBadRequestErrorMessage'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    UserListAlbumArtistsResponseDto: {
+    UserListAlbumAssociationsResponseDto: {
       /** @description The list of artists that match the query parameters, which may be limited by pagination. */
-      artists: components['schemas']['LibraryArtistDto'][];
+      associations: components['schemas']['LibraryAssociationDto'][];
       /**
        * @description The offset of the first artist in the artists array, which may be greater than 0 if
        *     pagination is applied.
@@ -6569,7 +6370,7 @@ export type components = {
        */
       total: number;
     };
-    UserListAlbumArtistsWithTracksBadRequestResponseDto: {
+    UserListAlbumAssociationsWithTracksBadRequestResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
@@ -6577,18 +6378,18 @@ export type components = {
        *     applied while serving the request
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListTrackArtistsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListAlbumAssociationsBadRequestErrorMessage'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    UserListAlbumArtistsWithTracksResponseDto: {
-      /** @description The list of artists that match the query parameters, which may be limited by pagination. */
-      artists: components['schemas']['LibraryArtistWithTracksDto'][];
+    UserListAlbumAssociationsWithTracksResponseDto: {
+      /** @description The list of albums that match the query parameters, which may be limited by pagination. */
+      associations: components['schemas']['LibraryAssociationWithTracksDto'][];
       /**
-       * @description The offset of the first artist in the artists array, which may be greater than 0 if
+       * @description The offset of the first album in the albums array, which may be greater than 0 if
        *     pagination is applied.
        */
       offset: number;
@@ -6599,8 +6400,8 @@ export type components = {
        */
       success: boolean;
       /**
-       * @description The total number of artists that match the query parameters, which may be greater
-       *     than the number of artists returned in the artists array if pagination is applied.
+       * @description The total number of albums that match the query parameters, which may be greater
+       *     than the number of albums returned in the albums array if pagination is applied.
        */
       total: number;
     };
@@ -6752,8 +6553,8 @@ export type components = {
      *     applied while serving the request
      * @enum {string}
      */
-    UserListTrackArtistsBadRequestErrorMessage: UserListTrackArtistsBadRequestErrorMessage;
-    UserListTrackArtistsBadRequestResponseDto: {
+    UserListTrackAssociationsBadRequestErrorMessage: UserListTrackAssociationsBadRequestErrorMessage;
+    UserListTrackAssociationsBadRequestResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
@@ -6761,18 +6562,18 @@ export type components = {
        *     applied while serving the request
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListTrackArtistsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListTrackAssociationsBadRequestErrorMessage'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    UserListTrackArtistsResponseDto: {
+    UserListTrackAssociationsResponseDto: {
       /** @description The list of artists that match the query parameters, which may be limited by pagination. */
-      artists: components['schemas']['LibraryArtistDto'][];
+      associations: components['schemas']['LibraryAssociationDto'][];
       /**
-       * @description The offset of the first artist in the artists array, which may be greater than 0 if
+       * @description The offset of the first association in the associations array, which may be greater than 0 if
        *     pagination is applied.
        */
       offset: number;
@@ -6783,12 +6584,12 @@ export type components = {
        */
       success: boolean;
       /**
-       * @description The total number of artists that match the query parameters, which may be greater
-       *     than the number of artists returned in the artists array if pagination is applied.
+       * @description The total number of associations that match the query parameters, which may be greater
+       *     than the number of associations returned in the associations array if pagination is applied.
        */
       total: number;
     };
-    UserListTrackArtistsWithTracksBadRequestResponseDto: {
+    UserListTrackAssociationsWithTracksBadRequestResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
@@ -6796,18 +6597,18 @@ export type components = {
        *     applied while serving the request
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListTrackArtistsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListTrackAssociationsBadRequestErrorMessage'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    UserListTrackArtistsWithTracksResponseDto: {
-      /** @description The list of artists that match the query parameters, which may be limited by pagination. */
-      artists: components['schemas']['LibraryArtistWithTracksDto'][];
+    UserListTrackAssociationsWithTracksResponseDto: {
+      /** @description The list of associations that match the query parameters, which may be limited by pagination. */
+      items: components['schemas']['LibraryAssociationWithTracksDto'][];
       /**
-       * @description The offset of the first artist in the artists array, which may be greater than 0 if
+       * @description The offset of the first association in the associations array, which may be greater than 0 if
        *     pagination is applied.
        */
       offset: number;
@@ -6818,166 +6619,8 @@ export type components = {
        */
       success: boolean;
       /**
-       * @description The total number of artists that match the query parameters, which may be greater
-       *     than the number of artists returned in the artists array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserListTrackComposersBadRequestErrorMessages: UserListTrackComposersBadRequestErrorMessages;
-    UserListTrackComposersBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListTrackComposersBadRequestErrorMessages'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTrackComposersResponseDto: {
-      /** @description The list of composers that match the query parameters, which may be limited by pagination. */
-      composers: components['schemas']['LibraryComposerDto'][];
-      /**
-       * @description The offset of the first composer in the composers array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of composers that match the query parameters, which may be greater
-       *     than the number of composers returned in the composers array if pagination is applied.
-       */
-      total: number;
-    };
-    UserListTrackComposersWithTracksBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListTrackComposersBadRequestErrorMessages'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTrackComposersWithTracksResponseDto: {
-      /** @description The list of composers that match the query parameters, which may be limited by pagination. */
-      composers: components['schemas']['LibraryComposerWithTracksDto'][];
-      /**
-       * @description The offset of the first composer in the composers array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of composers that match the query parameters, which may be greater
-       *     than the number of composers returned in the composers array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserListTrackGenresBadRequestErrorMessages: UserListTrackGenresBadRequestErrorMessages;
-    UserListTrackGenresBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-limit-error
-       */
-      message: components['schemas']['UserListTrackGenresBadRequestErrorMessages'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTrackGenresResponseDto: {
-      /** @description The list of genres that match the query parameters, which may be limited by pagination. */
-      genres: components['schemas']['LibraryGenreDto'][];
-      /**
-       * @description The offset of the first genre in the genres array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of genres that match the query parameters, which may be greater
-       *     than the number of genres returned in the genres array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserListTrackGenresWithTracksBadRequestErrorMessages: UserListTrackGenresWithTracksBadRequestErrorMessages;
-    UserListTrackGenresWithTracksBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-limit-error
-       */
-      message: components['schemas']['UserListTrackGenresWithTracksBadRequestErrorMessages'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTrackGenresWithTracksResponseDto: {
-      /** @description The list of genres that match the query parameters, which may be limited by pagination. */
-      genres: components['schemas']['LibraryGenreWithTracksDto'][];
-      /**
-       * @description The offset of the first genre in the genres array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of genres that match the query parameters, which may be greater
-       *     than the number of genres returned in the genres array if pagination is applied.
+       * @description The total number of associations that match the query parameters, which may be greater
+       *     than the number of associations returned in the associations array if pagination is applied.
        */
       total: number;
     };
@@ -7061,6 +6704,36 @@ export type components = {
     UserRetrieveAlbumResponseDto: {
       /** @description The list of albums that match the query parameters, which may be limited by pagination. */
       album: components['schemas']['LibraryAlbumWithTracksDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserRetrieveAssociationNotFoundErrorMessage: UserRetrieveAssociationNotFoundErrorMessage;
+    UserRetrieveAssociationNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default artist-not-found-error
+       */
+      message: components['schemas']['UserRetrieveAssociationNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserRetrieveAssociationResponseDto: {
+      association: components['schemas']['AssociationWithCreditsDto'];
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -7306,25 +6979,25 @@ export type components = {
        *     string is provided it will erase the custom value.  If the field is not
        *     provided it will leave the custom value unchanged.
        */
-      comment: string;
+      comment?: string;
       /**
        * @description Assigns a new value to the track composers if a value is provided.  If an empty
        *     string is provided it will erase the custom value.  If the field is not
        *     provided it will leave the custom value unchanged.
        */
-      composers: string;
+      composers?: string;
       /**
        * @description Assigns a new value to the disc number if a value is provided.  If an empty
        *     string is provided it will erase the custom value.  If the field is not
        *     provided it will leave the custom value unchanged.
        */
-      discNumber: number;
+      discNumber?: number;
       /**
        * @description Assigns a new value to the genres if a value is provided.  If an empty
        *     string is provided it will erase the custom value.  If the field is not
        *     provided it will leave the custom value unchanged.
        */
-      genres: string;
+      genres?: string;
       /**
        * @description Assigns a new value to the title if a value is provided.  If an empty
        *     string is provided it will erase the custom value.  If the field is not
@@ -7336,12 +7009,33 @@ export type components = {
        *     string is provided it will erase the custom value.  If the field is not
        *     provided it will leave the custom value unchanged.
        */
-      trackNumber: number;
+      trackNumber?: number;
       /**
        * @description Assigns a new value to the year if a value is provided.  If an empty
        *     string is provided it will erase the custom value.
        */
-      year: number;
+      year?: number;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied while serving the request
+     * @enum {string}
+     */
+    UserStreamFileNotFoundErrorMessage: UserStreamFileNotFoundErrorMessage;
+    UserStreamFileNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied while serving the request
+       * @default file-not-found-error
+       */
+      message: components['schemas']['UserStreamFileNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
     };
     UserTreeItemDto: {
       /**
@@ -7358,6 +7052,7 @@ export type components = {
       folder?: string;
       fullPath: string;
       id: number;
+      track?: components['schemas']['LibraryTrackDto'];
     };
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
@@ -7901,84 +7596,6 @@ export interface operations {
       };
     };
   };
-  GuestAlbumCoverController_get: {
-    parameters: {
-      query: {
-        /** @description The ID of the album */
-        id: number;
-        /** @description The width/height size of the image in pixels */
-        size: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'image/jpeg': string;
-          'image/png': string;
-          'image/webp': string;
-        };
-      };
-    };
-  };
-  GuestArtistCoverController_get: {
-    parameters: {
-      query: {
-        /** @description The ID of the artist */
-        id: number;
-        /** @description The width/height size of the image in pixels */
-        size: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'image/jpeg': string;
-          'image/png': string;
-          'image/webp': string;
-        };
-      };
-    };
-  };
-  GuestComposerCoverController_get: {
-    parameters: {
-      query: {
-        /** @description The ID of the composer */
-        id: number;
-        /** @description The width/height size of the image in pixels */
-        size: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'image/jpeg': string;
-          'image/png': string;
-          'image/webp': string;
-        };
-      };
-    };
-  };
   GuestCreateSessionController_post: {
     parameters: {
       query?: never;
@@ -8014,69 +7631,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  GuestGenreCoverController_get: {
-    parameters: {
-      query: {
-        /** @description The ID of the genre */
-        id: number;
-        /** @description The width/height size of the image in pixels */
-        size: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'image/jpeg': string;
-          'image/png': string;
-          'image/webp': string;
-        };
-      };
-    };
-  };
-  GuestStreamFileController_get: {
-    parameters: {
-      query: {
-        /** @description The ID of the file */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'audio/flac': string;
-          'audio/mpeg': string;
-          'audio/ogg': string;
-          'audio/wav': string;
-        };
-      };
-      /** @description The requested file was not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'audio/flac': components['schemas']['GuestStreamFileNotFoundResponseDto'];
-          'audio/mpeg': components['schemas']['GuestStreamFileNotFoundResponseDto'];
-          'audio/ogg': components['schemas']['GuestStreamFileNotFoundResponseDto'];
-          'audio/wav': components['schemas']['GuestStreamFileNotFoundResponseDto'];
         };
       };
     };
@@ -8171,6 +7725,66 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  UserAlbumCoverImageController_get: {
+    parameters: {
+      query: {
+        /** @description The ID of the association */
+        id: number;
+        /** @description The width/height size of the image in pixels */
+        size: number;
+      };
+      header: {
+        /** @description The JWT token provided via cookie */
+        cookie: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': string;
+          'image/png': string;
+          'image/webp': string;
+        };
+      };
+    };
+  };
+  UserAssociationCoverImageController_get: {
+    parameters: {
+      query: {
+        /** @description The ID of the association */
+        id: number;
+        /** @description The width/height size of the image in pixels */
+        size: number;
+        /** @description The type of association */
+        type?: components['schemas']['AssociationTypeEnum'];
+      };
+      header: {
+        /** @description The JWT token provided via cookie */
+        cookie: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': string;
+          'image/png': string;
+          'image/webp': string;
         };
       };
     };
@@ -8350,9 +7964,9 @@ export interface operations {
       };
     };
   };
-  UserListAlbumArtistsController_get: {
+  UserListAlbumAssociationsController_get: {
     parameters: {
-      query?: {
+      query: {
         /**
          * @description Optional filter for the date the album was added to the library, which will do an exact match against
          *     the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
@@ -8363,6 +7977,7 @@ export interface operations {
          *     the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
+        associationType: components['schemas']['AssociationTypeEnum'];
         /**
          * @description Optional search filter that will do a case-insensitive partial-match against the artist
          *     name, album name, composer name, or genre.
@@ -8378,7 +7993,7 @@ export interface operations {
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
         /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['ArtistSortFieldEnum'];
+        sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
       header: {
         /** @description JWT token for authentication */
@@ -8395,7 +8010,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumArtistsResponseDto'];
+          'application/json': components['schemas']['UserListAlbumAssociationsResponseDto'];
         };
       };
       /** @description Failure response with error information relating to missing or invalid parameters. */
@@ -8404,14 +8019,14 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumArtistsBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListAlbumAssociationsBadRequestResponseDto'];
         };
       };
     };
   };
-  UserListAlbumArtistsWithTracksController_get: {
+  UserListAlbumAssociationsWithTracksController_get: {
     parameters: {
-      query?: {
+      query: {
         /**
          * @description Optional filter for the date the album was added to the library, which will do an exact match against
          *     the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
@@ -8422,6 +8037,7 @@ export interface operations {
          *     the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
+        associationType: components['schemas']['AssociationTypeEnum'];
         /**
          * @description Optional search filter that will do a case-insensitive partial-match against the artist
          *     name, album name, composer name, or genre.
@@ -8437,7 +8053,7 @@ export interface operations {
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
         /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['ArtistSortFieldEnum'];
+        sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
       header: {
         /** @description JWT token for authentication */
@@ -8454,7 +8070,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumArtistsWithTracksResponseDto'];
+          'application/json': components['schemas']['UserListAlbumAssociationsWithTracksResponseDto'];
         };
       };
       /** @description Failure response with error information relating to missing or invalid parameters. */
@@ -8463,7 +8079,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumArtistsWithTracksBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListAlbumAssociationsWithTracksBadRequestResponseDto'];
         };
       };
     };
@@ -8720,9 +8336,9 @@ export interface operations {
       };
     };
   };
-  UserListTrackArtistsController_get: {
+  UserListTrackAssociationsController_get: {
     parameters: {
-      query?: {
+      query: {
         /**
          * @description Optional filter for the date the album was added to the library, which will do an exact match against
          *     the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
@@ -8733,6 +8349,7 @@ export interface operations {
          *     the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
+        associationType: components['schemas']['AssociationTypeEnum'];
         /**
          * @description Optional search filter that will do a case-insensitive partial-match against the artist
          *     name, album name, composer name, or genre.
@@ -8748,7 +8365,7 @@ export interface operations {
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
         /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['ArtistSortFieldEnum'];
+        sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
       header: {
         /** @description JWT token for authentication */
@@ -8765,7 +8382,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackArtistsResponseDto'];
+          'application/json': components['schemas']['UserListTrackAssociationsResponseDto'];
         };
       };
       /** @description Failure response with error information relating to missing or invalid parameters. */
@@ -8774,14 +8391,14 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackArtistsBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListTrackAssociationsBadRequestResponseDto'];
         };
       };
     };
   };
-  UserListTrackArtistsWithTracksController_get: {
+  UserListTrackAssociationsWithTracksController_get: {
     parameters: {
-      query?: {
+      query: {
         /**
          * @description Optional filter for the date the album was added to the library, which will do an exact match against
          *     the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
@@ -8792,6 +8409,7 @@ export interface operations {
          *     the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
+        associationType: components['schemas']['AssociationTypeEnum'];
         /**
          * @description Optional search filter that will do a case-insensitive partial-match against the artist
          *     name, album name, composer name, or genre.
@@ -8807,7 +8425,7 @@ export interface operations {
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
         /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['ArtistSortFieldEnum'];
+        sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
       header: {
         /** @description JWT token for authentication */
@@ -8824,7 +8442,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackArtistsWithTracksResponseDto'];
+          'application/json': components['schemas']['UserListTrackAssociationsWithTracksResponseDto'];
         };
       };
       /** @description Failure response with error information relating to missing or invalid parameters. */
@@ -8833,203 +8451,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackArtistsWithTracksBadRequestResponseDto'];
-        };
-      };
-    };
-  };
-  UserListTrackComposersController_get: {
-    parameters: {
-      query?: {
-        /**
-         * @description Optional filter for the date the album was added to the library, which will do an exact match against
-         *     the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
-         */
-        addedAfter?: string;
-        /**
-         * @description Optional filter for the date the composer was added to the library, which will do an exact match against
-         *     the date the composer was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
-         */
-        addedBefore?: string;
-        /**
-         * @description Optional search filter that will do a case-insensitive partial-match against the composer
-         *     name, artist name, album name, or genre.
-         */
-        filter?: string;
-        /**
-         * @description Optional filter for the genre name, which will do a case-insensitive partial-match against the
-         *     genres associated with a composer.
-         */
-        genre?: string[];
-        limit?: number;
-        offset?: number;
-        /** @description Optional filter for the direction to sort the results by. */
-        sortDirection?: components['schemas']['SortDirectionEnum'];
-        /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['ComposerSortFieldEnum'];
-      };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful response with an array of data and pagination information. */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackComposersResponseDto'];
-        };
-      };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackComposersBadRequestResponseDto'];
-        };
-      };
-    };
-  };
-  UserListTrackComposersWithTracksController_get: {
-    parameters: {
-      query?: {
-        /**
-         * @description Optional filter for the date the album was added to the library, which will do an exact match against
-         *     the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
-         */
-        addedAfter?: string;
-        /**
-         * @description Optional filter for the date the composer was added to the library, which will do an exact match against
-         *     the date the composer was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
-         */
-        addedBefore?: string;
-        /**
-         * @description Optional search filter that will do a case-insensitive partial-match against the composer
-         *     name, artist name, album name, or genre.
-         */
-        filter?: string;
-        /**
-         * @description Optional filter for the genre name, which will do a case-insensitive partial-match against the
-         *     genres associated with a composer.
-         */
-        genre?: string[];
-        limit?: number;
-        offset?: number;
-        /** @description Optional filter for the direction to sort the results by. */
-        sortDirection?: components['schemas']['SortDirectionEnum'];
-        /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['ComposerSortFieldEnum'];
-      };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful response with an array of data and pagination information. */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackComposersWithTracksResponseDto'];
-        };
-      };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackComposersWithTracksBadRequestResponseDto'];
-        };
-      };
-    };
-  };
-  UserListTrackGenresController_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-        /** @description Optional filter for the direction to sort the results by. */
-        sortDirection?: components['schemas']['SortDirectionEnum'];
-        /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['GenreSortFieldEnum'];
-      };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful response with an array of data and pagination information. */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackGenresResponseDto'];
-        };
-      };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackGenresBadRequestResponseDto'];
-        };
-      };
-    };
-  };
-  UserListTrackGenresWithTracksController_get: {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-        /** @description Optional filter for the direction to sort the results by. */
-        sortDirection?: components['schemas']['SortDirectionEnum'];
-        /** @description Optional filter for the field to sort results by. */
-        sortField?: components['schemas']['GenreSortFieldEnum'];
-      };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful response with an array of data and pagination information. */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackGenresWithTracksResponseDto'];
-        };
-      };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListTrackGenresWithTracksBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListTrackAssociationsWithTracksBadRequestResponseDto'];
         };
       };
     };
@@ -9182,6 +8604,41 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserRetrieveAlbumNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserRetrieveAssociationController_get: {
+    parameters: {
+      query: {
+        /** @description The ID of the association */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successfully retrieved the association data for the user. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserRetrieveAssociationResponseDto'];
+        };
+      };
+      /** @description Association not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserRetrieveAssociationNotFoundResponseDto'];
         };
       };
     };
@@ -9470,6 +8927,46 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserSetCustomFileDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserStreamFileController_get: {
+    parameters: {
+      query: {
+        /** @description The ID of the file */
+        id: number;
+      };
+      header: {
+        /** @description The JWT token provided via cookie */
+        cookie: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'audio/flac': string;
+          'audio/mpeg': string;
+          'audio/ogg': string;
+          'audio/wav': string;
+        };
+      };
+      /** @description The requested file was not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'audio/flac': components['schemas']['UserStreamFileNotFoundResponseDto'];
+          'audio/mpeg': components['schemas']['UserStreamFileNotFoundResponseDto'];
+          'audio/ogg': components['schemas']['UserStreamFileNotFoundResponseDto'];
+          'audio/wav': components['schemas']['UserStreamFileNotFoundResponseDto'];
         };
       };
     };
@@ -10352,17 +9849,18 @@ export enum AlbumSortFieldEnum {
   rating = 'rating',
   year = 'year',
 }
-export enum ArtistSortFieldEnum {
-  artist = 'artist',
+export enum AssociationSortFieldEnum {
+  name = 'name',
   date_added = 'date_added',
   random = 'random',
 }
+export enum AssociationTypeEnum {
+  artist = 'artist',
+  composer = 'composer',
+  genre = 'genre',
+}
 export enum BadRequestErrorEnum {
   bad_request_error = 'bad-request-error',
-}
-export enum ComposerSortFieldEnum {
-  composer = 'composer',
-  date_added = 'date_added',
 }
 export enum ContentTypeEnum {
   file = 'file',
@@ -10375,32 +9873,14 @@ export enum FileTypeEnum {
   mp3 = 'mp3',
   ogg = 'ogg',
 }
-export enum GenreSortFieldEnum {
-  genre = 'genre',
-}
 export enum GuestCreateSessionBadRequestErrorMessageEnum {
   invalid_username_error = 'invalid-username-error',
   invalid_username_length_error = 'invalid-username-length-error',
   invalid_password_error = 'invalid-password-error',
   invalid_password_length_error = 'invalid-password-length-error',
 }
-export enum GuestStreamFileNotFoundErrorMessage {
-  file_not_found_error = 'file-not-found-error',
-}
 export enum InternalServerErrorEnum {
   internal_server_error = 'internal-server-error',
-}
-export enum LibraryAlbumTrackDtoFileType {
-  flac = 'flac',
-  m4a = 'm4a',
-  mp3 = 'mp3',
-  ogg = 'ogg',
-}
-export enum LibraryTrackDtoFileType {
-  flac = 'flac',
-  m4a = 'm4a',
-  mp3 = 'mp3',
-  ogg = 'ogg',
 }
 export enum PlaylistTypeEnum {
   normal = 'normal',
@@ -10522,6 +10002,20 @@ export enum UserDeleteCustomFileDataNotFoundErrorMessage {
 export enum UserDeleteRootPathNotFoundErrorMessageEnum {
   root_path_not_found_error = 'root-path-not-found-error',
 }
+export enum UserListAlbumAssociationsBadRequestErrorMessage {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_limit_range_error = 'invalid-limit-range-error',
+  invalid_offset_error = 'invalid-offset-error',
+  invalid_offset_range_error = 'invalid-offset-range-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+}
 export enum UserListAlbumsBadRequestErrorMessages {
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
@@ -10577,43 +10071,13 @@ export enum UserListIndexerLogsNotFoundErrorMessageEnum {
   invalid_account_id_error = 'invalid-account-id-error',
   invalid_root_path_id_error = 'invalid-root-path-id-error',
 }
-export enum UserListTrackArtistsBadRequestErrorMessage {
+export enum UserListTrackAssociationsBadRequestErrorMessage {
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
   invalid_filter_error = 'invalid-filter-error',
   invalid_filter_length_error = 'invalid-filter-length-error',
   invalid_genre_error = 'invalid-genre-error',
   invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-}
-export enum UserListTrackComposersBadRequestErrorMessages {
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-}
-export enum UserListTrackGenresBadRequestErrorMessages {
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-}
-export enum UserListTrackGenresWithTracksBadRequestErrorMessages {
   invalid_limit_error = 'invalid-limit-error',
   invalid_limit_range_error = 'invalid-limit-range-error',
   invalid_offset_error = 'invalid-offset-error',
@@ -10646,6 +10110,9 @@ export enum UserListTracksBadRequestErrorMessages {
 }
 export enum UserRetrieveAlbumNotFoundErrorMessage {
   album_not_found_error = 'album-not-found-error',
+}
+export enum UserRetrieveAssociationNotFoundErrorMessage {
+  artist_not_found_error = 'artist-not-found-error',
 }
 export enum UserRoleEnum {
   user = 'user',
@@ -10687,6 +10154,9 @@ export enum UserSetCustomFileDataBadRequestErrorMessage {
   invalid_year_range_error = 'invalid-year-range-error',
 }
 export enum UserSetCustomFileDataNotFoundErrorMessage {
+  file_not_found_error = 'file-not-found-error',
+}
+export enum UserStreamFileNotFoundErrorMessage {
   file_not_found_error = 'file-not-found-error',
 }
 export enum UserUpdatePasswordBadRequestErrorMessageEnum {

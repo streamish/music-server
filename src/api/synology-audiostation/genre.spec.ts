@@ -1,6 +1,6 @@
 import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from 'src/types/api-schema';
+import { components } from '../../types/api-schema';
 
 describe('/webapi/AudioStation/genre.cgi', () => {
   let synologyApi: SynologyApi;

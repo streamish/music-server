@@ -33,12 +33,12 @@ export class UserListRootPathsService {
         'createdAt',
         'updatedAt',
         [
-          Sequelize.literal(`(SELECT COUNT(*) FROM "files" WHERE "files"."root_path_id" = "RootPathEntity"."id")`),
+          Sequelize.literal(`(SELECT COUNT(*) FROM "tracks" WHERE "tracks"."root_path_id" = "RootPathEntity"."id")`),
           'fileCount',
         ],
         [
           Sequelize.literal(
-            `(SELECT SUM(file_size) FROM "files" WHERE "files"."root_path_id" = "RootPathEntity"."id")`,
+            `(SELECT SUM(file_size) FROM "tracks" WHERE "tracks"."root_path_id" = "RootPathEntity"."id")`,
           ),
           'totalSize',
         ],

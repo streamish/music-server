@@ -1,9 +1,16 @@
 import { SmartPlaylistConjugalEnum, components } from '../../types/api-schema';
 import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { USER_PASSWORD, USER_USERNAME, createTestApi } from '../../test-helper';
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/playlist.cgi', () => {
   let synologyApi: SynologyApi;
+  let accountId: number;
+  let trackId1: number;
+  let trackId2: number;
+  let trackId3: number;
+  let trackId4: number;
+  let trackId5: number;
 
   async function createPlaylist(
     name: string,
@@ -47,7 +54,29 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
   }
 
   beforeAll(async () => {
-    synologyApi = await createSynologyApi();
+    const username = `favorites-user-${Date.now()}`;
+    const testApi = await createTestApi();
+    const account = await testApi.duplicateAccount(USER_USERNAME, username);
+    accountId = account.data?.accountId || 0;
+    if (!accountId) {
+      throw new Error(`Failed to create test account`);
+    }
+    synologyApi = await createSynologyApi(username, USER_PASSWORD);
+    const { data } = await synologyApi.listSongs({});
+    const typedData = data as components['schemas']['SynologySongResponseDto'];
+    trackId1 = Number(typedData.data?.songs[0]?.id.replace('music_', '') || 0);
+    trackId2 = Number(typedData.data?.songs[1]?.id.replace('music_', '') || 0);
+    trackId3 = Number(typedData.data?.songs[2]?.id.replace('music_', '') || 0);
+    trackId4 = Number(typedData.data?.songs[3]?.id.replace('music_', '') || 0);
+    trackId5 = Number(typedData.data?.songs[4]?.id.replace('music_', '') || 0);
+    if (!trackId1 || !trackId2 || !trackId3 || !trackId4 || !trackId5) {
+      throw new Error(`Failed to retrieve test track IDs`);
+    }
+  }, 120_000);
+
+  afterAll(async () => {
+    const testApi = await createTestApi();
+    await testApi.deleteAccount(accountId);
   });
 
   it('should create a "normal" playlist', async () => {
@@ -270,18 +299,18 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
     await synologyApi.addItemToPlaylist(playlistId, [
-      1,
-      2,
-      3,
+      trackId1,
+      trackId2,
+      trackId3,
       'radio_Station 2 http://station2.url',
       'radio_Station 3 http://station3.url',
     ]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(5);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     expect(playlist.additional.songs?.[3]?.id).toBe(
       `remote_{"album":""\\,"artist":""\\,"cover":""\\,"duration":0\\,"title":"Station 2"}\n http://station2.url}`,
     );
@@ -293,11 +322,11 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
   it('should remove item from a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(1);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     await synologyApi.removeItemFromPlaylist(playlistId, 0);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(0);
@@ -306,172 +335,172 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
   it('should remove items from a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1, 2, 3]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1, trackId2, trackId3]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(3);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     await synologyApi.removeItemFromPlaylist(playlistId, 1, 2);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(1);
-    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe('music_1');
+    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
   });
 
   it('should reposition remaining items from a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1, 2, 3, 4, 5]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1, trackId2, trackId3, trackId4, trackId5]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(5);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(playlist.additional.songs?.[0]?.position).toBe(1);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
     expect(playlist.additional.songs?.[1]?.position).toBe(2);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     expect(playlist.additional.songs?.[2]?.position).toBe(3);
-    expect(playlist.additional.songs?.[3]?.id).toBe(`music_4`);
+    expect(playlist.additional.songs?.[3]?.id).toBe(`music_${trackId4}`);
     expect(playlist.additional.songs?.[3]?.position).toBe(4);
-    expect(playlist.additional.songs?.[4]?.id).toBe(`music_5`);
+    expect(playlist.additional.songs?.[4]?.id).toBe(`music_${trackId5}`);
     expect(playlist.additional.songs?.[4]?.position).toBe(5);
     await synologyApi.removeItemFromPlaylist(playlistId, 1, 2);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(3);
-    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe('music_1');
+    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(updatedPlaylist.additional.songs?.[0]?.position).toBe(1);
-    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe('music_4');
+    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe(`music_${trackId4}`);
     expect(updatedPlaylist.additional.songs?.[1]?.position).toBe(2);
-    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe('music_5');
+    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe(`music_${trackId5}`);
     expect(updatedPlaylist.additional.songs?.[2]?.position).toBe(3);
   });
 
   it('should move items up a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1, 2, 3, 4, 5]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1, trackId2, trackId3, trackId4, trackId5]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(5);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(playlist.additional.songs?.[0]?.position).toBe(1);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
     expect(playlist.additional.songs?.[1]?.position).toBe(2);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     expect(playlist.additional.songs?.[2]?.position).toBe(3);
-    expect(playlist.additional.songs?.[3]?.id).toBe(`music_4`);
+    expect(playlist.additional.songs?.[3]?.id).toBe(`music_${trackId4}`);
     expect(playlist.additional.songs?.[3]?.position).toBe(4);
-    expect(playlist.additional.songs?.[4]?.id).toBe(`music_5`);
+    expect(playlist.additional.songs?.[4]?.id).toBe(`music_${trackId5}`);
     expect(playlist.additional.songs?.[4]?.position).toBe(5);
-    await synologyApi.movePlaylistItems(playlistId, [3, 4], 1);
+    await synologyApi.movePlaylistItems(playlistId, [trackId3, trackId4], 1);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(5);
-    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe('music_1');
+    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(updatedPlaylist.additional.songs?.[0]?.position).toBe(1);
-    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe('music_3');
+    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe(`music_${trackId3}`);
     expect(updatedPlaylist.additional.songs?.[1]?.position).toBe(2);
-    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe('music_4');
+    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe(`music_${trackId4}`);
     expect(updatedPlaylist.additional.songs?.[2]?.position).toBe(3);
-    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe('music_2');
+    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe(`music_${trackId2}`);
     expect(updatedPlaylist.additional.songs?.[3]?.position).toBe(4);
-    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe('music_5');
+    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe(`music_${trackId5}`);
     expect(updatedPlaylist.additional.songs?.[4]?.position).toBe(5);
   });
 
   it('should move disparate items up a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1, 2, 3, 4, 5]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1, trackId2, trackId3, trackId4, trackId5]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(5);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(playlist.additional.songs?.[0]?.position).toBe(1);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
     expect(playlist.additional.songs?.[1]?.position).toBe(2);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     expect(playlist.additional.songs?.[2]?.position).toBe(3);
-    expect(playlist.additional.songs?.[3]?.id).toBe(`music_4`);
+    expect(playlist.additional.songs?.[3]?.id).toBe(`music_${trackId4}`);
     expect(playlist.additional.songs?.[3]?.position).toBe(4);
-    expect(playlist.additional.songs?.[4]?.id).toBe(`music_5`);
+    expect(playlist.additional.songs?.[4]?.id).toBe(`music_${trackId5}`);
     expect(playlist.additional.songs?.[4]?.position).toBe(5);
-    await synologyApi.movePlaylistItems(playlistId, [4, 5], 0);
+    await synologyApi.movePlaylistItems(playlistId, [trackId4, trackId5], 0);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(5);
-    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe('music_4');
+    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe(`music_${trackId4}`);
     expect(updatedPlaylist.additional.songs?.[0]?.position).toBe(1);
-    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe('music_5');
+    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe(`music_${trackId5}`);
     expect(updatedPlaylist.additional.songs?.[1]?.position).toBe(2);
-    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe('music_1');
+    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe(`music_${trackId1}`);
     expect(updatedPlaylist.additional.songs?.[2]?.position).toBe(3);
-    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe('music_2');
+    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe(`music_${trackId2}`);
     expect(updatedPlaylist.additional.songs?.[3]?.position).toBe(4);
-    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe('music_3');
+    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe(`music_${trackId3}`);
     expect(updatedPlaylist.additional.songs?.[4]?.position).toBe(5);
   });
 
   it('should move items down a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1, 2, 3, 4, 5]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1, trackId2, trackId3, trackId4, trackId5]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(5);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(playlist.additional.songs?.[0]?.position).toBe(1);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
     expect(playlist.additional.songs?.[1]?.position).toBe(2);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     expect(playlist.additional.songs?.[2]?.position).toBe(3);
-    expect(playlist.additional.songs?.[3]?.id).toBe(`music_4`);
+    expect(playlist.additional.songs?.[3]?.id).toBe(`music_${trackId4}`);
     expect(playlist.additional.songs?.[3]?.position).toBe(4);
-    expect(playlist.additional.songs?.[4]?.id).toBe(`music_5`);
+    expect(playlist.additional.songs?.[4]?.id).toBe(`music_${trackId5}`);
     expect(playlist.additional.songs?.[4]?.position).toBe(5);
-    await synologyApi.movePlaylistItems(playlistId, [1, 2], 3);
+    await synologyApi.movePlaylistItems(playlistId, [trackId1, trackId2], 3);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(5);
-    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe('music_3');
+    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe(`music_${trackId3}`);
     expect(updatedPlaylist.additional.songs?.[0]?.position).toBe(1);
-    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe('music_4');
+    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe(`music_${trackId4}`);
     expect(updatedPlaylist.additional.songs?.[1]?.position).toBe(2);
-    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe('music_5');
+    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe(`music_${trackId5}`);
     expect(updatedPlaylist.additional.songs?.[2]?.position).toBe(3);
-    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe('music_1');
+    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe(`music_${trackId1}`);
     expect(updatedPlaylist.additional.songs?.[3]?.position).toBe(4);
-    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe('music_2');
+    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe(`music_${trackId2}`);
     expect(updatedPlaylist.additional.songs?.[4]?.position).toBe(5);
   });
 
   it('should move disparate items down a playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(name, 'normal');
-    await synologyApi.addItemToPlaylist(playlistId, [1, 2, 3, 4, 5]);
+    await synologyApi.addItemToPlaylist(playlistId, [trackId1, trackId2, trackId3, trackId4, trackId5]);
     const { playlist } = await getPlaylistItems(playlistId);
     expect(playlist.additional.songs).toBeDefined();
     expect(playlist.additional.songs?.length).toBe(5);
-    expect(playlist.additional.songs?.[0]?.id).toBe(`music_1`);
+    expect(playlist.additional.songs?.[0]?.id).toBe(`music_${trackId1}`);
     expect(playlist.additional.songs?.[0]?.position).toBe(1);
-    expect(playlist.additional.songs?.[1]?.id).toBe(`music_2`);
+    expect(playlist.additional.songs?.[1]?.id).toBe(`music_${trackId2}`);
     expect(playlist.additional.songs?.[1]?.position).toBe(2);
-    expect(playlist.additional.songs?.[2]?.id).toBe(`music_3`);
+    expect(playlist.additional.songs?.[2]?.id).toBe(`music_${trackId3}`);
     expect(playlist.additional.songs?.[2]?.position).toBe(3);
-    expect(playlist.additional.songs?.[3]?.id).toBe(`music_4`);
+    expect(playlist.additional.songs?.[3]?.id).toBe(`music_${trackId4}`);
     expect(playlist.additional.songs?.[3]?.position).toBe(4);
-    expect(playlist.additional.songs?.[4]?.id).toBe(`music_5`);
+    expect(playlist.additional.songs?.[4]?.id).toBe(`music_${trackId5}`);
     expect(playlist.additional.songs?.[4]?.position).toBe(5);
-    await synologyApi.movePlaylistItems(playlistId, [1, 4], 4);
+    await synologyApi.movePlaylistItems(playlistId, [trackId1, trackId4], 4);
     const { playlist: updatedPlaylist } = await getPlaylistItems(playlistId);
     expect(updatedPlaylist.additional.songs?.length).toBe(5);
-    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe('music_2');
+    expect(updatedPlaylist.additional.songs?.[0]?.id).toBe(`music_${trackId2}`);
     expect(updatedPlaylist.additional.songs?.[0]?.position).toBe(1);
-    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe('music_3');
+    expect(updatedPlaylist.additional.songs?.[1]?.id).toBe(`music_${trackId3}`);
     expect(updatedPlaylist.additional.songs?.[1]?.position).toBe(2);
-    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe('music_5');
+    expect(updatedPlaylist.additional.songs?.[2]?.id).toBe(`music_${trackId5}`);
     expect(updatedPlaylist.additional.songs?.[2]?.position).toBe(3);
-    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe('music_1');
+    expect(updatedPlaylist.additional.songs?.[3]?.id).toBe(`music_${trackId1}`);
     expect(updatedPlaylist.additional.songs?.[3]?.position).toBe(4);
-    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe('music_4');
+    expect(updatedPlaylist.additional.songs?.[4]?.id).toBe(`music_${trackId4}`);
     expect(updatedPlaylist.additional.songs?.[4]?.position).toBe(5);
   });
 });

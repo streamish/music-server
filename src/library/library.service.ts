@@ -1,60 +1,1132 @@
+import { AlbumEntity, AssociationEntity, AssociationLinkEntity, TrackEntity } from 'src/database/entities';
 import {
   AlbumSortFieldEnum,
-  ArtistSortFieldEnum,
-  ComposerSortFieldEnum,
-  GenreSortFieldEnum,
+  AssociationSortFieldEnum,
+  AssociationTypeEnum,
   SortDirectionEnum,
   TrackSortFieldEnum,
 } from 'src/types/enums';
-import { ArtistEntity, ComposerEntity, FileEntity, GenreEntity } from 'src/database/entities';
-import { ComposerFilters } from './types/composer-filter';
+import { AssociationFilter } from './types/association-filter';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { GenreFilters } from './types/genre-filter';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
-import { LibraryAlbumService } from './album.service';
-import { LibraryArtistDto, LibraryArtistWithTracksDto } from './dtos/library.artist.dto';
-import { LibraryArtistService } from './artist.service';
-import { LibraryComposerDto, LibraryComposerWithTracksDto, LibraryTrackDto } from './dtos';
-import { LibraryComposerService } from './composer.service';
-import { LibraryFolderService } from './library.folders';
-import { LibraryGenreDto, LibraryGenreWithTracksDto } from './dtos/library.genre.dto';
-import { LibraryTrackService } from './track.service';
-import { Op, OrderItem, Sequelize } from 'sequelize';
-import { TrackFilters } from './types/track-filter';
+import { LibraryAssociationDto, LibraryAssociationWithTracksDto } from './dtos/library.association.dto';
+import { LibraryTrackDto } from './dtos';
+import { TrackFilter } from './types/track-filter';
 import { UserTreeItemDto } from 'src/api/user/folder-structure/folder-structure.dto';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
-import sequelize from 'sequelize/lib/sequelize';
-import type { AlbumFilters } from './types/album-filter';
-import type { ArtistFilters } from './types/artist-filter';
+import { sep } from 'node:path';
+import sequelize, { FindAttributeOptions, FindOptions, Op, OrderItem, Sequelize } from 'sequelize';
+import type { AlbumFilter } from './types/album-filter';
 import type { ListResult } from './types/list-result';
 import type { Rating, RatingOrUnset } from 'src/types';
 
 @Injectable()
 export class LibraryService {
   constructor(
-    @InjectModel(ArtistEntity)
-    private readonly artistEntity: typeof ArtistEntity,
-    @InjectModel(ComposerEntity)
-    private readonly composerEntity: typeof ComposerEntity,
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
-    @InjectModel(GenreEntity)
-    private readonly genreEntity: typeof GenreEntity,
-
-    private readonly albumService: LibraryAlbumService,
-    private readonly artistService: LibraryArtistService,
-    private readonly composerService: LibraryComposerService,
-    private readonly libraryFolderService: LibraryFolderService,
-    private readonly trackService: LibraryTrackService,
+    @InjectModel(AlbumEntity)
+    private readonly albumEntity: typeof AlbumEntity,
+    @InjectModel(AssociationEntity)
+    private readonly associationEntity: typeof AssociationEntity,
+    @InjectModel(AssociationLinkEntity)
+    private readonly associationLinkEntity: typeof AssociationLinkEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {}
+
+  // eslint-disable-next-line class-methods-use-this
+  private async buildAlbumItem(album: AlbumEntity): Promise<LibraryAlbumDto> {
+    const albumArtists: LibraryAssociationDto[] =
+      album.albumArtists?.map((link) => {
+        return {
+          createdAt: link.association?.createdAt || new Date(),
+          id: link.association?.id || 0,
+          name: replaceDoubleQuotes(link.association?.name || ''),
+        };
+      }) || [];
+    const albumComposers: LibraryAssociationDto[] = [];
+    const albumGenres: LibraryAssociationDto[] = [];
+    if (album.tracks?.length) {
+      for (let i = 0, len = album.tracks?.length; i < len; i += 1) {
+        const track = album.tracks[i];
+        const trackArtists: LibraryAssociationDto[] = [];
+        const trackComposers: LibraryAssociationDto[] = [];
+        const trackGenres: LibraryAssociationDto[] = [];
+        if (track) {
+          const artistLinks = track.artists || [];
+          for (let j = 0, jLen = artistLinks.length; j < jLen; j += 1) {
+            const link = artistLinks[j];
+            if (link) {
+              const object = {
+                createdAt: link.association?.createdAt || new Date(),
+                id: link.association?.id || 0,
+                name: replaceDoubleQuotes(link.association?.name || ''),
+              };
+              if (link.isArtist) {
+                trackArtists.push(object);
+              }
+            }
+          }
+          const composerLinks = track.composers || [];
+          for (let j = 0, jLen = composerLinks.length; j < jLen; j += 1) {
+            const link = composerLinks[j];
+            if (link) {
+              const object = {
+                createdAt: link.association?.createdAt || new Date(),
+                id: link.association?.id || 0,
+                name: replaceDoubleQuotes(link.association?.name || ''),
+              };
+              if (link.isComposer) {
+                trackComposers.push(object);
+                albumComposers.push(object);
+              }
+            }
+          }
+          const genreLinks = track.genres || [];
+          for (let j = 0, jLen = genreLinks.length; j < jLen; j += 1) {
+            const link = genreLinks[j];
+            if (link) {
+              const object = {
+                createdAt: link.association?.createdAt || new Date(),
+                id: link.association?.id || 0,
+                name: replaceDoubleQuotes(link.association?.name || ''),
+              };
+              if (link.isGenre) {
+                trackGenres.push(object);
+                albumGenres.push(object);
+              }
+            }
+          }
+        }
+      }
+    }
+    return {
+      artists: albumArtists,
+      composers: albumComposers,
+      coverImageDarkMuted: album.coverImageDarkMuted || '#000000',
+      coverImageDarkVibrant: album.coverImageDarkVibrant || '#000000',
+      coverImageLightMuted: album.coverImageLightMuted || '#FFFFFF',
+      coverImageLightVibrant: album.coverImageLightVibrant || '#FFFFFF',
+      coverImageMuted: album.coverImageMuted || '#000000',
+      coverImageVibrant: album.coverImageVibrant || '#FFFFFF',
+      createdAt: album.createdAt,
+      genres: albumGenres,
+      id: album.id,
+      rating: ((album as unknown as Record<string, number>).rating ?? 0) as RatingOrUnset,
+      title: replaceDoubleQuotes(album.title),
+      year: album.year,
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private buildAssociationItem(association: AssociationEntity): LibraryAssociationDto {
+    return {
+      id: association?.id || 0,
+      name: association?.name || '',
+      createdAt: association?.createdAt || new Date(),
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private buildTrackItem(track: TrackEntity): LibraryTrackDto {
+    return {
+      albumArtists:
+        track.album?.albumArtists?.map((associationLink) => ({
+          id: associationLink.association?.id || 0,
+          name: associationLink.association?.name || '',
+          createdAt: associationLink.association?.createdAt || new Date(),
+        })) || [],
+      albumCoverImageDarkMuted: track.album?.coverImageDarkMuted || '#000000',
+      albumCoverImageDarkVibrant: track.album?.coverImageDarkVibrant || '#000000',
+      albumCoverImageLightMuted: track.album?.coverImageLightMuted || '#FFFFFF',
+      albumCoverImageLightVibrant: track.album?.coverImageLightVibrant || '#FFFFFF',
+      albumCoverImageMuted: track.album?.coverImageMuted || '#000000',
+      albumCoverImageVibrant: track.album?.coverImageVibrant || '#FFFFFF',
+      albumId: track.album?.id || 0,
+      albumTitle: replaceDoubleQuotes(track.album?.title || ''),
+      artists:
+        track.artists?.map((associationLink) => ({
+          id: associationLink.association?.id || 0,
+          name: associationLink.association?.name || '',
+          createdAt: associationLink.association?.createdAt || new Date(),
+        })) || [],
+      comment: replaceDoubleQuotes(track.comment),
+      composers:
+        track.composers?.map((associationLink) => ({
+          id: associationLink.association?.id || 0,
+          name: associationLink.association?.name || '',
+          createdAt: associationLink.association?.createdAt || new Date(),
+        })) || [],
+      discNumber: track.discNumber,
+      duration: track.duration,
+      fileBitRate: track.bitRate,
+      fileChannels: track.channels,
+      fileFrequency: track.frequency,
+      filePath: track.filePath,
+      fileSize: track.fileSize,
+      fileType: track.fileType,
+      genres:
+        track.genres?.map((associationLink) => ({
+          id: associationLink.association?.id || 0,
+          name: associationLink.association?.name || '',
+          createdAt: associationLink.association?.createdAt || new Date(),
+        })) || [],
+      id: track.id,
+      rating: track.rating ?? 0,
+      title: replaceDoubleQuotes(track.title),
+      trackNumber: track.trackNumber,
+      year: track.year,
+    };
+  }
+
+  private async constructAlbumQuery(
+    accountId: number,
+    filter: AlbumFilter,
+    sortField?: AlbumSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<FindOptions<AlbumEntity>> {
+    let sortFieldColumn: string | undefined;
+    switch (sortField) {
+      case AlbumSortFieldEnum.ALBUM:
+        sortFieldColumn = 'title';
+        break;
+      case AlbumSortFieldEnum.YEAR:
+        sortFieldColumn = 'year';
+        break;
+      case AlbumSortFieldEnum.RATING:
+        sortFieldColumn = 'rating';
+        break;
+      case AlbumSortFieldEnum.DATE_ADDED:
+        sortFieldColumn = 'createdAt';
+        break;
+      case AlbumSortFieldEnum.DATE_RELEASED:
+        sortFieldColumn = 'year';
+        break;
+      case AlbumSortFieldEnum.ARTIST:
+        sortFieldColumn = 'artists';
+        break;
+      case AlbumSortFieldEnum.ALBUM_ARTIST:
+        sortFieldColumn = 'albumArtistSort';
+        break;
+      case AlbumSortFieldEnum.COMPOSER:
+        sortFieldColumn = 'composers';
+        break;
+      case AlbumSortFieldEnum.GENRE:
+        sortFieldColumn = 'genres';
+        break;
+      default:
+        sortFieldColumn = 'title';
+        break;
+    }
+    const order: OrderItem[] = [];
+    if (sortFieldColumn) {
+      if (sortField === AlbumSortFieldEnum.RANDOM) {
+        order.push(Sequelize.literal('RANDOM()'));
+      } else {
+        order.push([Sequelize.fn('lower', Sequelize.col(sortFieldColumn as string)), sortDirection || 'ASC']);
+      }
+    }
+    const additionalSortFields: FindAttributeOptions = [];
+    if (sortField === AlbumSortFieldEnum.ARTIST) {
+      additionalSortFields.push([
+        Sequelize.literal(` (
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.track_id = "Track"."id" AND
+          association_links.is_artist=1
+      ORDER BY associations.name COLLATE NOCASE
+    )
+  )`),
+        'artistSort',
+      ]);
+    }
+    if (sortField === AlbumSortFieldEnum.ALBUM_ARTIST) {
+      additionalSortFields.push([
+        Sequelize.literal(` (
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.album_id = "AlbumEntity"."id" AND
+          association_links.is_artist=1
+      ORDER BY associations.name COLLATE NOCASE
+    )
+  )`),
+        'albumArtistSort',
+      ]);
+    } else if (sortField === AlbumSortFieldEnum.COMPOSER) {
+      additionalSortFields.push([
+        Sequelize.literal(`
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.album_id = "AlbumEntity"."id" AND
+          association_links.is_composer=1
+      ORDER BY associations.name COLLATE NOCASE
+    )
+        `),
+        'composerSort',
+      ]);
+    } else if (sortField === AlbumSortFieldEnum.GENRE) {
+      additionalSortFields.push([
+        Sequelize.literal(`
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.album_id = "AlbumEntity"."id" AND
+          association_links.is_genre=1
+      ORDER BY associations.name COLLATE NOCASE
+    )
+      `),
+        'genresSort',
+      ]);
+    }
+    const albumArtistIds: number[] = [];
+    if (filter?.artist?.length || filter?.artistIds?.length) {
+      const filterArtistIds = await this.getArtistIds(accountId, filter?.artist, filter?.filter);
+      albumArtistIds.push(...(filter?.artistIds || []), ...filterArtistIds);
+    }
+    const composerIds: number[] = [];
+    if (filter?.composer?.length || filter?.composerIds?.length) {
+      const filterComposerIds = await this.getComposerIds(accountId, filter?.composer, filter?.filter);
+      composerIds.push(...(filter?.composerIds || []), ...filterComposerIds);
+    }
+    const genreIds: number[] = [];
+    if (filter?.genre?.length || filter?.genreIds?.length) {
+      const filterGenreIds = await this.getGenreIds(accountId, filter?.genre, filter?.filter);
+      genreIds.push(...(filter?.genreIds || []), ...filterGenreIds);
+    }
+    return {
+      attributes: [
+        'coverImageDarkMuted',
+        'coverImageDarkVibrant',
+        'coverImageLightMuted',
+        'coverImageLightVibrant',
+        'coverImageMuted',
+        'coverImageVibrant',
+        'createdAt',
+        'id',
+        'title',
+        'year',
+        ...additionalSortFields,
+        [
+          this.albumEntity.sequelize!.literal(
+            `(SELECT ROUND(SUM(rating) / COUNT(rating)) FROM tracks WHERE album_id = id)`,
+          ),
+          'rating',
+        ],
+      ],
+      include: [
+        {
+          attributes: ['associationId'],
+          model: AssociationLinkEntity,
+          where: {
+            isArtist: true,
+            ...(albumArtistIds.length ? { associationId: albumArtistIds } : {}),
+          },
+          include: [
+            {
+              attributes: ['id', 'name', 'createdAt'],
+              model: AssociationEntity,
+            },
+          ],
+          as: 'albumArtists',
+          required: true,
+        },
+        {
+          attributes: ['associationId'],
+          model: AssociationLinkEntity,
+          where: {
+            isGenre: true,
+            ...(genreIds.length ? { associationId: genreIds } : {}),
+          },
+          include: [
+            {
+              attributes: ['id', 'name', 'createdAt'],
+              model: AssociationEntity,
+            },
+          ],
+          as: 'albumGenres',
+          required: genreIds.length > 0,
+        },
+        {
+          attributes: ['associationId'],
+          model: AssociationLinkEntity,
+          where: {
+            isComposer: true,
+            ...(composerIds.length ? { associationId: composerIds } : {}),
+          },
+          include: [
+            {
+              attributes: ['id', 'name', 'createdAt'],
+              model: AssociationEntity,
+            },
+          ],
+          as: 'albumComposers',
+          required: composerIds.length > 0,
+        },
+      ],
+      where: {
+        accountId,
+        ...(filter.filter && {
+          title: { [Op.like]: `%${normalizeString(filter.filter)}%` },
+        }),
+        ...(filter?.year && {
+          year: filter.year,
+        }),
+        ...(filter?.minRating !== undefined && {
+          rating: { [Op.gte]: filter.minRating },
+        }),
+        ...(filter?.maxRating !== undefined && {
+          rating: {
+            [Op.lte]: filter.maxRating,
+          },
+        }),
+        ...(filter?.addedBefore && {
+          createdAt: {
+            [Op.lt]: filter.addedBefore,
+          },
+        }),
+        ...(filter?.addedAfter && {
+          createdAt: {
+            [Op.gt]: filter.addedAfter,
+          },
+        }),
+      },
+      order,
+    };
+  }
+
+  private async constructAlbumAssociationQuery(
+    accountId: number,
+    filter?: AssociationFilter,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<FindOptions<AssociationLinkEntity>> {
+    const order: OrderItem[] = [];
+    if (sortField === AssociationSortFieldEnum.RANDOM) {
+      order.push(Sequelize.literal('RANDOM()'));
+    } else {
+      const sortFieldColumn =
+        sortField === AssociationSortFieldEnum.DATE_ADDED
+          ? Sequelize.col('createdAt')
+          : Sequelize.col('association.name');
+      order.push([Sequelize.fn('LOWER', sortFieldColumn), sortDirection || 'ASC']);
+    }
+    const genreIds: number[] = [];
+    if (filter?.genre) {
+      const filteredGenreIds = await this.getGenreIds(accountId, filter.genre);
+      genreIds.push(...filteredGenreIds);
+    }
+    return {
+      attributes: ['associationId'],
+      where: {
+        albumId: {
+          [Op.gte]: 0,
+        },
+        ...(filter?.addedBefore && {
+          createdAt: {
+            [Op.lt]: filter.addedBefore,
+          },
+        }),
+        ...(filter?.addedAfter && {
+          createdAt: {
+            [Op.gt]: filter.addedAfter,
+          },
+        }),
+        ...(filter?.isArtist && {
+          isArtist: filter.isArtist,
+        }),
+        ...(filter?.isComposer && {
+          isComposer: filter.isComposer,
+        }),
+        ...(filter?.isGenre && {
+          isGenre: filter.isGenre,
+        }),
+      },
+      include: [
+        {
+          attributes: ['id', 'name', 'nameNormalized', 'createdAt'],
+          model: AssociationEntity,
+          where: {
+            accountId,
+            ...(filter?.filter && {
+              nameNormalized: { [Op.like]: `%${normalizeString(filter.filter)}%` },
+            }),
+          },
+        },
+        {
+          attributes: ['id', 'title'],
+          model: AlbumEntity,
+          required: true,
+          include: genreIds.length
+            ? [
+                {
+                  attributes: [],
+                  model: AssociationLinkEntity,
+                  where: {
+                    isGenre: true,
+                    associationId: genreIds,
+                  },
+                  required: true,
+                  as: 'albumGenres',
+                },
+              ]
+            : [],
+        },
+      ],
+      order,
+    };
+  }
+
+  private async constructAlbumTrackAssociationQuery(
+    accountId: number,
+    filter?: AssociationFilter,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<FindOptions<AssociationEntity>> {
+    const order: OrderItem[] = [];
+    if (sortField === AssociationSortFieldEnum.RANDOM) {
+      order.push(Sequelize.literal('RANDOM()'));
+    } else {
+      const sortFieldColumn = sortField === AssociationSortFieldEnum.DATE_ADDED ? 'createdAt' : 'name';
+      order.push([Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']);
+    }
+    const genreIds: number[] = [];
+    if (filter?.genre) {
+      const fetchedGenreIds = await this.getGenreIds(accountId, filter.genre);
+      if (fetchedGenreIds.length) {
+        genreIds.push(...fetchedGenreIds);
+      }
+    }
+    return {
+      attributes: ['id', 'createdAt', 'name'],
+      where: {
+        accountId,
+        ...(filter?.filter && {
+          nameNormalized: { [Op.like]: `%${normalizeString(filter.filter)}%` },
+        }),
+      },
+      include: [
+        {
+          attributes: [],
+          model: AssociationLinkEntity,
+          required: true,
+          where: {
+            trackId: {
+              [Op.not]: null,
+            },
+            ...(filter?.addedBefore && {
+              createdAt: {
+                [Op.lt]: filter.addedBefore,
+              },
+            }),
+            ...(filter?.addedAfter && {
+              createdAt: {
+                [Op.gt]: filter.addedAfter,
+              },
+            }),
+            ...(filter?.isArtist !== undefined && {
+              isArtist: filter.isArtist,
+            }),
+            ...(filter?.isComposer !== undefined && {
+              isComposer: filter.isComposer,
+            }),
+            ...(filter?.isGenre !== undefined && {
+              isGenre: filter.isGenre,
+              ...(genreIds.length && {
+                id: genreIds,
+              }),
+            }),
+          },
+        },
+      ],
+      order,
+    };
+  }
+
+  private async constructTrackAssociationQuery(
+    accountId: number,
+    filter?: AssociationFilter,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<FindOptions<AssociationEntity>> {
+    const order: OrderItem[] = [];
+    if (sortField === AssociationSortFieldEnum.RANDOM) {
+      order.push(sequelize.literal('RANDOM()'));
+    } else {
+      const sortFieldColumn = sortField === AssociationSortFieldEnum.DATE_ADDED ? 'createdAt' : 'name';
+      order.push([Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']);
+    }
+    const genreIds: number[] = [];
+    if (filter?.genre) {
+      const filteredGenreIds = await this.getGenreIds(accountId, filter.genre);
+      if (filteredGenreIds.length) {
+        genreIds.push(...filteredGenreIds);
+      }
+    }
+    return {
+      attributes: ['id', 'name', 'createdAt'],
+      where: {
+        accountId,
+        ...(filter?.filter && {
+          nameNormalized: { [Op.like]: `%${normalizeString(filter.filter)}%` },
+        }),
+        ...(filter?.addedBefore && {
+          createdAt: {
+            [Op.lt]: filter.addedBefore,
+          },
+        }),
+        ...(filter?.addedAfter && {
+          createdAt: {
+            [Op.gt]: filter.addedAfter,
+          },
+        }),
+      },
+      include: [
+        {
+          attributes: ['associationId', 'trackId'],
+          model: AssociationLinkEntity,
+          as: 'associationLinks',
+          where: {
+            trackId: {
+              [Op.not]: null,
+            },
+            ...(filter?.isArtist === true && {
+              isArtist: filter.isArtist,
+            }),
+            ...(filter?.isComposer === true && {
+              isComposer: filter.isComposer,
+            }),
+            ...(filter?.isGenre === true && {
+              isGenre: filter.isGenre,
+            }),
+            ...(genreIds.length && {
+              [Op.and]: [
+                Sequelize.literal(`
+              EXISTS (
+                SELECT 1
+                FROM association_links AS genre_link
+                WHERE 
+                  genre_link.track_id = "associationLinks"."track_id"
+                  AND genre_link.is_genre = 1
+                  AND genre_link.association_id IN (${genreIds.join(',')})
+              )
+            `),
+              ],
+            }),
+          },
+          required: true,
+        },
+      ],
+      order,
+    };
+  }
+
+  private async constructTrackQuery(
+    accountId: number,
+    filter?: TrackFilter,
+    sortField?: TrackSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<FindOptions<TrackEntity>> {
+    let sortFieldColumn: string | undefined;
+    switch (sortField) {
+      case TrackSortFieldEnum.DATE_ADDED:
+        sortFieldColumn = 'createdAt';
+        break;
+      case TrackSortFieldEnum.ARTIST:
+        sortFieldColumn = 'artistSort';
+        break;
+      case TrackSortFieldEnum.ALBUM_ARTIST:
+        sortFieldColumn = 'albumArtistSort';
+        break;
+      case TrackSortFieldEnum.ALBUM:
+        sortFieldColumn = 'album.title';
+        break;
+      case TrackSortFieldEnum.COMPOSER:
+        sortFieldColumn = 'composerSort';
+        break;
+      case TrackSortFieldEnum.GENRE:
+        sortFieldColumn = 'genresSort';
+        break;
+      case TrackSortFieldEnum.YEAR:
+        sortFieldColumn = 'TrackEntity.year';
+        break;
+      case TrackSortFieldEnum.TITLE:
+        sortFieldColumn = 'TrackEntity.title';
+        break;
+      default:
+        break;
+    }
+    const order: OrderItem[] = [];
+    if (sortFieldColumn) {
+      order.push([Sequelize.fn('lower', Sequelize.col(sortFieldColumn as string)), sortDirection || 'ASC']);
+    } else {
+      order.push(
+        [Sequelize.fn('lower', Sequelize.col('album.title')), 'ASC'],
+        ['discNumber', 'ASC'],
+        ['trackNumber', 'ASC'],
+      );
+    }
+    const additionalSortFields: FindAttributeOptions = [];
+    if (sortField === TrackSortFieldEnum.ARTIST) {
+      additionalSortFields.push([
+        Sequelize.literal(` (
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.track_id = "TrackEntity"."id" AND
+          association_links.is_artist=1
+      ORDER BY associations.name COLLATE NOCASE
+    )
+  )`),
+        'artistSort',
+      ]);
+    } else if (sortField === TrackSortFieldEnum.ALBUM_ARTIST) {
+      additionalSortFields.push([
+        Sequelize.literal(` (
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.album_id = "TrackEntity"."album_id" AND
+          association_links.is_artist=1
+      ORDER BY associations.name COLLATE NOCASE
+    )
+  )`),
+        'albumArtistSort',
+      ]);
+    } else if (sortField === TrackSortFieldEnum.COMPOSER) {
+      additionalSortFields.push([
+        Sequelize.literal(`
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.track_id = "TrackEntity"."id" AND
+          association_links.is_composer=1
+      ORDER BY associations.name COLLATE NOCASE
+        )
+        `),
+        'composerSort',
+      ]);
+    } else if (sortField === TrackSortFieldEnum.GENRE) {
+      additionalSortFields.push([
+        Sequelize.literal(`
+        (
+    SELECT group_concat(name, ', ')
+    FROM (
+      SELECT name
+      FROM associations
+      INNER JOIN association_links
+        ON association_links.association_id = associations.id
+      WHERE association_links.track_id = "TrackEntity"."id" AND
+          association_links.is_genre=1
+      ORDER BY associations.name COLLATE NOCASE
+          )
+        )
+      `),
+        'genresSort',
+      ]);
+    }
+    const artistIds: number[] = [];
+    if (filter?.artist?.length || filter?.filter) {
+      const filterArtistIds = await this.getArtistIds(accountId, filter?.artist, filter?.filter);
+      artistIds.push(...filterArtistIds);
+    }
+    const composerIds: number[] = [];
+    if (filter?.composer?.length || filter?.filter) {
+      const filterComposerIds = await this.getComposerIds(accountId, filter?.composer, filter?.filter);
+      composerIds.push(...filterComposerIds);
+    }
+    const genreIds: number[] = [];
+    if (filter?.genre?.length || filter?.filter) {
+      const filterGenreIds = await this.getGenreIds(accountId, filter?.genre, filter?.filter);
+      genreIds.push(...filterGenreIds);
+    }
+    return {
+      attributes: [
+        'albumId',
+        'bitRate',
+        'channels',
+        'comment',
+        'createdAt',
+        'discNumber',
+        'duration',
+        'filePath',
+        'fileSize',
+        'fileType',
+        'frequency',
+        'id',
+        'rating',
+        'title',
+        'trackNumber',
+        'year',
+        ...additionalSortFields,
+      ],
+      order,
+      include: [
+        {
+          attributes: [
+            'id',
+            'title',
+            'coverImageLightVibrant',
+            'coverImageDarkVibrant',
+            'coverImageMuted',
+            'coverImageVibrant',
+            'coverImageDarkMuted',
+            'coverImageLightMuted',
+          ],
+          model: AlbumEntity,
+          required: true,
+          where: {
+            ...(filter?.album && {
+              title: { [Op.like]: `%${normalizeString(filter.album)}%` },
+            }),
+          },
+          include: [
+            {
+              attributes: ['id'],
+              model: AssociationLinkEntity,
+              include: [
+                {
+                  attributes: ['id', 'name', 'createdAt'],
+                  model: AssociationEntity,
+                  required: true,
+                },
+              ],
+              where: {
+                isArtist: true,
+              },
+              separate: true,
+              as: 'albumArtists',
+            },
+          ],
+        },
+        {
+          model: AssociationLinkEntity,
+          include: [
+            {
+              attributes: ['id', 'name', 'createdAt'],
+              model: AssociationEntity,
+              required: true,
+            },
+          ],
+          separate: true,
+          as: 'artists',
+          where: {
+            isArtist: true,
+          },
+        },
+        ...(artistIds.length
+          ? [
+              {
+                model: AssociationLinkEntity,
+                as: 'artistFilter',
+                required: true,
+                attributes: [],
+                where: {
+                  isArtist: true,
+                  associationId: artistIds,
+                },
+              },
+            ]
+          : []),
+        {
+          model: AssociationLinkEntity,
+          include: [
+            {
+              attributes: ['id', 'name', 'createdAt'],
+              model: AssociationEntity,
+              required: true,
+            },
+          ],
+          separate: true,
+          as: 'composers',
+          where: {
+            isComposer: true,
+          },
+        },
+        ...(composerIds.length
+          ? [
+              {
+                model: AssociationLinkEntity,
+                as: 'composerFilter',
+                required: true,
+                attributes: [],
+                where: {
+                  isComposer: true,
+                  associationId: composerIds,
+                },
+              },
+            ]
+          : []),
+        {
+          model: AssociationLinkEntity,
+          include: [
+            {
+              attributes: ['id', 'name', 'createdAt'],
+              model: AssociationEntity,
+              required: true,
+            },
+          ],
+          separate: true,
+          as: 'genres',
+          where: {
+            isGenre: true,
+          },
+        },
+        ...(genreIds.length
+          ? [
+              {
+                model: AssociationLinkEntity,
+                as: 'genreFilter',
+                required: true,
+                attributes: [],
+                where: {
+                  isGenre: true,
+                  associationId: genreIds,
+                },
+              },
+            ]
+          : []),
+      ],
+      where: {
+        accountId,
+        ...(filter?.albumIds?.length && {
+          albumId: filter.albumIds,
+        }),
+        ...(filter?.year && {
+          year: filter.year,
+        }),
+        ...(filter?.minRating !== undefined && {
+          rating: { [Op.gte]: filter.minRating },
+        }),
+        ...(filter?.maxRating !== undefined && {
+          rating: {
+            [Op.lte]: filter.maxRating,
+          },
+        }),
+        ...(filter?.addedBefore && {
+          createdAt: {
+            [Op.lt]: filter.addedBefore,
+          },
+        }),
+        ...(filter?.addedAfter && {
+          createdAt: {
+            [Op.gt]: filter.addedAfter,
+          },
+        }),
+        ...(filter?.filter && {
+          title: { [Op.like]: `%${normalizeString(filter.filter)}%` },
+        }),
+        ...(filter?.filePath && {
+          filePath: { [Op.like]: `${filter.filePath}%` },
+        }),
+      },
+    };
+  }
+
+  private async getArtistIds(accountId: number, artists?: string[], search?: string): Promise<number[]> {
+    const artistFilter = artists?.length
+      ? {
+          nameNormalized: {
+            [Op.or]: [
+              ...artists.map((artist) => {
+                return {
+                  [Op.like]: `${normalizeString(artist)}%`,
+                };
+              }),
+            ],
+          },
+        }
+      : {};
+    const searchFilter = search
+      ? {
+          nameNormalized: {
+            [Op.like]: `${normalizeString(search)}%`,
+          },
+        }
+      : {};
+    const results = await this.associationEntity.findAll({
+      attributes: ['id'],
+      where: {
+        accountId,
+        [Op.or]: [artistFilter, searchFilter],
+      },
+    });
+    return results.map((artist) => artist.id);
+  }
+
+  private async getComposerIds(accountId: number, composers?: string[], search?: string): Promise<number[]> {
+    const composerFilter = composers?.length
+      ? {
+          nameNormalized: {
+            [Op.or]: [
+              ...composers.map((composer) => {
+                return {
+                  [Op.like]: `${normalizeString(composer)}%`,
+                };
+              }),
+            ],
+          },
+        }
+      : {};
+    const searchFilter = search
+      ? {
+          nameNormalized: {
+            [Op.like]: `${normalizeString(search)}%`,
+          },
+        }
+      : {};
+    const results = await this.associationEntity.findAll({
+      attributes: ['id'],
+      where: {
+        accountId,
+        [Op.or]: [composerFilter, searchFilter],
+      },
+    });
+    return results.map((composer) => composer.id);
+  }
+
+  private async getGenreIds(accountId: number, genres?: string[], search?: string): Promise<number[]> {
+    const genreFilter = genres?.length
+      ? {
+          nameNormalized: {
+            [Op.or]: genres.map(normalizeString),
+          },
+        }
+      : {};
+    const searchFilter = search
+      ? {
+          nameNormalized: {
+            [Op.like]: `${normalizeString(search)}%`,
+          },
+        }
+      : {};
+    const results = await this.associationEntity.findAll({
+      attributes: ['id'],
+      where: {
+        accountId,
+        [Op.or]: [genreFilter, searchFilter],
+      },
+    });
+    return results.map((genre) => genre.id);
+  }
+
+  /**
+   * Returns lists of album-associated artists, composers and genres filtered by account ID and other criteria.
+   * @param {number} accountId
+   * @param {AssociationFilter} filter
+   * @param {number} offset
+   * @param {number} limit
+   * @param {AssociationSortFieldEnum} sortField
+   * @param {SortDirectionEnum} sortDirection
+   * @returns {Promise<ListResult<LibraryAssociationDto>>}
+   */
+  async listAlbumAssociations(
+    accountId: number,
+    filter: AssociationFilter,
+    offset: number,
+    limit: number,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<ListResult<LibraryAssociationDto>> {
+    const query = await this.constructAlbumAssociationQuery(accountId, filter, sortField, sortDirection);
+    const associations = await this.associationLinkEntity.findAll({
+      ...query,
+      offset,
+      limit,
+      group: ['association.name'],
+      subQuery: false,
+    });
+    const totals = await this.associationLinkEntity.count({
+      ...query,
+      group: ['association.name'],
+    });
+    return {
+      items: associations.map((link) => this.buildAssociationItem(link.association!)),
+      total: totals.length,
+    };
+  }
+
+  async listAlbumAssociationsViaTracks(
+    accountId: number,
+    filter: AssociationFilter,
+    offset: number,
+    limit: number,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<ListResult<LibraryAssociationDto>> {
+    const query = await this.constructAlbumTrackAssociationQuery(accountId, filter, sortField, sortDirection);
+    const associations = await this.associationEntity.findAll({
+      ...query,
+      offset,
+      limit,
+      group: ['name'],
+    });
+    const totals = await this.associationEntity.count({
+      ...query,
+      group: ['name'],
+    });
+    return {
+      items: associations.map((association) => this.buildAssociationItem(association)),
+      total: totals.length,
+    };
+  }
+
+  /**
+   * Returns lists of track-associated artists, composers and genres filtered by account ID and other criteria.
+   * @param {number} accountId
+   * @param {AssociationFilter} filter
+   * @param {number} offset
+   * @param {number} limit
+   * @param {AssociationSortFieldEnum} sortField
+   * @param {SortDirectionEnum} sortDirection
+   * @returns {Promise<ListResult<LibraryAssociationDto>>}
+   */
+  async listTrackAssociations(
+    accountId: number,
+    filter: AssociationFilter,
+    offset: number,
+    limit: number,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<ListResult<LibraryAssociationDto>> {
+    const query = await this.constructTrackAssociationQuery(accountId, filter, sortField, sortDirection);
+    const associations = await this.associationEntity.findAll({ ...query, offset, limit, group: ['name'] });
+    const totals = await this.associationEntity.count({ ...query, group: ['name'] });
+    return {
+      total: totals.length,
+      items: associations.map(this.buildAssociationItem),
+    };
+  }
 
   /**
    * Returns a list of albums belonging to an account, optionally paginated, filtered and sorted by the
    * specified parameters.
    * @param {number} accountId The user performing the search
-   * @param {AlbumFilters} filters The search parameters for the albums
+   * @param {AlbumFilter} filtes The search parameters for the albums
    * @param {number} offset Optional pagination offset
    * @param {number} limit Optional pagination limit
    * @param {AlbumSortFieldEnum} sortField Optional field to sort the results by
@@ -63,320 +1135,22 @@ export class LibraryService {
    */
   async listAlbums(
     accountId: number,
-    filters: AlbumFilters,
+    filter: AlbumFilter,
     offset: number,
     limit: number,
     sortField?: AlbumSortFieldEnum,
     sortDirection?: SortDirectionEnum,
   ): Promise<ListResult<LibraryAlbumDto>> {
-    const queryFilter = await this.albumService.createAlbumQueryFilter(accountId, filters);
-    const matchingAlbums = await this.albumService.findMatchingAlbumIds(queryFilter);
-    return this.albumService.listAlbumsById(matchingAlbums, offset, limit, sortField, sortDirection);
-  }
-
-  /**
-   * Returns a list of albums belonging to an account, optionally paginated, filtered and sorted by the
-   * specified parameters and bundling extended track lists for all albums.  If the track lists are not
-   * required then the `listAlbums` method will provide better performance.
-   * @param {number} accountId The user performing the search
-   * @param {AlbumFilters} filters The search parameters for the albums
-   * @param {number} offset Optional pagination offset
-   * @param {number} limit Optional pagination limit
-   * @param {AlbumSortFieldEnum} sortField Optional field to sort the results by
-   * @param {SortDirectionEnum} sortDirection Optional sort order specification
-   * @returns {Promise<ListResult<LibraryAlbumWithTracksDto>>} List of albums with tracks and total count
-   */
-  async listAlbumsWithTracks(
-    accountId: number,
-    filters: AlbumFilters,
-    offset: number,
-    limit: number,
-    sortField?: AlbumSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryAlbumWithTracksDto>> {
-    const queryFilter = await this.albumService.createAlbumQueryFilter(accountId, filters);
-    const matchingAlbums = await this.albumService.findMatchingAlbumIds(queryFilter);
-    return this.albumService.listAlbumsWithTracksById(matchingAlbums, offset, limit, sortField, sortDirection);
-  }
-
-  /**
-   * Lists all artists along with their albums for a given account, optionally paginated, filtered and
-   * sorted by the specified parameters.
-   * @param {number} accountId The user performing the search
-   * @param {ArtistFilters} filters The search parameters for the artists
-   * @param {number} offset The number of items to skip before starting to collect the result set
-   * @param {number} limit The maximum number of items to return
-   * @param {ArtistSortFieldEnum} [sortField] The field by which to sort the artists
-   * @param {SortDirectionEnum} [sortDirection] The direction in which to sort the artists
-   * @returns {Promise<ListResult<LibraryArtistDto>>} The list of artists with their albums and tracks.
-   */
-  async listAlbumArtists(
-    accountId: number,
-    filters: ArtistFilters,
-    offset: number,
-    limit: number,
-    sortField?: ArtistSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryArtistDto>> {
-    const sortFieldColumn = this.artistService.sortFieldToColumn(sortField);
-    const order: OrderItem[] = [];
-    if (sortField === ArtistSortFieldEnum.RANDOM) {
-      order.push(sequelize.literal('RANDOM()'));
-    } else {
-      order.push([Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']);
-    }
-    const normalizedFilterString = filters?.filter ? normalizeString(filters.filter) : undefined;
-    const queryFilter = await this.artistService.createAlbumArtistQueryFilter(accountId, filters);
-    const artistIds = await this.artistService.findMatchingArtistIds(queryFilter);
-    const artists = await this.artistEntity.findAndCountAll({
-      attributes: ['id', 'name', 'createdAt'],
-      where: {
-        id: artistIds,
-        ...(filters?.filter && {
-          name: { [Op.like]: `%${normalizedFilterString}%` },
-        }),
-        ...(filters?.addedBefore && {
-          createdAt: {
-            [Op.lt]: filters.addedBefore,
-          },
-        }),
-        ...(filters?.addedAfter && {
-          createdAt: {
-            [Op.gt]: filters.addedAfter,
-          },
-        }),
-      },
-      order,
-      offset,
+    const query = await this.constructAlbumQuery(accountId, filter, sortField, sortDirection);
+    const albums = await this.albumEntity.findAndCountAll({
+      ...query,
       limit,
+      offset,
+      group: ['AlbumEntity.id'],
     });
     return {
-      total: artists.count,
-      items: artists.rows.map((artist) => {
-        return {
-          id: artist.id,
-          createdAt: artist.createdAt,
-          name: replaceDoubleQuotes(artist.name || ''),
-        };
-      }),
-    };
-  }
-
-  /**
-   * Lists all artists along with their albums for a given account, optionally paginated, filtered and
-   * sorted by the specified parameters and bundling track lists for all albums.  If the track lists are
-   * not required then the `listArtists` method will provide better performance.
-   * @param {number} accountId The user performing the search
-   * @param {ArtistFilters} filters The search parameters for the artists
-   * @param {number} offset The number of items to skip before starting to collect the result set
-   * @param {number} limit The maximum number of items to return
-   * @param {ArtistSortFieldEnum} [sortField] The field by which to sort the artists
-   * @param {SortDirectionEnum} [sortDirection] The direction in which to sort the artists
-   * @returns {Promise<ListResult<LibraryArtistDto>>} The list of artists with their albums and tracks.
-   */
-  async listAlbumArtistsWithTracks(
-    accountId: number,
-    filters: ArtistFilters,
-    offset: number,
-    limit: number,
-    sortField?: ArtistSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryArtistWithTracksDto>> {
-    const artists = await this.listAlbumArtists(accountId, filters, offset, limit, sortField, sortDirection);
-    const albums = await this.listAlbumsWithTracks(
-      accountId,
-      filters?.filter
-        ? {
-            artist: [filters?.filter],
-          }
-        : {},
-      0,
-      100_000,
-    );
-    const albumIndex = {};
-    for (let i = 0, len = albums.items.length; i < len; i += 1) {
-      const album = albums.items[i];
-      if (album) {
-        for (let j = 0, jLen = album.artists.length; j < jLen; j += 1) {
-          const artist = album.artists[j];
-          if (artist) {
-            albumIndex[artist.id] = albumIndex[artist.id] || [];
-            const existing = albumIndex[artist.id].find((item) => item.id === album.id);
-            if (!existing) {
-              albumIndex[artist.id].push({
-                ...album,
-                tracks: album.tracks.filter((track) => track.artists.find((a) => a.id === artist.id)),
-              });
-            }
-          }
-        }
-        // index as combined artists
-        const combined = album.artists.map((a) => a.name).join(', ');
-        if (album.artists.length > 1) {
-          albumIndex[combined] = albumIndex[combined] || [];
-          const existingCombined = albumIndex[combined].find((item) => item.id === album.id);
-          if (!existingCombined) {
-            albumIndex[combined].push({
-              ...album,
-              tracks: album.tracks.filter(
-                (track) =>
-                  track.artists.find((a) => a.name === combined) ||
-                  track.artists.map((a) => a.name).join(', ') === combined,
-              ),
-            });
-          }
-        }
-      }
-    }
-    return {
-      total: artists.total,
-      items: artists.items
-        .map((artist) => ({
-          id: artist.id,
-          createdAt: artist.createdAt,
-          name: replaceDoubleQuotes(artist.name),
-          albums: albumIndex[artist.id] || [],
-        }))
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
-    };
-  }
-
-  /**
-   * Lists all composers along with their albums for a given account, optionally paginated, filtered and
-   * sorted by the specified parameters.
-   * @param {number} accountId The user performing the search
-   * @param {ComposerFilters} filters The search parameters for the composers
-   * @param {number} offset The number of items to skip before starting to collect the result set
-   * @param {number} limit The maximum number of items to return
-   * @param {ComposerSortFieldEnum} [sortField] The field by which to sort the composers
-   * @param {SortDirectionEnum} [sortDirection] The direction in which to sort the composers
-   * @returns {Promise<ListResult<LibraryComposerDto>>} The list of composers with their albums and tracks.
-   */
-  async listComposers(
-    accountId: number,
-    filters: ComposerFilters,
-    offset: number,
-    limit: number,
-    sortField?: ComposerSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryComposerDto>> {
-    const sortFieldColumn = this.composerService.sortFieldToColumn(sortField);
-    const normalizedFilterString = filters?.filter ? normalizeString(filters.filter) : undefined;
-    const queryFilter = await this.composerService.createComposerQueryFilter(accountId, filters);
-    const composerIds = await this.composerService.findMatchingComposerIds(queryFilter);
-    const composers = await this.composerEntity.findAndCountAll({
-      attributes: ['id', 'name', 'createdAt'],
-      where: {
-        id: composerIds,
-        ...(filters?.filter && {
-          name: { [Op.like]: `%${normalizedFilterString}%` },
-        }),
-        ...(filters?.addedBefore && {
-          createdAt: {
-            [Op.lt]: filters.addedBefore,
-          },
-        }),
-        ...(filters?.addedAfter && {
-          createdAt: {
-            [Op.gt]: filters.addedAfter,
-          },
-        }),
-      },
-      subQuery: false,
-      order: [[Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']],
-      offset,
-      limit,
-    });
-    return {
-      total: composers.count,
-      items: composers.rows.map((composer) => {
-        return {
-          id: composer.id,
-          createdAt: composer.createdAt,
-          name: replaceDoubleQuotes(composer.name || ''),
-        };
-      }),
-    };
-  }
-
-  /**
-   * Lists all composers along with their albums for a given account, optionally paginated, filtered and
-   * sorted by the specified parameters and bundling track lists for all albums.  If the track lists are
-   * not required then the `listComposers` method will provide better performance.
-   * @param {number} accountId The user performing the search
-   * @param {ComposerFilters} filters The search parameters for the composers
-   * @param {number} offset The number of items to skip before starting to collect the result set
-   * @param {number} limit The maximum number of items to return
-   * @param {ComposerSortFieldEnum} [sortField] The field by which to sort the composers
-   * @param {SortDirectionEnum} [sortDirection] The direction in which to sort the composers
-   * @returns {Promise<ListResult<LibraryComposerDto>>} The list of composers with their albums and tracks.
-   */
-  async listComposersWithTracks(
-    accountId: number,
-    filters: ComposerFilters,
-    offset: number,
-    limit: number,
-    sortField?: ComposerSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryComposerWithTracksDto>> {
-    const composers = await this.listComposers(accountId, filters, offset, limit, sortField, sortDirection);
-    const albumIndex = {};
-    const albums = await this.listAlbumsWithTracks(
-      accountId,
-      filters?.filter
-        ? {
-            composer: [filters?.filter],
-          }
-        : {},
-      0,
-      100_000,
-    );
-    for (let i = 0, len = albums.items.length; i < len; i += 1) {
-      const album = albums.items[i];
-      if (album) {
-        for (let j = 0, jLen = album.composers.length; j < jLen; j += 1) {
-          const composer = album.composers[j];
-          if (composer) {
-            albumIndex[composer.id] = albumIndex[composer.id] || [];
-            const existing = albumIndex[composer.id].find((item) => item.id === album.id);
-            if (!existing) {
-              albumIndex[composer.id].push({
-                ...album,
-                tracks: album.tracks.filter((track) => track.composers.find((c) => c.id === composer.id)),
-              });
-            }
-          }
-        }
-        // index as combined composers
-        if (album.composers.length > 1) {
-          const combined = album.composers.map((c) => c.name).join(', ');
-          albumIndex[combined] = albumIndex[combined] || [];
-          const existingCombined = albumIndex[combined].find((item) => item.id === album.id);
-          if (!existingCombined) {
-            albumIndex[combined].push({
-              ...album,
-              tracks: album.tracks.filter(
-                (track) =>
-                  track.composers.find((c) => c.name === combined) ||
-                  track.composers.map((c) => c.name).join(', ') === combined,
-              ),
-            });
-          }
-        }
-      }
-    }
-    return {
-      total: composers.total,
-      items: composers.items
-        .map((composer) => {
-          return {
-            id: composer.id,
-            createdAt: composer.createdAt,
-            name: replaceDoubleQuotes(composer.name || ''),
-            albums: albumIndex[composer.id] || [],
-          };
-        })
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
+      total: albums.count.length,
+      items: await Promise.all(albums.rows.map(this.buildAlbumItem)),
     };
   }
 
@@ -386,13 +1160,61 @@ export class LibraryService {
    * @returns {Promise<UserTreeItemDto[]>} The tree structure of folders for the account
    */
   async listFolders(accountId: number): Promise<UserTreeItemDto[]> {
-    return this.libraryFolderService.getTreeStructure(accountId);
+    const tracks = await this.listTracks(accountId, {}, 0, 100_000);
+    function sortChildren(node: UserTreeItemDto) {
+      node.children?.sort((a, b) => (a.folder || a.file || '').localeCompare(b.folder || b.file || ''));
+      node.children?.forEach(sortChildren);
+    }
+    const root: UserTreeItemDto = {
+      folder: '',
+      file: '',
+      fullPath: '',
+      id: 0,
+      children: [],
+    };
+    let folderId = 0;
+    const directoryMap = new Map([['', root]]);
+    for (let i = 0, len = tracks.items.length; i < len; i += 1) {
+      const track = tracks.items[i];
+      if (track) {
+        const { filePath } = track;
+        const parts = filePath.split('/').filter(Boolean);
+        let currentPath = '';
+        let parent = root;
+        for (let j = 0, jLen = parts.length; j < jLen; j += 1) {
+          const part = parts[j];
+          if (part) {
+            currentPath += `/${part}`;
+            let node = directoryMap.get(currentPath);
+            if (!node) {
+              const isFile = j === parts.length - 1;
+              if (!isFile) {
+                folderId += 1;
+              }
+              node = {
+                folder: isFile ? '' : part,
+                fullPath: currentPath,
+                track: isFile ? track : undefined,
+                ...(isFile
+                  ? { id: folderId, file: track.filePath.split(sep).pop() || '' }
+                  : { children: [], id: folderId }),
+              };
+              parent.children?.push(node);
+              directoryMap.set(currentPath, node);
+            }
+            parent = node;
+          }
+        }
+      }
+    }
+    sortChildren(root);
+    return root.children || [];
   }
 
   /**
    * Lists all tracks optionally paginated, filtered and sorted by the specified parameters
    * @param {number} accountId The user performing the search
-   * @param {TrackFilters} filters The search parameters for the tracks
+   * @param {TrackFilter} filter The search parameters for the tracks
    * @param {number} offset The number of items to skip before starting to collect the result set
    * @param {number} limit The maximum number of items to return
    * @param {TrackSortFieldEnum} [sortField] The field by which to sort the tracks
@@ -401,303 +1223,27 @@ export class LibraryService {
    */
   async listTracks(
     accountId: number,
-    filters: TrackFilters,
+    filter: TrackFilter,
     offset: number,
     limit: number,
     sortField?: TrackSortFieldEnum,
     sortDirection?: SortDirectionEnum,
   ): Promise<ListResult<LibraryTrackDto>> {
-    const queryFilter = await this.trackService.createTrackQueryFilter(accountId, filters);
-    const fileIds = await this.fileEntity.findAll({
-      attributes: ['id'],
-      ...queryFilter,
-    });
-    return this.trackService.listTracksById(
-      fileIds.map((file) => file.id),
-      offset || 0,
-      limit || 100_000,
-      sortField,
-      sortDirection,
-    );
-  }
-
-  /**
-   * Lists all artists along with their albums for a given account, optionally paginated, filtered and
-   * sorted by the specified parameters.  The difference between this and "album" artists is these
-   * names are compiled from track artists information.
-   * @param {number} accountId The user performing the search
-   * @param {ArtistFilters} filters The search parameters for the track artists
-   * @param {number} offset The number of items to skip before starting to collect the result set
-   * @param {number} limit The maximum number of items to return
-   * @param {ArtistSortFieldEnum} [sortField] The field by which to sort the track artists
-   * @param {SortDirectionEnum} [sortDirection] The direction in which to sort the track artists
-   * @returns {Promise<ListResult<LibraryArtistDto>>} The list of track artists with their albums and tracks.
-   */
-  async listTrackArtists(
-    accountId: number,
-    filters: ArtistFilters,
-    offset: number,
-    limit: number,
-    sortField?: ArtistSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryArtistDto>> {
-    const sortFieldColumn = this.artistService.sortFieldToColumn(sortField);
-    const order: OrderItem[] = [];
-    if (sortField === ArtistSortFieldEnum.RANDOM) {
-      order.push(sequelize.literal('RANDOM()'));
-    } else {
-      order.push([Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']);
-    }
-    const normalizedFilterString = filters?.filter ? normalizeString(filters.filter) : undefined;
-    const queryFilter = await this.artistService.createArtistQueryFilter(accountId, filters);
-    const artistIds = await this.artistService.findMatchingArtistIds(queryFilter);
-    const artists = await this.artistEntity.findAndCountAll({
-      attributes: ['id', 'name', 'createdAt'],
-      where: {
-        id: artistIds,
-        ...(filters?.filter && {
-          name: { [Op.like]: `%${normalizedFilterString}%` },
-        }),
-        ...(filters?.addedBefore && {
-          createdAt: {
-            [Op.lt]: filters.addedBefore,
-          },
-        }),
-        ...(filters?.addedAfter && {
-          createdAt: {
-            [Op.gt]: filters.addedAfter,
-          },
-        }),
-      },
+    const query = await this.constructTrackQuery(accountId, filter, sortField, sortDirection);
+    const data = await this.trackEntity.findAll({
+      ...query,
+      limit,
+      offset,
+      logging: false,
       subQuery: false,
-      order,
-      offset,
-      limit,
+    });
+    const count = await this.trackEntity.count({
+      ...query,
+      logging: false,
     });
     return {
-      total: artists.count,
-      items: artists.rows.map((artist) => {
-        return {
-          id: artist.id,
-          createdAt: artist.createdAt,
-          name: replaceDoubleQuotes(artist.name || ''),
-        };
-      }),
-    };
-  }
-
-  /**
-   * Lists all track artists along with their albums for a given account, optionally paginated, filtered
-   * and sorted by the specified parameters and bundling track lists for all albums.  If the track lists
-   * are not required then the `listTrackArtists` method will provide better performance.
-   * @param {number} accountId The user performing the search
-   * @param {ArtistFilters} filters The search parameters for the track artists
-   * @param {number} offset The number of items to skip before starting to collect the result set
-   * @param {number} limit The maximum number of items to return
-   * @param {ArtistSortFieldEnum} [sortField] The field by which to sort the track artists
-   * @param {SortDirectionEnum} [sortDirection] The direction in which to sort the composers
-   * @returns {Promise<ListResult<LibraryArtistDto>>} The list of track artists with their albums and tracks.
-   */
-  async listTrackArtistsWithTracks(
-    accountId: number,
-    filters: ArtistFilters,
-    offset: number,
-    limit: number,
-    sortField?: ArtistSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryArtistWithTracksDto>> {
-    const artists = await this.listTrackArtists(accountId, filters, offset, limit, sortField, sortDirection);
-    const albumIndex = {};
-    const albums = await this.listAlbumsWithTracks(
-      accountId,
-      filters?.filter
-        ? {
-            artist: [filters?.filter],
-          }
-        : {},
-      0,
-      100_000,
-    );
-    for (let i = 0, len = albums.items.length; i < len; i += 1) {
-      const album = albums.items[i];
-      if (album) {
-        const trackArtists: LibraryArtistDto[] = [];
-        for (let j = 0, jLen = album.tracks.length; j < jLen; j += 1) {
-          const track = album.tracks[j];
-          if (track) {
-            for (let k = 0, kLen = track.artists.length; k < kLen; k += 1) {
-              const artist = track.artists[k];
-              if (artist) {
-                albumIndex[artist.id] = albumIndex[artist.id] || [];
-                const existing = albumIndex[artist.id].find((item) => item.id === album.id);
-                if (!existing) {
-                  trackArtists.push(artist);
-                  albumIndex[artist.id].push({
-                    ...album,
-                    tracks: album.tracks.filter((t) => t.artists.find((a) => a.id === artist.id)),
-                  });
-                }
-              }
-            }
-          }
-        }
-        // index as combined artists
-        if (trackArtists.length > 1) {
-          const combined = trackArtists.map((a) => a.name).join(', ');
-          albumIndex[combined] = albumIndex[combined] || [];
-          const existing = albumIndex[combined].find((item) => item.id === album.id);
-          if (!existing) {
-            albumIndex[combined] = albumIndex[combined] || [];
-            albumIndex[combined].push({
-              ...album,
-              tracks: album.tracks.filter((track) => {
-                return (
-                  track.artists.find((a) => a.name === combined) ||
-                  track.artists.map((a) => a.name).join(', ') === combined
-                );
-              }),
-            });
-          }
-        }
-      }
-    }
-    return {
-      total: artists.total,
-      items: artists.items
-        .map((artist) => {
-          return {
-            id: artist.id,
-            createdAt: artist.createdAt,
-            name: replaceDoubleQuotes(artist.name || ''),
-            albums: albumIndex[artist.id] || [],
-          };
-        })
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
-    };
-  }
-
-  /**
-   * Lists track genres for a given account with pagination and sorting options.
-   * @param {number} accountId The user performing the search
-   * @param {GenreFilters} filter The filters to apply when querying for genres
-   * @param {number} offset The offset for pagination
-   * @param {number} limit The maximum number of items to return
-   * @param {GenreSortFieldEnum} sortField The field to sort by
-   * @param {SortDirectionEnum} sortDirection The direction to sort (ASC or DESC)
-   * @returns {Promise<ListResult<LibraryGenreDto>>} The list of track genres
-   */
-  async listTrackGenres(
-    accountId: number,
-    filter: GenreFilters,
-    offset: number,
-    limit: number,
-    sortField?: GenreSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryGenreDto>> {
-    let sortFieldColumn: string;
-    switch (sortField) {
-      case GenreSortFieldEnum.GENRE:
-      default:
-        sortFieldColumn = 'name';
-        break;
-    }
-    const genres = await this.genreEntity.findAndCountAll({
-      where: {
-        accountId,
-        isDefault: false,
-        ...(filter.genreIds ? { id: filter.genreIds } : {}),
-      },
-      attributes: ['id', 'name'],
-      order: [[Sequelize.fn('LOWER', Sequelize.col(sortFieldColumn)), sortDirection || 'ASC']],
-      offset,
-      limit,
-    });
-    return {
-      items: genres.rows.map((genre) => {
-        return {
-          id: genre.id,
-          name: genre.name,
-        };
-      }),
-      total: genres.count,
-    };
-  }
-
-  /**
-   * Lists track genres along with their associated tracks for a given account with pagination and sorting
-   * options.  If the track lists are not required then the `listTrackGenres` method will provide better
-   * performance.
-   * @param {number} accountId The user performing the search
-   * @param {GenreFilters} filter The filters to apply when querying for genres
-   * @param {number} offset The offset for pagination
-   * @param {number} limit The maximum number of items to return
-   * @param {GenreSortFieldEnum} sortField The field to sort by
-   * @param {SortDirectionEnum} sortDirection The direction to sort (ASC or DESC)
-   * @returns {Promise<ListResult<LibraryGenreWithTracksDto>>} The list of track genres with their albums and tracks
-   */
-  async listTrackGenresWithTracks(
-    accountId: number,
-    filter: GenreFilters,
-    offset: number,
-    limit: number,
-    sortField?: GenreSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryGenreWithTracksDto>> {
-    const genres = await this.listTrackGenres(accountId, filter, offset, limit, sortField, sortDirection);
-    const albumIndex = {};
-    const albums = await this.listAlbumsWithTracks(
-      accountId,
-      {
-        genre: genres.items.map((genre) => genre.name),
-      },
-      0,
-      100_000,
-    );
-    for (let i = 0, len = albums.items.length; i < len; i += 1) {
-      const album = albums.items[i];
-      if (album) {
-        for (let j = 0, jLen = album.genres.length; j < jLen; j += 1) {
-          const genre = album.genres[j];
-          if (genre) {
-            albumIndex[genre.id] = albumIndex[genre.id] || [];
-            const existing = albumIndex[genre.id].find((item) => item.id === album.id);
-            if (!existing) {
-              albumIndex[genre.id].push({
-                ...album,
-                tracks: album.tracks.filter((track) => track.genres.find((g) => g.id === genre.id)),
-              });
-            }
-          }
-        }
-        // index as combined genres
-        if (album.genres.length > 1) {
-          const combined = album.genres.map((genre) => genre.name).join(', ');
-          albumIndex[combined] = albumIndex[combined] || [];
-          const existingCombined = albumIndex[combined].find((item) => item.id === album.id);
-          if (!existingCombined) {
-            albumIndex[combined].push({
-              ...album,
-              tracks: album.tracks.filter(
-                (track) =>
-                  track.genres.find((g) => g.name === combined) ||
-                  track.genres.map((g) => g.name).join(', ') === combined,
-              ),
-            });
-          }
-        }
-      }
-    }
-    return {
-      items: genres.items
-        .map((genre) => {
-          return {
-            id: genre.id,
-            name: genre.name,
-            albums: albumIndex[genre.id] || [],
-          };
-        })
-        .filter((item) => item.albums.filter((album) => album.tracks && album.tracks.length).length),
-      total: genres.total,
+      items: data.map(this.buildTrackItem),
+      total: count,
     };
   }
 
@@ -708,7 +1254,7 @@ export class LibraryService {
    * @param {RatingOrUnset} rating The rating value `0` `1` `2` `3` `4` `5` to be applied to the specified tracks
    */
   async rateTracks(accountId: number, fileIds: number[], rating: RatingOrUnset): Promise<void> {
-    const files = await this.fileEntity.findAll({
+    const files = await this.trackEntity.findAll({
       where: {
         accountId,
         id: fileIds,
@@ -718,7 +1264,7 @@ export class LibraryService {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
     }
     const newValue: Rating | null = rating > 0 ? (rating as Rating) : null;
-    await this.fileEntity.update(
+    await this.trackEntity.update(
       {
         rating: newValue,
       },
@@ -731,82 +1277,161 @@ export class LibraryService {
     );
   }
 
-  /**
-   * Retrieves the specified album along with its tracks.
-   * @param {number} accountId The ID of the account requesting the album
-   * @param {number} albumId The ID of the album to retrieve
-   * @returns {Promise<LibraryAlbumWithTracksDto>} The album with its tracks
-   */
-  async retrieveAlbum(accountId: number, albumId: number): Promise<LibraryAlbumWithTracksDto> {
-    const ownsAlbum = await this.fileEntity.findOne({
+  async retrieveAlbum(accountId: number, albumIds: number | number[]): Promise<LibraryAlbumWithTracksDto[]> {
+    const query = await this.constructAlbumQuery(accountId, {});
+    const albums = await this.albumEntity.findAll({
+      ...query,
       where: {
-        accountId,
-        albumId,
+        ...query.where,
+        id: albumIds,
       },
     });
-    if (!ownsAlbum) {
+    if (!albums || albums.length === 0) {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }
-    const album = await this.albumService.listAlbumsWithTracksById([albumId], 0, 1);
-    if (!album?.items?.[0]) {
-      throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
-    }
-    return album.items[0];
+    albums.sort((a, b) => {
+      if (Array.isArray(albumIds)) {
+        return albumIds.indexOf(a.id) - albumIds.indexOf(b.id);
+      }
+      return 0;
+    });
+    const tracks = await this.listTracks(
+      accountId,
+      {
+        albumIds: Array.isArray(albumIds) ? albumIds : [albumIds],
+      },
+      0,
+      100_000,
+    );
+    return Promise.all(
+      albums.map(async (album) => {
+        const builtAlbum = await this.buildAlbumItem(album);
+        const albumTracks = tracks.items.filter((track) => track.albumId === album.id);
+        return {
+          ...builtAlbum,
+          tracks: albumTracks,
+        };
+      }),
+    );
   }
 
-  /**
-   * Retrieves the specified album artist along with their albums and tracks.
-   * @param {number} accountId The ID of the account requesting the artist
-   * @param {number} artistId The ID of the artist to retrieve
-   * @returns {Promise<LibraryArtistWithTracksDto>} The artist with their albums and tracks
-   */
-  async retrieveAlbumArtist(accountId: number, artistId: number): Promise<LibraryArtistWithTracksDto> {
-    const artists = await this.listAlbumArtistsWithTracks(accountId, { artistIds: [artistId] }, 0, 1);
-    if (!artists?.items?.[0]) {
-      throw new NotFoundException(ErrorCodes.ARTIST_NOT_FOUND_ERROR);
+  async retrieveAlbumAssociation(
+    accountId: number,
+    associationIds: number | number[],
+    associationType: AssociationTypeEnum,
+  ): Promise<LibraryAssociationWithTracksDto[]> {
+    const trackQuery = await this.constructTrackAssociationQuery(accountId, {
+      ...(associationType === AssociationTypeEnum.ARTIST ? { isArtist: true } : {}),
+      ...(associationType === AssociationTypeEnum.COMPOSER ? { isComposer: true } : {}),
+      ...(associationType === AssociationTypeEnum.GENRE ? { isGenre: true } : {}),
+    });
+    const associations = await this.associationEntity.findAll({
+      ...trackQuery,
+      include: [
+        {
+          ...(Array.isArray(trackQuery.include) ? trackQuery.include : []),
+          model: AssociationLinkEntity,
+          where: {
+            albumId: {
+              [Op.gte]: 0,
+            },
+            ...(associationType === AssociationTypeEnum.ARTIST ? { isArtist: true } : {}),
+            ...(associationType === AssociationTypeEnum.COMPOSER ? { isComposer: true } : {}),
+            ...(associationType === AssociationTypeEnum.GENRE ? { isGenre: true } : {}),
+          },
+        },
+      ],
+      where: {
+        ...trackQuery.where,
+        id: associationIds,
+      },
+    });
+    if (!associations || associations.length === 0) {
+      return [];
     }
-    return artists.items[0];
+    associations.sort((a, b) => {
+      if (Array.isArray(associationIds)) {
+        return associationIds.indexOf(a.id) - associationIds.indexOf(b.id);
+      }
+      return 0;
+    });
+    const albumIds = Array.from(
+      new Set(associations.map((association) => association.associationLinks.map((link) => link.albumId || 0)).flat()),
+    );
+    const albums = await this.retrieveAlbum(accountId, albumIds);
+    return Promise.all(
+      associations.map(async (association) => {
+        const builtAssociation = this.buildAssociationItem(association);
+        return {
+          ...builtAssociation,
+          albums,
+        };
+      }),
+    );
   }
 
-  /**
-   * Retrieves the specified track artist along with their albums and tracks.
-   * @param {number} accountId The ID of the account requesting the artist
-   * @param {number} artistId The ID of the artist to retrieve
-   * @returns {Promise<LibraryArtistWithTracksDto>} The artist with their albums and tracks
-   */
-  async retrieveTrackArtist(accountId: number, artistId: number): Promise<LibraryArtistWithTracksDto> {
-    const artists = await this.listTrackArtistsWithTracks(accountId, { artistIds: [artistId] }, 0, 1);
-    if (!artists?.items?.[0]) {
-      throw new NotFoundException(ErrorCodes.ARTIST_NOT_FOUND_ERROR);
+  async retrieveTrackAssociation(
+    accountId: number,
+    associationIds: number | number[],
+    associationType: AssociationTypeEnum,
+  ): Promise<LibraryAssociationWithTracksDto[]> {
+    const associationQuery = await this.constructTrackAssociationQuery(accountId, {
+      isArtist: associationType === AssociationTypeEnum.ARTIST ? true : undefined,
+      isComposer: associationType === AssociationTypeEnum.COMPOSER ? true : undefined,
+      isGenre: associationType === AssociationTypeEnum.GENRE ? true : undefined,
+    });
+    const associations = await this.associationEntity.findAll({
+      ...associationQuery,
+      where: {
+        ...associationQuery.where,
+        id: associationIds,
+      },
+    });
+    if (!associations || associations.length === 0) {
+      return [];
     }
-    return artists.items[0];
+    associations.sort((a, b) => {
+      if (Array.isArray(associationIds)) {
+        return associationIds.indexOf(a.id) - associationIds.indexOf(b.id);
+      }
+      return a.id === associationIds ? -1 : 1;
+    });
+    const trackIds = associations.flatMap((a) => a.associationLinks.map((link) => link.trackId));
+    const tracks = await this.retrieveTrack(accountId, trackIds);
+    const albumIds = Array.from(new Set(tracks.map((track) => track.albumId)));
+    const albums = await this.retrieveAlbum(accountId, albumIds);
+    return associations.map((association) => {
+      const builtAssociation = this.buildAssociationItem(association);
+      const assocationTrackIds = Array.from(new Set(association.associationLinks.map((link) => link.trackId)));
+      const associationTracks = tracks.filter((track) => assocationTrackIds.includes(track.id));
+      const associationAlbumIds = Array.from(new Set(associationTracks.map((track) => track.albumId)));
+      return {
+        ...builtAssociation,
+        albums: albums
+          .filter((album) => associationAlbumIds.includes(album.id))
+          .map((album) => {
+            const albumTracks = associationTracks.filter((track) => track.albumId === album.id);
+            return {
+              ...album,
+              tracks: albumTracks,
+            };
+          }),
+      };
+    });
   }
 
-  /**
-   * Retrieves the specified track composer along with their albums and tracks.
-   * @param {number} accountId The ID of the account requesting the composer
-   * @param {number} composerId The ID of the composer to retrieve
-   * @returns {Promise<LibraryComposerWithTracksDto>} The composer with their albums and tracks
-   */
-  async retrieveTrackComposer(accountId: number, composerId: number): Promise<LibraryComposerWithTracksDto> {
-    const composers = await this.listComposersWithTracks(accountId, { composerIds: [composerId] }, 0, 1);
-    if (!composers?.items?.[0]) {
-      throw new NotFoundException(ErrorCodes.COMPOSER_NOT_FOUND_ERROR);
+  async retrieveTrack(accountId: number, trackIds: number | number[]): Promise<LibraryTrackDto[]> {
+    const query = await this.constructTrackQuery(accountId, {});
+    const tracks = await this.trackEntity.findAll({
+      ...query,
+      where: {
+        ...query.where,
+        id: trackIds,
+      },
+    });
+    if (!tracks || tracks.length === 0) {
+      throw new NotFoundException(ErrorCodes.TRACKS_NOT_FOUND_ERROR);
     }
-    return composers.items[0];
-  }
-
-  /**
-   * Retrieves the specified track genre along with their albums and tracks.
-   * @param {number} accountId The ID of the account requesting the genre
-   * @param {number} genreId The ID of the genre to retrieve
-   * @returns {Promise<LibraryGenreWithTracksDto>} The genre with their albums and tracks
-   */
-  async retrieveTrackGenre(accountId: number, genreId: number): Promise<LibraryGenreWithTracksDto> {
-    const genres = await this.listTrackGenresWithTracks(accountId, { genreIds: [genreId] }, 0, 1);
-    if (!genres?.items?.[0]) {
-      throw new NotFoundException(ErrorCodes.GENRE_NOT_FOUND_ERROR);
-    }
-    return genres.items[0];
+    return tracks.map(this.buildTrackItem);
   }
 }

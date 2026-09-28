@@ -1,8 +1,8 @@
 import { AccountEntity } from './account.entity';
-import { AlbumArtistEntity } from './album-artist.entity';
+import { AssociationLinkEntity } from './association-link.entity';
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
-import { FileEntity } from './file.entity';
 import { RootPathEntity } from './root-path.entity';
+import { TrackEntity } from './track.entity';
 
 /**
  * The AlbumEntity holds metadata for a music album within a root path
@@ -28,8 +28,17 @@ export class AlbumEntity extends Model<AlbumEntity> {
   @ForeignKey(() => AccountEntity)
   declare accountId?: number;
 
-  @HasMany(() => AlbumArtistEntity)
-  declare albumArtists?: AlbumArtistEntity[];
+  @HasMany(() => AssociationLinkEntity)
+  declare associationLinks?: AssociationLinkEntity[];
+
+  @HasMany(() => AssociationLinkEntity)
+  declare albumArtists?: AssociationLinkEntity[];
+
+  @HasMany(() => AssociationLinkEntity)
+  declare albumComposers?: AssociationLinkEntity[];
+
+  @HasMany(() => AssociationLinkEntity)
+  declare albumGenres?: AssociationLinkEntity[];
 
   /**
    * The cover image for the album (if one exists).
@@ -79,9 +88,6 @@ export class AlbumEntity extends Model<AlbumEntity> {
   @Column(DataType.STRING(255))
   declare folderPath: string;
 
-  @HasMany(() => FileEntity)
-  declare files?: FileEntity[];
-
   /**
    * The ID of the table row is an auto-incrementing integer that is assigned by the database when the row is created.
    */
@@ -115,6 +121,9 @@ export class AlbumEntity extends Model<AlbumEntity> {
 
   @Column(DataType.STRING(255))
   declare titleNormalized: string;
+
+  @HasMany(() => TrackEntity)
+  declare tracks?: TrackEntity[];
 
   @Column(DataType.INTEGER)
   declare year: number;

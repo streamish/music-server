@@ -117,6 +117,9 @@ export class RoleGuard implements CanActivate {
 
   // eslint-disable-next-line class-methods-use-this
   private extractTokenFromHeader(request: Request): string | undefined {
+    if (request.cookies?.token) {
+      return request.cookies.token;
+    }
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }

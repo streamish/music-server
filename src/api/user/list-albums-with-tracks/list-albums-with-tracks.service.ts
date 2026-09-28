@@ -7,7 +7,7 @@ export class UserListAlbumsWithTracksService {
   constructor(private readonly libraryService: LibraryService) {}
 
   async listAlbumsWithTracks(accountId: number, query: UserListAlbumsWithTracksQueryDto) {
-    const albums = await this.libraryService.listAlbumsWithTracks(
+    const data = await this.libraryService.listAlbums(
       accountId,
       query,
       query.offset || 0,
@@ -15,10 +15,14 @@ export class UserListAlbumsWithTracksService {
       query.sortField,
       query.sortDirection,
     );
+    const albums = await this.libraryService.retrieveAlbum(
+      accountId,
+      data.items.map((album) => album.id),
+    );
     return {
-      albums: albums.items,
+      albums,
       offset: query.offset || 0,
-      total: albums.total,
+      total: data.total,
     };
   }
 }

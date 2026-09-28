@@ -242,14 +242,18 @@ describe('/musicstation/api/medialist_api.php', () => {
       desc: SortDirectionEnum.desc,
     });
     expect(error).toBeUndefined();
-    expect(data?.datas.data.length).toBe(7);
-    expect(data?.datas.data[0]?.Title).toBe('Chorus');
-    expect(data?.datas.data[1]?.Title).toBe('Chanson');
-    expect(data?.datas.data[2]?.Title).toBe('Bluegrass');
-    expect(data?.datas.data[3]?.Title).toBe('Bebob');
-    expect(data?.datas.data[4]?.Title).toBe('Acoustic');
-    expect(data?.datas.data[5]?.Title).toBe('Acid Jazz');
-    expect(data?.datas.data[6]?.Title).toBe('Acid');
+    expect(data?.datas.data.length).toBe(11);
+    expect(data?.datas.data[0]?.Title).toBe('Rock');
+    expect(data?.datas.data[1]?.Title).toBe('EDM');
+    expect(data?.datas.data[2]?.Title).toBe('Dance');
+    expect(data?.datas.data[3]?.Title).toBe('Chorus');
+    expect(data?.datas.data[4]?.Title).toBe('Chanson');
+    expect(data?.datas.data[5]?.Title).toBe('Bluegrass');
+    expect(data?.datas.data[6]?.Title).toBe('Bebob');
+    expect(data?.datas.data[7]?.Title).toBe('Ballad');
+    expect(data?.datas.data[8]?.Title).toBe('Acoustic');
+    expect(data?.datas.data[9]?.Title).toBe('Acid Jazz');
+    expect(data?.datas.data[10]?.Title).toBe('Acid');
   });
 
   it('should paginate genres', async () => {
@@ -279,6 +283,7 @@ describe('/musicstation/api/medialist_api.php', () => {
   });
 
   it('should list genre tracks', async () => {
+    // select a genre
     const { data: genreData } = await listMedia<ListTracks>({
       act: 'list',
       type: 'genre',
@@ -287,7 +292,8 @@ describe('/musicstation/api/medialist_api.php', () => {
       sortBy: 'title',
       desc: SortDirectionEnum.desc,
     });
-    const { error, data } = await listMedia<ListTracks>({
+    // list its tracks
+    const { error, data: trackData } = await listMedia<ListTracks>({
       act: 'list',
       type: 'genre',
       pagesize: 250,
@@ -297,8 +303,10 @@ describe('/musicstation/api/medialist_api.php', () => {
       desc: SortDirectionEnum.desc,
     });
     expect(error).toBeUndefined();
-    expect(data?.datas.data.length).toBe(1);
-    expect(data?.datas.data[0]?.Genre).toBe(genreData?.datas.data[0]?.Title);
+    expect(trackData?.datas.data.length).toBe(7);
+    for (let i = 0, len = trackData?.datas.data.length; i < len; i += 1) {
+      expect(trackData?.datas.data[i]?.Genre).toBe(genreData?.datas.data[0]?.Title);
+    }
   });
 
   it('should list folders', async () => {

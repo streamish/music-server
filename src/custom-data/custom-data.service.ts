@@ -1,42 +1,51 @@
+import { AssociationTypeEnum } from 'src/types/enums';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { FileCustomDataEntity, FileEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
+import { TrackCustomDataEntity, TrackEntity } from 'src/database/entities';
 
 @Injectable()
 export class CustomDataService {
   constructor(
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
-    @InjectModel(FileCustomDataEntity)
-    private readonly fileCustomDataEntity: typeof FileCustomDataEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
+    @InjectModel(TrackCustomDataEntity)
+    private readonly trackCustomDataEntity: typeof TrackCustomDataEntity,
     private readonly libraryService: LibraryService,
   ) {}
 
   /**
    * Sets custom name for the specified album artist.
    * @param {number} accountId The ID of the account performing the update
-   * @param {number} artistId The ID of the album artist to update
+   * @param {number} associationId The ID of the album artist to update
    * @param {string} name The custom name value to set for the artist
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
-  async setCustomAlbumArtistName(accountId: number, artistId: number, name: string): Promise<number[]> {
-    const albumArtist = await this.libraryService.retrieveAlbumArtist(accountId, artistId);
+  async setCustomAlbumArtistName(accountId: number, associationId: number, name: string): Promise<number[]> {
+    const albumArtists = await this.libraryService.retrieveAlbumAssociation(
+      accountId,
+      associationId,
+      AssociationTypeEnum.ARTIST,
+    );
+    const albumArtist = albumArtists[0];
+    if (!albumArtist) {
+      return [];
+    }
     const trackIds = albumArtist.albums.flatMap((album) => album.tracks.map((track) => track.id));
     for (let i = 0, len = albumArtist.albums.length; i < len; i += 1) {
       const album = albumArtist.albums[i];
       if (album) {
         const newAlbumArtists = album.artists
           .map((a) => {
-            return a.id === artistId ? name : a.name;
+            return a.id === associationId ? name : a.name;
           })
           .join(', ');
         for (let j = 0, jLen = album.tracks.length; j < jLen; j += 1) {
           const track = album.tracks[j];
           if (track) {
             // eslint-disable-next-line no-await-in-loop
-            const existingCustomData = await this.fileCustomDataEntity.findOne({
+            const existingCustomData = await this.trackCustomDataEntity.findOne({
               where: {
                 id: track.id,
               },
@@ -44,7 +53,7 @@ export class CustomDataService {
             });
             if (existingCustomData) {
               // eslint-disable-next-line no-await-in-loop
-              await this.fileCustomDataEntity.update(
+              await this.trackCustomDataEntity.update(
                 {
                   albumArtists: newAlbumArtists,
                 },
@@ -56,11 +65,11 @@ export class CustomDataService {
               );
             } else {
               // eslint-disable-next-line no-await-in-loop
-              await this.fileCustomDataEntity.create({
+              await this.trackCustomDataEntity.create({
                 albumArtists: newAlbumArtists,
                 id: track.id,
-                fileId: track.id,
-              } as FileCustomDataEntity);
+                trackId: track.id,
+              } as TrackCustomDataEntity);
             }
           }
         }
@@ -72,23 +81,31 @@ export class CustomDataService {
   /**
    * Sets custom name for the specified track artist.
    * @param {number} accountId The ID of the account performing the update
-   * @param {number} artistId The ID of the track artist to update
+   * @param {number} associationId The ID of the track artist to update
    * @param {string} name The custom name value to set for the artist
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
-  async setCustomTrackArtistName(accountId: number, artistId: number, name: string): Promise<number[]> {
-    const trackArtist = await this.libraryService.retrieveTrackArtist(accountId, artistId);
+  async setCustomTrackArtistName(accountId: number, associationId: number, name: string): Promise<number[]> {
+    const trackArtists = await this.libraryService.retrieveTrackAssociation(
+      accountId,
+      associationId,
+      AssociationTypeEnum.ARTIST,
+    );
+    const trackArtist = trackArtists[0];
+    if (!trackArtist) {
+      return [];
+    }
     const tracks = trackArtist.albums.map((album) => album.tracks).flat();
     for (let j = 0, trackLen = tracks.length; j < trackLen; j += 1) {
       const track = tracks[j];
       if (track) {
         const newTrackArtists = track.artists
           .map((a) => {
-            return a.id === artistId ? name : a.name;
+            return a.id === associationId ? name : a.name;
           })
           .join(', ');
         // eslint-disable-next-line no-await-in-loop
-        const existingCustomData = await this.fileCustomDataEntity.findOne({
+        const existingCustomData = await this.trackCustomDataEntity.findOne({
           where: {
             id: track.id,
           },
@@ -96,7 +113,7 @@ export class CustomDataService {
         });
         if (existingCustomData) {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.update(
+          await this.trackCustomDataEntity.update(
             {
               artists: newTrackArtists,
             },
@@ -108,11 +125,11 @@ export class CustomDataService {
           );
         } else {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.create({
+          await this.trackCustomDataEntity.create({
             artists: newTrackArtists,
             id: track.id,
-            fileId: track.id,
-          } as FileCustomDataEntity);
+            trackId: track.id,
+          } as TrackCustomDataEntity);
         }
       }
     }
@@ -127,7 +144,15 @@ export class CustomDataService {
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
   async setCustomTrackComposerName(accountId: number, composerId: number, name: string): Promise<number[]> {
-    const trackComposer = await this.libraryService.retrieveTrackComposer(accountId, composerId);
+    const trackComposers = await this.libraryService.retrieveTrackAssociation(
+      accountId,
+      composerId,
+      AssociationTypeEnum.COMPOSER,
+    );
+    const trackComposer = trackComposers[0];
+    if (!trackComposer) {
+      throw new NotFoundException(ErrorCodes.COMPOSER_NOT_FOUND_ERROR);
+    }
     const tracks = trackComposer.albums.map((album) => album.tracks).flat();
     for (let j = 0, trackLen = tracks.length; j < trackLen; j += 1) {
       const track = tracks[j];
@@ -138,7 +163,7 @@ export class CustomDataService {
           })
           .join(', ');
         // eslint-disable-next-line no-await-in-loop
-        const existingCustomData = await this.fileCustomDataEntity.findOne({
+        const existingCustomData = await this.trackCustomDataEntity.findOne({
           where: {
             id: track.id,
           },
@@ -146,7 +171,7 @@ export class CustomDataService {
         });
         if (existingCustomData) {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.update(
+          await this.trackCustomDataEntity.update(
             {
               composers: newTrackComposers,
             },
@@ -158,11 +183,11 @@ export class CustomDataService {
           );
         } else {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.create({
+          await this.trackCustomDataEntity.create({
             composers: newTrackComposers,
             id: track.id,
-            fileId: track.id,
-          } as FileCustomDataEntity);
+            trackId: track.id,
+          } as TrackCustomDataEntity);
         }
       }
     }
@@ -177,7 +202,15 @@ export class CustomDataService {
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
   async setCustomTrackGenreName(accountId: number, genreId: number, name: string): Promise<number[]> {
-    const trackGenre = await this.libraryService.retrieveTrackGenre(accountId, genreId);
+    const trackGenres = await this.libraryService.retrieveTrackAssociation(
+      accountId,
+      genreId,
+      AssociationTypeEnum.GENRE,
+    );
+    const trackGenre = trackGenres[0];
+    if (!trackGenre) {
+      throw new NotFoundException(ErrorCodes.GENRE_NOT_FOUND_ERROR);
+    }
     const tracks = trackGenre.albums.map((album) => album.tracks).flat();
     for (let j = 0, trackLen = tracks.length; j < trackLen; j += 1) {
       const track = tracks[j];
@@ -188,7 +221,7 @@ export class CustomDataService {
           })
           .join(', ');
         // eslint-disable-next-line no-await-in-loop
-        const existingCustomData = await this.fileCustomDataEntity.findOne({
+        const existingCustomData = await this.trackCustomDataEntity.findOne({
           where: {
             id: track.id,
           },
@@ -196,7 +229,7 @@ export class CustomDataService {
         });
         if (existingCustomData) {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.update(
+          await this.trackCustomDataEntity.update(
             {
               genres: newTrackGenres,
             },
@@ -208,11 +241,11 @@ export class CustomDataService {
           );
         } else {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.create({
+          await this.trackCustomDataEntity.create({
             genres: newTrackGenres,
             id: track.id,
-            fileId: track.id,
-          } as FileCustomDataEntity);
+            trackId: track.id,
+          } as TrackCustomDataEntity);
         }
       }
     }
@@ -235,12 +268,16 @@ export class CustomDataService {
     albumArtists: string,
     year: number,
   ): Promise<number[]> {
-    const album = await this.libraryService.retrieveAlbum(accountId, albumId);
+    const albums = await this.libraryService.retrieveAlbum(accountId, albumId);
+    const album = albums[0];
+    if (!album) {
+      throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
+    }
     for (let i = 0, len = album.tracks.length; i < len; i += 1) {
       const file = album.tracks[i];
       if (file) {
         // eslint-disable-next-line no-await-in-loop
-        const existingCustomData = await this.fileCustomDataEntity.findOne({
+        const existingCustomData = await this.trackCustomDataEntity.findOne({
           where: {
             id: file.id,
           },
@@ -248,7 +285,7 @@ export class CustomDataService {
         });
         if (existingCustomData) {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.update(
+          await this.trackCustomDataEntity.update(
             {
               albumTitle,
               albumArtists,
@@ -262,13 +299,13 @@ export class CustomDataService {
           );
         } else {
           // eslint-disable-next-line no-await-in-loop
-          await this.fileCustomDataEntity.create({
+          await this.trackCustomDataEntity.create({
             albumTitle,
             albumArtists,
             year,
             id: file.id,
-            fileId: file.id,
-          } as FileCustomDataEntity);
+            trackId: file.id,
+          } as TrackCustomDataEntity);
         }
       }
     }
@@ -278,7 +315,7 @@ export class CustomDataService {
   /**
    * Sets custom data for the specified track.
    * @param {number} accountId The ID of the account that owns the track.
-   * @param {number} fileId The ID of the track file.
+   * @param {number} trackId The ID of the track file.
    * @param {string} title The custom title for the track.
    * @param {string} artists The custom artists for the track.
    * @param {string} composers The custom composers for the track.
@@ -291,7 +328,7 @@ export class CustomDataService {
    */
   async setCustomTrackData(
     accountId: number,
-    fileId: number,
+    trackId: number,
     title: string,
     artists: string,
     composers: string,
@@ -301,35 +338,35 @@ export class CustomDataService {
     trackNumber: number,
     year: number,
   ): Promise<number> {
-    const file = await this.fileEntity.findByPk(fileId, {
+    const file = await this.trackEntity.findByPk(trackId, {
       attributes: ['accountId'],
     });
     if (!file || file.accountId !== accountId) {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
     }
-    const existingData = await this.fileCustomDataEntity.findOne({
+    const existingData = await this.trackCustomDataEntity.findOne({
       where: {
-        id: fileId,
+        id: trackId,
       },
       attributes: ['id'],
     });
-    const data: FileCustomDataEntity = {
+    const data: TrackCustomDataEntity = {
       artists,
       composers,
       genres,
       comment,
       discNumber,
-      fileId,
-      id: fileId,
+      trackId,
+      id: trackId,
       title,
       trackNumber,
       year,
-    } as FileCustomDataEntity;
+    } as TrackCustomDataEntity;
     if (existingData) {
-      await this.fileCustomDataEntity.update(data, { where: { id: fileId } });
+      await this.trackCustomDataEntity.update(data, { where: { id: trackId } });
     } else {
-      await this.fileCustomDataEntity.create(data);
+      await this.trackCustomDataEntity.create(data);
     }
-    return fileId;
+    return trackId;
   }
 }

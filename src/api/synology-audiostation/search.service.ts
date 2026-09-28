@@ -1,6 +1,6 @@
 import { ContentTypeEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
-import { LibraryAlbumDto, LibraryArtistDto, LibraryTrackDto } from 'src/library/dtos';
+import { LibraryAlbumDto, LibraryAssociationDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { SynologySearchAlbumDto, SynologySearchArtistDto, SynologySearchDataDto, SynologySongDto } from './dtos';
 import { replaceDoubleQuotes } from 'src/utils/strings';
@@ -15,7 +15,7 @@ function albumToRow(album: LibraryAlbumDto): SynologySearchAlbumDto {
   };
 }
 
-function artistToRow(artist: LibraryArtistDto): SynologySearchArtistDto {
+function artistToRow(artist: LibraryAssociationDto): SynologySearchArtistDto {
   return {
     name: replaceDoubleQuotes(artist.name),
   };
@@ -68,10 +68,11 @@ export class SynologySearchService {
       0,
       100_000,
     );
-    const artists = await this.libraryService.listTrackArtists(
+    const artists = await this.libraryService.listTrackAssociations(
       accountId,
       {
         filter: keyword,
+        isArtist: true,
       },
       0,
       100_000,

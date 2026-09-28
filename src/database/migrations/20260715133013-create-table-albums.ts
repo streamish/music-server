@@ -57,11 +57,15 @@ export async function up(queryInterface: QueryInterface) {
   await queryInterface.addIndex('albums', ['title'], {
     name: 'idx_albums_title',
   });
+  await queryInterface.addIndex('albums', ['account_id', 'title', 'id'], {
+    name: 'idx_albums_account_lower_title_id',
+  });
 }
 
 export async function down(queryInterface: QueryInterface) {
   await queryInterface.removeIndex('albums', 'idx_albums_account_id');
   await queryInterface.removeIndex('albums', 'idx_albums_root_path_id');
   await queryInterface.removeIndex('albums', 'idx_albums_title');
+  await queryInterface.removeIndex('albums', 'idx_albums_account_lower_title_id');
   await queryInterface.dropTable('albums');
 }

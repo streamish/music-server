@@ -1,3 +1,4 @@
+import { AssociationTypeEnum } from '../../../types/api-schema';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
@@ -15,14 +16,15 @@ describe('/api/user/set-artist-name', () => {
     }
     accountId = newAccount.data.accountId;
     userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data: artistData } = await userApi.listAlbumArtists({
+    const { data: artistData } = await userApi.listAlbumAssociations({
+      associationType: AssociationTypeEnum.artist,
       offset: 0,
       limit: 1,
     });
-    if (!artistData?.artists?.[0]?.id) {
+    if (!artistData?.associations?.[0]?.id) {
       throw new Error('Failed to fetch artist data');
     }
-    artistId = artistData.artists[0].id;
+    artistId = artistData.associations[0].id;
   }, 120_000);
 
   afterAll(async () => {

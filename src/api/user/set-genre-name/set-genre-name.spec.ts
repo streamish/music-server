@@ -1,3 +1,4 @@
+import { AssociationTypeEnum } from '../../../types/api-schema';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
@@ -15,14 +16,15 @@ describe('/api/user/set-genre-name', () => {
     }
     accountId = newAccount.data.accountId;
     userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data: genreData } = await userApi.listTrackGenres({
+    const { data: genreData } = await userApi.listTrackAssociations({
+      associationType: AssociationTypeEnum.genre,
       offset: 0,
       limit: 1,
     });
-    if (!genreData?.genres?.[0]?.id) {
+    if (!genreData?.associations?.[0]?.id) {
       throw new Error('Failed to fetch genre data');
     }
-    genreId = genreData.genres[0].id;
+    genreId = genreData.associations[0].id;
   }, 120_000);
 
   afterAll(async () => {

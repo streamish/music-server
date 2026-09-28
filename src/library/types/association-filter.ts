@@ -1,0 +1,36 @@
+/**
+ * The filters that can be applied when querying for artists in the library.
+ */
+export type AssociationFilter = {
+  /**
+   * Optional filter for the date the artist was added to the library, which will do an exact match against
+   * the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
+   */
+  addedAfter?: Date;
+  /**
+   * Optional filter for the date the artist was added to the library, which will do an exact match against
+   * the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
+   */
+  addedBefore?: Date;
+  /**
+   * Flag for the association being for an artist.
+   */
+  isArtist?: boolean;
+  /**
+   * Flag for the association being for a composer.
+   */
+  isComposer?: boolean;
+  /**
+   * Flag for the association being for a genre.
+   */
+  isGenre?: boolean;
+  /**
+   * Optional filter for a case-insensitive partial-match against the artist's name.
+   */
+  filter?: string;
+  /**
+   * Optional filter for the genre(s), which will do a case-insensitive match against the
+   * genres associated with an artist.
+   */
+  genre?: string[];
+};

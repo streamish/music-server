@@ -25,23 +25,18 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataType.BOOLEAN,
       allowNull: true,
     },
-    artist_id: {
+    association_id: {
       type: DataType.INTEGER,
       allowNull: true,
       references: {
-        model: 'artists',
+        model: 'associations',
         key: 'id',
       },
       onDelete: 'CASCADE',
     },
-    composer_id: {
-      type: DataType.INTEGER,
+    association_type: {
+      type: DataType.STRING(50),
       allowNull: true,
-      references: {
-        model: 'composers',
-        key: 'id',
-      },
-      onDelete: 'CASCADE',
     },
     created_at: {
       type: DataType.DATE,
@@ -50,15 +45,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     folder_path: {
       type: DataType.STRING(500),
       allowNull: true,
-    },
-    genre_id: {
-      type: DataType.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'genres',
-        key: 'id',
-      },
-      onDelete: 'CASCADE',
     },
     id: {
       type: DataType.INTEGER,

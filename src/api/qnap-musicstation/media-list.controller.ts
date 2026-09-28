@@ -127,7 +127,7 @@ export class QnapMediaListController {
       const query = plainToInstance(QnapMediaListGeneralQueryDto, data, {
         enableImplicitConversion: true,
       });
-      // Route #1:  song list
+      // Route #1:  track list
       if (query.type === 'songs') {
         const songList = await this.mediaListApiService.listTracks(
           user.id,
@@ -139,7 +139,7 @@ export class QnapMediaListController {
         return objectToXml({ status: 1, ...songList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
       if (query.type === 'album') {
-        // Route #2:  album's song list
+        // Route #2:  album's track list
         if (query.linkid) {
           const trackList = await this.mediaListApiService.listTracksByAlbum(user.id, query.linkid);
           return objectToXml({ status: 1, ...trackList }, 'QDocRoot version="1.0"', 'QDocRoot');
@@ -155,7 +155,7 @@ export class QnapMediaListController {
         return objectToXml({ status: 1, ...albumList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
       if (query.type === 'artist') {
-        // Route #4:  artist's song list
+        // Route #4:  artist's track list
         if (query.linkid) {
           const albumList = await this.mediaListApiService.listAlbumsByArtist(
             user.id,
@@ -178,9 +178,14 @@ export class QnapMediaListController {
         return objectToXml({ status: 1, ...artistList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
       if (query.type === 'genre') {
-        // Route #6:  genre's song list
+        // Route #6:  genre's track list
         if (query.linkid) {
-          const trackList = await this.mediaListApiService.listTracksByGenre(user.id, query.linkid);
+          const trackList = await this.mediaListApiService.listTracksByGenre(
+            user.id,
+            query.linkid,
+            query.pagesize || 250,
+            query.currpage || 1,
+          );
           return objectToXml({ status: 1, ...trackList }, 'QDocRoot version="1.0"', 'QDocRoot');
         }
         // Route #7:  genre list

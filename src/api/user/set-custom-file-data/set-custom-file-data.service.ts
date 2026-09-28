@@ -1,29 +1,29 @@
 import { ErrorCodes } from 'src/constants/error-codes';
-import { FileCustomDataEntity, FileEntity } from 'src/database/entities';
 import { IndexerService } from 'src/indexer/indexer.service';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { TrackCustomDataEntity, TrackEntity } from 'src/database/entities';
 import { UserSetCustomFileDataBodyDto } from './set-custom-file-data.dto';
 
 @Injectable()
 export class UserSetCustomFileDataService {
   constructor(
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
-    @InjectModel(FileCustomDataEntity)
-    private readonly fileCustomDataEntity: typeof FileCustomDataEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
+    @InjectModel(TrackCustomDataEntity)
+    private readonly trackCustomDataEntity: typeof TrackCustomDataEntity,
     @Inject(IndexerService)
     private readonly indexerService: IndexerService,
   ) {}
 
-  async setCustomFileData(accountId: number, fileId: number, body: UserSetCustomFileDataBodyDto): Promise<void> {
-    const file = await this.fileEntity.findOne({ where: { id: fileId, accountId } });
+  async setCustomFileData(accountId: number, trackId: number, body: UserSetCustomFileDataBodyDto): Promise<void> {
+    const file = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
     if (!file) {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
     }
-    const existingCustomData = await this.fileCustomDataEntity.findOne({ where: { fileId } });
+    const existingCustomData = await this.trackCustomDataEntity.findOne({ where: { trackId } });
     if (existingCustomData) {
-      await this.fileCustomDataEntity.update(
+      await this.trackCustomDataEntity.update(
         {
           albumArtists: body.albumArtists !== undefined ? body.albumArtists : existingCustomData.albumArtists,
           albumTitle: body.albumTitle !== undefined ? body.albumTitle : existingCustomData.albumTitle,
@@ -36,12 +36,12 @@ export class UserSetCustomFileDataService {
           trackNumber: body.trackNumber !== undefined ? body.trackNumber : existingCustomData.trackNumber,
           year: body.year !== undefined ? body.year : existingCustomData.year,
         },
-        { where: { id: fileId } },
+        { where: { id: trackId } },
       );
     } else {
-      await this.fileCustomDataEntity.create({
-        id: fileId,
-        fileId,
+      await this.trackCustomDataEntity.create({
+        id: trackId,
+        trackId,
         albumArtists: body.albumArtists,
         albumTitle: body.albumTitle,
         artists: body.artists,
@@ -52,8 +52,8 @@ export class UserSetCustomFileDataService {
         title: body.title,
         trackNumber: body.trackNumber,
         year: body.year,
-      } as FileCustomDataEntity);
+      } as TrackCustomDataEntity);
     }
-    await this.indexerService.scanFile(fileId);
+    await this.indexerService.scanFile(trackId);
   }
 }

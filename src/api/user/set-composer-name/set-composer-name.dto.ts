@@ -8,8 +8,8 @@ export class UserSetComposerNameQueryDto {
   /**
    * The ID of the composer
    */
-  @IsInt({ message: ErrorCodes.INVALID_COMPOSER_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_COMPOSER_ID_ERROR })
+  @IsInt({ message: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR })
+  @Min(1, { message: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR })
   declare id: number;
 }
 
@@ -46,9 +46,13 @@ export class UserSetComposerNameBadRequestResponseDto extends BadRequestResponse
    */
   @ApiProperty({
     isArray: true,
-    enum: [ErrorCodes.INVALID_COMPOSER_ID_ERROR, ErrorCodes.INVALID_NAME_ERROR, ErrorCodes.INVALID_NAME_LENGTH_ERROR],
+    enum: [
+      ErrorCodes.INVALID_ASSOCIATION_ID_ERROR,
+      ErrorCodes.INVALID_NAME_ERROR,
+      ErrorCodes.INVALID_NAME_LENGTH_ERROR,
+    ],
     enumName: 'UserSetComposerNameBadRequestErrorMessage',
-    default: ErrorCodes.INVALID_COMPOSER_ID_ERROR,
+    default: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR,
   })
   declare message: ErrorCodes[];
 }

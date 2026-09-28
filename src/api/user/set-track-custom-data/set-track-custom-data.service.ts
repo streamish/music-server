@@ -11,19 +11,19 @@ export class UserSetTrackCustomDataService {
     private readonly indexerService: IndexerService,
   ) {}
 
-  async setTrackData(accountId: number, fileId: number, customData: UserSetTrackCustomDataBodyDto) {
+  async setTrackData(accountId: number, trackId: number, customData: UserSetTrackCustomDataBodyDto) {
     await this.customDataService.setCustomTrackData(
       accountId,
-      fileId,
+      trackId,
       customData.title,
       customData.artists,
-      customData.composers,
-      customData.genres,
-      customData.comment,
-      customData.discNumber,
-      customData.trackNumber,
-      customData.year,
+      customData.composers || '',
+      customData.genres || '',
+      customData.comment || '',
+      customData.discNumber || 0,
+      customData.trackNumber || 0,
+      customData.year || 0,
     );
-    await this.indexerService.scanFile(fileId);
+    await this.indexerService.scanFile(trackId);
   }
 }

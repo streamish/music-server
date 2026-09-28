@@ -28,7 +28,7 @@ describe('/api/user/delete-custom-file-data', () => {
   describe('errors', () => {
     it('should reject invalid file id', async () => {
       const { error } = await userApi.deleteCustomFileData(-1);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_FILE_ID_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
     });
   });
 

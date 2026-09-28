@@ -1,7 +1,7 @@
 /**
  * The filters that can be applied when querying for albums in the library.
  */
-export type AlbumFilters = {
+export type AlbumFilter = {
   /*
    * Optional filter for the date the album was added to the library, which will do an exact match against
    * the date the album was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
@@ -18,15 +18,27 @@ export type AlbumFilters = {
    */
   artist?: string[];
   /**
+   * Optional filter for specific artist(s) specified by ID.
+   */
+  artistIds?: number[];
+  /**
    * Optional filter for the composer(s), which will do a case-insensitive match against the
    * composers associated with an album.
    */
   composer?: string[];
   /**
+   * Optional filter for specific composer(s) specified by ID.
+   */
+  composerIds?: number[];
+  /**
    * Optional filter for the genre(s), which will do a case-insensitive match against the
    * genres associated with an album.
    */
   genre?: string[];
+  /**
+   * Optional filter for specific genre(s) specified by ID.
+   */
+  genreIds?: number[];
   /**
    * Optional filter for the maximum rating value, which will do an exact match against the
    * aggregate rating of an album's tracks.

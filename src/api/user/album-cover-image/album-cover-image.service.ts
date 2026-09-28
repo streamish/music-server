@@ -1,0 +1,40 @@
+import { AlbumEntity } from 'src/database/entities/album.entity';
+import { CoverImage } from 'src/types/cover-image';
+import { InjectModel } from '@nestjs/sequelize/dist/common/sequelize.decorators';
+import { Injectable } from '@nestjs/common';
+import { Op, col, where } from 'sequelize';
+import sharp from 'sharp';
+
+@Injectable()
+export class UserAlbumCoverImageService {
+  constructor(
+    @InjectModel(AlbumEntity)
+    private readonly albumEntity: typeof AlbumEntity,
+  ) {}
+
+  async getImage(albumId: number, size: number): Promise<CoverImage | undefined> {
+    const artistCover = await this.albumEntity.findOne({
+      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
+      where: {
+        [Op.and]: [where(col('coverImage'), Op.not, null), where(col('coverImageMimeType'), Op.not, null)],
+        id: albumId,
+      },
+    });
+    if (!artistCover) {
+      return undefined;
+    }
+    const sharpImage = sharp(artistCover.coverImage);
+    const metadata = await sharpImage.metadata();
+    if (!metadata.width || !metadata.height) {
+      return undefined;
+    }
+    if (metadata.width !== size || metadata.height !== size) {
+      const resizedImageBuffer = await sharpImage.resize(size, size, { fit: 'inside' });
+      artistCover.coverImage = await resizedImageBuffer.toBuffer();
+    }
+    return {
+      coverImage: artistCover.coverImage,
+      coverImageMimeType: artistCover.coverImageMimeType,
+    };
+  }
+}

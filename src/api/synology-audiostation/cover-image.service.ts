@@ -1,14 +1,8 @@
-import {
-  AlbumArtistEntity,
-  AlbumEntity,
-  ArtistEntity,
-  ComposerEntity,
-  FileEntity,
-  LinkedComposerEntity,
-} from 'src/database/entities';
+import { AlbumEntity, AssociationEntity, AssociationLinkEntity, TrackEntity } from 'src/database/entities';
 import { CoverImage } from 'src/types/cover-image';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Op } from 'sequelize';
 import { normalizeString } from 'src/utils/strings';
 
 @Injectable()
@@ -16,10 +10,8 @@ export class SynologyCoverImageService {
   constructor(
     @InjectModel(AlbumEntity)
     private readonly albumEntity: typeof AlbumEntity,
-    @InjectModel(ComposerEntity)
-    private readonly composerEntity: typeof ComposerEntity,
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {}
 
   /**
@@ -39,14 +31,21 @@ export class SynologyCoverImageService {
       },
       include: [
         {
-          model: AlbumArtistEntity,
-          attributes: [],
+          model: AssociationLinkEntity,
           include: [
             {
-              model: ArtistEntity,
               attributes: [],
+              model: AssociationEntity,
               where: {
                 nameNormalized: normalizeString(albumArtist),
+                [Op.or]: [
+                  {
+                    isAlbumArtist: true,
+                  },
+                  {
+                    isTrackArtist: true,
+                  },
+                ],
               },
             },
           ],
@@ -82,14 +81,21 @@ export class SynologyCoverImageService {
       },
       include: [
         {
-          model: AlbumArtistEntity,
-          attributes: [],
+          model: AssociationLinkEntity,
           include: [
             {
-              model: ArtistEntity,
               attributes: [],
+              model: AssociationEntity,
               where: {
                 nameNormalized: normalizeString(albumArtist),
+                [Op.or]: [
+                  {
+                    isAlbumArtist: true,
+                  },
+                  {
+                    isTrackArtist: true,
+                  },
+                ],
               },
             },
           ],
@@ -112,37 +118,31 @@ export class SynologyCoverImageService {
    * @returns {Promise<CoverImage | undefined>} The album cover image.
    */
   async getComposerCoverImage(accountId: number, composerName: string): Promise<CoverImage | undefined> {
-    const composer = await this.composerEntity.findOne({
-      attributes: ['id'],
+    const album = await this.albumEntity.findOne({
+      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
-        nameNormalized: normalizeString(composerName),
+        accountId,
       },
       include: [
         {
-          model: LinkedComposerEntity,
-          attributes: ['fileId'],
+          model: AssociationLinkEntity,
           include: [
             {
-              model: FileEntity,
-              attributes: ['albumId'],
+              attributes: [],
+              model: AssociationEntity,
               where: {
-                accountId,
+                nameNormalized: normalizeString(composerName),
+                isComposer: true,
               },
-              include: [
-                {
-                  model: AlbumEntity,
-                  attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
-                },
-              ],
             },
           ],
         },
       ],
     });
-    if (!composer) {
-      throw new NotFoundException(`Cover image not found for composer: ${composerName}`);
+    if (!album) {
+      throw new NotFoundException(`Album not found for composer: ${composerName}`);
     }
-    return composer.linkedComposers?.[0]?.file?.album;
+    return album;
   }
 
   /**
@@ -151,14 +151,14 @@ export class SynologyCoverImageService {
    * updated by saving a new image into the IDv3 tag data and then the file being modified will be picked
    * up by the indexer on its next run.
    * @param {number} accountId The account ID for the user requesting the cover image.
-   * @param {number} fileId The ID of the track for which to retrieve the cover image.
+   * @param {number} trackId The ID of the track for which to retrieve the cover image.
    * @returns {Promise<CoverImage | undefined>} The track cover image.
    */
-  async getFileCoverImage(accountId: number, fileId: number): Promise<CoverImage | undefined> {
-    const file = await this.fileEntity.findOne({
+  async getTrackCoverImage(accountId: number, trackId: number): Promise<CoverImage | undefined> {
+    const track = await this.trackEntity.findOne({
       attributes: [],
       where: {
-        id: fileId,
+        id: trackId,
         accountId,
       },
       include: [
@@ -168,6 +168,9 @@ export class SynologyCoverImageService {
         },
       ],
     });
-    return file?.album;
+    if (!track?.album) {
+      throw new NotFoundException(`Album not found for track ID: ${trackId}`);
+    }
+    return track?.album;
   }
 }

@@ -2,8 +2,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FileTypeEnum } from 'src/types/enums';
 import { IsEnum, IsInt, IsNumber, IsString } from 'class-validator';
-import { LibraryArtistDto, LibraryComposerDto } from '.';
-import { LibraryGenreDto } from './library.genre.dto';
+import { LibraryAssociationDto } from './library.association.dto';
 import type { RatingOrUnset } from 'src/types';
 
 export class LibraryTrackDto {
@@ -11,7 +10,7 @@ export class LibraryTrackDto {
    * The list of artists for the track.
    */
   @ApiProperty() // not sure why but defining type + isArray results in LibraryArtistDto[][]
-  declare albumArtists: LibraryArtistDto[];
+  declare albumArtists: LibraryAssociationDto[];
 
   /**
    * The title of the album to which the track belongs.
@@ -26,10 +25,49 @@ export class LibraryTrackDto {
   declare albumTitle: string;
 
   /**
+   * A color detected in the cover art image
+   */
+  @IsString()
+  declare albumCoverImageLightVibrant?: string;
+
+  /**
+   * A color detected in the cover art image
+   */
+  @IsString()
+  declare albumCoverImageDarkVibrant?: string;
+
+  /**
+   * A color detected in the cover art image
+   */
+  @IsString()
+  declare albumCoverImageMuted?: string;
+
+  /**
+   * A color detected in the cover art image
+   */
+  @IsString()
+  declare albumCoverImageVibrant?: string;
+
+  /**
+   * A color detected in the cover art image
+   */
+  @IsString()
+  declare albumCoverImageDarkMuted?: string;
+
+  /**
+   * A color detected in the cover art image
+   */
+  @IsString()
+  declare albumCoverImageLightMuted?: string;
+
+  /**
    * The list of artists for the track.
    */
-  @ApiProperty() // not sure why but defining type + isArray results in LibraryArtistDto[][]
-  declare artists: LibraryArtistDto[];
+  @ApiProperty({
+    type: [LibraryAssociationDto],
+    // isArray: true,
+  })
+  declare artists: LibraryAssociationDto[];
 
   /**
    * The comment or description associated with the track.
@@ -40,8 +78,11 @@ export class LibraryTrackDto {
   /**
    * The list of composers for the track.
    */
-  @ApiProperty() // not sure why but defining type + isArray results in LibraryComposerDto[][]
-  declare composers: LibraryComposerDto[];
+  @ApiProperty({
+    type: [LibraryAssociationDto],
+    // isArray: true,
+  })
+  declare composers: LibraryAssociationDto[];
 
   /**
    * The disc number of the track on the album or disc if there are multiple discs.  If this field is not
@@ -88,6 +129,11 @@ export class LibraryTrackDto {
   /**
    * The type of the file for the track, such as MP3, FLAC, etc.
    */
+  @ApiProperty({
+    enum: FileTypeEnum,
+    enumName: 'FileTypeEnum',
+    example: FileTypeEnum.FLAC,
+  })
   @IsEnum(FileTypeEnum)
   declare fileType: FileTypeEnum;
 
@@ -95,10 +141,10 @@ export class LibraryTrackDto {
    * The list of genres for the track.
    */
   @ApiProperty({
-    type: LibraryGenreDto,
+    type: LibraryAssociationDto,
     isArray: true,
   })
-  declare genres: LibraryGenreDto[];
+  declare genres: LibraryAssociationDto[];
 
   /**
    * The internally-generated unique ID of the track

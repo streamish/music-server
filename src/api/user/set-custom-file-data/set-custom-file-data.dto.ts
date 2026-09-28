@@ -8,8 +8,8 @@ export class UserSetCustomFileDataQueryDto {
   /**
    * The ID of the file
    */
-  @IsInt({ message: ErrorCodes.INVALID_FILE_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_FILE_ID_ERROR })
+  @IsInt({ message: ErrorCodes.INVALID_TRACK_ID_ERROR })
+  @Min(1, { message: ErrorCodes.INVALID_TRACK_ID_ERROR })
   declare id: number;
 }
 
@@ -135,7 +135,7 @@ export class UserSetCustomFileDataNotFoundResponseDto extends NotFoundResponseDt
 }
 
 const UserSetCustomFileDataBadRequestErrorMessage = [
-  ErrorCodes.INVALID_FILE_ID_ERROR,
+  ErrorCodes.INVALID_TRACK_ID_ERROR,
   ErrorCodes.INVALID_ALBUM_ARTISTS_ERROR,
   ErrorCodes.INVALID_ALBUM_ARTISTS_LENGTH_ERROR,
   ErrorCodes.INVALID_ALBUM_TITLE_ERROR,
@@ -167,7 +167,7 @@ export class UserSetCustomFileDataBadRequestResponseDto extends BadRequestRespon
     isArray: true,
     enum: UserSetCustomFileDataBadRequestErrorMessage,
     enumName: 'UserSetCustomFileDataBadRequestErrorMessage',
-    default: ErrorCodes.INVALID_FILE_ID_ERROR,
+    default: ErrorCodes.INVALID_TRACK_ID_ERROR,
   })
   declare message: ErrorCodes[];
 }

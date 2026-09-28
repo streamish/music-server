@@ -49,7 +49,7 @@ export class SynologyCoverImageController {
   ) {
     let album;
     if ('id' in query) {
-      album = await this.coverImageService.getFileCoverImage(user.id, query.id);
+      album = await this.coverImageService.getTrackCoverImage(user.id, query.id);
     } else if ('artist_name' in query) {
       album = await this.coverImageService.getArtistCoverImage(user.id, query.artist_name);
     } else if ('album_name' in query) {

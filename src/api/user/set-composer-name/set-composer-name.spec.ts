@@ -1,3 +1,4 @@
+import { AssociationTypeEnum } from '../../../types/api-schema';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
@@ -15,14 +16,15 @@ describe('/api/user/set-composer-name', () => {
     }
     accountId = newAccount.data.accountId;
     userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data: composerData } = await userApi.listTrackComposers({
+    const { data: composerData } = await userApi.listTrackAssociations({
+      associationType: AssociationTypeEnum.composer,
       offset: 0,
       limit: 1,
     });
-    if (!composerData?.composers?.[0]?.id) {
+    if (!composerData?.associations?.[0]?.id) {
       throw new Error('Failed to fetch composer data');
     }
-    composerId = composerData.composers[0].id;
+    composerId = composerData.associations[0].id;
   }, 120_000);
 
   afterAll(async () => {
@@ -55,7 +57,7 @@ describe('/api/user/set-composer-name', () => {
       const { error } = await userApi.setComposerName(-1, {
         name: 'Custom Composer',
       });
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_COMPOSER_ID_ERROR);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ASSOCIATION_ID_ERROR);
     }, 120_000);
 
     it('should reject invalid name length', async () => {
