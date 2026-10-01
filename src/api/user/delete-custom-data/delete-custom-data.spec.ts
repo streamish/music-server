@@ -55,7 +55,7 @@ describe('/api/user/delete-custom-data', () => {
         throw new Error('Track not found before delete');
       }
       const trackId = trackBeforeDelete.id;
-      const { error, data } = await userApi.setCustomFileData(trackId, {
+      const { error, data } = await userApi.setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',

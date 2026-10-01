@@ -28,7 +28,7 @@ import { UserSetCustomDataService } from './set-custom-data.service';
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
 export class UserSetCustomDataController {
-  constructor(private readonly setCustomFileDataService: UserSetCustomDataService) {}
+  constructor(private readonly setCustomDataService: UserSetCustomDataService) {}
 
   @Put('set-custom-data')
   @ApiOperation({
@@ -60,7 +60,7 @@ export class UserSetCustomDataController {
     @Query() query: UserSetCustomDataQueryDto,
     @Body() body: UserSetCustomDataBodyDto,
   ) {
-    await this.setCustomFileDataService.setCustomFileData(user.id, query.id, body);
+    await this.setCustomDataService.setCustomData(user.id, query.id, body);
     return {
       success: true,
     };

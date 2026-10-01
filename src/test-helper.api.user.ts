@@ -194,7 +194,7 @@ async function setComposerName(params: RequestParams, composerId: number, body: 
 
 type SetCustomFileDataBodyDto = paths['/api/user/set-custom-data']['put']['requestBody']['content']['application/json'];
 
-async function setCustomFileData(params: RequestParams, customFileDataId: number, body: SetCustomFileDataBodyDto) {
+async function setCustomData(params: RequestParams, customFileDataId: number, body: SetCustomFileDataBodyDto) {
   return api.PUT(`/api/user/set-custom-data`, {
     body,
     params: {
@@ -267,7 +267,7 @@ export type UserApi = {
   setAlbumCustomData: (albumId: number, data: SetAlbumCustomDataBodyDto) => ReturnType<typeof setAlbumCustomData>;
   setArtistName: (artistId: number, data: SetArtistNameBodyDto) => ReturnType<typeof setArtistName>;
   setComposerName: (composerId: number, data: SetComposerNameBodyDto) => ReturnType<typeof setComposerName>;
-  setCustomFileData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomFileData>;
+  setCustomData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomData>;
   setGenreName: (genreId: number, data: SetGenreNameBodyDto) => ReturnType<typeof setGenreName>;
   setTrackCustomData: (
     trackCustomDataId: number,
@@ -351,8 +351,8 @@ export async function createUserApi(username?: string, password?: string): Promi
     async setGenreName(genreId: number, data: SetGenreNameBodyDto) {
       return setGenreName(params, genreId, data);
     },
-    async setCustomFileData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
-      return setCustomFileData(params, customFileDataId, data);
+    async setCustomData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
+      return setCustomData(params, customFileDataId, data);
     },
     async setTrackCustomData(trackCustomDataId: number, data: SetTrackCustomDataBodyDto) {
       return setTrackCustomData(params, trackCustomDataId, data);

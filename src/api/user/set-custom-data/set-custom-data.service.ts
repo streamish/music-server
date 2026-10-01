@@ -16,7 +16,7 @@ export class UserSetCustomDataService {
     private readonly indexerService: IndexerService,
   ) {}
 
-  async setCustomFileData(accountId: number, trackId: number, body: UserSetCustomDataBodyDto): Promise<void> {
+  async setCustomData(accountId: number, trackId: number, body: UserSetCustomDataBodyDto): Promise<void> {
     const file = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
     if (!file) {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
