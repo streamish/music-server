@@ -1,13 +1,24 @@
-import { ADMIN_PASSWORD, ADMIN_USERNAME, UserApi, api, createUserApi } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/users/folder-structure', () => {
   let userApi: UserApi;
+  let accountId: number;
 
   beforeAll(async () => {
-    userApi = await createUserApi(ADMIN_USERNAME, ADMIN_PASSWORD);
+    const newUsername = `user-${Date.now()}`;
+    const newAccount = await testApi.duplicateAccount(USER_USERNAME, newUsername);
+    if (!newAccount.data?.accountId) {
+      throw new Error('Failed to create new account');
+    }
+    accountId = newAccount.data.accountId;
+    userApi = await createUserApi(newUsername, USER_PASSWORD);
   });
+
+  afterAll(async () => {
+    await testApi.deleteAccount(accountId);
+  }, 120_000);
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {

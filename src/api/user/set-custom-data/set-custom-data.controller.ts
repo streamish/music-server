@@ -14,28 +14,29 @@ import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USE
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 import {
-  UserSetCustomFileDataBadRequestResponseDto,
-  UserSetCustomFileDataBodyDto,
-  UserSetCustomFileDataNotFoundResponseDto,
-  UserSetCustomFileDataQueryDto,
-  UserSetCustomFileDataResponseDto,
-} from './set-custom-file-data.dto';
-import { UserSetCustomFileDataService } from './set-custom-file-data.service';
+  UserSetCustomDataBadRequestResponseDto,
+  UserSetCustomDataBodyDto,
+  UserSetCustomDataNotFoundResponseDto,
+  UserSetCustomDataQueryDto,
+  UserSetCustomDataResponseDto,
+} from './set-custom-data.dto';
+import { UserSetCustomDataService } from './set-custom-data.service';
 
 @Controller({
   path: '/api/user',
 })
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
-export class UserSetCustomFileDataController {
-  constructor(private readonly setCustomFileDataService: UserSetCustomFileDataService) {}
+export class UserSetCustomDataController {
+  constructor(private readonly setCustomFileDataService: UserSetCustomDataService) {}
 
-  @Put('set-custom-file-data')
+  @Put('set-custom-data')
   @ApiOperation({
-    summary: `Set custom data for a file in the user's account`,
+    summary: `Set custom data for a track in the user's account`,
     description: [
-      `Assigns custom data to a file, overriding the embedded data within it.`,
-      `The next indexing pass of the file will reflect the newly set custom data.`,
+      `Assigns custom data to a track, overriding the embedded data within it.`,
+      `This data is all-inclusive, compared to similar endpoints that set individual field(s).`,
+      `The next indexing pass of the track will reflect the newly set custom data.`,
       JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
   })
@@ -44,20 +45,20 @@ export class UserSetCustomFileDataController {
   @ApiHeader(JWT_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'Custom data set successfully',
-    type: UserSetCustomFileDataResponseDto,
+    type: UserSetCustomDataResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'File not found',
-    type: UserSetCustomFileDataNotFoundResponseDto,
+    type: UserSetCustomDataNotFoundResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request failed',
-    type: UserSetCustomFileDataBadRequestResponseDto,
+    type: UserSetCustomDataBadRequestResponseDto,
   })
   async put(
     @User() user: AccountEntity,
-    @Query() query: UserSetCustomFileDataQueryDto,
-    @Body() body: UserSetCustomFileDataBodyDto,
+    @Query() query: UserSetCustomDataQueryDto,
+    @Body() body: UserSetCustomDataBodyDto,
   ) {
     await this.setCustomFileDataService.setCustomFileData(user.id, query.id, body);
     return {

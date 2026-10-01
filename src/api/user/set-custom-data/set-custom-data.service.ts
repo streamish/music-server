@@ -3,10 +3,10 @@ import { IndexerService } from 'src/indexer/indexer.service';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { TrackCustomDataEntity, TrackEntity } from 'src/database/entities';
-import { UserSetCustomFileDataBodyDto } from './set-custom-file-data.dto';
+import { UserSetCustomDataBodyDto } from './set-custom-data.dto';
 
 @Injectable()
-export class UserSetCustomFileDataService {
+export class UserSetCustomDataService {
   constructor(
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
@@ -16,7 +16,7 @@ export class UserSetCustomFileDataService {
     private readonly indexerService: IndexerService,
   ) {}
 
-  async setCustomFileData(accountId: number, trackId: number, body: UserSetCustomFileDataBodyDto): Promise<void> {
+  async setCustomFileData(accountId: number, trackId: number, body: UserSetCustomDataBodyDto): Promise<void> {
     const file = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
     if (!file) {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);

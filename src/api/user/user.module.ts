@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { UserAlbumCoverImageModule } from './album-cover-image/album-cover-image.module';
 import { UserAssociationCoverImageModule } from './association-cover-image/association-cover-image.module';
 import { UserCreateRootPathModule } from './create-root-path/create-root-path.module';
-import { UserDeleteCustomFileDataModule } from './delete-custom-file-data/delete-custom-file-data.module';
+import { UserDeleteCustomDataModule } from './delete-custom-data/delete-custom-data.module';
 import { UserDeleteRootPathModule } from './delete-root-path/delete-root-path.module';
 import { UserEndSessionModule } from './end-session/end-session.module';
 import { UserFolderStructureModule } from './folder-structure/folder-structure.module';
@@ -22,7 +22,7 @@ import { UserRetrieveAssociationModule } from './retrieve-association/retrieve-a
 import { UserSetAlbumCustomDataModule } from './set-album-custom-data/set-album-custom-data.module';
 import { UserSetArtistNameModule } from './set-artist-name/set-artist-name.module';
 import { UserSetComposerNameModule } from './set-composer-name/set-composer-name.module';
-import { UserSetCustomFileDataModule } from './set-custom-file-data/set-custom-file-data.module';
+import { UserSetCustomDataModule } from './set-custom-data/set-custom-data.module';
 import { UserSetGenreNameModule } from './set-genre-name/set-genre-name.module';
 import { UserSetTrackCustomDataModule } from './set-track-custom-data/set-track-custom-data.module';
 import { UserStreamFileModule } from './stream-file/stream-file.module';
@@ -33,7 +33,7 @@ import { UserUpdatePasswordModule } from './update-password/update-password.modu
     UserAlbumCoverImageModule,
     UserAssociationCoverImageModule,
     UserCreateRootPathModule,
-    UserDeleteCustomFileDataModule,
+    UserDeleteCustomDataModule,
     UserDeleteRootPathModule,
     UserEndSessionModule,
     UserFolderStructureModule,
@@ -52,7 +52,7 @@ import { UserUpdatePasswordModule } from './update-password/update-password.modu
     UserSetAlbumCustomDataModule,
     UserSetArtistNameModule,
     UserSetComposerNameModule,
-    UserSetCustomFileDataModule,
+    UserSetCustomDataModule,
     UserSetGenreNameModule,
     UserSetTrackCustomDataModule,
     UserStreamFileModule,

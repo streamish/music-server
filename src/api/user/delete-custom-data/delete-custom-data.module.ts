@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize/dist/sequelize.module';
 import { TrackCustomDataEntity } from 'src/database/entities/track-custom-data.entity';
 import { TrackEntity } from 'src/database/entities';
-import { UserDeleteCustomFileDataController } from './delete-custom-file-data.controller';
-import { UserDeleteCustomFileDataService } from './delete-custom-file-data.service';
+import { UserDeleteCustomDataController } from './delete-custom-data.controller';
+import { UserDeleteCustomDataService } from './delete-custom-data.service';
 
 @Module({
   imports: [SequelizeModule.forFeature([TrackEntity, TrackCustomDataEntity])],
-  controllers: [UserDeleteCustomFileDataController],
-  providers: [UserDeleteCustomFileDataService],
+  controllers: [UserDeleteCustomDataController],
+  providers: [UserDeleteCustomDataService],
 })
-export class UserDeleteCustomFileDataModule {}
+export class UserDeleteCustomDataModule {}

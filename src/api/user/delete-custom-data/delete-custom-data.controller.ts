@@ -5,11 +5,11 @@ import { Controller, Delete, Query, UseGuards } from '@nestjs/common';
 import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
 import {
-  UserDeleteCustomFileDataNotFoundResponseDto,
-  UserDeleteCustomFileDataQueryDto,
-  UserDeleteCustomFileDataResponseDto,
-} from './delete-custom-file-data.dto';
-import { UserDeleteCustomFileDataService } from './delete-custom-file-data.service';
+  UserDeleteCustomDataNotFoundResponseDto,
+  UserDeleteCustomDataQueryDto,
+  UserDeleteCustomDataResponseDto,
+} from './delete-custom-data.dto';
+import { UserDeleteCustomDataService } from './delete-custom-data.service';
 import { UserRoleEnum } from 'src/types/enums';
 
 @Controller({
@@ -17,10 +17,10 @@ import { UserRoleEnum } from 'src/types/enums';
 })
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
-export class UserDeleteCustomFileDataController {
-  constructor(private readonly deleteCustomFileDataService: UserDeleteCustomFileDataService) {}
+export class UserDeleteCustomDataController {
+  constructor(private readonly deleteCustomFileDataService: UserDeleteCustomDataService) {}
 
-  @Delete('delete-custom-file-data')
+  @Delete('delete-custom-data')
   @ApiOperation({
     summary: `Remove custom data from a file in the user's account`,
     description: [
@@ -34,13 +34,13 @@ export class UserDeleteCustomFileDataController {
   @ApiHeader(JWT_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'Custom data deleted successfully',
-    type: UserDeleteCustomFileDataResponseDto,
+    type: UserDeleteCustomDataResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'File not found',
-    type: UserDeleteCustomFileDataNotFoundResponseDto,
+    type: UserDeleteCustomDataNotFoundResponseDto,
   })
-  async delete(@User() user: AccountEntity, @Query() query: UserDeleteCustomFileDataQueryDto) {
+  async delete(@User() user: AccountEntity, @Query() query: UserDeleteCustomDataQueryDto) {
     await this.deleteCustomFileDataService.deleteCustomFileData(user.id, query.id);
     return {
       success: true,

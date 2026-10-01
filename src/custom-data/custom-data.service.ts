@@ -274,12 +274,12 @@ export class CustomDataService {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }
     for (let i = 0, len = album.tracks.length; i < len; i += 1) {
-      const file = album.tracks[i];
-      if (file) {
+      const track = album.tracks[i];
+      if (track) {
         // eslint-disable-next-line no-await-in-loop
         const existingCustomData = await this.trackCustomDataEntity.findOne({
           where: {
-            id: file.id,
+            id: track.id,
           },
           attributes: ['id'],
         });
@@ -293,7 +293,7 @@ export class CustomDataService {
             },
             {
               where: {
-                id: file.id,
+                id: track.id,
               },
             },
           );
@@ -303,8 +303,8 @@ export class CustomDataService {
             albumTitle,
             albumArtists,
             year,
-            id: file.id,
-            trackId: file.id,
+            id: track.id,
+            trackId: track.id,
           } as TrackCustomDataEntity);
         }
       }

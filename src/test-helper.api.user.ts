@@ -18,7 +18,7 @@ async function createRootPath(params: RequestParams, rootPath: string) {
 }
 
 async function deleteCustomFileData(params: RequestParams, customFileDataId: number) {
-  return api.DELETE(`/api/user/delete-custom-file-data`, {
+  return api.DELETE(`/api/user/delete-custom-data`, {
     params: {
       ...params,
       query: {
@@ -192,11 +192,10 @@ async function setComposerName(params: RequestParams, composerId: number, body: 
   });
 }
 
-type SetCustomFileDataBodyDto =
-  paths['/api/user/set-custom-file-data']['put']['requestBody']['content']['application/json'];
+type SetCustomFileDataBodyDto = paths['/api/user/set-custom-data']['put']['requestBody']['content']['application/json'];
 
 async function setCustomFileData(params: RequestParams, customFileDataId: number, body: SetCustomFileDataBodyDto) {
-  return api.PUT(`/api/user/set-custom-file-data`, {
+  return api.PUT(`/api/user/set-custom-data`, {
     body,
     params: {
       ...params,

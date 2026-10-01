@@ -13,13 +13,14 @@ import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
 import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
-import { UserSetComposerNameBodyDto, UserSetComposerNameQueryDto } from './set-composer-name.dto';
-import { UserSetComposerNameService } from './set-composer-name.service';
 import {
-  UserSetCustomFileDataBadRequestResponseDto,
-  UserSetCustomFileDataNotFoundResponseDto,
-  UserSetCustomFileDataResponseDto,
-} from '../set-custom-file-data/set-custom-file-data.dto';
+  UserSetComposerNameBadRequestResponseDto,
+  UserSetComposerNameBodyDto,
+  UserSetComposerNameNotFoundResponseDto,
+  UserSetComposerNameQueryDto,
+  UserSetComposerNameResponseDto,
+} from './set-composer-name.dto';
+import { UserSetComposerNameService } from './set-composer-name.service';
 
 @Controller({
   path: '/api/user',
@@ -44,15 +45,15 @@ export class UserSetComposerNameController {
   @ApiHeader(JWT_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'Custom data set successfully',
-    type: UserSetCustomFileDataResponseDto,
+    type: UserSetComposerNameResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'File not found',
-    type: UserSetCustomFileDataNotFoundResponseDto,
+    description: 'Composer not found',
+    type: UserSetComposerNameNotFoundResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request failed',
-    type: UserSetCustomFileDataBadRequestResponseDto,
+    type: UserSetComposerNameBadRequestResponseDto,
   })
   async patch(
     @User() user: AccountEntity,

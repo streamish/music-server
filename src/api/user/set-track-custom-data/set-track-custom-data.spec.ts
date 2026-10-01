@@ -200,7 +200,7 @@ describe('/api/user/set-track-custom-data', () => {
   });
 
   describe('success', () => {
-    it('should create custom data for the file', async () => {
+    it('should create custom data for the track', async () => {
       const { data: trackDataBefore } = await userApi.listTracks({
         offset: 0,
         limit: 100_000,

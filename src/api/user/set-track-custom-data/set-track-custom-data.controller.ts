@@ -14,11 +14,12 @@ import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USE
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 import {
-  UserSetCustomFileDataBadRequestResponseDto,
-  UserSetCustomFileDataNotFoundResponseDto,
-  UserSetCustomFileDataResponseDto,
-} from '../set-custom-file-data/set-custom-file-data.dto';
-import { UserSetTrackCustomDataBodyDto, UserSetTrackCustomDataQueryDto } from './set-track-custom-data.dto';
+  UserSetTrackCustomDataBadRequestResponseDto,
+  UserSetTrackCustomDataBodyDto,
+  UserSetTrackCustomDataNotFoundResponseDto,
+  UserSetTrackCustomDataQueryDto,
+  UserSetTrackCustomDataResponseDto,
+} from './set-track-custom-data.dto';
 import { UserSetTrackCustomDataService } from './set-track-custom-data.service';
 
 @Controller({
@@ -33,7 +34,7 @@ export class UserSetTrackCustomDataController {
   @ApiOperation({
     summary: `Set custom data for a track in the user's account`,
     description: [
-      `Assigns custom data to a track file, overriding the embedded data within it.`,
+      `Assigns custom data to a track, overriding the embedded data within it.`,
       `The next indexing pass of the file will reflect the newly set custom data.`,
       JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
@@ -43,15 +44,15 @@ export class UserSetTrackCustomDataController {
   @ApiHeader(JWT_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'Custom data set successfully',
-    type: UserSetCustomFileDataResponseDto,
+    type: UserSetTrackCustomDataResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'File not found',
-    type: UserSetCustomFileDataNotFoundResponseDto,
+    description: 'Track not found',
+    type: UserSetTrackCustomDataNotFoundResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request failed',
-    type: UserSetCustomFileDataBadRequestResponseDto,
+    type: UserSetTrackCustomDataBadRequestResponseDto,
   })
   async patch(
     @User() user: AccountEntity,

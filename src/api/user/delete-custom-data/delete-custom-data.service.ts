@@ -6,7 +6,7 @@ import { TrackCustomDataEntity } from 'src/database/entities/track-custom-data.e
 import { TrackEntity } from 'src/database/entities';
 
 @Injectable()
-export class UserDeleteCustomFileDataService {
+export class UserDeleteCustomDataService {
   constructor(
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,

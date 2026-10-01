@@ -2,7 +2,7 @@ import { ErrorCodes } from '../../../constants/error-codes';
 import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-describe('/api/user/set-custom-file-data', () => {
+describe('/api/user/set-custom-data', () => {
   let accountId: number;
   let userApi: UserApi;
   let trackId: number;
@@ -36,7 +36,7 @@ describe('/api/user/set-custom-file-data', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PUT(`/api/user/set-custom-file-data`, {
+      const { error } = await api.PUT(`/api/user/set-custom-data`, {
         body: {
           albumArtists: 'Custom albumArtists',
           albumTitle: 'Custom albumTitle',
@@ -258,7 +258,7 @@ describe('/api/user/set-custom-file-data', () => {
   });
 
   describe('success', () => {
-    it('should create custom data for the file', async () => {
+    it('should create custom data for the track', async () => {
       const { data: trackDataBefore } = await userApi.listTracks({
         offset: 0,
         limit: 100_000,

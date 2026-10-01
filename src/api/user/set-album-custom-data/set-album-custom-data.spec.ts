@@ -90,7 +90,7 @@ describe('/api/user/set-album-custom-data', () => {
   });
 
   describe('success', () => {
-    it('should create custom data for the file', async () => {
+    it('should create custom data for the album', async () => {
       const { data: trackDataBefore } = await userApi.listTracks({
         offset: 0,
         limit: 100_000,

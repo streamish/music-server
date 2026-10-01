@@ -1196,7 +1196,7 @@ export class LibraryService {
                 fullPath: currentPath,
                 track: isFile ? track : undefined,
                 ...(isFile
-                  ? { id: folderId, file: track.filePath.split(sep).pop() || '' }
+                  ? { id: track.id, file: track.filePath.split(sep).pop() || '' }
                   : { children: [], id: folderId }),
               };
               parent.children?.push(node);

@@ -4,16 +4,16 @@ import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from '
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsInt, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 
-export class UserSetCustomFileDataQueryDto {
+export class UserSetCustomDataQueryDto {
   /**
-   * The ID of the file
+   * The ID of the track
    */
   @IsInt({ message: ErrorCodes.INVALID_TRACK_ID_ERROR })
   @Min(1, { message: ErrorCodes.INVALID_TRACK_ID_ERROR })
   declare id: number;
 }
 
-export class UserSetCustomFileDataBodyDto {
+export class UserSetCustomDataBodyDto {
   /**
    * Assigns a new value to the album artists if a value is provided.  If an empty
    * string is provided it will erase the existing value.  If the field is not
@@ -118,9 +118,9 @@ export class UserSetCustomFileDataBodyDto {
   declare year?: number;
 }
 
-export class UserSetCustomFileDataResponseDto extends SuccessResponseDto {}
+export class UserSetCustomDataResponseDto extends SuccessResponseDto {}
 
-export class UserSetCustomFileDataNotFoundResponseDto extends NotFoundResponseDto {
+export class UserSetCustomDataNotFoundResponseDto extends NotFoundResponseDto {
   /**
    * The error message(s) that occurred during the validation of the request data or additional requirements
    * applied during the execution of the request
@@ -128,13 +128,13 @@ export class UserSetCustomFileDataNotFoundResponseDto extends NotFoundResponseDt
   @ApiProperty({
     isArray: true,
     enum: [ErrorCodes.FILE_NOT_FOUND_ERROR],
-    enumName: 'UserSetCustomFileDataNotFoundErrorMessage',
+    enumName: 'UserSetCustomDataNotFoundErrorMessage',
     default: ErrorCodes.FILE_NOT_FOUND_ERROR,
   })
   declare message: ErrorCodes[];
 }
 
-const UserSetCustomFileDataBadRequestErrorMessage = [
+const UserSetCustomDataBadRequestErrorMessage = [
   ErrorCodes.INVALID_TRACK_ID_ERROR,
   ErrorCodes.INVALID_ALBUM_ARTISTS_ERROR,
   ErrorCodes.INVALID_ALBUM_ARTISTS_LENGTH_ERROR,
@@ -158,15 +158,15 @@ const UserSetCustomFileDataBadRequestErrorMessage = [
   ErrorCodes.INVALID_YEAR_RANGE_ERROR,
 ];
 
-export class UserSetCustomFileDataBadRequestResponseDto extends BadRequestResponseDto {
+export class UserSetCustomDataBadRequestResponseDto extends BadRequestResponseDto {
   /**
    * The error message(s) that occurred during the validation of the request data or additional requirements
    * applied during the execution of the request
    */
   @ApiProperty({
     isArray: true,
-    enum: UserSetCustomFileDataBadRequestErrorMessage,
-    enumName: 'UserSetCustomFileDataBadRequestErrorMessage',
+    enum: UserSetCustomDataBadRequestErrorMessage,
+    enumName: 'UserSetCustomDataBadRequestErrorMessage',
     default: ErrorCodes.INVALID_TRACK_ID_ERROR,
   })
   declare message: ErrorCodes[];

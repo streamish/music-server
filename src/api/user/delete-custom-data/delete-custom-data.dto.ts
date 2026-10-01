@@ -4,7 +4,7 @@ import { ErrorCodes } from 'src/constants/error-codes';
 import { IsInt, Min } from 'class-validator';
 import { NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 
-export class UserDeleteCustomFileDataQueryDto {
+export class UserDeleteCustomDataQueryDto {
   /**
    * The ID of the file
    */
@@ -13,9 +13,9 @@ export class UserDeleteCustomFileDataQueryDto {
   declare id: number;
 }
 
-export class UserDeleteCustomFileDataResponseDto extends SuccessResponseDto {}
+export class UserDeleteCustomDataResponseDto extends SuccessResponseDto {}
 
-export class UserDeleteCustomFileDataNotFoundResponseDto extends NotFoundResponseDto {
+export class UserDeleteCustomDataNotFoundResponseDto extends NotFoundResponseDto {
   /**
    * The error message(s) that occurred during the validation of the request data or additional requirements
    * applied during the execution of the request
@@ -23,7 +23,7 @@ export class UserDeleteCustomFileDataNotFoundResponseDto extends NotFoundRespons
   @ApiProperty({
     isArray: true,
     enum: [ErrorCodes.FILE_NOT_FOUND_ERROR],
-    enumName: 'UserDeleteCustomFileDataNotFoundErrorMessage',
+    enumName: 'UserDeleteCustomDataNotFoundErrorMessage',
     default: ErrorCodes.FILE_NOT_FOUND_ERROR,
   })
   declare message: ErrorCodes[];
