@@ -1,4 +1,4 @@
-import { AlbumEntity, FileEntity, RootPathEntity } from 'src/database/entities';
+import { AlbumEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { join } from 'node:path';
@@ -6,8 +6,8 @@ import { join } from 'node:path';
 @Injectable()
 export class GuestStreamFileService {
   constructor(
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {}
 
   /**
@@ -18,7 +18,7 @@ export class GuestStreamFileService {
    * @returns {Promise<StreamDto>} The absolute file path, codec and size for streaming the file.
    */
   async getStream(trackId: number) {
-    const file = await this.fileEntity.findOne({
+    const file = await this.trackEntity.findOne({
       attributes: ['createdAt', 'filePath', 'fileSize', 'fileType', 'updatedAt'],
       where: {
         id: trackId,

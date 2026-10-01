@@ -23,7 +23,7 @@ export const USER_APIS = 'User APIs';
 export const SYNOLOGY_AUDIOSTATION_APIS = 'Synology AudioStation APIs';
 
 /**
- * The compatibility layer for QNAP Music Station and their QMusic smartphoen apps.
+ * The compatibility layer for QNAP Music Station and their QMusic smartphone apps.
  */
 export const QNAP_MUSICSTATION_APIS = 'QNAP Music Station APIs';
 
@@ -46,6 +46,15 @@ export const JWT_TOKEN_HEADER = {
   name: 'Authorization',
   description: 'JWT token for authentication',
   example: 'Bearer <JWT_TOKEN>',
+  required: true,
+};
+
+/**
+ * Cookie header decorator for sessions
+ */
+export const COOKIE_TOKEN_HEADER = {
+  name: 'cookie',
+  description: 'The JWT token provided via cookie',
   required: true,
 };
 

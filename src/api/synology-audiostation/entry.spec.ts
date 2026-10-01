@@ -6,11 +6,12 @@ import {
   components,
 } from '../../types/api-schema';
 import { SynologyApi, createSynologyApi, encryptSynologyCredentials } from '../../test-helper.synology';
-import { api } from '../../test-helper';
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { USER_PASSWORD, USER_USERNAME, api, createTestApi } from '../../test-helper';
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/entry.cgi', () => {
   let synologyApi: SynologyApi;
+  let accountId: number;
 
   async function createPlaylist(
     name: string,
@@ -38,7 +39,19 @@ describe('/webapi/AudioStation/entry.cgi', () => {
   }
 
   beforeAll(async () => {
-    synologyApi = await createSynologyApi();
+    const username = `favorites-user-${Date.now()}`;
+    const testApi = await createTestApi();
+    const account = await testApi.duplicateAccount(USER_USERNAME, username);
+    accountId = account.data?.accountId || 0;
+    if (!accountId) {
+      throw new Error(`Failed to create test account`);
+    }
+    synologyApi = await createSynologyApi(username, USER_PASSWORD);
+  }, 120_000);
+
+  afterAll(async () => {
+    const testApi = await createTestApi();
+    await testApi.deleteAccount(accountId);
   });
 
   describe('authentication', () => {
@@ -223,7 +236,7 @@ describe('/webapi/AudioStation/entry.cgi', () => {
       const { items } = await addFavorite([
         {
           criteria: {
-            folder: '5',
+            folder: '3',
           },
           name: 'Nested Folder',
           type: SynologyPinTypeEnum.folder,

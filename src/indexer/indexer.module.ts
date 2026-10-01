@@ -1,23 +1,16 @@
 import {
   AccountEntity,
-  AlbumArtistEntity,
   AlbumEntity,
-  ArtistEntity,
-  ComposerEntity,
-  FileCustomDataEntity,
-  FileEntity,
-  GenreEntity,
+  AssociationEntity,
+  AssociationLinkEntity,
   IndexerConfigurationEntity,
-  LinkedArtistEntity,
-  LinkedComposerEntity,
-  LinkedGenreEntity,
   RootPathEntity,
+  TrackCustomDataEntity,
+  TrackEntity,
 } from 'src/database/entities';
 import { IndexAlbumService } from './index-album.service';
-import { IndexArtistService } from './index-artist.service';
-import { IndexComposerService } from './index-composer.service';
-import { IndexFileService } from './index-file.service';
-import { IndexGenreService } from './index-genre.service';
+import { IndexAssociationService } from './index-association.service';
+import { IndexTrackService } from './index-track.service';
 import { IndexerService } from './indexer.service';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -28,28 +21,16 @@ import { SystemConfigurationEntity } from 'src/database/entities/system-configur
     SequelizeModule.forFeature([
       AccountEntity,
       AlbumEntity,
-      AlbumArtistEntity,
-      ArtistEntity,
-      ComposerEntity,
-      FileEntity,
-      FileCustomDataEntity,
-      GenreEntity,
+      AssociationEntity,
+      AssociationLinkEntity,
       IndexerConfigurationEntity,
-      LinkedArtistEntity,
-      LinkedComposerEntity,
-      LinkedGenreEntity,
       RootPathEntity,
       SystemConfigurationEntity,
+      TrackCustomDataEntity,
+      TrackEntity,
     ]),
   ],
-  providers: [
-    IndexerService,
-    IndexAlbumService,
-    IndexArtistService,
-    IndexComposerService,
-    IndexGenreService,
-    IndexFileService,
-  ],
+  providers: [IndexerService, IndexAlbumService, IndexAssociationService, IndexTrackService],
   exports: [IndexerService],
 })
 export class IndexerModule {}

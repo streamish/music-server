@@ -8,8 +8,8 @@ export class GuestStreamFileQueryDto {
   /**
    * The ID of the file
    */
-  @IsInt({ message: ErrorCodes.INVALID_FILE_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_FILE_ID_ERROR })
+  @IsInt({ message: ErrorCodes.INVALID_TRACK_ID_ERROR })
+  @Min(1, { message: ErrorCodes.INVALID_TRACK_ID_ERROR })
   declare id: number;
 }
 

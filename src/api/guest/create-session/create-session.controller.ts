@@ -14,6 +14,7 @@ import {
 } from './create-session.dto';
 import { GuestCreateSessionService } from './create-session.service';
 import { InternalServerErrorResponseDto } from 'src/api/response.dto';
+import type { Request } from 'express';
 
 @Controller({
   path: '/api/guest',

@@ -157,7 +157,7 @@ export class SynologyPlaylistService {
       if (typeof id === 'number') {
         insertData.push({
           playlistId: playlist.id,
-          fileId: id,
+          trackId: id,
           position,
         } as PlaylistItemEntity);
       } else if (typeof id === 'string' && id.startsWith('radio_')) {
@@ -275,7 +275,7 @@ export class SynologyPlaylistService {
   async getItems(accountId: number, body: SynologyPlaylistTrackListBodyDto): Promise<SynologyPlaylistWithItemsDataDto> {
     const playlist = await this.getPlaylist(accountId, body.id);
     const itemIds = await this.playlistItemEntity.findAll({
-      attributes: ['id', 'fileId', 'position', 'radioStationTitle', 'radioStationUrl'],
+      attributes: ['id', 'trackId', 'position', 'radioStationTitle', 'radioStationUrl'],
       where: {
         playlistId: playlist.id,
       },
@@ -321,7 +321,7 @@ export class SynologyPlaylistService {
             songs_offset: body.offset,
             songs_total: tracks.items.length,
             songs: itemIds.map((item) => {
-              const track = tracks.items.find((t) => t.id === item.fileId) || radioStationTrack;
+              const track = tracks.items.find((t) => t.id === item.trackId) || radioStationTrack;
               const id = track.id
                 ? `music_${track.id}`
                 : // eslint-disable-next-line max-len
@@ -430,18 +430,18 @@ export class SynologyPlaylistService {
       throw new Error('Cannot move items in a smart playlist');
     }
     const items = await this.playlistItemEntity.findAll({
-      attributes: ['id', 'fileId', 'radioStationUrl', 'radioStationTitle', 'position'],
+      attributes: ['id', 'trackId', 'radioStationUrl', 'radioStationTitle', 'position'],
       where: {
         playlistId: playlist.id,
       },
       order: [['position', 'ASC']],
     });
     const movingItems = items.filter((item) => {
-      const idValue = item.fileId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
+      const idValue = item.trackId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
       return body.songs.includes(idValue);
     });
     const remainingItems = items.filter((item) => {
-      const idValue = item.fileId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
+      const idValue = item.trackId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
       return !body.songs.includes(idValue);
     });
     const insertAt = Math.min(Math.max(body.offset, 0), remainingItems.length);

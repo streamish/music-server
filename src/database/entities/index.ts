@@ -1,16 +1,9 @@
 import { AccountEntity } from './account.entity';
-import { AlbumArtistEntity } from './album-artist.entity';
 import { AlbumEntity } from './album.entity';
-import { ArtistEntity } from './artist.entity';
-import { ComposerEntity } from './composer.entity';
+import { AssociationEntity } from './association.entity';
+import { AssociationLinkEntity } from './association-link.entity';
 import { FavoriteItemEntity } from './favorite-item.entity';
-import { FileCustomDataEntity } from './file-custom-data.entity';
-import { FileEntity } from './file.entity';
-import { GenreEntity } from './genre.entity';
 import { IndexerConfigurationEntity } from './indexer-configuration.entity';
-import { LinkedArtistEntity } from './linked-artist.entity';
-import { LinkedComposerEntity } from './linked-composer.entity';
-import { LinkedGenreEntity } from './linked-genre.entity';
 import { PlaylistEntity } from './playlist.entity';
 import { PlaylistItemEntity } from './playlist-item.entity';
 import { PlaylistSmartRuleEntity } from './playlist-smart-rule.entity';
@@ -19,21 +12,18 @@ import { SessionEntity } from './session.entity';
 import { ShoutcastContainerEntity } from './shoutcast-container.entity';
 import { ShoutcastItemEntity } from './shoutcast-item.entity';
 import { SystemConfigurationEntity } from './system-configurations.entity';
+import { TrackCustomDataEntity } from './track-custom-data.entity';
+import { TrackEntity } from './track.entity';
 
 export {
   AccountEntity,
-  AlbumArtistEntity,
   AlbumEntity,
-  ArtistEntity,
-  ComposerEntity,
+  TrackEntity,
+  AssociationEntity,
+  AssociationLinkEntity,
   FavoriteItemEntity,
-  FileEntity,
-  FileCustomDataEntity,
-  GenreEntity,
+  TrackCustomDataEntity,
   IndexerConfigurationEntity,
-  LinkedArtistEntity,
-  LinkedComposerEntity,
-  LinkedGenreEntity,
   PlaylistEntity,
   PlaylistItemEntity,
   PlaylistSmartRuleEntity,
@@ -51,19 +41,14 @@ export const entitiesList = [
   SystemConfigurationEntity,
   RootPathEntity,
   AlbumEntity,
-  FileEntity,
-  FileCustomDataEntity,
-  ArtistEntity,
-  ComposerEntity,
-  GenreEntity,
-  AlbumArtistEntity,
+  TrackEntity,
+  TrackCustomDataEntity,
+  AssociationEntity,
   PlaylistEntity,
   PlaylistItemEntity,
   PlaylistSmartRuleEntity,
   FavoriteItemEntity,
-  LinkedArtistEntity,
-  LinkedComposerEntity,
-  LinkedGenreEntity,
+  AssociationLinkEntity,
   ShoutcastContainerEntity,
   ShoutcastItemEntity,
 ];

@@ -1,4 +1,4 @@
-import { AlbumEntity, FileEntity, RootPathEntity } from 'src/database/entities';
+import { AlbumEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { StreamDto } from './dtos';
@@ -7,8 +7,8 @@ import { join } from 'node:path';
 @Injectable()
 export class SynologyStreamService {
   constructor(
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {}
 
   /**
@@ -20,7 +20,7 @@ export class SynologyStreamService {
    * @returns {Promise<StreamDto>} The absolute file path, codec and size for streaming the file.
    */
   async getStream(accountId: number, trackId: number): Promise<StreamDto> {
-    const file = await this.fileEntity.findOne({
+    const file = await this.trackEntity.findOne({
       attributes: ['filePath', 'fileSize', 'fileType'],
       where: {
         accountId,

@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
-import { AlbumArtistEntity, AlbumEntity, RootPathEntity } from 'src/database/entities';
+import { AlbumEntity, AssociationLinkEntity, RootPathEntity } from 'src/database/entities';
 import { IAudioMetadata } from 'src/types/music-metadata';
-import { IndexArtistService } from './index-artist.service';
+import { IndexAssociationService } from './index-association.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, Logger } from '@nestjs/common';
 import { Op, Transaction } from 'sequelize';
@@ -16,9 +16,9 @@ export class IndexAlbumService {
   constructor(
     @InjectModel(AlbumEntity)
     private readonly albumEntity: typeof AlbumEntity,
-    @InjectModel(AlbumArtistEntity)
-    private readonly albumArtistEntity: typeof AlbumArtistEntity,
-    private readonly indexArtistService: IndexArtistService,
+    @InjectModel(AssociationLinkEntity)
+    private readonly associationLinkEntity: typeof AssociationLinkEntity,
+    private readonly indexAssociationService: IndexAssociationService,
   ) {}
 
   async updateAlbum(
@@ -122,20 +122,22 @@ export class IndexAlbumService {
     for (let i = 0, len = albumArtists.length; i < len; i += 1) {
       const artist = albumArtists[i];
       if (artist) {
-        const artistId = await this.indexArtistService.insertOrRetrieveArtist(rootPath.accountId, artist, transaction);
-        const existingAssociation = await this.albumArtistEntity.findOne({
+        const associationId = await this.indexAssociationService.findOrInsert(rootPath.accountId, artist, transaction);
+        const existingAssociation = await this.associationLinkEntity.findOne({
           where: {
             albumId,
-            artistId,
+            associationId,
+            isArtist: true,
           },
           transaction,
         });
         if (!existingAssociation) {
-          const newAssociation = await this.albumArtistEntity.create(
+          const newAssociation = await this.associationLinkEntity.create(
             {
               albumId,
-              artistId,
-            } as AlbumArtistEntity,
+              associationId,
+              isArtist: true,
+            } as AssociationLinkEntity,
             {
               transaction,
             },
@@ -146,13 +148,14 @@ export class IndexAlbumService {
         }
       }
     }
-    // delete obsolete album-artist associations
-    await this.albumArtistEntity.destroy({
+    // delete obsolete album associations
+    await this.associationLinkEntity.destroy({
       where: {
         albumId,
         id: {
           [Op.notIn]: validAssociationIds,
         },
+        isArtist: true,
       },
       transaction,
     });

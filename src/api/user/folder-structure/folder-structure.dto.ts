@@ -1,23 +1,10 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
+import { LibraryTrackDto } from 'src/library/dtos';
 import { SuccessResponseDto } from 'src/api/response.dto';
 
 export class UserTreeItemDto {
-  @IsString()
-  @IsOptional()
-  declare folder?: string;
-
-  @IsString()
-  @IsOptional()
-  declare file?: string;
-
-  @IsString()
-  declare fullPath: string;
-
-  @IsInt()
-  declare id: number;
-
   @ApiProperty({
     type: UserTreeItemDto,
     isArray: true,
@@ -31,6 +18,26 @@ export class UserTreeItemDto {
     ],
   })
   declare children?: UserTreeItemDto[];
+
+  @IsString()
+  @IsOptional()
+  declare file?: string;
+
+  @IsString()
+  @IsOptional()
+  declare folder?: string;
+
+  @IsString()
+  declare fullPath: string;
+
+  @IsInt()
+  declare id: number;
+
+  @ApiProperty({
+    type: LibraryTrackDto,
+    required: false,
+  })
+  declare track?: LibraryTrackDto;
 }
 
 export class UserFolderStructureResponseDto extends SuccessResponseDto {

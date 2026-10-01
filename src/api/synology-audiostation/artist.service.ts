@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { LibraryArtistDto } from 'src/library/dtos/library.artist.dto';
+import { LibraryAssociationDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { SynologyArtistDataDto, SynologyArtistDto } from './dtos';
 import { replaceDoubleQuotes } from 'src/utils/strings';
 
-function personToRow(person: LibraryArtistDto): SynologyArtistDto {
+function personToRow(person: LibraryAssociationDto): SynologyArtistDto {
   return {
     additional: {
       artist_rating: {
@@ -20,7 +20,7 @@ export class SynologyArtistService {
   constructor(private readonly libraryService: LibraryService) {}
 
   async listArtists(accountId: number, offset: number, limit: number): Promise<SynologyArtistDataDto> {
-    const artists = await this.libraryService.listAlbumArtists(accountId, {}, offset, limit);
+    const artists = await this.libraryService.listAlbumAssociations(accountId, { isArtist: true }, offset, limit);
     return {
       artists: artists.items.map(personToRow),
       offset,
@@ -34,10 +34,11 @@ export class SynologyArtistService {
     offset: number,
     limit: number,
   ): Promise<SynologyArtistDataDto> {
-    const artists = await this.libraryService.listAlbumArtists(
+    const artists = await this.libraryService.listAlbumAssociations(
       accountId,
       {
         genre: genreName.split('/'),
+        isArtist: true,
       },
       offset,
       limit,

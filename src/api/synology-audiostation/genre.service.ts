@@ -1,91 +1,62 @@
-import { FileEntity, GenreEntity, LinkedGenreEntity } from 'src/database/entities';
-import { InjectModel } from '@nestjs/sequelize';
 import { Injectable } from '@nestjs/common';
-import { Sequelize } from 'sequelize-typescript';
+import { LibraryAssociationDto } from 'src/library/dtos/library.association.dto';
+import { LibraryService } from 'src/library/library.service';
 import { SynologyDefaultGenreDataDto, SynologyGenreDataDto, SynologyGenreDto } from './dtos';
 import { replaceDoubleQuotes } from 'src/utils/strings';
 
-function genreToRow(genre: GenreEntity): SynologyGenreDto {
+const defaultGenres = [
+  'Ballad',
+  'Blues/Soul',
+  'Classical',
+  'Country',
+  'EDM/Dance',
+  'Funk',
+  'Hip-Hop/R&B',
+  'Jazz',
+  'Pop',
+  'Reggae',
+  'Rock/Metal',
+  'Soundtrack',
+  'World/Spiritual',
+];
+
+function genreToRow(association: LibraryAssociationDto): SynologyGenreDto {
   return {
     additional: {
       artist_rating: {
         rating: 0,
       },
     },
-    id: `genre_${genre.id}`,
-    name: replaceDoubleQuotes(genre.name),
+    id: `genre_${association.id}`,
+    name: replaceDoubleQuotes(association.name),
   };
 }
 
 @Injectable()
 export class SynologyGenreService {
-  constructor(
-    @InjectModel(GenreEntity)
-    private readonly genreEntity: typeof GenreEntity,
-  ) {}
+  constructor(private readonly libraryService: LibraryService) {}
 
-  async listDefaultGenres(accountId: number): Promise<SynologyDefaultGenreDataDto> {
-    const genres = await this.genreEntity.findAll({
-      where: {
-        accountId,
-        isDefault: true,
-      },
-      attributes: ['id', 'name'],
-      order: [['name', 'ASC']],
-    });
+  // eslint-disable-next-line class-methods-use-this
+  async listDefaultGenres(): Promise<SynologyDefaultGenreDataDto> {
     return {
-      default_genres: genres.map((genre) => ({ name: genre.name })),
-      total: genres.length,
+      default_genres: defaultGenres.map((name) => ({ name })),
+      total: defaultGenres.length,
     };
   }
 
   async listGenres(accountId: number, offset: number, limit: number): Promise<SynologyGenreDataDto> {
-    const genres = await this.genreEntity.findAll({
-      attributes: ['id', 'name'],
-      include: [
-        {
-          model: LinkedGenreEntity,
-          attributes: ['fileId'],
-          include: [
-            {
-              model: FileEntity,
-              attributes: ['id'],
-              where: {
-                accountId,
-              },
-            },
-          ],
-        },
-      ],
-      group: ['GenreEntity.id'],
-      order: [['name', 'ASC']],
+    const genres = await this.libraryService.listTrackAssociations(
+      accountId,
+      {
+        isGenre: true,
+      },
       offset,
-      limit: limit || 100000,
-    });
-    const total = await this.genreEntity.count({
-      attributes: [[Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('name'))), 'count']],
-      include: [
-        {
-          model: LinkedGenreEntity,
-          attributes: ['fileId'],
-          include: [
-            {
-              model: FileEntity,
-              attributes: ['id'],
-              where: {
-                accountId,
-              },
-              required: true,
-            },
-          ],
-          required: true,
-        },
-      ],
-    });
+      limit || 100000,
+    );
     return {
-      genres: genres.map(genreToRow),
+      genres: genres.items.map(genreToRow),
       offset,
-      total,
+      total: genres.total,
     };
   }
 }

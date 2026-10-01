@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
+import { TrackSortFieldEnum } from 'src/types/enums';
 import { UserListTracksQueryDto } from './list-tracks.dto';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class UserListTracksService {
       query,
       query.offset || 0,
       query.limit || 100_000,
-      query.sortField,
+      query.sortField || TrackSortFieldEnum.TITLE,
       query.sortDirection,
     );
     return {

@@ -14,11 +14,12 @@ import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USE
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
 import {
-  UserSetCustomFileDataBadRequestResponseDto,
-  UserSetCustomFileDataNotFoundResponseDto,
-  UserSetCustomFileDataResponseDto,
-} from '../set-custom-file-data/set-custom-file-data.dto';
-import { UserSetGenreNameBodyDto, UserSetGenreNameQueryDto } from './set-genre-name.dto';
+  UserSetGenreNameBadRequestResponseDto,
+  UserSetGenreNameBodyDto,
+  UserSetGenreNameNotFoundResponseDto,
+  UserSetGenreNameQueryDto,
+  UserSetGenreNameResponseDto,
+} from './set-genre-name.dto';
 import { UserSetGenreNameService } from './set-genre-name.service';
 
 @Controller({
@@ -44,15 +45,15 @@ export class UserSetGenreNameController {
   @ApiHeader(JWT_TOKEN_HEADER)
   @ApiOkResponse({
     description: 'Custom data set successfully',
-    type: UserSetCustomFileDataResponseDto,
+    type: UserSetGenreNameResponseDto,
   })
   @ApiNotFoundResponse({
-    description: 'File not found',
-    type: UserSetCustomFileDataNotFoundResponseDto,
+    description: 'Genre not found',
+    type: UserSetGenreNameNotFoundResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request failed',
-    type: UserSetCustomFileDataBadRequestResponseDto,
+    type: UserSetGenreNameBadRequestResponseDto,
   })
   async patch(
     @User() user: AccountEntity,

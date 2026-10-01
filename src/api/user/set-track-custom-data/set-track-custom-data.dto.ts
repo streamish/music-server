@@ -2,14 +2,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { IsInt, IsString, Length, Max, Min, ValidateIf } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, Max, Min, ValidateIf } from 'class-validator';
 
 export class UserSetTrackCustomDataQueryDto {
   /**
    * The ID of the file
    */
-  @IsInt({ message: ErrorCodes.INVALID_FILE_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_FILE_ID_ERROR })
+  @IsInt({ message: ErrorCodes.INVALID_TRACK_ID_ERROR })
+  @Min(1, { message: ErrorCodes.INVALID_TRACK_ID_ERROR })
   declare id: number;
 }
 
@@ -30,7 +30,9 @@ export class UserSetTrackCustomDataBodyDto {
    */
   @IsString({ message: ErrorCodes.INVALID_COMMENT_ERROR })
   @Length(1, 255, { message: ErrorCodes.INVALID_COMMENT_LENGTH_ERROR })
-  declare comment: string;
+  @ValidateIf((o) => o.comment !== null && o.comment !== undefined && o.comment !== '')
+  @IsOptional()
+  declare comment?: string;
 
   /**
    * Assigns a new value to the track composers if a value is provided.  If an empty
@@ -39,7 +41,9 @@ export class UserSetTrackCustomDataBodyDto {
    */
   @IsString({ message: ErrorCodes.INVALID_COMPOSERS_ERROR })
   @Length(1, 1000, { message: ErrorCodes.INVALID_COMPOSERS_LENGTH_ERROR })
-  declare composers: string;
+  @ValidateIf((o) => o.composers !== null && o.composers !== undefined && o.composers !== '')
+  @IsOptional()
+  declare composers?: string;
 
   /**
    * Assigns a new value to the disc number if a value is provided.  If an empty
@@ -49,7 +53,9 @@ export class UserSetTrackCustomDataBodyDto {
   @IsInt({ message: ErrorCodes.INVALID_DISC_NUMBER_ERROR })
   @Min(1, { message: ErrorCodes.INVALID_DISC_NUMBER_RANGE_ERROR })
   @Max(1000, { message: ErrorCodes.INVALID_DISC_NUMBER_RANGE_ERROR })
-  declare discNumber: number;
+  @ValidateIf((o) => o.discNumber !== null && o.discNumber !== undefined)
+  @IsOptional()
+  declare discNumber?: number;
 
   /**
    * Assigns a new value to the genres if a value is provided.  If an empty
@@ -58,7 +64,9 @@ export class UserSetTrackCustomDataBodyDto {
    */
   @IsString({ message: ErrorCodes.INVALID_GENRES_ERROR })
   @Length(1, 1000, { message: ErrorCodes.INVALID_GENRES_LENGTH_ERROR })
-  declare genres: string;
+  @ValidateIf((o) => o.genres !== null && o.genres !== undefined && o.genres !== '')
+  @IsOptional()
+  declare genres?: string;
 
   /**
    * Assigns a new value to the title if a value is provided.  If an empty
@@ -77,7 +85,9 @@ export class UserSetTrackCustomDataBodyDto {
   @IsInt({ message: ErrorCodes.INVALID_TRACK_NUMBER_ERROR })
   @Min(1, { message: ErrorCodes.INVALID_TRACK_NUMBER_RANGE_ERROR })
   @Max(1000, { message: ErrorCodes.INVALID_TRACK_NUMBER_RANGE_ERROR })
-  declare trackNumber: number;
+  @ValidateIf((o) => o.trackNumber !== null && o.trackNumber !== undefined)
+  @IsOptional()
+  declare trackNumber?: number;
 
   /**
    * Assigns a new value to the year if a value is provided.  If an empty
@@ -87,7 +97,8 @@ export class UserSetTrackCustomDataBodyDto {
   @Min(1000, { message: ErrorCodes.INVALID_YEAR_ERROR })
   @Max(new Date().getFullYear() + 100, { message: ErrorCodes.INVALID_YEAR_RANGE_ERROR })
   @ValidateIf((o) => o.year !== null && o.year !== undefined && o.year !== '')
-  declare year: number;
+  @IsOptional()
+  declare year?: number;
 }
 
 export class UserSetTrackCustomDataResponseDto extends SuccessResponseDto {}
@@ -107,7 +118,7 @@ export class UserSetTrackCustomDataNotFoundResponseDto extends NotFoundResponseD
 }
 
 const UserSetTrackCustomDataBadRequestErrorMessage = [
-  ErrorCodes.INVALID_FILE_ID_ERROR,
+  ErrorCodes.INVALID_TRACK_ID_ERROR,
   ErrorCodes.INVALID_ARTISTS_ERROR,
   ErrorCodes.INVALID_ARTISTS_LENGTH_ERROR,
   ErrorCodes.INVALID_COMMENT_ERROR,
@@ -135,7 +146,7 @@ export class UserSetTrackCustomDataBadRequestResponseDto extends BadRequestRespo
     isArray: true,
     enum: UserSetTrackCustomDataBadRequestErrorMessage,
     enumName: 'UserSetTrackCustomDataBadRequestErrorMessage',
-    default: ErrorCodes.INVALID_FILE_ID_ERROR,
+    default: ErrorCodes.INVALID_TRACK_ID_ERROR,
   })
   declare message: ErrorCodes[];
 }

@@ -1,9 +1,12 @@
 import { ShoutcastItemTypeEnum, components } from '../../types/api-schema';
 import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { USER_PASSWORD, USER_USERNAME } from '../../test-helper';
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { createTestApi } from '../../test-helper.api.test';
 
 describe('/webapi/AudioStation/radio.cgi', () => {
   let synologyApi: SynologyApi;
+  let accountId: number;
 
   async function listStationsInContainer(container: 'User defined' | 'My favorite' | 'SHOUTcast' | string) {
     const { data, error } = await synologyApi.listStationsInContainer(container);
@@ -42,7 +45,19 @@ describe('/webapi/AudioStation/radio.cgi', () => {
   }
 
   beforeAll(async () => {
-    synologyApi = await createSynologyApi();
+    const username = `favorites-user-${Date.now()}`;
+    const testApi = await createTestApi();
+    const account = await testApi.duplicateAccount(USER_USERNAME, username);
+    accountId = account.data?.accountId || 0;
+    if (!accountId) {
+      throw new Error(`Failed to create test account`);
+    }
+    synologyApi = await createSynologyApi(username, USER_PASSWORD);
+  }, 120_000);
+
+  afterAll(async () => {
+    const testApi = await createTestApi();
+    await testApi.deleteAccount(accountId);
   });
 
   it('should add a new user-defined station', async () => {

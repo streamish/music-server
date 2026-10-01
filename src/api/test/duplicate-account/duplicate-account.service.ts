@@ -1,4 +1,4 @@
-import { AccountEntity, AlbumEntity, FileEntity, RootPathEntity } from 'src/database/entities';
+import { AccountEntity, AlbumEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { Guid } from 'typescript-guid';
 import { IndexerService } from 'src/indexer/indexer.service';
@@ -12,8 +12,8 @@ export class TestDuplicateAccountService {
     private readonly accountEntity: typeof AccountEntity,
     @InjectModel(AlbumEntity)
     private readonly albumEntity: typeof AlbumEntity,
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
     @Inject(IndexerService)
     private readonly indexerService: IndexerService,
     @InjectModel(RootPathEntity)
@@ -65,12 +65,12 @@ export class TestDuplicateAccountService {
       }
     }
     // copy the files
-    const files = await this.fileEntity.findAll({ where: { accountId: account.id } });
+    const files = await this.trackEntity.findAll({ where: { accountId: account.id } });
     for (let i = 0, len = files.length; i < len; i += 1) {
       const file = files[i];
       if (file) {
         // eslint-disable-next-line no-await-in-loop
-        await this.fileEntity.create({
+        await this.trackEntity.create({
           ...file.toJSON(),
           accountId: newAccount.id,
           rootPathId: rootPathRemap[file.rootPathId],
@@ -78,11 +78,11 @@ export class TestDuplicateAccountService {
           createdAt: new Date(1970, 0, 1),
           updatedAt: undefined,
           id: undefined,
-        } as unknown as FileEntity);
+        } as unknown as TrackEntity);
       }
     }
     // re-index the new files
-    const newFiles = await this.fileEntity.findAll({ where: { accountId: newAccount.id } });
+    const newFiles = await this.trackEntity.findAll({ where: { accountId: newAccount.id } });
     for (let i = 0, len = newFiles.length; i < len; i += 1) {
       const newFile = newFiles[i];
       if (newFile) {

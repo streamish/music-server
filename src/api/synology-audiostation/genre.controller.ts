@@ -55,7 +55,7 @@ export class SynologyGenreController {
   ): Promise<SynologyGenreResponseDto | SynologyDefaultGenreResponseDto> {
     // Route #1:  the default genres presented in the "recommended genre" section of the app
     if (body.method === SynologyMethodEnum.LIST_DEFAULT_GENRE) {
-      const data = await this.genreService.listDefaultGenres(user.id);
+      const data = await this.genreService.listDefaultGenres();
       return {
         data,
         success: true,

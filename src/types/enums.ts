@@ -16,6 +16,12 @@ export enum FileTypeEnum {
   OGG = 'ogg',
 }
 
+export enum AssociationTypeEnum {
+  ARTIST = 'artist',
+  COMPOSER = 'composer',
+  GENRE = 'genre',
+}
+
 export enum ContentTypeEnum {
   FILE = 'file',
   FOLDER = 'folder',
@@ -128,6 +134,11 @@ export enum AlbumSortFieldEnum {
 
 export enum ArtistSortFieldEnum {
   ARTIST = 'artist',
+  DATE_ADDED = 'date_added',
+  RANDOM = 'random',
+}
+export enum AssociationSortFieldEnum {
+  NAME = 'name',
   DATE_ADDED = 'date_added',
   RANDOM = 'random',
 }

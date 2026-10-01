@@ -1,6 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
-import { FileEntity } from './file.entity';
 import { PlaylistEntity } from './playlist.entity';
+import { TrackEntity } from './track.entity';
 
 /**
  * The PlaylistEntity holds a reference to a user's playlist. A user may have
@@ -30,17 +30,17 @@ export class PlaylistItemEntity extends Model<PlaylistItemEntity> {
   @Column({
     type: DataType.INTEGER,
     references: {
-      model: FileEntity,
+      model: TrackEntity,
       key: 'id',
     },
     allowNull: true,
     onDelete: 'CASCADE',
   })
-  @ForeignKey(() => FileEntity)
-  declare fileId?: number;
+  @ForeignKey(() => TrackEntity)
+  declare trackId?: number;
 
-  @BelongsTo(() => FileEntity)
-  declare file?: FileEntity;
+  @BelongsTo(() => TrackEntity)
+  declare track?: TrackEntity;
 
   /**
    * The ID of the table row is an integer that is assigned by the database when the row is created.

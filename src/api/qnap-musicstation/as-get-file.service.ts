@@ -1,17 +1,17 @@
-import { FileEntity, RootPathEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { RootPathEntity, TrackEntity } from 'src/database/entities';
 import { join } from 'node:path';
 
 @Injectable()
 export class QnapAsGetFileService {
   constructor(
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {}
 
   async getFile(accountId: number, fileId: number) {
-    const file = await this.fileEntity.findOne({
+    const file = await this.trackEntity.findOne({
       attributes: ['filePath', 'fileSize', 'createdAt', 'updatedAt'],
       where: {
         id: fileId,

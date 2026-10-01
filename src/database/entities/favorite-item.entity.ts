@@ -1,9 +1,8 @@
 import { AccountEntity } from './account.entity';
 import { AlbumEntity } from './album.entity';
-import { ArtistEntity } from './artist.entity';
+import { AssociationEntity } from './association.entity';
+import { AssociationTypeEnum } from 'src/types/enums';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
-import { ComposerEntity } from './composer.entity';
-import { GenreEntity } from './genre.entity';
 import { PlaylistEntity } from './playlist.entity';
 
 /**
@@ -58,40 +57,28 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
   declare allSongs: boolean;
 
   /**
-   * The artist ID if an artist is pinned
+   * The association link to an artist, composer or genre
    */
   @Column({
     type: DataType.INTEGER,
     references: {
-      model: ArtistEntity,
+      model: AssociationEntity,
       key: 'id',
     },
     allowNull: true,
     onDelete: 'CASCADE',
   })
-  @ForeignKey(() => ArtistEntity)
-  declare artistId?: number;
+  @ForeignKey(() => AssociationEntity)
+  declare associationId?: number;
 
-  @BelongsTo(() => ArtistEntity)
-  declare artist: ArtistEntity;
+  @BelongsTo(() => AssociationEntity)
+  declare association?: AssociationEntity;
 
-  /**
-   * The composer ID if a composer is pinned
-   */
   @Column({
-    type: DataType.INTEGER,
-    references: {
-      model: ComposerEntity,
-      key: 'id',
-    },
+    type: DataType.STRING(50),
     allowNull: true,
-    onDelete: 'CASCADE',
   })
-  @ForeignKey(() => ComposerEntity)
-  declare composerId?: number;
-
-  @BelongsTo(() => ComposerEntity)
-  declare composer: ComposerEntity;
+  declare associationType?: AssociationTypeEnum;
 
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This
@@ -111,24 +98,6 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     allowNull: true,
   })
   declare folderPath: string;
-
-  /**
-   * The genre ID if a genre is pinned
-   */
-  @Column({
-    type: DataType.INTEGER,
-    references: {
-      model: GenreEntity,
-      key: 'id',
-    },
-    allowNull: true,
-    onDelete: 'CASCADE',
-  })
-  @ForeignKey(() => GenreEntity)
-  declare genreId?: number;
-
-  @BelongsTo(() => GenreEntity)
-  declare genre: GenreEntity;
 
   /**
    * The ID of the table row is the first file ID that was found in the folder path

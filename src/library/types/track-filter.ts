@@ -1,12 +1,16 @@
 /**
  * The filters that can be applied when querying for tracks in the library.
  */
-export type TrackFilters = {
+export type TrackFilter = {
   /**
    * Optional filter for the album(s), which will do a case-insensitive match against the
    * album titles of  tracks.
    */
   album?: string;
+  /**
+   * Optional filter for the album IDs, which will match tracks belonging to the specified albums.
+   */
+  albumIds?: number[];
   /**
    * Optional filter for the album artist(s), which will do a case-insensitive match against the
    * album artists associated with a track.
@@ -32,10 +36,6 @@ export type TrackFilters = {
    * composers associated with a track.
    */
   composer?: string[];
-  /**
-   * Optional filter for retrieving specific files.
-   */
-  fileIds?: number[];
   /**
    * Optional filter for the file path, which will do a case-sensitive starting-match against the
    * file paths of the tracks.

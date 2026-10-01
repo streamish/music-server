@@ -7,11 +7,11 @@ export async function up(queryInterface: QueryInterface) {
       allowNull: false,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
-    file_id: {
+    track_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'files',
+        model: 'tracks',
         key: 'id',
       },
       onDelete: 'CASCADE',

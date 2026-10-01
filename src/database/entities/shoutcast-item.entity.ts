@@ -13,7 +13,7 @@ import { ShoutcastItemTypeEnum } from 'src/types/enums';
 })
 export class ShoutcastItemEntity extends Model<ShoutcastItemEntity> {
   /**
-   * The account ID the file belongs to.
+   * The container ID the shoutcast item belongs in.
    */
   @Column({
     type: DataType.INTEGER,

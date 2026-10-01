@@ -1,6 +1,9 @@
-import { Column, DataType, Model, Sequelize, Table } from 'sequelize-typescript';
+import { AfterCreate, Column, DataType, Model, Sequelize, Table } from 'sequelize-typescript';
 import { Guid } from 'typescript-guid';
-import { UserRoleEnum } from 'src/types/enums';
+import { ShoutcastContainerEntity } from './shoutcast-container.entity';
+import { ShoutcastItemEntity } from './shoutcast-item.entity';
+import { ShoutcastItemTypeEnum, UserRoleEnum } from 'src/types/enums';
+import type { CreateOptions } from 'sequelize';
 
 /**
  * The AccountEntity holds all of the information required for a person to securely-access the
@@ -94,4 +97,59 @@ export class AccountEntity extends Model<AccountEntity> {
     type: DataType.STRING(255),
   })
   declare username: string;
+
+  @AfterCreate
+  static async createRequiredData(account: AccountEntity, options: CreateOptions<AccountEntity>): Promise<void> {
+    // insert shoutcast containers
+    const containers = ['SHOUTcast', 'User defined', 'My favorite'].map((title) => {
+      return {
+        accountId: account.id,
+        title,
+      } as ShoutcastContainerEntity;
+    });
+    const inserted = await ShoutcastContainerEntity.bulkCreate(containers, {
+      transaction: options.transaction,
+    });
+    const firstContainerId = inserted[0]?.id;
+    if (!firstContainerId) {
+      throw new Error('Failed to create initial shoutcast container');
+    }
+    // insert shoutcast items
+    const genres = [
+      'Alternative',
+      'Blues',
+      'Classical',
+      'Country',
+      'Easy Listening',
+      'Electronic',
+      'Folk',
+      'Themes',
+      'Rap',
+      'Inspirational',
+      'International',
+      'Jazz',
+      'Latin',
+      'Metal',
+      'New Age',
+      'Decades',
+      'Pop',
+      'R&B and Urban',
+      'Reggae',
+      'Rock',
+      'Seasonal and Holiday',
+      'Soundtracks',
+      'Talk',
+      'Misc',
+      'Public Radio',
+    ].map((title) => {
+      return {
+        containerId: firstContainerId,
+        title,
+        type: ShoutcastItemTypeEnum.CONTAINER,
+      } as ShoutcastItemEntity;
+    });
+    await ShoutcastItemEntity.bulkCreate(genres, {
+      transaction: options.transaction,
+    });
+  }
 }

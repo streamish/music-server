@@ -18,7 +18,7 @@ async function createRootPath(params: RequestParams, rootPath: string) {
 }
 
 async function deleteCustomFileData(params: RequestParams, customFileDataId: number) {
-  return api.DELETE(`/api/user/delete-custom-file-data`, {
+  return api.DELETE(`/api/user/delete-custom-data`, {
     params: {
       ...params,
       query: {
@@ -45,6 +45,12 @@ async function endSession(params: RequestParams) {
   });
 }
 
+async function folderStructure(params: RequestParams) {
+  return api.GET(`/api/user/folder-structure`, {
+    params,
+  });
+}
+
 type ListAlbumsQueryDto = paths['/api/user/list-albums']['get']['parameters']['query'];
 
 async function listAlbums(params: RequestParams, query?: ListAlbumsQueryDto) {
@@ -67,10 +73,10 @@ async function listAlbumsWithTracks(params: RequestParams, query?: ListAlbumsWit
   });
 }
 
-type ListAlbumArtistsQueryDto = paths['/api/user/list-album-artists']['get']['parameters']['query'];
+type ListAlbumAssociationsQueryDto = paths['/api/user/list-album-associations']['get']['parameters']['query'];
 
-async function listAlbumArtists(params: RequestParams, query?: ListAlbumArtistsQueryDto) {
-  return api.GET(`/api/user/list-album-artists`, {
+async function listAlbumAssociations(params: RequestParams, query: ListAlbumAssociationsQueryDto) {
+  return api.GET(`/api/user/list-album-associations`, {
     params: {
       ...params,
       query,
@@ -78,21 +84,15 @@ async function listAlbumArtists(params: RequestParams, query?: ListAlbumArtistsQ
   });
 }
 
-type ListAlbumArtistsWithTracksQueryDto =
-  paths['/api/user/list-album-artists-with-tracks']['get']['parameters']['query'];
+type ListAlbumAssociationsWithTracksQueryDto =
+  paths['/api/user/list-album-associations-with-tracks']['get']['parameters']['query'];
 
-async function listAlbumArtistsWithTracks(params: RequestParams, query?: ListAlbumArtistsWithTracksQueryDto) {
-  return api.GET(`/api/user/list-album-artists-with-tracks`, {
+async function listAlbumAssociationsWithTracks(params: RequestParams, query: ListAlbumAssociationsWithTracksQueryDto) {
+  return api.GET(`/api/user/list-album-associations-with-tracks`, {
     params: {
       ...params,
       query,
     },
-  });
-}
-
-async function folderStructure(params: RequestParams) {
-  return api.GET(`/api/user/folder-structure`, {
-    params,
   });
 }
 
@@ -108,10 +108,10 @@ async function listRootPaths(params: RequestParams) {
   });
 }
 
-type ListTrackArtistsQueryDto = paths['/api/user/list-track-artists']['get']['parameters']['query'];
+type ListTrackAssociationsQueryDto = paths['/api/user/list-track-associations']['get']['parameters']['query'];
 
-async function listTrackArtists(params: RequestParams, query?: ListTrackArtistsQueryDto) {
-  return api.GET(`/api/user/list-track-artists`, {
+async function listTrackAssociations(params: RequestParams, query: ListTrackAssociationsQueryDto) {
+  return api.GET(`/api/user/list-track-associations`, {
     params: {
       ...params,
       query,
@@ -119,56 +119,11 @@ async function listTrackArtists(params: RequestParams, query?: ListTrackArtistsQ
   });
 }
 
-type ListTrackArtistsWithTracksQueryDto =
-  paths['/api/user/list-track-artists-with-tracks']['get']['parameters']['query'];
+type ListTrackAssociationsWithTracksQueryDto =
+  paths['/api/user/list-track-associations-with-tracks']['get']['parameters']['query'];
 
-async function listTrackArtistsWithTracks(params: RequestParams, query?: ListTrackArtistsWithTracksQueryDto) {
-  return api.GET(`/api/user/list-track-artists-with-tracks`, {
-    params: {
-      ...params,
-      query,
-    },
-  });
-}
-
-type ListTrackComposersQueryDto = paths['/api/user/list-track-composers']['get']['parameters']['query'];
-
-async function listTrackComposers(params: RequestParams, query?: ListTrackComposersQueryDto) {
-  return api.GET(`/api/user/list-track-composers`, {
-    params: {
-      ...params,
-      query,
-    },
-  });
-}
-
-type ListTrackComposersWithTracksQueryDto =
-  paths['/api/user/list-track-composers-with-tracks']['get']['parameters']['query'];
-
-async function listTrackComposersWithTracks(params: RequestParams, query?: ListTrackComposersWithTracksQueryDto) {
-  return api.GET(`/api/user/list-track-composers-with-tracks`, {
-    params: {
-      ...params,
-      query,
-    },
-  });
-}
-
-type ListTrackGenresQueryDto = paths['/api/user/list-track-genres']['get']['parameters']['query'];
-
-async function listTrackGenres(params: RequestParams, query?: ListTrackGenresQueryDto) {
-  return api.GET(`/api/user/list-track-genres`, {
-    params: {
-      ...params,
-      query,
-    },
-  });
-}
-
-type ListTrackGenresWithTracksQueryDto = paths['/api/user/list-track-genres-with-tracks']['get']['parameters']['query'];
-
-async function listTrackGenresWithTracks(params: RequestParams, query?: ListTrackGenresWithTracksQueryDto) {
-  return api.GET(`/api/user/list-track-genres-with-tracks`, {
+async function listTrackAssociationsWithTracks(params: RequestParams, query: ListTrackAssociationsWithTracksQueryDto) {
+  return api.GET(`/api/user/list-track-associations-with-tracks`, {
     params: {
       ...params,
       query,
@@ -237,11 +192,10 @@ async function setComposerName(params: RequestParams, composerId: number, body: 
   });
 }
 
-type SetCustomFileDataBodyDto =
-  paths['/api/user/set-custom-file-data']['put']['requestBody']['content']['application/json'];
+type SetCustomFileDataBodyDto = paths['/api/user/set-custom-data']['put']['requestBody']['content']['application/json'];
 
-async function setCustomFileData(params: RequestParams, customFileDataId: number, body: SetCustomFileDataBodyDto) {
-  return api.PUT(`/api/user/set-custom-file-data`, {
+async function setCustomData(params: RequestParams, customFileDataId: number, body: SetCustomFileDataBodyDto) {
+  return api.PUT(`/api/user/set-custom-data`, {
     body,
     params: {
       ...params,
@@ -297,31 +251,23 @@ export type UserApi = {
   endSession: () => ReturnType<typeof endSession>;
   listAlbums: (query?: ListAlbumsQueryDto) => ReturnType<typeof listAlbums>;
   listAlbumsWithTracks: (query?: ListAlbumsWithTracksQueryDto) => ReturnType<typeof listAlbumsWithTracks>;
-  listAlbumArtists: (query?: ListAlbumArtistsQueryDto) => ReturnType<typeof listAlbumArtists>;
-  listAlbumArtistsWithTracks: (
-    query?: ListAlbumArtistsWithTracksQueryDto,
-  ) => ReturnType<typeof listAlbumArtistsWithTracks>;
+  listAlbumAssociations: (query: ListAlbumAssociationsQueryDto) => ReturnType<typeof listAlbumAssociations>;
+  listAlbumAssociationsWithTracks: (
+    query: ListAlbumAssociationsWithTracksQueryDto,
+  ) => ReturnType<typeof listAlbumAssociationsWithTracks>;
   folderStructure: () => ReturnType<typeof folderStructure>;
   listIndexerLogs: () => ReturnType<typeof listIndexerLogs>;
   listRootPaths: () => ReturnType<typeof listRootPaths>;
-  listTrackArtists: (query?: ListTrackArtistsQueryDto) => ReturnType<typeof listTrackArtists>;
-  listTrackArtistsWithTracks: (
-    query?: ListTrackArtistsWithTracksQueryDto,
-  ) => ReturnType<typeof listTrackArtistsWithTracks>;
-  listTrackComposers: (query?: ListTrackComposersQueryDto) => ReturnType<typeof listTrackComposers>;
-  listTrackComposersWithTracks: (
-    query?: ListTrackComposersWithTracksQueryDto,
-  ) => ReturnType<typeof listTrackComposersWithTracks>;
-  listTrackGenres: (query?: ListTrackGenresQueryDto) => ReturnType<typeof listTrackGenres>;
-  listTrackGenresWithTracks: (
-    query?: ListTrackGenresWithTracksQueryDto,
-  ) => ReturnType<typeof listTrackGenresWithTracks>;
+  listTrackAssociations: (query: ListTrackAssociationsQueryDto) => ReturnType<typeof listTrackAssociations>;
+  listTrackAssociationsWithTracks: (
+    query: ListTrackAssociationsWithTracksQueryDto,
+  ) => ReturnType<typeof listTrackAssociationsWithTracks>;
   listTracks: (query?: ListTracksQueryDto) => ReturnType<typeof listTracks>;
   regenerateSessionKey: () => ReturnType<typeof regenerateSessionKey>;
   setAlbumCustomData: (albumId: number, data: SetAlbumCustomDataBodyDto) => ReturnType<typeof setAlbumCustomData>;
   setArtistName: (artistId: number, data: SetArtistNameBodyDto) => ReturnType<typeof setArtistName>;
   setComposerName: (composerId: number, data: SetComposerNameBodyDto) => ReturnType<typeof setComposerName>;
-  setCustomFileData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomFileData>;
+  setCustomData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomData>;
   setGenreName: (genreId: number, data: SetGenreNameBodyDto) => ReturnType<typeof setGenreName>;
   setTrackCustomData: (
     trackCustomDataId: number,
@@ -366,11 +312,11 @@ export async function createUserApi(username?: string, password?: string): Promi
     async listAlbumsWithTracks(query?: ListAlbumsWithTracksQueryDto) {
       return listAlbumsWithTracks(params, query);
     },
-    async listAlbumArtists(query?: ListAlbumArtistsQueryDto) {
-      return listAlbumArtists(params, query);
+    async listAlbumAssociations(query: ListAlbumAssociationsQueryDto) {
+      return listAlbumAssociations(params, query);
     },
-    async listAlbumArtistsWithTracks(query?: ListAlbumArtistsWithTracksQueryDto) {
-      return listAlbumArtistsWithTracks(params, query);
+    async listAlbumAssociationsWithTracks(query: ListAlbumAssociationsWithTracksQueryDto) {
+      return listAlbumAssociationsWithTracks(params, query);
     },
     async folderStructure() {
       return folderStructure(params);
@@ -381,23 +327,11 @@ export async function createUserApi(username?: string, password?: string): Promi
     async listRootPaths() {
       return listRootPaths(params);
     },
-    async listTrackArtists(query?: ListTrackArtistsQueryDto) {
-      return listTrackArtists(params, query);
+    async listTrackAssociations(query: ListTrackAssociationsQueryDto) {
+      return listTrackAssociations(params, query);
     },
-    async listTrackArtistsWithTracks(query?: ListTrackArtistsWithTracksQueryDto) {
-      return listTrackArtistsWithTracks(params, query);
-    },
-    async listTrackComposers(query?: ListTrackComposersQueryDto) {
-      return listTrackComposers(params, query);
-    },
-    async listTrackComposersWithTracks(query?: ListTrackComposersWithTracksQueryDto) {
-      return listTrackComposersWithTracks(params, query);
-    },
-    async listTrackGenres(query?: ListTrackGenresQueryDto) {
-      return listTrackGenres(params, query);
-    },
-    async listTrackGenresWithTracks(query?: ListTrackGenresWithTracksQueryDto) {
-      return listTrackGenresWithTracks(params, query);
+    async listTrackAssociationsWithTracks(query: ListTrackAssociationsWithTracksQueryDto) {
+      return listTrackAssociationsWithTracks(params, query);
     },
     async listTracks(query?: ListTracksQueryDto) {
       return listTracks(params, query);
@@ -417,8 +351,8 @@ export async function createUserApi(username?: string, password?: string): Promi
     async setGenreName(genreId: number, data: SetGenreNameBodyDto) {
       return setGenreName(params, genreId, data);
     },
-    async setCustomFileData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
-      return setCustomFileData(params, customFileDataId, data);
+    async setCustomData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
+      return setCustomData(params, customFileDataId, data);
     },
     async setTrackCustomData(trackCustomDataId: number, data: SetTrackCustomDataBodyDto) {
       return setTrackCustomData(params, trackCustomDataId, data);

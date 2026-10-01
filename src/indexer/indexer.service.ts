@@ -1,14 +1,13 @@
+import { AssociationTypeEnum } from 'src/types/enums';
 import { ConfigService } from 'src/config/config.service';
 import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { FSWatcher, readdir, stat, watch } from 'node:fs';
-import { FileEntity, IndexerConfigurationEntity, RootPathEntity } from 'src/database/entities';
 import { IAudioMetadata, IOptions } from 'src/types/music-metadata';
 import { IndexAlbumService } from './index-album.service';
-import { IndexArtistService } from './index-artist.service';
-import { IndexComposerService } from './index-composer.service';
-import { IndexFileService } from './index-file.service';
-import { IndexGenreService } from './index-genre.service';
+import { IndexAssociationService } from './index-association.service';
+import { IndexTrackService } from './index-track.service';
+import { IndexerConfigurationEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, Logger } from '@nestjs/common';
 import { Op } from 'sequelize';
@@ -23,7 +22,7 @@ const validFiles = ['mp3', 'flac', 'ogg', 'm4a'];
 type FileItem = { path: string; lastModified: Date; size: number };
 type FileUpdateItem = {
   embeddedData: IAudioMetadata;
-  fileId: number;
+  trackId: number;
   path: string;
   lastModified: Date;
   size: number;
@@ -55,12 +54,10 @@ export class IndexerService {
   constructor(
     private readonly configService: ConfigService,
     private readonly indexAlbumService: IndexAlbumService,
-    private readonly indexArtistService: IndexArtistService,
-    private readonly indexComposerService: IndexComposerService,
-    private readonly indexGenreService: IndexGenreService,
-    private readonly indexFileService: IndexFileService,
-    @InjectModel(FileEntity)
-    private readonly fileEntity: typeof FileEntity,
+    private readonly indexAssociationService: IndexAssociationService,
+    private readonly indexFileService: IndexTrackService,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
     @InjectModel(IndexerConfigurationEntity)
     private readonly indexerConfigurationEntity: typeof IndexerConfigurationEntity,
     @InjectModel(RootPathEntity)
@@ -126,7 +123,7 @@ export class IndexerService {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async vacuumDatabase() {
     this.addLogEntry(0, 0, 'Vacuuming database');
-    await this.fileEntity.sequelize?.query('VACUUM');
+    await this.trackEntity.sequelize?.query('VACUUM');
   }
 
   /**
@@ -273,7 +270,7 @@ export class IndexerService {
       `root path contains ${uniqueFolderPaths.length} folders with ${filesToScan.length} files`,
     );
     // remove deleted folders and files from the database
-    const deletedFiles = await this.fileEntity.destroy({
+    const deletedFiles = await this.trackEntity.destroy({
       where: {
         accountId: rootPath.accountId,
         rootPathId: rootPath.id,
@@ -297,11 +294,11 @@ export class IndexerService {
 
   /**
    * Manually rescan a single specific file after changes to its custom data
-   * @param {number} fileId The ID of the file
+   * @param {number} trackId The ID of the file
    */
-  async scanFile(fileId: number) {
-    this.logger.log(`manually scanning file with ID ${fileId}`);
-    const file = await this.fileEntity.findByPk(fileId, {
+  async scanFile(trackId: number) {
+    this.logger.log(`manually scanning file with ID ${trackId}`);
+    const file = await this.trackEntity.findByPk(trackId, {
       attributes: ['filePath', 'rootPathId', 'fileSize'],
     });
     if (!file) {
@@ -328,10 +325,26 @@ export class IndexerService {
     const { embeddedData } = fileToUpdate;
     const albumPath = filePath.replace(rootPath.rootPath, '').split(sep).slice(0, 3).join(sep);
     await this.indexAlbumService.updateAlbum(rootPath, embeddedData, albumPath, rootPath.accountId);
-    const fileDetail = await this.indexFileService.updateFile(embeddedData, fileId, rootPath.accountId);
-    await this.indexArtistService.updateArtists(embeddedData, rootPath.accountId, fileDetail);
-    await this.indexComposerService.updateComposers(embeddedData, rootPath.accountId, fileDetail);
-    await this.indexGenreService.updateGenres(embeddedData, rootPath.accountId, fileDetail);
+    const track = await this.indexFileService.updateTrack(embeddedData, trackId, rootPath.accountId);
+    await this.indexAssociationService.updateAssociations(
+      embeddedData,
+      rootPath.accountId,
+      AssociationTypeEnum.ARTIST,
+      track,
+    );
+    await this.indexAssociationService.updateAssociations(
+      embeddedData,
+      rootPath.accountId,
+      AssociationTypeEnum.COMPOSER,
+      track,
+    );
+    await this.indexAssociationService.updateAssociations(
+      embeddedData,
+      rootPath.accountId,
+      AssociationTypeEnum.GENRE,
+      track,
+    );
+    await this.indexAssociationService.syncAlbumAssociations(track.albumId);
   }
 
   /**
@@ -417,14 +430,14 @@ export class IndexerService {
     const fileName = basename(filePath);
     const albumPath = filePath.replace(rootPath.rootPath, '').split(sep).slice(0, 3).join(sep);
     // check if the file exists in the database and is up to date
-    const existingFile = await this.indexFileService.retrieveFileLastModified(rootPath.accountId, relativePath);
+    const existingFile = await this.indexFileService.retrieveLastModified(rootPath.accountId, relativePath);
     if (!existingFile || existingFile.fileMtime.getTime() !== lastModified.getTime()) {
       // get the idv3 information from the file
       let embeddedData: IAudioMetadata;
       try {
         embeddedData = await this.parseMetaData(filePath);
         if (existingFile) {
-          embeddedData = await this.indexFileService.applyCustomFileData(existingFile.id, embeddedData);
+          embeddedData = await this.indexFileService.applyCustomTrackData(existingFile.id, embeddedData);
         }
       } catch (error) {
         this.logger.error(`error reading metadata ${filePath}`, error);
@@ -439,7 +452,7 @@ export class IndexerService {
           return;
         }
         // if it doesn't exist add it to the database
-        const newFile = await this.fileEntity.create({
+        const newFile = await this.trackEntity.create({
           accountId: rootPath.accountId,
           albumId: album.id,
           fileMtime: lastModified,
@@ -447,10 +460,10 @@ export class IndexerService {
           fileSize: fileItem.size,
           fileType: fileName.split('.').pop() || '',
           rootPathId: rootPath.id,
-        } as FileEntity);
+        } as TrackEntity);
         filesToUpdate.push({
           embeddedData,
-          fileId: newFile.id,
+          trackId: newFile.id,
           lastModified,
           path: relativePath,
           size: fileItem.size,
@@ -460,7 +473,7 @@ export class IndexerService {
         // if it exists but the last-modified is different update it
         filesToUpdate.push({
           embeddedData,
-          fileId: existingFile.id,
+          trackId: existingFile.id,
           lastModified,
           path: relativePath,
           size: fileItem.size,
@@ -492,7 +505,7 @@ export class IndexerService {
     await this.synchronizeFile(
       rootPath,
       fileItem.embeddedData,
-      fileItem.fileId,
+      fileItem.trackId,
       fileItem.path,
       fileItem.size,
       fileItem.lastModified,
@@ -504,7 +517,7 @@ export class IndexerService {
    * Copies the IDv3 data from the file to the database and updates the file's last-modified date
    * @param {RootPathEntity} rootPath The indexer root path being scanned
    * @param {IAudioMetadata} embeddedData The IDv3 data extracted from the file
-   * @param {number} fileId The ID of the file in the database
+   * @param {number} trackId The ID of the file in the database
    * @param {string} relativePath The path to the file on disk
    * @param {number} fileSize The size of the file
    * @param {Date} fileMtime The last-modified date of the file
@@ -514,7 +527,7 @@ export class IndexerService {
   async synchronizeFile(
     rootPath: RootPathEntity,
     embeddedData: IAudioMetadata,
-    fileId: number,
+    trackId: number,
     relativePath: string,
     fileSize: number,
     fileMtime: Date,
@@ -524,11 +537,27 @@ export class IndexerService {
       return;
     }
     await this.addLogEntry(rootPath.accountId, rootPath.id, `saving track ${relativePath}`);
-    const fileDetail = await this.indexFileService.updateFile(embeddedData, fileId, rootPath.accountId);
-    await this.indexArtistService.updateArtists(embeddedData, rootPath.accountId, fileDetail);
-    await this.indexComposerService.updateComposers(embeddedData, rootPath.accountId, fileDetail);
-    await this.indexGenreService.updateGenres(embeddedData, rootPath.accountId, fileDetail);
-    await this.fileEntity.update(
+    const track = await this.indexFileService.updateTrack(embeddedData, trackId, rootPath.accountId);
+    await this.indexAssociationService.updateAssociations(
+      embeddedData,
+      rootPath.accountId,
+      AssociationTypeEnum.ARTIST,
+      track,
+    );
+    await this.indexAssociationService.updateAssociations(
+      embeddedData,
+      rootPath.accountId,
+      AssociationTypeEnum.COMPOSER,
+      track,
+    );
+    await this.indexAssociationService.updateAssociations(
+      embeddedData,
+      rootPath.accountId,
+      AssociationTypeEnum.GENRE,
+      track,
+    );
+    await this.indexAssociationService.syncAlbumAssociations(track.albumId);
+    await this.trackEntity.update(
       {
         fileMtime,
         fileSize,
@@ -536,7 +565,7 @@ export class IndexerService {
       },
       {
         where: {
-          id: fileId,
+          id: trackId,
         },
       },
     );

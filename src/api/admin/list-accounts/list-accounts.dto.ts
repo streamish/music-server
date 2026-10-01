@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString } from 'class-validator';
 import { SuccessResponseDto } from 'src/api/response.dto';
 import { UserRoleEnum } from 'src/types/enums';
