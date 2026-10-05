@@ -6,6 +6,30 @@ describe('/api/user/set-album-rating', () => {
   let userApi: UserApi;
   let accountId: number;
 
+  async function setRating(albumId: number, rating: number) {
+    const { error, data } = await userApi.setAlbumRating(
+      {
+        id: albumId,
+      },
+      {
+        rating,
+      },
+    );
+    expect(error).toBeUndefined();
+    expect(data?.success).toBe(true);
+  }
+
+  async function getAlbum(index: number) {
+    const { data } = await userApi.listAlbumsWithTracks({
+      offset: 0,
+      limit: 100_000,
+    });
+    if (!data?.albums.length || !data?.albums[index]) {
+      throw new Error('No albums found');
+    }
+    return data.albums[index];
+  }
+
   beforeAll(async () => {
     const newUsername = `user-${Date.now()}`;
     const newAccount = await testApi.duplicateAccount(USER_USERNAME, newUsername);
@@ -54,70 +78,63 @@ describe('/api/user/set-album-rating', () => {
   });
 
   describe('success', () => {
-    it('should set rating for the album', async () => {
-      const { data: albumDataBefore } = await userApi.listAlbums({
-        offset: 1,
-        limit: 1,
-      });
-      const albumBefore = albumDataBefore?.albums[0];
-      if (!albumBefore) {
-        throw new Error('Album not found before custom data set');
+    it('should set rating for the tracks', async () => {
+      // rate the album
+      const albumBefore = await getAlbum(0);
+      for (let i = 0; i < albumBefore.tracks.length; i += 1) {
+        expect(albumBefore.tracks[i]?.rating).toBe(0);
       }
-      expect(albumBefore.rating).toBeFalsy();
-      const { error, data } = await userApi.setAlbumRating(
-        {
-          id: albumBefore.id,
-        },
-        {
-          rating: 5,
-        },
-      );
-      expect(error).toBeUndefined();
-      expect(data?.success).toBe(true);
-      // find the album
-      const { data: albumDataAfter } = await userApi.listAlbumsWithTracks({
-        offset: 1,
-        limit: 1,
-      });
-      const albumAfter = albumDataAfter?.albums[0];
-      if (!albumAfter) {
-        throw new Error('Album not found');
-      }
+      await setRating(albumBefore.id, 5);
+      // confirm track ratings
+      const albumAfter = await getAlbum(0);
       for (let i = 0; i < albumAfter.tracks.length; i += 1) {
         expect(albumAfter.tracks[i]?.rating).toBe(5);
       }
     }, 120_000);
 
-    it('should affect the rating of the album', async () => {
-      const { data: albumDataBefore } = await userApi.listAlbums({
-        offset: 2,
-        limit: 1,
-      });
-      const albumBefore = albumDataBefore?.albums[0];
-      if (!albumBefore) {
-        throw new Error('Album not found before custom data set');
+    it('should affect the aggregate rating of the album', async () => {
+      // rate the album
+      const albumBefore = await getAlbum(1);
+      for (let i = 0; i < albumBefore.tracks.length; i += 1) {
+        expect(albumBefore.tracks[i]?.rating).toBe(0);
       }
-      expect(albumBefore.rating).toBeFalsy();
-      const { error, data } = await userApi.setAlbumRating(
-        {
-          id: albumBefore.id,
-        },
-        {
-          rating: 3,
-        },
-      );
-      expect(error).toBeUndefined();
-      expect(data?.success).toBe(true);
-      // find the album
-      const { data: albumDataAfter } = await userApi.listAlbumsWithTracks({
-        offset: 2,
-        limit: 1,
-      });
-      const albumAfter = albumDataAfter?.albums[0];
-      if (!albumAfter) {
-        throw new Error('Album not found');
-      }
+      expect(albumBefore.rating).toBe(0);
+      await setRating(albumBefore.id, 3);
+      // confirm it affected the album rating
+      const albumAfter = await getAlbum(1);
       expect(albumAfter.rating).toBe(3);
+    }, 120_000);
+
+    it('should reset rating for the album', async () => {
+      // rate the album
+      const albumBefore = await getAlbum(2);
+      expect(albumBefore.rating).toBe(0);
+      await setRating(albumBefore.id, 5);
+      // confirm the rating
+      const albumRated = await getAlbum(2);
+      expect(albumRated.rating).toBe(5);
+      // reset the rating
+      await setRating(albumBefore.id, 0);
+      // confirm the rating has been reset
+      const albumAfter = await getAlbum(2);
+      for (let i = 0; i < albumAfter.tracks.length; i += 1) {
+        expect(albumAfter.tracks[i]?.rating).toBe(0);
+      }
+    }, 120_000);
+
+    it('should reset the aggregate rating of the album', async () => {
+      // rate the album
+      const albumBefore = await getAlbum(3);
+      expect(albumBefore.rating).toBe(0);
+      await setRating(albumBefore.id, 5);
+      // confirm the rating
+      const albumRated = await getAlbum(3);
+      expect(albumRated.rating).toBe(5);
+      // reset the rating
+      await setRating(albumBefore.id, 0);
+      // confirm the aggregate rating is reset
+      const albumAfter = await getAlbum(3);
+      expect(albumAfter.rating).toBe(0);
     }, 120_000);
   });
 });
