@@ -1250,18 +1250,18 @@ export class LibraryService {
   /**
    * Rates the specified tracks for the given account.
    * @param {number} accountId The ID of the account performing the rating
-   * @param {number[]} fileIds The IDs of the files (tracks) to be rated
+   * @param {number[]} trackIds The IDs of the files (tracks) to be rated
    * @param {RatingOrUnset} rating The rating value `0` `1` `2` `3` `4` `5` to be applied to the specified tracks
    */
-  async rateTracks(accountId: number, fileIds: number[], rating: RatingOrUnset): Promise<void> {
-    const files = await this.trackEntity.findAll({
+  async rateTracks(accountId: number, trackIds: number[], rating: RatingOrUnset): Promise<void> {
+    const tracks = await this.trackEntity.findAll({
       where: {
         accountId,
-        id: fileIds,
+        id: trackIds,
       },
     });
-    if (files.length !== fileIds.length) {
-      throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
+    if (tracks.length !== trackIds.length) {
+      throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }
     const newValue: Rating | null = rating > 0 ? (rating as Rating) : null;
     await this.trackEntity.update(
@@ -1271,7 +1271,7 @@ export class LibraryService {
       {
         where: {
           accountId,
-          id: fileIds,
+          id: trackIds,
         },
       },
     );

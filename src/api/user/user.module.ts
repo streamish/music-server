@@ -20,11 +20,13 @@ import { UserRegenerateSessionKeyModule } from './regenerate-session-key/regener
 import { UserRetrieveAlbumModule } from './retrieve-album/retrieve-album.module';
 import { UserRetrieveAssociationModule } from './retrieve-association/retrieve-association.module';
 import { UserSetAlbumCustomDataModule } from './set-album-custom-data/set-album-custom-data.module';
+import { UserSetAlbumRatingModule } from './set-album-rating/set-album-rating.module';
 import { UserSetArtistNameModule } from './set-artist-name/set-artist-name.module';
 import { UserSetComposerNameModule } from './set-composer-name/set-composer-name.module';
 import { UserSetCustomDataModule } from './set-custom-data/set-custom-data.module';
 import { UserSetGenreNameModule } from './set-genre-name/set-genre-name.module';
 import { UserSetTrackCustomDataModule } from './set-track-custom-data/set-track-custom-data.module';
+import { UserSetTrackRatingModule } from './set-track-rating/set-track-rating.module';
 import { UserStreamFileModule } from './stream-file/stream-file.module';
 import { UserUpdatePasswordModule } from './update-password/update-password.module';
 
@@ -54,6 +56,8 @@ import { UserUpdatePasswordModule } from './update-password/update-password.modu
     UserSetComposerNameModule,
     UserSetCustomDataModule,
     UserSetGenreNameModule,
+    UserSetAlbumRatingModule,
+    UserSetTrackRatingModule,
     UserSetTrackCustomDataModule,
     UserStreamFileModule,
     UserUpdatePasswordModule,

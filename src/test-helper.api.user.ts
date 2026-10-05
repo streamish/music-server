@@ -163,6 +163,19 @@ async function setAlbumCustomData(params: RequestParams, albumCustomDataId: numb
   });
 }
 
+type SetAlbumRatingQueryDto = paths['/api/user/set-album-rating']['put']['parameters']['query'];
+type SetAlbumRatingBodyDto = paths['/api/user/set-album-rating']['put']['requestBody']['content']['application/json'];
+
+async function setAlbumRating(params: RequestParams, query: SetAlbumRatingQueryDto, body: SetAlbumRatingBodyDto) {
+  return api.PUT(`/api/user/set-album-rating`, {
+    body,
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
 type SetArtistNameBodyDto = paths['/api/user/set-artist-name']['patch']['requestBody']['content']['application/json'];
 
 async function setArtistName(params: RequestParams, artistId: number, body: SetArtistNameBodyDto) {
@@ -235,6 +248,19 @@ async function setTrackCustomData(params: RequestParams, trackCustomDataId: numb
   });
 }
 
+type SetTrackRatingQueryDto = paths['/api/user/set-track-rating']['put']['parameters']['query'];
+type SetTrackRatingBodyDto = paths['/api/user/set-track-rating']['put']['requestBody']['content']['application/json'];
+
+async function setTrackRating(params: RequestParams, query: SetTrackRatingQueryDto, body: SetTrackRatingBodyDto) {
+  return api.PUT(`/api/user/set-track-rating`, {
+    body,
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
 async function updatePassword(params: RequestParams, newPassword: string) {
   return api.POST(`/api/user/update-password`, {
     body: {
@@ -265,6 +291,7 @@ export type UserApi = {
   listTracks: (query?: ListTracksQueryDto) => ReturnType<typeof listTracks>;
   regenerateSessionKey: () => ReturnType<typeof regenerateSessionKey>;
   setAlbumCustomData: (albumId: number, data: SetAlbumCustomDataBodyDto) => ReturnType<typeof setAlbumCustomData>;
+  setAlbumRating: (query: SetAlbumRatingQueryDto, body: SetAlbumRatingBodyDto) => ReturnType<typeof setAlbumRating>;
   setArtistName: (artistId: number, data: SetArtistNameBodyDto) => ReturnType<typeof setArtistName>;
   setComposerName: (composerId: number, data: SetComposerNameBodyDto) => ReturnType<typeof setComposerName>;
   setCustomData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomData>;
@@ -273,6 +300,7 @@ export type UserApi = {
     trackCustomDataId: number,
     data: SetTrackCustomDataBodyDto,
   ) => ReturnType<typeof setTrackCustomData>;
+  setTrackRating: (query: SetTrackRatingQueryDto, body: SetTrackRatingBodyDto) => ReturnType<typeof setTrackRating>;
   updatePassword: (newPassword: string) => ReturnType<typeof updatePassword>;
 };
 
@@ -342,6 +370,9 @@ export async function createUserApi(username?: string, password?: string): Promi
     async setAlbumCustomData(albumId: number, data: SetAlbumCustomDataBodyDto) {
       return setAlbumCustomData(params, albumId, data);
     },
+    async setAlbumRating(query: SetAlbumRatingQueryDto, body: SetAlbumRatingBodyDto) {
+      return setAlbumRating(params, query, body);
+    },
     async setArtistName(artistId: number, data: SetArtistNameBodyDto) {
       return setArtistName(params, artistId, data);
     },
@@ -353,6 +384,9 @@ export async function createUserApi(username?: string, password?: string): Promi
     },
     async setCustomData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
       return setCustomData(params, customFileDataId, data);
+    },
+    async setTrackRating(query: SetTrackRatingQueryDto, body: SetTrackRatingBodyDto) {
+      return setTrackRating(params, query, body);
     },
     async setTrackCustomData(trackCustomDataId: number, data: SetTrackCustomDataBodyDto) {
       return setTrackCustomData(params, trackCustomDataId, data);
