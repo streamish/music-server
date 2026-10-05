@@ -33,6 +33,7 @@ export enum ErrorCodes {
   INVALID_MIN_RATING_ERROR = 'invalid-min-rating-error',
   INVALID_NAME_ERROR = 'invalid-name-error',
   INVALID_NAME_LENGTH_ERROR = 'invalid-name-length-error',
+  INVALID_RATING_ERROR = 'invalid-rating-error',
   INVALID_RELEASED_AFTER_ERROR = 'invalid-released-after-error',
   INVALID_RELEASED_BEFORE_ERROR = 'invalid-released-before-error',
   INVALID_SORT_FIELD_ERROR = 'invalid-sort-field-error',
