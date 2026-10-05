@@ -83,10 +83,41 @@ describe('/api/user/set-album-rating', () => {
       if (!albumAfter) {
         throw new Error('Album not found');
       }
-      // expect(albumAfter.rating).toBe(5);
       for (let i = 0; i < albumAfter.tracks.length; i += 1) {
         expect(albumAfter.tracks[i]?.rating).toBe(5);
       }
+    }, 120_000);
+
+    it('should affect the rating of the album', async () => {
+      const { data: albumDataBefore } = await userApi.listAlbums({
+        offset: 2,
+        limit: 1,
+      });
+      const albumBefore = albumDataBefore?.albums[0];
+      if (!albumBefore) {
+        throw new Error('Album not found before custom data set');
+      }
+      expect(albumBefore.rating).toBeFalsy();
+      const { error, data } = await userApi.setAlbumRating(
+        {
+          id: albumBefore.id,
+        },
+        {
+          rating: 3,
+        },
+      );
+      expect(error).toBeUndefined();
+      expect(data?.success).toBe(true);
+      // find the album
+      const { data: albumDataAfter } = await userApi.listAlbumsWithTracks({
+        offset: 2,
+        limit: 1,
+      });
+      const albumAfter = albumDataAfter?.albums[0];
+      if (!albumAfter) {
+        throw new Error('Album not found');
+      }
+      expect(albumAfter.rating).toBe(3);
     }, 120_000);
   });
 });

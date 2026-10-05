@@ -113,7 +113,7 @@ export class LibraryService {
       createdAt: album.createdAt,
       genres: albumGenres,
       id: album.id,
-      rating: ((album as unknown as Record<string, number>).rating ?? 0) as RatingOrUnset,
+      rating: (album.get({ plain: true }) as unknown as Record<string, number>).rating as RatingOrUnset,
       title: replaceDoubleQuotes(album.title),
       year: album.year,
     };
@@ -324,7 +324,7 @@ export class LibraryService {
         ...additionalSortFields,
         [
           this.albumEntity.sequelize!.literal(
-            `(SELECT ROUND(SUM(rating) / COUNT(rating)) FROM tracks WHERE album_id = id)`,
+            `(SELECT ROUND(SUM(rating) / COUNT(rating)) FROM tracks WHERE tracks.album_id = AlbumEntity.id)`,
           ),
           'rating',
         ],
