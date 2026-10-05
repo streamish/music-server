@@ -6,6 +6,42 @@ describe('/api/user/set-track-rating', () => {
   let userApi: UserApi;
   let accountId: number;
 
+  async function setRating(trackId: number, rating: number) {
+    const { error, data } = await userApi.setTrackRating(
+      {
+        id: trackId,
+      },
+      {
+        rating,
+      },
+    );
+    expect(error).toBeUndefined();
+    expect(data?.success).toBe(true);
+  }
+
+  async function getTrack(index: number) {
+    const { data } = await userApi.listTracks({
+      offset: 0,
+      limit: 100_000,
+    });
+    if (!data?.tracks.length || !data?.tracks[index]) {
+      throw new Error('No tracks found');
+    }
+    return data.tracks[index];
+  }
+
+  async function getAlbum(albumId: number) {
+    const { data } = await userApi.listAlbumsWithTracks({
+      offset: 0,
+      limit: 100_000,
+    });
+    const album = data?.albums.find((a) => a.id === albumId);
+    if (!album) {
+      throw new Error('Album not found');
+    }
+    return album;
+  }
+
   beforeAll(async () => {
     const newUsername = `user-${Date.now()}`;
     const newAccount = await testApi.duplicateAccount(USER_USERNAME, newUsername);
@@ -55,35 +91,63 @@ describe('/api/user/set-track-rating', () => {
 
   describe('success', () => {
     it('should set rating for the track', async () => {
-      const { data: trackDataBefore } = await userApi.listTracks({
-        offset: 0,
-        limit: 1,
-      });
-      const trackBefore = trackDataBefore?.tracks[0];
-      if (!trackBefore) {
-        throw new Error('Track not found before custom data set');
-      }
+      // rate track
+      const trackBefore = await getTrack(0);
       expect(trackBefore.rating).toBeFalsy();
-      const { error, data } = await userApi.setTrackRating(
-        {
-          id: trackBefore.id,
-        },
-        {
-          rating: 5,
-        },
-      );
-      expect(error).toBeUndefined();
-      expect(data?.success).toBe(true);
-      // find the track
-      const { data: trackDataAfter } = await userApi.listTracks({
-        offset: 0,
-        limit: 1,
-      });
-      const trackAfter = trackDataAfter?.tracks[0];
+      await setRating(trackBefore.id, 5);
+      // confirm it rated
+      const trackAfter = await getTrack(0);
       if (!trackAfter) {
         throw new Error('Track not found');
       }
       expect(trackAfter.rating).toBe(5);
+    }, 120_000);
+
+    it('should affect rating for the album', async () => {
+      // rate track
+      const trackBefore = await getTrack(1);
+      expect(trackBefore.rating).toBeFalsy();
+      await setRating(trackBefore.id, 5);
+      // confirm it rated
+      const trackAfter = await getTrack(1);
+      expect(trackAfter.rating).toBe(5);
+      // confirm it affected album
+      const album = await getAlbum(trackBefore.albumId);
+      const ratingTotal = album.tracks.reduce((total, track) => total + (track.rating || 0), 0);
+      const averageRating = ratingTotal / album.tracks.length;
+      expect(album.rating).toBe(averageRating);
+    }, 120_000);
+
+    it('should reset rating for the track', async () => {
+      // rate track
+      const trackBefore = await getTrack(2);
+      expect(trackBefore.rating).toBeFalsy();
+      await setRating(trackBefore.id, 4);
+      // confirm it rated
+      const trackAfter = await getTrack(2);
+      expect(trackAfter.rating).toBe(4);
+      // reset the rating
+      await setRating(trackBefore.id, 0);
+      // confirm it reset
+      const trackAfterReset = await getTrack(2);
+      expect(trackAfterReset.rating).toBe(0);
+    }, 120_000);
+
+    it('should reset rating for the album', async () => {
+      const trackBefore = await getTrack(3);
+      if (!trackBefore) {
+        throw new Error('Track not found before custom data set');
+      }
+      expect(trackBefore.rating).toBeFalsy();
+      await setRating(trackBefore.id, 5);
+      // confirm it rated
+      const trackAfter = await getTrack(3);
+      expect(trackAfter.rating).toBe(5);
+      // reset rating
+      await setRating(trackAfter.id, 0);
+      // confirm it affected album
+      const album = await getAlbum(trackAfter.albumId);
+      expect(album.rating).toBe(0);
     }, 120_000);
   });
 });
