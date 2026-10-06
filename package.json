@@ -100,7 +100,7 @@
     "generate:seeder": "bash generators/sequelize-seeder.sh",
     "lint:json": "for x in `find . -type f -name \"*.json\" -not -path \"./node_modules/*\" -not -path \"./.git/*\" -not -path \"./dist/*\"`; do npx sort-json-keys \"./$x\"; done",
     "lint": "npx eslint . --fix",
-    "openapi:generate": "npx openapi-typescript http://localhost:7100/swagger.json -o ./src/types/api-schema.ts --enum --alphabetize --export-type",
+    "openapi:refresh": "npx openapi-typescript http://localhost:7100/swagger.json -o ./src/types/api-schema.ts --enum --alphabetize --export-type",
     "prepare": "husky",
     "prettier": "prettier --write .",
     "rebuild": "rm -f *.db && npm run build && npm run sequelize:migrate && npm run sequelize:seed:all",
@@ -108,10 +108,10 @@
     "sequelize:seed:all": "npx sequelize-cli db:seed:all",
     "sequelize:seed:create": "npx sequelize-cli seed:create --seeders-path ./src/database/seeders --name ",
     "sequelize:seed": "npx sequelize-cli db:seed",
-    "start:debug": "npx dotenv -e .env -- npx nest start --debug --watch",
-    "start:dev": "npx dotenv -e .env -- npx nest start --watch",
+    "start:debug": "npx dotenv -e .env -- npx nest start --debug",
+    "start:dev": "npx dotenv -e .env -- npx nest start",
     "start:prod": "npx node dist/main",
-    "start:test": "npx dotenv -e .env.test -- npx nest start",
+    "start:test": "npx dotenv -e .env.test -- npx nest start --path tsconfig.test.json",
     "test": "npx dotenv -e .env.test npx jest"
   },
   "version": "0.0.6"

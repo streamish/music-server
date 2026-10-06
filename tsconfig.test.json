@@ -14,7 +14,7 @@
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": false,
     "noUncheckedIndexedAccess": true,
-    "outDir": "./dist",
+    "outDir": "./dist-test",
     "removeComments": true,
     "resolveJsonModule": true,
     "resolvePackageJsonExports": true,
