@@ -14,6 +14,7 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from '@nes
 import { ConfigService } from 'src/config/config.service';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
+import { LibraryFolderDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { Op } from 'sequelize';
 import {
@@ -25,7 +26,6 @@ import {
   SynologyEntrySignInDataDto,
 } from './dtos';
 import { SynologyPinTypeEnum } from './enums';
-import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
 import { readFileSync } from 'node:fs';
 import { sep } from 'node:path';
@@ -231,8 +231,8 @@ export class SynologyEntryService {
   }
 
   async createPinnedItem(accountId: number, items: SynologyEntryNewPinItemDto[]): Promise<SynologyEntryPinsDataDto> {
-    let tree: UserTreeItemDto[] | undefined;
-    function findTreeItem(id: number, branch: UserTreeItemDto[]): UserTreeItemDto | undefined {
+    let tree: LibraryFolderDto[] | undefined;
+    function findTreeItem(id: number, branch: LibraryFolderDto[]): LibraryFolderDto | undefined {
       if (!branch) {
         return undefined;
       }

@@ -12,9 +12,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
 import { LibraryAssociationDto, LibraryAssociationWithTracksDto } from './dtos/library.association.dto';
-import { LibraryTrackDto } from './dtos';
+import { LibraryFolderDto, LibraryTrackDto } from './dtos';
 import { TrackFilter } from './types/track-filter';
-import { UserTreeItemDto } from 'src/api/user/folder-structure/folder-structure.dto';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
 import { sep } from 'node:path';
 import sequelize, { FindAttributeOptions, FindOptions, Op, OrderItem, Sequelize } from 'sequelize';
@@ -1159,15 +1158,15 @@ export class LibraryService {
   /**
    * Lists all folders for a given account in a tree structure.
    * @param {number} accountId The user performing the search
-   * @returns {Promise<UserTreeItemDto[]>} The tree structure of folders for the account
+   * @returns {Promise<LibraryFolderDto[]>} The tree structure of folders for the account
    */
-  async listFolders(accountId: number): Promise<UserTreeItemDto[]> {
+  async listFolders(accountId: number): Promise<LibraryFolderDto[]> {
     const tracks = await this.listTracks(accountId, {}, 0, 100_000);
-    function sortChildren(node: UserTreeItemDto) {
+    function sortChildren(node: LibraryFolderDto) {
       node.children?.sort((a, b) => (a.folder || a.file || '').localeCompare(b.folder || b.file || ''));
       node.children?.forEach(sortChildren);
     }
-    const root: UserTreeItemDto = {
+    const root: LibraryFolderDto = {
       folder: '',
       file: '',
       fullPath: '',
