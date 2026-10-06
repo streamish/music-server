@@ -4,6 +4,7 @@ import { AssociationEntity } from './association.entity';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
 import { PlaylistEntity } from './playlist.entity';
+import { TrackEntity } from './track.entity';
 
 /**
  * The FavoriteItemEntity represents an item that has been favorited or pinned by the user.
@@ -23,11 +24,10 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
       model: AccountEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AccountEntity)
-  declare accountId?: number;
+  declare accountId: number;
 
   /**
    * The album ID if an album is pinned
@@ -100,7 +100,7 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
   declare folderPath: string;
 
   /**
-   * The ID of the table row is the first file ID that was found in the folder path
+   * The ID of the table row is an integer that is assigned by the database when the row is created.
    */
   @Column({
     type: DataType.INTEGER,
@@ -145,6 +145,24 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     },
   })
   declare recentlyAdded: boolean;
+
+  /**
+   * The track ID if a track is pinned
+   */
+  @Column({
+    type: DataType.INTEGER,
+    references: {
+      model: TrackEntity,
+      key: 'id',
+    },
+    allowNull: true,
+    onDelete: 'CASCADE',
+  })
+  @ForeignKey(() => TrackEntity)
+  declare trackId?: number;
+
+  @BelongsTo(() => TrackEntity)
+  declare track: TrackEntity;
 
   /**
    * This field is managed by Sequelize and tracks the most recent date and time the row was last

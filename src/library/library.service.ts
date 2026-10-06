@@ -1,4 +1,11 @@
-import { AlbumEntity, AssociationEntity, AssociationLinkEntity, TrackEntity } from 'src/database/entities';
+import {
+  AlbumEntity,
+  AssociationEntity,
+  AssociationLinkEntity,
+  FavoriteItemEntity,
+  PlaylistEntity,
+  TrackEntity,
+} from 'src/database/entities';
 import {
   AlbumSortFieldEnum,
   AssociationSortFieldEnum,
@@ -12,7 +19,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
 import { LibraryAssociationDto, LibraryAssociationWithTracksDto } from './dtos/library.association.dto';
-import { LibraryFolderDto, LibraryTrackDto } from './dtos';
+import { LibraryFavoriteDto, LibraryFolderDto, LibraryTrackDto } from './dtos';
 import { TrackFilter } from './types/track-filter';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
 import { sep } from 'node:path';
@@ -30,6 +37,10 @@ export class LibraryService {
     private readonly associationEntity: typeof AssociationEntity,
     @InjectModel(AssociationLinkEntity)
     private readonly associationLinkEntity: typeof AssociationLinkEntity,
+    @InjectModel(FavoriteItemEntity)
+    private readonly favoriteItemEntity: typeof FavoriteItemEntity,
+    @InjectModel(PlaylistEntity)
+    private readonly playlistEntity: typeof PlaylistEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
   ) {}
@@ -124,6 +135,150 @@ export class LibraryService {
       id: association?.id || 0,
       name: association?.name || '',
       createdAt: association?.createdAt || new Date(),
+    };
+  }
+
+  private async buildFavoriteItem(favorite: FavoriteItemEntity): Promise<LibraryFavoriteDto> {
+    // Build a favorite album
+    if (favorite.albumId) {
+      const albums = favorite.albumId ? await this.retrieveAlbum(favorite.accountId, favorite.albumId) : undefined;
+      const album = albums?.[0];
+      if (!album) {
+        throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
+      }
+      return {
+        id: favorite.id || 0,
+        createdAt: favorite.createdAt || new Date(),
+        album,
+      };
+    }
+    // Build a favorite track
+    if (favorite.trackId) {
+      const tracks = favorite.trackId ? await this.retrieveTrack(favorite.accountId, favorite.trackId) : undefined;
+      const track = tracks?.[0];
+      if (!track) {
+        throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
+      }
+      return {
+        id: favorite.id || 0,
+        createdAt: favorite.createdAt || new Date(),
+        track,
+      };
+    }
+    // Build a favorite folder
+    if (favorite.folderPath) {
+      const folders = await this.listFolders(favorite.accountId);
+      const findFolder = (branches: LibraryFolderDto[]) => {
+        for (let i = 0, len = branches.length; i < len; i += 1) {
+          const branch = branches[i];
+          if (branch) {
+            if (branch.folder === favorite.folderPath) {
+              return branch;
+            }
+            if (branch.children?.length) {
+              const found = findFolder(branch.children);
+              if (found) {
+                return found;
+              }
+            }
+          }
+        }
+        return undefined;
+      };
+      const folder = findFolder(folders);
+      if (!folder) {
+        throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
+      }
+      return {
+        id: favorite.id || 0,
+        createdAt: favorite.createdAt || new Date(),
+        folder,
+      };
+    }
+    // Build a favorite association
+    if (favorite.associationId && favorite.associationType) {
+      const association = await this.associationEntity.findByPk(favorite.associationId, {
+        include: [
+          {
+            model: AssociationLinkEntity,
+          },
+        ],
+      });
+      if (!association) {
+        throw new NotFoundException(ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR);
+      }
+      const albumArtist =
+        favorite.associationType === AssociationTypeEnum.ARTIST
+          ? await this.retrieveAlbumAssociation(favorite.accountId, favorite.associationId, AssociationTypeEnum.ARTIST)
+          : [];
+      const trackAssociations = await this.retrieveTrackAssociation(
+        favorite.accountId,
+        favorite.associationId,
+        favorite.associationType,
+      );
+      const albums: LibraryAlbumWithTracksDto[] = [
+        ...(albumArtist[0]?.albums || []),
+        ...(trackAssociations[0]?.albums || []),
+      ]
+        .flat()
+        .filter(Boolean);
+      // consolidate the albums into a unique list
+      const uniqueAlbumsMap = new Map<number, LibraryAlbumWithTracksDto>();
+      for (let i = 0, len = albums.length; i < len; i += 1) {
+        const album = albums[i];
+        if (album) {
+          if (!uniqueAlbumsMap.has(album.id)) {
+            uniqueAlbumsMap.set(album.id, album);
+          } else {
+            // consolidate the tracks from duplicate albums
+            const existingAlbum = uniqueAlbumsMap.get(album.id);
+            if (existingAlbum) {
+              existingAlbum.tracks = [...(existingAlbum.tracks || []), ...(album.tracks || [])].filter(Boolean);
+            }
+          }
+        }
+      }
+      const uniqueAlbums = Array.from(uniqueAlbumsMap.values());
+      uniqueAlbums.sort((a, b) => {
+        return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+      });
+      return {
+        id: favorite.id || 0,
+        createdAt: favorite.createdAt || new Date(),
+        associationType: favorite.associationType,
+        association: {
+          ...this.buildAssociationItem(association),
+          albums: uniqueAlbums.map((album) => {
+            album.tracks.sort((a, b) => {
+              // sort by disc number then track number
+              if ((!a.discNumber && !b.discNumber) || a.discNumber === b.discNumber) {
+                return a.trackNumber - b.trackNumber;
+              }
+              return a.discNumber - b.discNumber;
+            });
+            return album;
+          }),
+        },
+      };
+    }
+    // Build a favorite playlist
+    if (favorite.playlistId && !favorite.allSongs && !favorite.randomHundred && !favorite.recentlyAdded) {
+      const playlist = await this.playlistEntity.findByPk(favorite.playlistId);
+      if (!playlist) {
+        throw new NotFoundException(ErrorCodes.PLAYLIST_NOT_FOUND_ERROR);
+      }
+      return {
+        id: favorite.id || 0,
+        createdAt: favorite.createdAt || new Date(),
+        playlist,
+      };
+    }
+    return {
+      id: favorite.id || 0,
+      createdAt: favorite.createdAt || new Date(),
+      allSongs: favorite.allSongs,
+      randomHundred: favorite.randomHundred,
+      recentlyAdded: favorite.recentlyAdded,
     };
   }
 
@@ -1035,6 +1190,25 @@ export class LibraryService {
     return results.map((genre) => genre.id);
   }
 
+  async deleteFavoriteItem(accountId: number, favoriteId: number | number[]): Promise<void> {
+    const favoriteItems = await this.favoriteItemEntity.findAll({
+      where: {
+        id: favoriteId,
+        accountId,
+      },
+      attributes: ['id', 'accountId'],
+    });
+    if (!favoriteItems.length || (Array.isArray(favoriteId) && favoriteItems.length !== favoriteId.length)) {
+      throw new NotFoundException(ErrorCodes.FAVORITE_ITEMS_NOT_FOUND);
+    }
+    await this.favoriteItemEntity.destroy({
+      where: {
+        id: favoriteId,
+        accountId,
+      },
+    });
+  }
+
   /**
    * Returns lists of album-associated artists, composers and genres filtered by account ID and other criteria.
    * @param {number} accountId
@@ -1152,6 +1326,25 @@ export class LibraryService {
     return {
       total: albums.count.length,
       items: await Promise.all(albums.rows.map(this.buildAlbumItem)),
+    };
+  }
+
+  async listFavorites(accountId: number, offset: number, limit: number): Promise<ListResult<LibraryFavoriteDto>> {
+    const favorites = await this.favoriteItemEntity.findAll({
+      where: {
+        accountId,
+      },
+      offset: offset || 0,
+      limit: limit || 100_000,
+    });
+    const total = await this.favoriteItemEntity.count({
+      where: {
+        accountId,
+      },
+    });
+    return {
+      total,
+      items: await Promise.all(favorites.map(this.buildFavoriteItem.bind(this))),
     };
   }
 
@@ -1434,5 +1627,68 @@ export class LibraryService {
       throw new NotFoundException(ErrorCodes.TRACKS_NOT_FOUND_ERROR);
     }
     return tracks.map(this.buildTrackItem);
+  }
+
+  async setAlbumFavorite(accountId: number, albumId: number): Promise<void> {
+    const album = await this.albumEntity.findOne({
+      attributes: ['id'],
+      where: {
+        id: albumId,
+        accountId,
+      },
+    });
+    if (!album) {
+      throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
+    }
+    await this.favoriteItemEntity.create({
+      accountId,
+      albumId,
+    } as FavoriteItemEntity);
+  }
+
+  async setAssociationFavorite(
+    accountId: number,
+    associationId: number,
+    associationType: AssociationTypeEnum,
+  ): Promise<void> {
+    const association = await this.associationEntity.findOne({
+      attributes: ['id'],
+      where: {
+        id: associationId,
+        accountId,
+      },
+    });
+    if (!association) {
+      throw new NotFoundException(ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR);
+    }
+    await this.favoriteItemEntity.create({
+      accountId,
+      associationId,
+      associationType,
+    } as FavoriteItemEntity);
+  }
+
+  async setFolderFavorite(accountId: number, folderPath: string): Promise<void> {
+    await this.favoriteItemEntity.create({
+      accountId,
+      folderPath,
+    } as FavoriteItemEntity);
+  }
+
+  async setTrackFavorite(accountId: number, trackId: number): Promise<void> {
+    const track = await this.trackEntity.findOne({
+      attributes: ['id'],
+      where: {
+        id: trackId,
+        accountId,
+      },
+    });
+    if (!track) {
+      throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
+    }
+    await this.favoriteItemEntity.create({
+      accountId,
+      trackId,
+    } as FavoriteItemEntity);
   }
 }
