@@ -24,10 +24,11 @@ describe('/api/user/set-album-rating', () => {
       offset: 0,
       limit: 100_000,
     });
-    if (!data?.albums.length || !data?.albums[index]) {
-      throw new Error('No albums found');
+    const album = data?.albums[index];
+    if (!album) {
+      throw new Error('No album found');
     }
-    return data.albums[index];
+    return album;
   }
 
   beforeAll(async () => {

@@ -39,8 +39,8 @@ describe('/api/user/list-root-paths', () => {
       mkdirSync(testPath2);
       const account = await adminApi.createTestAccount();
       const accountApi = await createUserApi(account.username, account.password);
-      await accountApi.createRootPath(testPath1);
-      await accountApi.createRootPath(testPath2);
+      await accountApi.createRootPath({ rootPath: testPath1 });
+      await accountApi.createRootPath({ rootPath: testPath2 });
       const { error, data } = await accountApi.listRootPaths();
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);

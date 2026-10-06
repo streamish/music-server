@@ -320,13 +320,13 @@ export type UserApi = {
   deleteFavorite: (query: DeleteFavoriteQueryDto) => ReturnType<typeof deleteFavorite>;
   deleteRootPath: (query: DeleteRootPathQueryDto) => ReturnType<typeof deleteRootPath>;
   endSession: () => ReturnType<typeof endSession>;
+  folderStructure: () => ReturnType<typeof folderStructure>;
   listAlbums: (query?: ListAlbumsQueryDto) => ReturnType<typeof listAlbums>;
   listAlbumsWithTracks: (query?: ListAlbumsWithTracksQueryDto) => ReturnType<typeof listAlbumsWithTracks>;
   listAlbumAssociations: (query: ListAlbumAssociationsQueryDto) => ReturnType<typeof listAlbumAssociations>;
   listAlbumAssociationsWithTracks: (
     query: ListAlbumAssociationsWithTracksQueryDto,
   ) => ReturnType<typeof listAlbumAssociationsWithTracks>;
-  folderStructure: () => ReturnType<typeof folderStructure>;
   listIndexerLogs: () => ReturnType<typeof listIndexerLogs>;
   listRootPaths: () => ReturnType<typeof listRootPaths>;
   listTrackAssociations: (query: ListTrackAssociationsQueryDto) => ReturnType<typeof listTrackAssociations>;
@@ -384,6 +384,9 @@ export async function createUserApi(username?: string, password?: string): Promi
     },
     async endSession() {
       return endSession(params);
+    },
+    async folderStructure() {
+      return folderStructure(params);
     },
     async listAlbums(query?: ListAlbumsQueryDto) {
       return listAlbums(params, query);

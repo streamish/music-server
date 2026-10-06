@@ -26,7 +26,7 @@ export class UserDeleteRootPathController {
     summary: `Remove a music source from the user's account`,
     description: [
       `Deletes the specified root path and all associated information in the database immediately.`,
-      `The songs and folders will no longer be present in your librariy but the files will remain on the file system.`,
+      `The songs and folders will no longer be present in your library but the files will remain on the file system.`,
       JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
   })

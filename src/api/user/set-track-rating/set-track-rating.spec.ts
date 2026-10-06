@@ -24,10 +24,11 @@ describe('/api/user/set-track-rating', () => {
       offset: 0,
       limit: 100_000,
     });
-    if (!data?.tracks.length || !data?.tracks[index]) {
-      throw new Error('No tracks found');
+    const track = data?.tracks[index];
+    if (!track) {
+      throw new Error('Track not found');
     }
-    return data.tracks[index];
+    return track;
   }
 
   async function getAlbum(albumId: number) {
@@ -135,9 +136,6 @@ describe('/api/user/set-track-rating', () => {
 
     it('should reset rating for the album', async () => {
       const trackBefore = await getTrack(3);
-      if (!trackBefore) {
-        throw new Error('Track not found before custom data set');
-      }
       expect(trackBefore.rating).toBeFalsy();
       await setRating(trackBefore.id, 5);
       // confirm it rated
