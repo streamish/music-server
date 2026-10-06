@@ -507,6 +507,29 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/user/delete-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Remove a favorite from the user's account
+     * @description Deletes the specified favorite immediately.
+     *     The album, association or track will no longer be a favorite but will still exist in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    delete: operations['UserDeleteFavoriteController_delete'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/user/delete-root-path': {
     parameters: {
       query?: never;
@@ -520,7 +543,7 @@ export type paths = {
     /**
      * Remove a music source from the user's account
      * @description Deletes the specified root path and all associated information in the database immediately.
-     *     The songs and folders will no longer be present in your librariy but the files will remain on the file system.
+     *     The songs and folders will no longer be present in your library but the files will remain on the file system.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
@@ -908,6 +931,28 @@ export type paths = {
     patch: operations['UserSetAlbumCustomDataController_patch'];
     trace?: never;
   };
+  '/api/user/set-album-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Mark an album as a favorite
+     * @description Favorites the specified album allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    put: operations['UserSetAlbumFavoriteController_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/user/set-album-rating': {
     parameters: {
       query?: never;
@@ -917,8 +962,8 @@ export type paths = {
     };
     get?: never;
     /**
-     * Sets or unsets an album's tracks
-     * @description Sets or unsets a 1-5 star rating for a track or the tracks in an album.
+     * Sets or unsets ratings for an album
+     * @description Sets or unsets a 1-5 star rating for the tracks within an album.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
@@ -952,6 +997,28 @@ export type paths = {
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetArtistNameController_patch'];
+    trace?: never;
+  };
+  '/api/user/set-association-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Mark an association as a favorite
+     * @description Favorites an associated artist, composer or genre allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    put: operations['UserSetAssociationFavoriteController_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   '/api/user/set-composer-name': {
@@ -1049,6 +1116,28 @@ export type paths = {
     patch: operations['UserSetTrackCustomDataController_patch'];
     trace?: never;
   };
+  '/api/user/set-track-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Mark a track as a favorite
+     * @description Favorites the specified track allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    put: operations['UserSetTrackFavoriteController_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/user/set-track-rating': {
     parameters: {
       query?: never;
@@ -1058,8 +1147,8 @@ export type paths = {
     };
     get?: never;
     /**
-     * Sets or unsets a 1-5 star rating for a track or the tracks in an album.
-     * @description Sets or unsets a 1-5 star rating for a track or the tracks in an album.
+     * Sets or unsets rating for a track
+     * @description Sets or unsets a 1-5 star rating for a single track.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
@@ -2397,6 +2486,23 @@ export type components = {
       id: number;
       /** @description The name of the artist. */
       name: string;
+    };
+    LibraryFolderDto: {
+      /**
+       * @example [
+       *       {
+       *         "folder": "sub-folder",
+       *         "fullPath": "/path/to/sub-folder",
+       *         "id": 123
+       *       }
+       *     ]
+       */
+      children?: components['schemas']['LibraryFolderDto'][];
+      file?: string;
+      folder?: string;
+      fullPath: string;
+      id: number;
+      track?: components['schemas']['LibraryTrackDto'];
     };
     LibraryTrackDto: {
       /** @description The list of artists for the track. */
@@ -6338,6 +6444,35 @@ export type components = {
     };
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserDeleteFavoriteNotFoundErrorMessage: UserDeleteFavoriteNotFoundErrorMessage;
+    UserDeleteFavoriteNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default favorite-item-not-found-error
+       */
+      message: components['schemas']['UserDeleteFavoriteNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserDeleteFavoriteResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
      *     applied while serving the request
      * @enum {string}
      */
@@ -6366,7 +6501,7 @@ export type components = {
       success: boolean;
     };
     UserFolderStructureResponseDto: {
-      items: components['schemas']['UserTreeItemDto'][];
+      items: components['schemas']['LibraryFolderDto'][];
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -6884,6 +7019,35 @@ export type components = {
      *     applied during the execution of the request
      * @enum {string}
      */
+    UserSetAlbumFavoriteNotFoundErrorMessage: UserSetAlbumFavoriteNotFoundErrorMessage;
+    UserSetAlbumFavoriteNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default album-not-found-error
+       */
+      message: components['schemas']['UserSetAlbumFavoriteNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetAlbumFavoriteResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
     UserSetAlbumRatingBadRequestErrorMessage: UserSetAlbumRatingBadRequestErrorMessage;
     UserSetAlbumRatingBadRequestResponseDto: {
       /** @description General description of the error class */
@@ -6986,6 +7150,35 @@ export type components = {
       success: boolean;
     };
     UserSetArtistNameResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserSetAssociationFavoriteNotFoundErrorMessage: UserSetAssociationFavoriteNotFoundErrorMessage;
+    UserSetAssociationFavoriteNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default association-not-found-error
+       */
+      message: components['schemas']['UserSetAssociationFavoriteNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetAssociationFavoriteResponseDto: {
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -7323,6 +7516,35 @@ export type components = {
      *     applied during the execution of the request
      * @enum {string}
      */
+    UserSetTrackFavoriteNotFoundErrorMessage: UserSetTrackFavoriteNotFoundErrorMessage;
+    UserSetTrackFavoriteNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default track-not-found-error
+       */
+      message: components['schemas']['UserSetTrackFavoriteNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetTrackFavoriteResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
     UserSetTrackRatingBadRequestErrorMessage: UserSetTrackRatingBadRequestErrorMessage;
     UserSetTrackRatingBadRequestResponseDto: {
       /** @description General description of the error class */
@@ -7395,23 +7617,6 @@ export type components = {
        * @default false
        */
       success: boolean;
-    };
-    UserTreeItemDto: {
-      /**
-       * @example [
-       *       {
-       *         "folder": "sub-folder",
-       *         "fullPath": "/path/to/sub-folder",
-       *         "id": 123
-       *       }
-       *     ]
-       */
-      children?: components['schemas']['UserTreeItemDto'][];
-      file?: string;
-      folder?: string;
-      fullPath: string;
-      id: number;
-      track?: components['schemas']['LibraryTrackDto'];
     };
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
@@ -8215,6 +8420,41 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserDeleteCustomDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserDeleteFavoriteController_delete: {
+    parameters: {
+      query: {
+        /** @description The ID of the favorite item to be deleted */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Favorite deleted successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserDeleteFavoriteResponseDto'];
+        };
+      };
+      /** @description Favorite not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserDeleteFavoriteNotFoundResponseDto'];
         };
       };
     };
@@ -9050,6 +9290,41 @@ export interface operations {
       };
     };
   };
+  UserSetAlbumFavoriteController_put: {
+    parameters: {
+      query: {
+        /** @description The ID of the album */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Favorite set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAlbumFavoriteResponseDto'];
+        };
+      };
+      /** @description Favorite not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAlbumFavoriteNotFoundResponseDto'];
+        };
+      };
+    };
+  };
   UserSetAlbumRatingController_put: {
     parameters: {
       query: {
@@ -9142,6 +9417,42 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserSetArtistNameNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetAssociationFavoriteController_put: {
+    parameters: {
+      query: {
+        associationType: components['schemas']['AssociationTypeEnum'];
+        /** @description The ID of the association */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Favorite set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAssociationFavoriteResponseDto'];
+        };
+      };
+      /** @description Favorite not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetAssociationFavoriteNotFoundResponseDto'];
         };
       };
     };
@@ -9334,6 +9645,41 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserSetTrackCustomDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetTrackFavoriteController_put: {
+    parameters: {
+      query: {
+        /** @description The ID of the track to mark as favorite */
+        id: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Favorite set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetTrackFavoriteResponseDto'];
+        };
+      };
+      /** @description Favorite not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetTrackFavoriteNotFoundResponseDto'];
         };
       };
     };
@@ -10454,6 +10800,9 @@ export enum UserCreateRootPathBadRequestErrorMessageEnum {
 export enum UserDeleteCustomDataNotFoundErrorMessage {
   file_not_found_error = 'file-not-found-error',
 }
+export enum UserDeleteFavoriteNotFoundErrorMessage {
+  favorite_item_not_found_error = 'favorite-item-not-found-error',
+}
 export enum UserDeleteRootPathNotFoundErrorMessageEnum {
   root_path_not_found_error = 'root-path-not-found-error',
 }
@@ -10585,6 +10934,9 @@ export enum UserSetAlbumCustomDataBadRequestErrorMessage {
 export enum UserSetAlbumCustomDataNotFoundErrorMessage {
   album_not_found_error = 'album-not-found-error',
 }
+export enum UserSetAlbumFavoriteNotFoundErrorMessage {
+  album_not_found_error = 'album-not-found-error',
+}
 export enum UserSetAlbumRatingBadRequestErrorMessage {
   invalid_album_id_error = 'invalid-album-id-error',
   invalid_rating_error = 'invalid-rating-error',
@@ -10601,6 +10953,9 @@ export enum UserSetArtistNameBadRequestErrorMessage {
 }
 export enum UserSetArtistNameNotFoundErrorMessage {
   artist_not_found_error = 'artist-not-found-error',
+}
+export enum UserSetAssociationFavoriteNotFoundErrorMessage {
+  association_not_found_error = 'association-not-found-error',
 }
 export enum UserSetComposerNameBadRequestErrorMessage {
   invalid_association_id_error = 'invalid-association-id-error',
@@ -10665,6 +11020,9 @@ export enum UserSetTrackCustomDataBadRequestErrorMessage {
 }
 export enum UserSetTrackCustomDataNotFoundErrorMessage {
   file_not_found_error = 'file-not-found-error',
+}
+export enum UserSetTrackFavoriteNotFoundErrorMessage {
+  track_not_found_error = 'track-not-found-error',
 }
 export enum UserSetTrackRatingBadRequestErrorMessage {
   invalid_track_id_error = 'invalid-track-id-error',
