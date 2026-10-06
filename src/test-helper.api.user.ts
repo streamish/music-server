@@ -8,33 +8,44 @@ type RequestParams = {
   };
 };
 
-async function createRootPath(params: RequestParams, rootPath: string) {
+type CreateRootPathBodyDto = paths['/api/user/create-root-path']['post']['requestBody']['content']['application/json'];
+
+async function createRootPath(params: RequestParams, body: CreateRootPathBodyDto) {
   return api.POST(`/api/user/create-root-path`, {
-    body: {
-      rootPath,
-    },
+    body,
     params,
   });
 }
 
-async function deleteCustomFileData(params: RequestParams, customFileDataId: number) {
+type DeleteCustomDataQueryDto = paths['/api/user/delete-custom-data']['delete']['parameters']['query'];
+
+async function deleteCustomData(params: RequestParams, query: DeleteCustomDataQueryDto) {
   return api.DELETE(`/api/user/delete-custom-data`, {
     params: {
       ...params,
-      query: {
-        id: customFileDataId,
-      },
+      query,
     },
   });
 }
 
-async function deleteRootPath(params: RequestParams, rootPathId: number) {
+type DeleteFavoriteQueryDto = paths['/api/user/delete-favorite']['delete']['parameters']['query'];
+
+async function deleteFavorite(params: RequestParams, query: DeleteFavoriteQueryDto) {
+  return api.DELETE(`/api/user/delete-favorite`, {
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
+type DeleteRootPathQueryDto = paths['/api/user/delete-root-path']['delete']['parameters']['query'];
+
+async function deleteRootPath(params: RequestParams, query: DeleteRootPathQueryDto) {
   return api.DELETE(`/api/user/delete-root-path`, {
     params: {
       ...params,
-      query: {
-        id: rootPathId,
-      },
+      query,
     },
   });
 }
@@ -163,6 +174,17 @@ async function setAlbumCustomData(params: RequestParams, albumCustomDataId: numb
   });
 }
 
+type SetAlbumFavoriteQueryDto = paths['/api/user/set-album-favorite']['put']['parameters']['query'];
+
+async function setAlbumFavorite(params: RequestParams, query: SetAlbumFavoriteQueryDto) {
+  return api.PUT(`/api/user/set-album-favorite`, {
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
 type SetAlbumRatingQueryDto = paths['/api/user/set-album-rating']['put']['parameters']['query'];
 type SetAlbumRatingBodyDto = paths['/api/user/set-album-rating']['put']['requestBody']['content']['application/json'];
 
@@ -186,6 +208,17 @@ async function setArtistName(params: RequestParams, artistId: number, body: SetA
       query: {
         id: artistId,
       },
+    },
+  });
+}
+
+type SetAssociationFavoriteQueryDto = paths['/api/user/set-association-favorite']['put']['parameters']['query'];
+
+async function setAssociationFavorite(params: RequestParams, query: SetAssociationFavoriteQueryDto) {
+  return api.PUT(`/api/user/set-association-favorite`, {
+    params: {
+      ...params,
+      query,
     },
   });
 }
@@ -248,6 +281,17 @@ async function setTrackCustomData(params: RequestParams, trackCustomDataId: numb
   });
 }
 
+type SetTrackFavoriteQueryDto = paths['/api/user/set-track-favorite']['put']['parameters']['query'];
+
+async function setTrackFavorite(params: RequestParams, query: SetTrackFavoriteQueryDto) {
+  return api.PUT(`/api/user/set-track-favorite`, {
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
 type SetTrackRatingQueryDto = paths['/api/user/set-track-rating']['put']['parameters']['query'];
 type SetTrackRatingBodyDto = paths['/api/user/set-track-rating']['put']['requestBody']['content']['application/json'];
 
@@ -271,9 +315,10 @@ async function updatePassword(params: RequestParams, newPassword: string) {
 }
 
 export type UserApi = {
-  createRootPath: (rootPath: string) => ReturnType<typeof createRootPath>;
-  deleteCustomFileData: (customFileDataId: number) => ReturnType<typeof deleteCustomFileData>;
-  deleteRootPath: (rootPathId: number) => ReturnType<typeof deleteRootPath>;
+  createRootPath: (body: CreateRootPathBodyDto) => ReturnType<typeof createRootPath>;
+  deleteCustomData: (query: DeleteCustomDataQueryDto) => ReturnType<typeof deleteCustomData>;
+  deleteFavorite: (query: DeleteFavoriteQueryDto) => ReturnType<typeof deleteFavorite>;
+  deleteRootPath: (query: DeleteRootPathQueryDto) => ReturnType<typeof deleteRootPath>;
   endSession: () => ReturnType<typeof endSession>;
   listAlbums: (query?: ListAlbumsQueryDto) => ReturnType<typeof listAlbums>;
   listAlbumsWithTracks: (query?: ListAlbumsWithTracksQueryDto) => ReturnType<typeof listAlbumsWithTracks>;
@@ -291,8 +336,10 @@ export type UserApi = {
   listTracks: (query?: ListTracksQueryDto) => ReturnType<typeof listTracks>;
   regenerateSessionKey: () => ReturnType<typeof regenerateSessionKey>;
   setAlbumCustomData: (albumId: number, data: SetAlbumCustomDataBodyDto) => ReturnType<typeof setAlbumCustomData>;
+  setAlbumFavorite: (query: SetAlbumFavoriteQueryDto) => ReturnType<typeof setAlbumFavorite>;
   setAlbumRating: (query: SetAlbumRatingQueryDto, body: SetAlbumRatingBodyDto) => ReturnType<typeof setAlbumRating>;
   setArtistName: (artistId: number, data: SetArtistNameBodyDto) => ReturnType<typeof setArtistName>;
+  setAssociationFavorite: (query: SetAssociationFavoriteQueryDto) => ReturnType<typeof setAssociationFavorite>;
   setComposerName: (composerId: number, data: SetComposerNameBodyDto) => ReturnType<typeof setComposerName>;
   setCustomData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomData>;
   setGenreName: (genreId: number, data: SetGenreNameBodyDto) => ReturnType<typeof setGenreName>;
@@ -300,6 +347,7 @@ export type UserApi = {
     trackCustomDataId: number,
     data: SetTrackCustomDataBodyDto,
   ) => ReturnType<typeof setTrackCustomData>;
+  setTrackFavorite: (query: SetTrackFavoriteQueryDto) => ReturnType<typeof setTrackFavorite>;
   setTrackRating: (query: SetTrackRatingQueryDto, body: SetTrackRatingBodyDto) => ReturnType<typeof setTrackRating>;
   updatePassword: (newPassword: string) => ReturnType<typeof updatePassword>;
 };
@@ -322,14 +370,17 @@ export async function createUserApi(username?: string, password?: string): Promi
   };
 
   return {
-    async createRootPath(rootPath: string) {
-      return createRootPath(params, rootPath);
+    async createRootPath(body: CreateRootPathBodyDto) {
+      return createRootPath(params, body);
     },
-    async deleteCustomFileData(customFileDataId: number) {
-      return deleteCustomFileData(params, customFileDataId);
+    async deleteCustomData(query: DeleteCustomDataQueryDto) {
+      return deleteCustomData(params, query);
     },
-    async deleteRootPath(rootPathId: number) {
-      return deleteRootPath(params, rootPathId);
+    async deleteFavorite(query: DeleteFavoriteQueryDto) {
+      return deleteFavorite(params, query);
+    },
+    async deleteRootPath(query: DeleteRootPathQueryDto) {
+      return deleteRootPath(params, query);
     },
     async endSession() {
       return endSession(params);
@@ -370,11 +421,17 @@ export async function createUserApi(username?: string, password?: string): Promi
     async setAlbumCustomData(albumId: number, data: SetAlbumCustomDataBodyDto) {
       return setAlbumCustomData(params, albumId, data);
     },
+    async setAlbumFavorite(query: SetAlbumFavoriteQueryDto) {
+      return setAlbumFavorite(params, query);
+    },
     async setAlbumRating(query: SetAlbumRatingQueryDto, body: SetAlbumRatingBodyDto) {
       return setAlbumRating(params, query, body);
     },
     async setArtistName(artistId: number, data: SetArtistNameBodyDto) {
       return setArtistName(params, artistId, data);
+    },
+    async setAssociationFavorite(query: SetAssociationFavoriteQueryDto) {
+      return setAssociationFavorite(params, query);
     },
     async setComposerName(composerId: number, data: SetComposerNameBodyDto) {
       return setComposerName(params, composerId, data);
@@ -390,6 +447,9 @@ export async function createUserApi(username?: string, password?: string): Promi
     },
     async setTrackCustomData(trackCustomDataId: number, data: SetTrackCustomDataBodyDto) {
       return setTrackCustomData(params, trackCustomDataId, data);
+    },
+    async setTrackFavorite(query: SetTrackFavoriteQueryDto) {
+      return setTrackFavorite(params, query);
     },
     async updatePassword(newPassword: string) {
       return updatePassword(params, newPassword);
