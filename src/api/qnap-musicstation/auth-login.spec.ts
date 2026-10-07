@@ -1,9 +1,15 @@
-import { api } from '../../test-helper.qnap';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 import { components } from '../../types/api-schema';
-import { describe, expect, it } from '@jest/globals';
+import { createQnapApiWithXmlResponse } from '../../test-helper';
+import type { QnapApiClient } from '../../test-helper';
 
 describe('/cgi-bin/authLogin.cgi', () => {
   const clientId = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+  let api: QnapApiClient;
+
+  beforeAll(async () => {
+    api = await createQnapApiWithXmlResponse();
+  });
 
   describe('authentication', () => {
     it('should create session', async () => {
