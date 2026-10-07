@@ -5,25 +5,25 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { InternalServerErrorResponseDto } from 'src/api/response.dto';
 import { TEST_APIS } from 'src/constants/swagger';
 import {
-  TestDeleteAccountNotFoundResponseDto,
-  TestDeleteAccountQueryDto,
-  TestDeleteAccountResponseDto,
-} from './delete-account.dto';
-import { TestDeleteAccountService } from './delete-account.service';
+  TestRetrieveAccountNotFoundResponseDto,
+  TestRetrieveAccountQueryDto,
+  TestRetrieveAccountResponseDto,
+} from './retrieve-account.dto';
+import { TestRetrieveAccountService } from './retrieve-account.service';
 
 @Controller({
   path: '/api/test',
 })
 @ApiTags(TEST_APIS)
-export class TestDeleteAccountController {
-  constructor(private readonly deleteAccountService: TestDeleteAccountService) {}
+export class TestRetrieveAccountController {
+  constructor(private readonly testRetrieveAccountService: TestRetrieveAccountService) {}
 
   // eslint-disable-next-line class-methods-use-this
-  @Delete('delete-account')
+  @Get('retrieve-account')
   @ApiOperation({
     summary: 'Delete account',
     description: [
@@ -33,18 +33,19 @@ export class TestDeleteAccountController {
     ].join('\n'),
   })
   @ApiCreatedResponse({
-    type: TestDeleteAccountResponseDto,
+    type: TestRetrieveAccountResponseDto,
   })
   @ApiNotFoundResponse({
-    type: TestDeleteAccountNotFoundResponseDto,
+    type: TestRetrieveAccountNotFoundResponseDto,
   })
   @ApiInternalServerErrorResponse({
     type: InternalServerErrorResponseDto,
   })
-  async delete(@Query() query: TestDeleteAccountQueryDto) {
-    await this.deleteAccountService.deleteAccount(query.id);
+  async get(@Query() query: TestRetrieveAccountQueryDto) {
+    const account = await this.testRetrieveAccountService.retrieveAccount(query.id);
     return {
       success: true,
+      account,
     };
   }
 }
