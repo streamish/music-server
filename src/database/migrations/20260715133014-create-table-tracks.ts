@@ -55,6 +55,7 @@ export async function up(queryInterface: QueryInterface) {
       onDelete: 'CASCADE',
     },
     title: DataTypes.STRING(255),
+    title_normalized: DataTypes.STRING(255),
     track_number: DataTypes.INTEGER,
     updated_at: {
       type: DataTypes.DATE,

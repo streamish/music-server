@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, Logger } from '@nestjs/common';
 import { TrackCustomDataEntity, TrackEntity } from 'src/database/entities';
 import { Transaction } from 'sequelize';
-import { sanitizeString } from 'src/utils/strings';
+import { normalizeString, sanitizeString } from 'src/utils/strings';
 
 @Injectable()
 export class IndexTrackService {
@@ -110,6 +110,7 @@ export class IndexTrackService {
         duration: embeddedData.format.duration || 0,
         frequency: embeddedData.format.sampleRate || 0,
         title: sanitizeString(embeddedData.common.title || '') || '',
+        titleNormalized: normalizeString(embeddedData.common.title || '') || '',
         trackNumber: embeddedData.common.track?.no || 0,
         year: embeddedData.common.year || 0,
       },

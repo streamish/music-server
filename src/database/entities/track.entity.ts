@@ -157,6 +157,9 @@ export class TrackEntity extends Model<TrackEntity> {
   @Column(DataType.STRING(255))
   declare title: string;
 
+  @Column(DataType.STRING(255))
+  declare titleNormalized: string;
+
   @Column(DataType.INTEGER)
   declare trackNumber: number;
 
