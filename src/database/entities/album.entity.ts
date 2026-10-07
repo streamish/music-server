@@ -35,10 +35,19 @@ export class AlbumEntity extends Model<AlbumEntity> {
   declare albumArtists?: AssociationLinkEntity[];
 
   @HasMany(() => AssociationLinkEntity)
+  declare albumArtistFilter?: AssociationLinkEntity[];
+
+  @HasMany(() => AssociationLinkEntity)
   declare albumComposers?: AssociationLinkEntity[];
 
   @HasMany(() => AssociationLinkEntity)
+  declare albumComposerFilter?: AssociationLinkEntity[];
+
+  @HasMany(() => AssociationLinkEntity)
   declare albumGenres?: AssociationLinkEntity[];
+
+  @HasMany(() => AssociationLinkEntity)
+  declare albumGenreFilter?: AssociationLinkEntity[];
 
   /**
    * The cover image for the album (if one exists).

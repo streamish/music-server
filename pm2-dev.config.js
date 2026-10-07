@@ -4,7 +4,7 @@ module.exports = {
       args: 'dotenv -e .env -- npm run start:dev',
       error_file: '/dev/null',
       exec_mode: 'fork',
-      ignore_watch: ['node_modules', 'dist', '.git'],
+      ignore_watch: ['node_modules', 'dist', 'dist-test', '.git', '*.spec.ts', 'database.*'],
       instances: 1,
       merge_logs: true,
       name: 'streamish-dev-api',
