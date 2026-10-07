@@ -11,7 +11,7 @@ import type { Request, Response } from 'express';
 const emptyBuffer = Buffer.alloc(0);
 
 @Controller({
-  path: '/api/User',
+  path: '/api/user',
 })
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
