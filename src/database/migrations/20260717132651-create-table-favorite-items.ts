@@ -5,7 +5,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.createTable('favorite_items', {
     account_id: {
       type: DataType.INTEGER,
-      allowNull: true,
       references: {
         model: 'accounts',
         key: 'id',
@@ -68,6 +67,15 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     recently_added: {
       type: DataType.BOOLEAN,
       allowNull: true,
+    },
+    track_id: {
+      type: DataType.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'tracks',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
     },
     updated_at: {
       type: DataType.DATE,

@@ -1,5 +1,4 @@
 import {
-  AlbumEntity,
   AssociationEntity,
   AssociationLinkEntity,
   FavoriteItemEntity,
@@ -14,6 +13,7 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from '@nes
 import { ConfigService } from 'src/config/config.service';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
+import { LibraryFavoriteDto, LibraryFolderDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { Op } from 'sequelize';
 import {
@@ -25,13 +25,12 @@ import {
   SynologyEntrySignInDataDto,
 } from './dtos';
 import { SynologyPinTypeEnum } from './enums';
-import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
 import { readFileSync } from 'node:fs';
 import { sep } from 'node:path';
 import crypto from 'node:crypto';
 
-function pinnedItemToRow(item: FavoriteItemEntity): SynologyEntryPinItemDto {
+function favoriteToRow(item: LibraryFavoriteDto): SynologyEntryPinItemDto {
   return {
     id: item.id.toString(),
     criteria: {
@@ -40,25 +39,25 @@ function pinnedItemToRow(item: FavoriteItemEntity): SynologyEntryPinItemDto {
       artist: item.associationType === AssociationTypeEnum.ARTIST ? item.association?.name : undefined,
       composer: item.associationType === AssociationTypeEnum.COMPOSER ? item.association?.name : undefined,
       genre: item.associationType === AssociationTypeEnum.GENRE ? item.association?.name : undefined,
-      folder: item.folderPath ? `dir_${item.folderPath}` : undefined,
+      folder: item.folder ? `dir_${item.folder?.folder}` : undefined,
       playlist: item.playlist?.name,
     },
     name:
-      item.album?.title ||
       item.association?.name ||
-      item.folderPath?.split(sep).pop() ||
+      item.album?.title ||
+      item.folder?.folder?.split(sep).pop() ||
       item.playlist?.name ||
       (item.allSongs ? 'All songs' : undefined) ||
       (item.randomHundred ? 'Random 100' : undefined) ||
       (item.recentlyAdded ? 'Recently added' : undefined) ||
       'Unknown',
     type:
-      (item.albumId ? SynologyPinTypeEnum.ALBUM : '') ||
       (item.associationType === AssociationTypeEnum.ARTIST ? SynologyPinTypeEnum.ARTIST : '') ||
       (item.associationType === AssociationTypeEnum.COMPOSER ? SynologyPinTypeEnum.COMPOSER : '') ||
       (item.associationType === AssociationTypeEnum.GENRE ? SynologyPinTypeEnum.GENRE : '') ||
-      (item.folderPath ? SynologyPinTypeEnum.FOLDER : '') ||
-      (item.playlistId ? SynologyPinTypeEnum.PLAYLIST : '') ||
+      (item.playlist?.id ? SynologyPinTypeEnum.PLAYLIST : '') ||
+      (item.album?.id ? SynologyPinTypeEnum.ALBUM : '') ||
+      (item.folder ? SynologyPinTypeEnum.FOLDER : '') ||
       (item.allSongs ? SynologyPinTypeEnum.ALBUM : '') ||
       (item.randomHundred ? SynologyPinTypeEnum.RANDOM_100 : '') ||
       (item.recentlyAdded ? SynologyPinTypeEnum.RECENTLY_ADDED : '') ||
@@ -75,16 +74,14 @@ export class SynologyEntryService {
   constructor(
     @Inject(AuthenticationService)
     private readonly authenticationService: AuthenticationService,
-    @InjectModel(AlbumEntity)
-    private readonly albumEntity: typeof AlbumEntity,
     @InjectModel(AssociationEntity)
     private readonly associationEntity: typeof AssociationEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
     @Inject(ConfigService) private readonly configService: ConfigService,
+    private readonly libraryService: LibraryService,
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
-    private readonly libraryService: LibraryService,
     @InjectModel(PlaylistEntity)
     private readonly playlistEntity: typeof PlaylistEntity,
     @InjectModel(PlaylistItemEntity)
@@ -192,47 +189,17 @@ export class SynologyEntryService {
   }
 
   async listPinnedItems(accountId: number, offset: number, limit: number): Promise<SynologyEntryPinsDataDto> {
-    const items = await this.favoriteItemEntity.findAll({
-      where: {
-        accountId,
-      },
-      include: [
-        {
-          model: AlbumEntity,
-          attributes: ['title'],
-          required: false,
-          as: 'album',
-        },
-        {
-          model: AssociationEntity,
-          attributes: ['name'],
-          required: false,
-        },
-        {
-          model: PlaylistEntity,
-          attributes: ['name'],
-          required: false,
-          as: 'playlist',
-        },
-      ],
-      offset: offset || 0,
-      limit: limit || 100000,
-    });
-    const total = await this.favoriteItemEntity.count({
-      where: {
-        accountId,
-      },
-    });
+    const data = await this.libraryService.listFavorites(accountId, offset, limit);
     return {
-      items: items.map(pinnedItemToRow),
+      items: data.items.map(favoriteToRow),
       offset: offset || 0,
-      total,
+      total: data.total,
     };
   }
 
   async createPinnedItem(accountId: number, items: SynologyEntryNewPinItemDto[]): Promise<SynologyEntryPinsDataDto> {
-    let tree: UserTreeItemDto[] | undefined;
-    function findTreeItem(id: number, branch: UserTreeItemDto[]): UserTreeItemDto | undefined {
+    let tree: LibraryFolderDto[] | undefined;
+    function findTreeItem(id: number, branch: LibraryFolderDto[]): LibraryFolderDto | undefined {
       if (!branch) {
         return undefined;
       }
@@ -256,9 +223,6 @@ export class SynologyEntryService {
     for (let i = 0, len = items.length; i < len; i += 1) {
       const item = items[i];
       if (item) {
-        let albumId;
-        let associationId;
-        let folderPath;
         let playlistId;
         if (item.criteria.album && item.criteria.album_artist) {
           // eslint-disable-next-line no-await-in-loop
@@ -271,14 +235,28 @@ export class SynologyEntryService {
             0,
             1,
           );
-          albumId = albums.items[0]?.id;
-        }
-        const associateName =
-          item.criteria.album_artist || item.criteria.artist || item.criteria.composer || item.criteria.genre;
-        let associationType: AssociationTypeEnum | undefined;
-        if (associateName) {
+          const albumId = albums.items[0]?.id;
+          if (!albumId) {
+            throw new NotFoundException({
+              success: false,
+              message: 'Album not found',
+              album: item.criteria.album,
+            });
+          }
           // eslint-disable-next-line no-await-in-loop
-          associationId = await this.getAssociationId(accountId, associateName);
+          await this.libraryService.setAlbumFavorite(accountId, albumId);
+        } else if (
+          item.criteria.album_artist ||
+          item.criteria.artist ||
+          item.criteria.composer ||
+          item.criteria.genre
+        ) {
+          // eslint-disable-next-line no-await-in-loop
+          const associationId = await this.getAssociationId(
+            accountId,
+            item.criteria.album_artist || item.criteria.artist || item.criteria.composer || item.criteria.genre || '',
+          );
+          let associationType: AssociationTypeEnum | undefined;
           if (item.criteria.artist) {
             associationType = AssociationTypeEnum.ARTIST;
             // } else if (item.criteria.album_artist) {
@@ -288,17 +266,25 @@ export class SynologyEntryService {
           } else {
             associationType = AssociationTypeEnum.GENRE;
           }
-        }
-        if (item.type === 'folder') {
+          // eslint-disable-next-line no-await-in-loop
+          await this.libraryService.setAssociationFavorite(accountId, associationId, associationType);
+        } else if (item.type === 'folder') {
           if (!tree) {
             // eslint-disable-next-line no-await-in-loop
             tree = await this.libraryService.listFolders(accountId);
           }
           const itemId = Number.parseInt(item.criteria.folder || '1', 10);
           const treeItem = findTreeItem(itemId, tree);
-          folderPath = treeItem?.folder || '';
-        }
-        if (item.type === 'playlist') {
+          if (!treeItem?.folder?.length) {
+            throw new NotFoundException({
+              success: false,
+              message: 'Folder not found',
+              folder: item.criteria.folder,
+            });
+          }
+          // eslint-disable-next-line no-await-in-loop
+          await this.libraryService.setFolderFavorite(accountId, treeItem.fullPath);
+        } else if (item.type === 'playlist') {
           // eslint-disable-next-line no-await-in-loop
           const playlist = await this.playlistEntity.findOne({
             attributes: ['id'],
@@ -311,37 +297,32 @@ export class SynologyEntryService {
             throw new NotFoundException({
               success: false,
               message: 'Playlist not found',
-              playlistId: item.criteria.playlist,
+              playlist: item.criteria.playlist,
             });
           }
           playlistId = playlist.id;
+          // eslint-disable-next-line no-await-in-loop
+          await this.favoriteItemEntity.create({
+            accountId,
+            playlistId,
+          } as FavoriteItemEntity);
+        } else {
+          // eslint-disable-next-line no-await-in-loop
+          await this.favoriteItemEntity.create({
+            accountId,
+            allSongs: item.name === 'All songs',
+            playlistId,
+            randomHundred: item.type === SynologyPinTypeEnum.RANDOM_100,
+            recentlyAdded: item.type === SynologyPinTypeEnum.RECENTLY_ADDED,
+          } as FavoriteItemEntity);
         }
-        // eslint-disable-next-line no-await-in-loop
-        await this.favoriteItemEntity.create({
-          accountId,
-          albumId,
-          allSongs: item.name === 'All songs',
-          associationId,
-          associationType,
-          folderPath,
-          playlistId,
-          randomHundred: item.type === SynologyPinTypeEnum.RANDOM_100,
-          recentlyAdded: item.type === SynologyPinTypeEnum.RECENTLY_ADDED,
-        } as FavoriteItemEntity);
       }
     }
     return this.listPinnedItems(accountId, 0, 100000);
   }
 
   async deletePinnedItem(accountId: number, itemIds: number[]): Promise<SynologyEntryPinsDataDto> {
-    await this.favoriteItemEntity.destroy({
-      where: {
-        accountId,
-        id: {
-          [Op.in]: itemIds,
-        },
-      },
-    });
+    await this.libraryService.deleteFavoriteItem(accountId, itemIds);
     return this.listPinnedItems(accountId, 0, 100000);
   }
 

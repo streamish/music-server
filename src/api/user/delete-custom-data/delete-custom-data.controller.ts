@@ -18,7 +18,7 @@ import { UserRoleEnum } from 'src/types/enums';
 @ApiTags(USER_APIS)
 @UseGuards(RoleGuard)
 export class UserDeleteCustomDataController {
-  constructor(private readonly deleteCustomFileDataService: UserDeleteCustomDataService) {}
+  constructor(private readonly deleteCustomDataService: UserDeleteCustomDataService) {}
 
   @Delete('delete-custom-data')
   @ApiOperation({
@@ -41,7 +41,7 @@ export class UserDeleteCustomDataController {
     type: UserDeleteCustomDataNotFoundResponseDto,
   })
   async delete(@User() user: AccountEntity, @Query() query: UserDeleteCustomDataQueryDto) {
-    await this.deleteCustomFileDataService.deleteCustomFileData(user.id, query.id);
+    await this.deleteCustomDataService.deleteCustomData(user.id, query.id);
     return {
       success: true,
     };

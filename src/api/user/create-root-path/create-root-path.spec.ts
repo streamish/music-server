@@ -39,7 +39,7 @@ describe('/api/user/create-root-path', () => {
       const invalidPath = join(tmpdir(), `test-create-invalid-${Date.now()}`);
       const account = await adminApi.createTestAccount();
       const accountApi = await createUserApi(account.username, account.password);
-      const { error } = await accountApi.createRootPath(invalidPath);
+      const { error } = await accountApi.createRootPath({ rootPath: invalidPath });
       expect(error?.message?.[0]).toBe(ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR);
       deleteAccounts.push(account.id);
     });
@@ -52,7 +52,7 @@ describe('/api/user/create-root-path', () => {
       // create the path
       const originalRootPath = join(tmpdir(), `test-new-root-path-${Date.now()}`);
       mkdirSync(originalRootPath, { recursive: true });
-      const { data } = await accountApi.createRootPath(originalRootPath);
+      const { data } = await accountApi.createRootPath({ rootPath: originalRootPath });
       expect(data?.success).toBe(true);
       // verify it
       const updatedRootPathList = await accountApi.listRootPaths();

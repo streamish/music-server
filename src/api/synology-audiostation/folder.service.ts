@@ -2,11 +2,10 @@ import { ContentTypeEnum, TrackSortFieldEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
 import { SynologyFolderDataDto, SynologyFolderDto, SynologySongDto } from './dtos';
-import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { sep } from 'node:path';
-import type { LibraryTrackDto } from 'src/library/dtos';
+import type { LibraryFolderDto, LibraryTrackDto } from 'src/library/dtos';
 
-function folderToRow(folder: UserTreeItemDto): SynologyFolderDto {
+function folderToRow(folder: LibraryFolderDto): SynologyFolderDto {
   return {
     id: `dir_${folder.id}`,
     is_personal: false,
@@ -73,7 +72,7 @@ export class SynologyFolderService {
     offset: number,
     limit: number,
   ): Promise<SynologyFolderDataDto> {
-    function findItem(treeItem: UserTreeItemDto) {
+    function findItem(treeItem: LibraryFolderDto) {
       const result = treeItem.id === folderId ? treeItem : null;
       if (result) {
         return result;

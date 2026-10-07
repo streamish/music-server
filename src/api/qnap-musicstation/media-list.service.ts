@@ -6,9 +6,8 @@ import {
   TrackSortFieldEnum,
 } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
-import { LibraryAlbumDto, LibraryAssociationDto, LibraryTrackDto } from 'src/library/dtos';
+import { LibraryAlbumDto, LibraryAssociationDto, LibraryFolderDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
-import { UserTreeItemDto } from '../user/folder-structure/folder-structure.dto';
 import { sep } from 'path';
 
 function songToRow(track: LibraryTrackDto) {
@@ -65,7 +64,7 @@ function artistToRow(artist: LibraryAssociationDto) {
   };
 }
 
-function folderToRow(folder: UserTreeItemDto) {
+function folderToRow(folder: LibraryFolderDto) {
   return {
     Title: folder.folder?.split(sep).pop() || folder.folder || '',
     FileName: folder.folder?.split(sep).pop() || folder.folder || '',
@@ -200,7 +199,7 @@ export class QnapMediaListService {
   }
 
   async listFolders(accountId: number, folderId: number) {
-    function findItem(treeItem: UserTreeItemDto) {
+    function findItem(treeItem: LibraryFolderDto) {
       const result = treeItem.id === folderId ? treeItem : null;
       if (result) {
         return result;

@@ -16,7 +16,7 @@ export class UserDeleteCustomDataService {
     private readonly indexerService: IndexerService,
   ) {}
 
-  async deleteCustomFileData(accountId: number, fileId: number): Promise<void> {
+  async deleteCustomData(accountId: number, fileId: number): Promise<void> {
     const file = await this.trackEntity.findOne({ where: { id: fileId, accountId } });
     if (!file) {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);

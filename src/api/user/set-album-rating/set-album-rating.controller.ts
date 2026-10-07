@@ -58,7 +58,6 @@ export class UserSetAlbumRatingController {
     @Query() query: UserSetAlbumRatingQueryDto,
     @Body() body: UserSetAlbumRatingBodyDto,
   ) {
-    console.log('Setting rating for user:', user, 'with body:', body, 'and query:', query);
     await this.setRatingService.setRating(user.id, query.id, body.rating);
     return {
       success: true,

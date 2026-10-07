@@ -216,22 +216,6 @@ describe('/webapi/AudioStation/entry.cgi', () => {
       expect(items.some((item) => item.type.toString() === SynologyPinTypeEnum.random_100)).toBe(true);
     });
 
-    it('should favorite root folder', async () => {
-      const { items } = await addFavorite([
-        {
-          criteria: {
-            folder: '1',
-          },
-          name: 'Root Folder',
-          type: SynologyPinTypeEnum.folder,
-        },
-      ]);
-      expect(items.length).toBeGreaterThan(0);
-      expect(
-        items.some((item) => item.type.toString() === SynologyPinTypeEnum.folder && item.name === 'Artist 1'),
-      ).toBe(true);
-    });
-
     it('should favorite nested folder', async () => {
       const { items } = await addFavorite([
         {

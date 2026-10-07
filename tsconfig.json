@@ -26,6 +26,6 @@
     "types": ["node", "express"]
     // "incremental": true,
   },
-  "exclude": ["node_modules", "dist", "**/test-helper.*.ts"],
-  "ignorePatterns": ["node_modules", "dist", "**/test-helper.*.ts"]
+  "exclude": ["node_modules", "dist", "dist-test", "**/test-helper.*.ts"],
+  "ignorePatterns": ["node_modules", "dist", "dist-test", "**/test-helper.*.ts"]
 }

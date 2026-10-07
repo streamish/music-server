@@ -17,7 +17,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', 'jest.*', 'dist', 'node_modules', 'api-schema.ts'],
+  ignorePatterns: ['.eslintrc.js', 'jest.*', 'pm2-*.js', 'dist', 'dist-test', 'node_modules', 'api-schema.ts'],
   rules: {
     // single quotes
     '@typescript-eslint/quotes': ['error', 'single', { allowTemplateLiterals: true }],

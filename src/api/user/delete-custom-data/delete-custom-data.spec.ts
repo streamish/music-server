@@ -38,7 +38,7 @@ describe('/api/user/delete-custom-data', () => {
 
   describe('errors', () => {
     it('should reject invalid file id', async () => {
-      const { error } = await userApi.deleteCustomFileData(-1);
+      const { error } = await userApi.deleteCustomData({ id: -1 });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
     });
   });
@@ -89,7 +89,7 @@ describe('/api/user/delete-custom-data', () => {
       expect(track.trackNumber).toBe(7);
       expect(track.year).toBe(1950);
       // delete the data
-      const { error: deleteError, data: deleteData } = await userApi.deleteCustomFileData(trackId);
+      const { error: deleteError, data: deleteData } = await userApi.deleteCustomData({ id: trackId });
       expect(deleteError).toBeUndefined();
       expect(deleteData?.success).toBe(true);
       // confirm the track no longer uses custom data
