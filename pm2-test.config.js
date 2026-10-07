@@ -3,7 +3,9 @@ module.exports = {
     {
       args: 'dotenv -e .env.test -- npm run start:test',
       error_file: '/dev/null',
+      exec_mode: 'fork',
       ignore_watch: ['node_modules', 'dist', '.git'],
+      instances: 1,
       merge_logs: true,
       name: 'streamish-test-api',
       out_file: '/dev/null',
