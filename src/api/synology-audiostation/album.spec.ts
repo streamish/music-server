@@ -1,22 +1,34 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum, components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/album.cgi', () => {
-  let synologyApi: SynologyApi;
-
-  async function listAlbums(filter: Record<string, string>, offset?: number, limit?: number) {
-    const { data, error } = await synologyApi.listAlbums(filter, offset, limit);
-    return {
-      data,
-      error,
-      albums: data?.data.albums || [],
-      total: data?.data.total || 0,
-    };
-  }
+  let api: Awaited<SynologyApiClient>;
 
   beforeAll(async () => {
-    synologyApi = await createSynologyApi();
+    api = await createSynologyApi();
   });
+
+  async function listAlbums(filters: Record<string, string>, offset?: number, limit?: number) {
+    const { data, error } = await api.POST('/webapi/AudioStation/album.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Album,
+        method: SynologyMethodEnum.list,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        offset: offset || 0,
+        limit: limit || 100000,
+        ...filters,
+      },
+    });
+    const typedData = data as components['schemas']['SynologyAlbumResponseDto'];
+    return {
+      data: typedData,
+      error,
+      albums: typedData?.data.albums || [],
+      total: typedData?.data.total || 0,
+    };
+  }
 
   it('should list albums by genre + artist', async () => {
     const { albums, total } = await listAlbums({ genre: 'Chanson', artist: 'Artist 3' });

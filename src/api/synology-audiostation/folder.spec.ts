@@ -1,12 +1,26 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum, components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from '../../types/api-schema';
 
 describe('/webapi/AudioStation/folder.cgi', () => {
-  let synologyApi: SynologyApi;
+  let api: Awaited<SynologyApiClient>;
+
+  beforeAll(async () => {
+    api = await createSynologyApi();
+  });
 
   async function listFolders(id?: string, offset?: number, limit?: number) {
-    const { data, error } = await synologyApi.listFolders(id, offset, limit);
+    const { data, error } = await api.POST('/webapi/AudioStation/folder.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Folder,
+        method: SynologyMethodEnum.list,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        id,
+        offset: offset || 0,
+        limit: limit || 100000,
+      },
+    });
     const typedData = data as components['schemas']['SynologyFolderResponseDto'];
     return {
       data: typedData,
@@ -15,10 +29,6 @@ describe('/webapi/AudioStation/folder.cgi', () => {
       total: typedData?.data.total || 0,
     };
   }
-
-  beforeAll(async () => {
-    synologyApi = await createSynologyApi();
-  });
 
   it('should list root folders', async () => {
     const { folders } = await listFolders();

@@ -1,12 +1,26 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum, type components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from '../../types/api-schema';
 
 describe('/webapi/AudioStation/artist.cgi', () => {
-  let synologyApi: SynologyApi;
+  let api: Awaited<SynologyApiClient>;
+
+  beforeAll(async () => {
+    api = await createSynologyApi();
+  });
 
   async function listArtists(filters: Record<string, string>, offset?: number, limit?: number) {
-    const { data, error } = await synologyApi.listArtists(filters, offset, limit);
+    const { data, error } = await api.POST('/webapi/AudioStation/artist.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Artist,
+        method: SynologyMethodEnum.list,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        offset: offset || 0,
+        limit: limit || 100000,
+        ...filters,
+      },
+    });
     const typedData = data as components['schemas']['SynologyArtistResponseDto'];
     return {
       data: typedData,
@@ -15,10 +29,6 @@ describe('/webapi/AudioStation/artist.cgi', () => {
       total: typedData?.data.total || 0,
     };
   }
-
-  beforeAll(async () => {
-    synologyApi = await createSynologyApi();
-  });
 
   it('should list artists by genre', async () => {
     const { artists } = await listArtists({ genre: 'Rock' });
