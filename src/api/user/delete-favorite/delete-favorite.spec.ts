@@ -2,7 +2,7 @@ import { ErrorCodes } from '../../../constants/error-codes';
 import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-describe('/api/user/set-album-favorite', () => {
+describe('/api/user/delete-favorite', () => {
   let accountId: number;
   let userApi: UserApi;
   let albumId: number;
@@ -32,7 +32,7 @@ describe('/api/user/set-album-favorite', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PUT(`/api/user/set-album-favorite`, {
+      const { error } = await api.DELETE(`/api/user/delete-favorite`, {
         params: {
           query: {
             id: 1,
@@ -48,13 +48,13 @@ describe('/api/user/set-album-favorite', () => {
 
   describe('errors', () => {
     it('should reject invalid album id', async () => {
-      const { error } = await userApi.setAlbumFavorite({ id: -1 });
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_ID_ERROR);
+      const { error } = await userApi.deleteFavorite({ id: -1 });
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_FAVORITE_ITEM_ID_ERROR);
     }, 120_000);
   });
 
   describe('success', () => {
-    it('should create favorite for the album', async () => {
+    it('should delete favorite for the album', async () => {
       // create the favorite
       const { error, data } = await userApi.setAlbumFavorite({ id: albumId });
       expect(error).toBeUndefined();
@@ -65,7 +65,19 @@ describe('/api/user/set-album-favorite', () => {
         limit: 99_999,
       });
       expect(listFavoritesError).toBeUndefined();
-      expect(listFavoritesData?.favorites.some((f) => f.album?.id === albumId)).toBe(true);
+      const favorite = listFavoritesData?.favorites.find((f) => f.album?.id === albumId);
+      expect(favorite?.album?.id).toBe(albumId);
+      // delete it
+      const { error: deleteError, data: deleteData } = await userApi.deleteFavorite({ id: favorite?.id || 0 });
+      expect(deleteError).toBeUndefined();
+      expect(deleteData?.success).toBe(true);
+      // verify deletion
+      const { error: listFavoritesErrorAfterDelete, data: listFavoritesDataAfterDelete } = await userApi.listFavorites({
+        offset: 0,
+        limit: 99_999,
+      });
+      expect(listFavoritesErrorAfterDelete).toBeUndefined();
+      expect(listFavoritesDataAfterDelete?.favorites.some((f) => f.album?.id === albumId)).toBe(false);
     }, 120_000);
   });
 });

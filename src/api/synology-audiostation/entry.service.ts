@@ -283,7 +283,7 @@ export class SynologyEntryService {
             });
           }
           // eslint-disable-next-line no-await-in-loop
-          await this.libraryService.setFolderFavorite(accountId, treeItem.folder);
+          await this.libraryService.setFolderFavorite(accountId, treeItem.fullPath);
         } else if (item.type === 'playlist') {
           // eslint-disable-next-line no-await-in-loop
           const playlist = await this.playlistEntity.findOne({

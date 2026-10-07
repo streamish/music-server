@@ -107,6 +107,17 @@ async function listAlbumAssociationsWithTracks(params: RequestParams, query: Lis
   });
 }
 
+type ListFavoritesQueryDto = paths['/api/user/list-favorites']['get']['parameters']['query'];
+
+async function listFavorites(params: RequestParams, query: ListFavoritesQueryDto) {
+  return api.GET(`/api/user/list-favorites`, {
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
 async function listIndexerLogs(params: RequestParams) {
   return api.GET(`/api/user/list-indexer-logs`, {
     params,
@@ -252,6 +263,17 @@ async function setCustomData(params: RequestParams, customFileDataId: number, bo
   });
 }
 
+type SetFolderFavoriteQueryDto = paths['/api/user/set-folder-favorite']['put']['parameters']['query'];
+
+async function setFolderFavorite(params: RequestParams, query: SetFolderFavoriteQueryDto) {
+  return api.PUT(`/api/user/set-folder-favorite`, {
+    params: {
+      ...params,
+      query,
+    },
+  });
+}
+
 type SetGenreNameBodyDto = paths['/api/user/set-genre-name']['patch']['requestBody']['content']['application/json'];
 
 async function setGenreName(params: RequestParams, genreId: number, body: SetGenreNameBodyDto) {
@@ -329,6 +351,7 @@ export type UserApi = {
   ) => ReturnType<typeof listAlbumAssociationsWithTracks>;
   listIndexerLogs: () => ReturnType<typeof listIndexerLogs>;
   listRootPaths: () => ReturnType<typeof listRootPaths>;
+  listFavorites: (query: ListFavoritesQueryDto) => ReturnType<typeof listFavorites>;
   listTrackAssociations: (query: ListTrackAssociationsQueryDto) => ReturnType<typeof listTrackAssociations>;
   listTrackAssociationsWithTracks: (
     query: ListTrackAssociationsWithTracksQueryDto,
@@ -342,6 +365,7 @@ export type UserApi = {
   setAssociationFavorite: (query: SetAssociationFavoriteQueryDto) => ReturnType<typeof setAssociationFavorite>;
   setComposerName: (composerId: number, data: SetComposerNameBodyDto) => ReturnType<typeof setComposerName>;
   setCustomData: (customFileDataId: number, data: SetCustomFileDataBodyDto) => ReturnType<typeof setCustomData>;
+  setFolderFavorite: (query: SetFolderFavoriteQueryDto) => ReturnType<typeof setFolderFavorite>;
   setGenreName: (genreId: number, data: SetGenreNameBodyDto) => ReturnType<typeof setGenreName>;
   setTrackCustomData: (
     trackCustomDataId: number,
@@ -400,8 +424,8 @@ export async function createUserApi(username?: string, password?: string): Promi
     async listAlbumAssociationsWithTracks(query: ListAlbumAssociationsWithTracksQueryDto) {
       return listAlbumAssociationsWithTracks(params, query);
     },
-    async folderStructure() {
-      return folderStructure(params);
+    async listFavorites(query: ListFavoritesQueryDto) {
+      return listFavorites(params, query);
     },
     async listIndexerLogs() {
       return listIndexerLogs(params);
@@ -444,6 +468,9 @@ export async function createUserApi(username?: string, password?: string): Promi
     },
     async setCustomData(customFileDataId: number, data: SetCustomFileDataBodyDto) {
       return setCustomData(params, customFileDataId, data);
+    },
+    async setFolderFavorite(query: SetFolderFavoriteQueryDto) {
+      return setFolderFavorite(params, query);
     },
     async setTrackRating(query: SetTrackRatingQueryDto, body: SetTrackRatingBodyDto) {
       return setTrackRating(params, query, body);

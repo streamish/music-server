@@ -172,7 +172,7 @@ export class LibraryService {
         for (let i = 0, len = branches.length; i < len; i += 1) {
           const branch = branches[i];
           if (branch) {
-            if (branch.folder === favorite.folderPath) {
+            if (branch.fullPath === favorite.folderPath) {
               return branch;
             }
             if (branch.children?.length) {
@@ -1190,20 +1190,20 @@ export class LibraryService {
     return results.map((genre) => genre.id);
   }
 
-  async deleteFavoriteItem(accountId: number, favoriteId: number | number[]): Promise<void> {
+  async deleteFavoriteItem(accountId: number, favoriteItemId: number | number[]): Promise<void> {
     const favoriteItems = await this.favoriteItemEntity.findAll({
       where: {
-        id: favoriteId,
+        id: favoriteItemId,
         accountId,
       },
-      attributes: ['id', 'accountId'],
+      attributes: ['id'],
     });
-    if (!favoriteItems.length || (Array.isArray(favoriteId) && favoriteItems.length !== favoriteId.length)) {
-      throw new NotFoundException(ErrorCodes.FAVORITE_ITEMS_NOT_FOUND);
+    if (!favoriteItems.length || (Array.isArray(favoriteItemId) && favoriteItems.length !== favoriteItemId.length)) {
+      throw new NotFoundException(ErrorCodes.FAVORITE_ITEM_NOT_FOUND_ERROR);
     }
     await this.favoriteItemEntity.destroy({
       where: {
-        id: favoriteId,
+        id: favoriteItemId,
         accountId,
       },
     });
@@ -1669,6 +1669,11 @@ export class LibraryService {
   }
 
   async setFolderFavorite(accountId: number, folderPath: string): Promise<void> {
+    const folderStructure = await this.listFolders(accountId);
+    const folderExists = folderStructure.some((item) => item.children?.some((child) => child.fullPath === folderPath));
+    if (!folderExists) {
+      throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
+    }
     await this.favoriteItemEntity.create({
       accountId,
       folderPath,

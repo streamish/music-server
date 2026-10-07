@@ -710,6 +710,30 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/user/list-favorites': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List favorites
+     * @description Favorites can be albums, tracks, folders, or an associated artist, composer or genre.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    get: operations['UserListFavoritesController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/user/list-indexer-logs': {
     parameters: {
       query?: never;
@@ -1062,6 +1086,28 @@ export type paths = {
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetCustomDataController_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/user/set-folder-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Mark a folder as a favorite
+     * @description Favorites the specified folder allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    put: operations['UserSetFolderFavoriteController_put'];
     post?: never;
     delete?: never;
     options?: never;
@@ -2487,6 +2533,27 @@ export type components = {
       /** @description The name of the artist. */
       name: string;
     };
+    LibraryFavoriteDto: {
+      album?: components['schemas']['LibraryAlbumDto'];
+      /** @description Flag used by Synology */
+      allSongs?: boolean;
+      association?: components['schemas']['LibraryAssociationWithTracksDto'];
+      associationType?: components['schemas']['AssociationTypeEnum'];
+      /**
+       * Format: date-time
+       * @description The date the artist was added to the library
+       */
+      createdAt: string;
+      folder?: components['schemas']['LibraryFolderDto'];
+      /** @description The internally-generated unique ID of the artist */
+      id: number;
+      playlist?: components['schemas']['PlaylistPlaceholder'];
+      /** @description Flag used by Synology for a random-100 playlist */
+      randomHundred?: boolean;
+      /** @description Flag used by Synology for recently added items */
+      recentlyAdded?: boolean;
+      track?: components['schemas']['LibraryTrackDto'];
+    };
     LibraryFolderDto: {
       /**
        * @example [
@@ -2566,6 +2633,10 @@ export type components = {
        *     and compilations.
        */
       year: number;
+    };
+    PlaylistPlaceholder: {
+      id: number;
+      name: string;
     };
     /** @enum {string} */
     PlaylistTypeEnum: PlaylistTypeEnum;
@@ -6669,6 +6740,47 @@ export type components = {
     };
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserListFavoritesBadRequestErrorMessage: UserListFavoritesBadRequestErrorMessage;
+    UserListFavoritesBadRequestResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default internal-server-error
+       */
+      message: components['schemas']['UserListFavoritesBadRequestErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserListFavoritesResponseDto: {
+      /** @description The list of favorites that match the query parameters, which may be limited by pagination. */
+      favorites: components['schemas']['LibraryFavoriteDto'][];
+      /**
+       * @description The offset of the first favorite in the favorites array, which may be greater than 0 if
+       *     pagination is applied.
+       */
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      /**
+       * @description The total number of favorites that match the query parameters, which may be greater
+       *     than the number of favorites returned in the favorites array if pagination is applied.
+       */
+      total: number;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
      *     applied while serving the request
      * @enum {string}
      */
@@ -7348,6 +7460,35 @@ export type components = {
       success: boolean;
     };
     UserSetCustomDataResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    UserSetFolderFavoriteNotFoundErrorMessage: UserSetFolderFavoriteNotFoundErrorMessage;
+    UserSetFolderFavoriteNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default folder-not-found-error
+       */
+      message: components['schemas']['UserSetFolderFavoriteNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    UserSetFolderFavoriteResponseDto: {
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -8871,6 +9012,41 @@ export interface operations {
       };
     };
   };
+  UserListFavoritesController_get: {
+    parameters: {
+      query?: {
+        limit?: number;
+        offset?: number;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful response with an array of data and pagination information. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserListFavoritesResponseDto'];
+        };
+      };
+      /** @description Failure response with error information relating to missing or invalid parameters. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserListFavoritesBadRequestResponseDto'];
+        };
+      };
+    };
+  };
   UserListIndexerLogsController_get: {
     parameters: {
       query?: {
@@ -9549,6 +9725,40 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserSetCustomDataNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  UserSetFolderFavoriteController_put: {
+    parameters: {
+      query: {
+        folder: string;
+      };
+      header: {
+        /** @description JWT token for authentication */
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Favorite set successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetFolderFavoriteResponseDto'];
+        };
+      };
+      /** @description Favorite not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserSetFolderFavoriteNotFoundResponseDto'];
         };
       };
     };
@@ -10866,6 +11076,9 @@ export enum UserListAlbumsWithTracksBadRequestErrorMessages {
   invalid_sort_order_error = 'invalid-sort-order-error',
   invalid_year_error = 'invalid-year-error',
 }
+export enum UserListFavoritesBadRequestErrorMessage {
+  internal_server_error = 'internal-server-error',
+}
 export enum UserListIndexerLogsBadRequestErrorMessageEnum {
   invalid_account_id_error = 'invalid-account-id-error',
   invalid_root_path_id_error = 'invalid-root-path-id-error',
@@ -10990,6 +11203,9 @@ export enum UserSetCustomDataBadRequestErrorMessage {
 }
 export enum UserSetCustomDataNotFoundErrorMessage {
   file_not_found_error = 'file-not-found-error',
+}
+export enum UserSetFolderFavoriteNotFoundErrorMessage {
+  folder_not_found_error = 'folder-not-found-error',
 }
 export enum UserSetGenreNameBadRequestErrorMessage {
   invalid_genre_id_error = 'invalid-genre-id-error',
