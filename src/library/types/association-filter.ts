@@ -29,8 +29,8 @@ export type AssociationFilter = {
    */
   filter?: string;
   /**
-   * Optional filter for the genre(s), which will do a case-insensitive match against the
-   * genres associated with an artist.
+   * Optional filter for the genre(s), which will do a case-insensitive match.  This is used for finding
+   * associated artists and composers with works in the specified genres.
    */
   genre?: string[];
 };
