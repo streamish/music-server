@@ -3,17 +3,22 @@ import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { IsInt, Min } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { UserRoleEnum } from 'src/types/enums';
 
-export class TestRetrieveAccountDto extends PickType(AccountEntity, ['id', 'username', 'roles'] as const) {}
+export class TestRetrieveAccountDto extends PickType(AccountEntity, ['id', 'username'] as const) {
+  @ApiProperty({ enum: UserRoleEnum, enumName: 'UserRoleEnum', isArray: true })
+  declare roles: UserRoleEnum[];
+}
 
 export class TestRetrieveAccountQueryDto {
   /**
-   * The ID of the account
+   * The username of the account
    */
-  @IsInt({ message: ErrorCodes.INVALID_ACCOUNT_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_ACCOUNT_ID_ERROR })
-  declare id: number;
+  @IsString()
+  @Length(1, 255, { message: ErrorCodes.INVALID_USERNAME_LENGTH_ERROR })
+  @IsNotEmpty({ message: ErrorCodes.INVALID_USERNAME_ERROR })
+  declare username: string;
 }
 
 export class TestRetrieveAccountResponseDto extends SuccessResponseDto {
@@ -28,9 +33,9 @@ export class TestRetrieveAccountNotFoundResponseDto extends NotFoundResponseDto 
    */
   @ApiProperty({
     isArray: true,
-    enum: [ErrorCodes.INVALID_ACCOUNT_ID_ERROR],
+    enum: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
     enumName: 'TestRetrieveAccountNotFoundErrorMessage',
-    default: ErrorCodes.INVALID_ACCOUNT_ID_ERROR,
+    default: ErrorCodes.ACCOUNT_NOT_FOUND_ERROR,
   })
   declare message: ErrorCodes[];
 }
@@ -42,9 +47,9 @@ export class TestRetrieveAccountBadRequestResponseDto extends BadRequestResponse
    */
   @ApiProperty({
     isArray: true,
-    enum: [ErrorCodes.INTERNAL_SERVER_ERROR],
+    enum: [ErrorCodes.INVALID_USERNAME_ERROR, ErrorCodes.INVALID_USERNAME_LENGTH_ERROR],
     enumName: 'TestRetrieveAccountBadRequestErrorMessage',
-    default: ErrorCodes.INTERNAL_SERVER_ERROR,
+    default: ErrorCodes.INVALID_USERNAME_ERROR,
   })
   declare message: ErrorCodes[];
 }

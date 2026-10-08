@@ -42,7 +42,7 @@ export class TestRetrieveAccountController {
     type: InternalServerErrorResponseDto,
   })
   async get(@Query() query: TestRetrieveAccountQueryDto) {
-    const account = await this.testRetrieveAccountService.retrieveAccount(query.id);
+    const account = await this.testRetrieveAccountService.retrieveAccount(query.username);
     return {
       success: true,
       account,

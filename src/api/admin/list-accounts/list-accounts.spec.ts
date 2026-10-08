@@ -1,21 +1,33 @@
-import { ADMIN_USERNAME, AdminApi, USER_PASSWORD, USER_USERNAME, api, createAdminApi } from '../../../test-helper';
+import {
+  ADMIN_USERNAME,
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/admin/list-accounts', () => {
-  let adminApi: AdminApi;
+  let adminApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    adminApi = await createAuthenticatedApi();
   });
+
+  async function listAccounts() {
+    return adminApi.GET('/api/admin/list-accounts', {
+      ...emptyAuthToken,
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.GET(`/api/admin/list-accounts`, {
+      const { error } = await unauthenticatedApi.GET(`/api/admin/list-accounts`, {
         params: {
-          header: {
-            Authorization: '',
-          },
+          ...emptyAuthToken.params,
         },
       });
       const typedError = error as unknown as Record<string, string | string[]>;
@@ -23,8 +35,10 @@ describe('/api/admin/list-accounts', () => {
     });
 
     it('should reject non-admin access', async () => {
-      const nonAdminApi = await createAdminApi(USER_USERNAME, USER_PASSWORD);
-      const { error } = await nonAdminApi.listAccounts();
+      const nonAuthenticatedApiClient = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
+      const { error } = await nonAuthenticatedApiClient.GET('/api/admin/list-accounts', {
+        ...emptyAuthToken,
+      });
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -32,7 +46,7 @@ describe('/api/admin/list-accounts', () => {
 
   describe('success', () => {
     it('should list accounts', async () => {
-      const { error, data } = await adminApi.listAccounts();
+      const { error, data } = await listAccounts();
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       expect(data?.accounts.length).toBeGreaterThan(0);

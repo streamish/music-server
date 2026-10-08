@@ -29,6 +29,9 @@ export class RoleGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     // verify the session if a JWT token is present in authorization header
     const token = this.extractTokenFromHeader(request);
+    if (!token?.length && !allowGuest) {
+      throw new ForbiddenException(ErrorCodes.FORBIDDEN_ERROR);
+    }
     if (token) {
       try {
         const payload: {

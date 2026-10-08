@@ -1,9 +1,17 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/delete-custom-data', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let accountId: number;
 
   beforeAll(async () => {
@@ -13,23 +21,81 @@ describe('/api/user/delete-custom-data', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
   });
 
   afterAll(async () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function deleteCustomData(id: number) {
+    return userApi.DELETE(`/api/user/delete-custom-data`, {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
+  async function listTracks(params: { offset: number; limit: number }) {
+    return userApi.GET(`/api/user/list-tracks`, {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          offset: params.offset,
+          limit: params.limit,
+        },
+      },
+    });
+  }
+
+  async function setCustomData(
+    id: number,
+    params: {
+      albumArtists: string;
+      albumTitle: string;
+      title: string;
+      artists: string;
+      comment: string;
+      composers: string;
+      discNumber: number;
+      genres: string;
+      trackNumber: number;
+      year: number;
+    },
+  ) {
+    return userApi.PUT(`/api/user/set-custom-data`, {
+      body: {
+        albumArtists: params.albumArtists,
+        albumTitle: params.albumTitle,
+        title: params.title,
+        artists: params.artists,
+        comment: params.comment,
+        composers: params.composers,
+        discNumber: params.discNumber,
+        genres: params.genres,
+        trackNumber: params.trackNumber,
+        year: params.year,
+      },
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.DELETE(`/api/user/delete-custom-data`, {
+      const { error } = await unauthenticatedApi.DELETE(`/api/user/delete-custom-data`, {
         params: {
           query: {
             id: 1,
           },
-          header: {
-            Authorization: '',
-          },
+          ...emptyAuthToken.params,
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
@@ -38,7 +104,14 @@ describe('/api/user/delete-custom-data', () => {
 
   describe('errors', () => {
     it('should reject invalid file id', async () => {
-      const { error } = await userApi.deleteCustomData({ id: -1 });
+      const { error } = await userApi.DELETE(`/api/user/delete-custom-data`, {
+        params: {
+          ...emptyAuthToken.params,
+          query: {
+            id: -1,
+          },
+        },
+      });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
     });
   });
@@ -46,7 +119,7 @@ describe('/api/user/delete-custom-data', () => {
   describe('success', () => {
     it('should delete custom data for the file', async () => {
       // get the track information before deleting
-      const { data: trackDataBeforeDelete } = await userApi.listTracks({
+      const { data: trackDataBeforeDelete } = await listTracks({
         offset: 0,
         limit: 1,
       });
@@ -55,7 +128,7 @@ describe('/api/user/delete-custom-data', () => {
         throw new Error('Track not found before delete');
       }
       const trackId = trackBeforeDelete.id;
-      const { error, data } = await userApi.setCustomData(trackId, {
+      const { error, data } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -70,7 +143,7 @@ describe('/api/user/delete-custom-data', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // confirm the track uses custom data
-      const { data: trackData } = await userApi.listTracks({
+      const { data: trackData } = await listTracks({
         offset: 0,
         limit: 100_000,
       });
@@ -89,11 +162,11 @@ describe('/api/user/delete-custom-data', () => {
       expect(track.trackNumber).toBe(7);
       expect(track.year).toBe(1950);
       // delete the data
-      const { error: deleteError, data: deleteData } = await userApi.deleteCustomData({ id: trackId });
+      const { error: deleteError, data: deleteData } = await deleteCustomData(trackId);
       expect(deleteError).toBeUndefined();
       expect(deleteData?.success).toBe(true);
       // confirm the track no longer uses custom data
-      const { data: trackDataAfterDelete } = await userApi.listTracks({
+      const { data: trackDataAfterDelete } = await listTracks({
         offset: 0,
         limit: 100_000,
       });

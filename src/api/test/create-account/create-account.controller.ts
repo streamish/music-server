@@ -23,7 +23,9 @@ export class TestCreateAccountController {
     const account = await this.testCreateAccountService.createAccount(body);
     return {
       success: true,
-      account,
+      accountId: account.id,
+      username: account.username,
+      roles: account.roles,
     };
   }
 }

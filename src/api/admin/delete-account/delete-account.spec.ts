@@ -1,23 +1,59 @@
-import { ADMIN_PASSWORD, AdminApi, USER_PASSWORD, USER_USERNAME, api, createAdminApi } from '../../../test-helper';
+import {
+  ADMIN_PASSWORD,
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { UserRoleEnum } from '../../../types/api-schema';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/admin/delete-account', () => {
   const deleteAccounts: number[] = [];
-  let adminApi: AdminApi;
+  let adminApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    adminApi = await createAuthenticatedApi();
   });
 
   afterAll(async () => {
-    await adminApi.deleteTestAccounts(deleteAccounts);
+    await testApi.deleteAccounts(deleteAccounts);
   });
+
+  async function createAccount(adminPassword: string, username: string, password: string) {
+    await adminApi.POST('/api/admin/create-account', {
+      body: {
+        adminPassword,
+        username,
+        password,
+        roles: [UserRoleEnum.user],
+      },
+      ...emptyAuthToken,
+    });
+    return testApi.retrieveAccount(username);
+  }
+
+  async function deleteAccount(adminPassword: string, accountId: number) {
+    return adminApi.PATCH('/api/admin/delete-account', {
+      body: {
+        adminPassword,
+      },
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id: accountId,
+        },
+      },
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PATCH(`/api/admin/delete-account`, {
+      const { error } = await unauthenticatedApi.PATCH(`/api/admin/delete-account`, {
         body: {
           adminPassword: ADMIN_PASSWORD,
         },
@@ -34,47 +70,57 @@ describe('/api/admin/delete-account', () => {
     });
 
     it('should reject non-admin access', async () => {
-      const nonAdminApi = await createAdminApi(USER_USERNAME, USER_PASSWORD);
-      const { error } = await nonAdminApi.deleteAccount(ADMIN_PASSWORD, 2);
+      const userApi = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
+      const { error } = await userApi.PATCH('/api/admin/delete-account', {
+        body: {
+          adminPassword: ADMIN_PASSWORD,
+        },
+        params: {
+          ...emptyAuthToken.params,
+          query: {
+            id: 2,
+          },
+        },
+      });
       expect(error?.message[0]).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
   });
 
   describe('errors', () => {
     it('should reject invalid account id', async () => {
-      const { error } = await adminApi.deleteAccount(ADMIN_PASSWORD, 0);
+      const { error } = await deleteAccount(ADMIN_PASSWORD, 0);
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     });
 
     it('should reject only administrator', async () => {
-      await adminApi.extraAdminsCleared();
-      const users = await adminApi.listAccounts();
-      const adminUser = users.data?.accounts.find((user) => user.roles.includes(UserRoleEnum.admin));
+      await testApi.extraAdminsCleared();
+      const users = await testApi.listAccounts();
+      const adminUser = users.find((user) => user.roles.includes(UserRoleEnum.admin));
       if (!adminUser) {
         throw new Error('No admin account found');
       }
-      const { error } = await adminApi.deleteAccount(ADMIN_PASSWORD, adminUser.id);
+      const { error } = await deleteAccount(ADMIN_PASSWORD, adminUser.id);
       expect(error?.message[0]).toBe(ErrorCodes.ACCOUNT_ONLY_ADMIN_ERROR);
     });
 
     it('should reject missing admin password', async () => {
-      const account = await adminApi.createTestAccount();
-      const { error } = await adminApi.deleteAccount('', account.id);
+      const account = await createAccount(ADMIN_PASSWORD, `testuser-${Date.now()}`, 'password');
+      const { error } = await deleteAccount('', account.id);
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
       deleteAccounts.push(account.id);
     });
 
     it('should reject invalid admin password length', async () => {
-      const account = await adminApi.createTestAccount();
-      const { error } = await adminApi.deleteAccount('x'.repeat(256), account.id);
+      const account = await createAccount(ADMIN_PASSWORD, `testuser-${Date.now()}`, 'password');
+      const { error } = await deleteAccount('x'.repeat(256), account.id);
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR);
       deleteAccounts.push(account.id);
     });
 
     it('should reject invalid admin password', async () => {
-      const account = await adminApi.createTestAccount();
-      const { error } = await adminApi.deleteAccount('wrong-password', account.id);
+      const account = await createAccount(ADMIN_PASSWORD, `testuser-${Date.now()}`, 'password');
+      const { error } = await deleteAccount('wrong-password', account.id);
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
       deleteAccounts.push(account.id);
     });
@@ -82,14 +128,14 @@ describe('/api/admin/delete-account', () => {
 
   describe('success', () => {
     it('should delete an account successfully', async () => {
-      const account = await adminApi.createTestAccount();
+      const account = await createAccount(ADMIN_PASSWORD, `testuser-${Date.now()}`, 'password');
       // delete it
-      const { error, data } = await adminApi.deleteAccount(ADMIN_PASSWORD, account.id);
+      const { error, data } = await deleteAccount(ADMIN_PASSWORD, account.id);
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // verify it
-      const users = await adminApi.listAccounts();
-      const deletedAccount = users.data?.accounts.find((user) => user.username === account.username);
+      const users = await testApi.listAccounts();
+      const deletedAccount = users.find((user) => user.username === account.username);
       expect(deletedAccount).toBeUndefined();
     });
   });

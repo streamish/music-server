@@ -1,11 +1,19 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { paths } from 'src/types/api-schema';
 
 describe('/api/user/set-album-favorite', () => {
+  let userApi: AuthenticatedApiClient;
   let accountId: number;
-  let userApi: UserApi;
-  let albumId: number;
 
   beforeAll(async () => {
     const newUsername = `user-${Date.now()}`;
@@ -14,25 +22,45 @@ describe('/api/user/set-album-favorite', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data } = await userApi.listAlbums({
-      offset: 0,
-      limit: 1,
-    });
-    const album = data?.albums[0];
-    if (!album) {
-      throw new Error('Album not found');
-    }
-    albumId = album.id;
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
   }, 120_000);
 
   afterAll(async () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function listAlbums(query: paths['/api/user/list-albums']['get']['parameters']['query']) {
+    return userApi.GET('/api/user/list-albums', {
+      params: {
+        ...emptyAuthToken.params,
+        query,
+      },
+    });
+  }
+
+  async function listFavorites(query: paths['/api/user/list-favorites']['get']['parameters']['query']) {
+    return userApi.GET('/api/user/list-favorites', {
+      params: {
+        ...emptyAuthToken.params,
+        query,
+      },
+    });
+  }
+
+  async function setAlbumFavorite(id: number) {
+    return userApi.PUT('/api/user/set-album-favorite', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PUT(`/api/user/set-album-favorite`, {
+      const { error } = await unauthenticatedApi.PUT(`/api/user/set-album-favorite`, {
         params: {
           query: {
             id: 1,
@@ -48,24 +76,32 @@ describe('/api/user/set-album-favorite', () => {
 
   describe('errors', () => {
     it('should reject invalid album id', async () => {
-      const { error } = await userApi.setAlbumFavorite({ id: -1 });
+      const { error } = await setAlbumFavorite(-1);
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_ID_ERROR);
     }, 120_000);
   });
 
   describe('success', () => {
     it('should create favorite for the album', async () => {
+      const { data: albumData } = await listAlbums({
+        offset: 0,
+        limit: 1,
+      });
+      const album = albumData?.albums[0];
+      if (!album) {
+        throw new Error('Album not found');
+      }
       // create the favorite
-      const { error, data } = await userApi.setAlbumFavorite({ id: albumId });
+      const { error, data } = await setAlbumFavorite(album.id);
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
-      const { error: listFavoritesError, data: listFavoritesData } = await userApi.listFavorites({
+      const { error: listFavoritesError, data: listFavoritesData } = await listFavorites({
         offset: 0,
         limit: 99_999,
       });
       expect(listFavoritesError).toBeUndefined();
-      expect(listFavoritesData?.favorites.some((f) => f.album?.id === albumId)).toBe(true);
+      expect(listFavoritesData?.favorites.some((f) => f.album?.id === album.id)).toBe(true);
     }, 120_000);
   });
 });

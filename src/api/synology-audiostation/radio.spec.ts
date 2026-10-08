@@ -1,6 +1,6 @@
 import { ShoutcastItemTypeEnum, SynologyApiEnum, SynologyMethodEnum, type components } from '../../types/api-schema';
 import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
-import { USER_USERNAME, createTestApi } from '../../test-helper';
+import { USER_USERNAME, testApi } from '../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/radio.cgi', () => {
@@ -9,7 +9,6 @@ describe('/webapi/AudioStation/radio.cgi', () => {
 
   beforeAll(async () => {
     const username = `favorites-user-${Date.now()}`;
-    const testApi = await createTestApi();
     const account = await testApi.duplicateAccount(USER_USERNAME, username);
     accountId = account.data?.accountId || 0;
     if (!accountId) {
@@ -19,7 +18,6 @@ describe('/webapi/AudioStation/radio.cgi', () => {
   }, 120_000);
 
   afterAll(async () => {
-    const testApi = await createTestApi();
     await testApi.deleteAccount(accountId);
   });
 

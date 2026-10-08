@@ -1,18 +1,34 @@
-import { ADMIN_PASSWORD, ADMIN_USERNAME, UserApi, api, createUserApi } from '../../../test-helper';
-import { AlbumSortFieldEnum, SortDirectionEnum } from '../../../types/api-schema';
+import {
+  ADMIN_PASSWORD,
+  ADMIN_USERNAME,
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  unauthenticatedApi,
+} from '../../../test-helper';
+import { AlbumSortFieldEnum, SortDirectionEnum, paths } from '../../../types/api-schema';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/users/list-albums-with-tracks', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    userApi = await createUserApi(ADMIN_USERNAME, ADMIN_PASSWORD);
+    userApi = await createAuthenticatedApi(ADMIN_USERNAME, ADMIN_PASSWORD);
   });
+
+  async function listAlbumsWithTracks(query: paths['/api/user/list-albums-with-tracks']['get']['parameters']['query']) {
+    return userApi.GET('/api/user/list-albums-with-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query,
+      },
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.GET(`/api/user/list-albums-with-tracks`, {
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-albums-with-tracks`, {
         params: {
           header: {
             Authorization: '',
@@ -26,109 +42,109 @@ describe('/users/list-albums-with-tracks', () => {
 
   describe('errors', () => {
     it('should reject invalid addedAfter date', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ addedAfter: 'invalid-date' });
+      const { error } = await listAlbumsWithTracks({ addedAfter: 'invalid-date' });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADDED_AFTER_ERROR);
     });
 
     it('should reject invalid addedBefore date', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ addedBefore: 'invalid-date' });
+      const { error } = await listAlbumsWithTracks({ addedBefore: 'invalid-date' });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ADDED_BEFORE_ERROR);
     });
 
     // it('should reject invalid artist', async () => {
-    //   const { error } = await userApi.listAlbumsWithTracks({ artist: [true as unknown as string] });
+    //   const { error } = await listAlbumsWithTracks({ artist: [true as unknown as string] });
     //   expect(error?.message[0]).toBe(ErrorCodes.INVALID_ARTIST_ERROR);
     // });
 
     it('should reject invalid artist length', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ artist: ['x'.repeat(300)] });
+      const { error } = await listAlbumsWithTracks({ artist: ['x'.repeat(300)] });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_ARTIST_LENGTH_ERROR);
     });
 
     // it('should reject invalid composer', async () => {
-    //   const { error } = await userApi.listAlbumsWithTracks({ composer: [0 as unknown as string] });
+    //   const { error } = await listAlbumsWithTracks({ composer: [0 as unknown as string] });
     //   expect(error?.message[0]).toBe(ErrorCodes.INVALID_COMPOSER_LENGTH_ERROR);
     // });
 
     it('should reject invalid composer length', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ composer: ['x'.repeat(300)] });
+      const { error } = await listAlbumsWithTracks({ composer: ['x'.repeat(300)] });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_COMPOSER_LENGTH_ERROR);
     });
 
     it('should reject invalid filter', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ filter: '' });
+      const { error } = await listAlbumsWithTracks({ filter: '' });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_FILTER_LENGTH_ERROR);
     });
 
     // it('should reject invalid genre', async () => {
-    //   const { error } = await userApi.listAlbumsWithTracks({ genre: [0 as unknown as string] });
+    //   const { error } = await listAlbumsWithTracks({ genre: [0 as unknown as string] });
     //   expect(error?.message[0]).toBe(ErrorCodes.INVALID_GENRE_LENGTH_ERROR);
     // });
 
     it('should reject invalid genre length', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ genre: ['x'.repeat(300)] });
+      const { error } = await listAlbumsWithTracks({ genre: ['x'.repeat(300)] });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_GENRE_LENGTH_ERROR);
     });
 
     it('should reject negative limit', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ offset: 0, limit: -1000 });
+      const { error } = await listAlbumsWithTracks({ offset: 0, limit: -1000 });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_LIMIT_ERROR);
     });
 
     it('should reject excessive "limit"', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ offset: 0, limit: 1_000_000 });
+      const { error } = await listAlbumsWithTracks({ offset: 0, limit: 1_000_000 });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_LIMIT_ERROR);
     });
 
     it('should reject invalid limit', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ offset: 0, limit: 'asdf' as unknown as number });
+      const { error } = await listAlbumsWithTracks({ offset: 0, limit: 'asdf' as unknown as number });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_LIMIT_ERROR);
     });
 
     it('should reject invalid maxRating', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ maxRating: -1 });
+      const { error } = await listAlbumsWithTracks({ maxRating: -1 });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_MAX_RATING_ERROR);
     });
 
     it('should reject invalid minRating', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ minRating: -1 });
+      const { error } = await listAlbumsWithTracks({ minRating: -1 });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_MIN_RATING_ERROR);
     });
 
     it('should reject negative offset', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ offset: -1000 });
+      const { error } = await listAlbumsWithTracks({ offset: -1000 });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_OFFSET_ERROR);
     });
 
     it('should reject invalid offset', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ offset: 'asdf' as unknown as number });
+      const { error } = await listAlbumsWithTracks({ offset: 'asdf' as unknown as number });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_OFFSET_ERROR);
     });
 
     it('should reject invalid releasedAfter date', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ releasedAfter: 'invalid-date' });
+      const { error } = await listAlbumsWithTracks({ releasedAfter: 'invalid-date' });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_RELEASED_AFTER_ERROR);
     });
 
     it('should reject invalid releasedBefore date', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ releasedBefore: 'invalid-date' });
+      const { error } = await listAlbumsWithTracks({ releasedBefore: 'invalid-date' });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_RELEASED_BEFORE_ERROR);
     });
 
     it('should reject invalid sortDirection', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ sortDirection: 'invalid-direction' as SortDirectionEnum });
+      const { error } = await listAlbumsWithTracks({ sortDirection: 'invalid-direction' as SortDirectionEnum });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_SORT_ORDER_ERROR);
     });
 
     it('should reject invalid sortField', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({
+      const { error } = await listAlbumsWithTracks({
         sortField: 'invalid-field' as unknown as AlbumSortFieldEnum,
       });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_SORT_FIELD_ERROR);
     });
 
     it('should reject invalid year', async () => {
-      const { error } = await userApi.listAlbumsWithTracks({ year: 'never' as unknown as number });
+      const { error } = await listAlbumsWithTracks({ year: 'never' as unknown as number });
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_YEAR_ERROR);
     });
   });
@@ -136,7 +152,7 @@ describe('/users/list-albums-with-tracks', () => {
   describe('edge cases', () => {
     describe('filter', () => {
       it('should filter by genre', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({ genre: ['Rock'] });
+        const { data } = await listAlbumsWithTracks({ genre: ['Rock'] });
         const { albums, total } = data || { albums: [], total: 0 };
         expect(total).toBe(2);
         expect(albums.length).toBe(2);
@@ -145,7 +161,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should filter by artist', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({ artist: ['Artist 3'] });
+        const { data } = await listAlbumsWithTracks({ artist: ['Artist 3'] });
         const { albums, total } = data || { albums: [], total: 0 };
         expect(total).toBe(2);
         expect(albums.length).toBe(2);
@@ -154,7 +170,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should filter by composer', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({ composer: ['Composer 4'] });
+        const { data } = await listAlbumsWithTracks({ composer: ['Composer 4'] });
         const { albums, total } = data || { albums: [], total: 0 };
         expect(total).toBe(2);
         expect(albums.length).toBe(2);
@@ -163,7 +179,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should filter by search term', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({ filter: 'Album 4' });
+        const { data } = await listAlbumsWithTracks({ filter: 'Album 4' });
         const { albums, total } = data || { albums: [], total: 0 };
         expect(total).toBe(1);
         expect(albums.length).toBe(1);
@@ -171,7 +187,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should filter by year', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({ year: 2004 });
+        const { data } = await listAlbumsWithTracks({ year: 2004 });
         const { albums, total } = data || { albums: [], total: 0 };
         expect(total).toBe(1);
         expect(albums.length).toBe(1);
@@ -181,7 +197,7 @@ describe('/users/list-albums-with-tracks', () => {
 
     describe('sort', () => {
       it('should sort by album name ASC', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({
+        const { data } = await listAlbumsWithTracks({
           sortField: AlbumSortFieldEnum.album,
           sortDirection: SortDirectionEnum.asc,
         });
@@ -196,7 +212,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should sort by album name DESC', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({
+        const { data } = await listAlbumsWithTracks({
           sortField: AlbumSortFieldEnum.album,
           sortDirection: SortDirectionEnum.desc,
         });
@@ -211,7 +227,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should sort by year ASC', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({
+        const { data } = await listAlbumsWithTracks({
           sortField: AlbumSortFieldEnum.year,
           sortDirection: SortDirectionEnum.asc,
         });
@@ -226,7 +242,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should sort by year DESC', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({
+        const { data } = await listAlbumsWithTracks({
           sortField: AlbumSortFieldEnum.year,
           sortDirection: SortDirectionEnum.desc,
         });
@@ -241,7 +257,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should sort by album artist ASC', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({
+        const { data } = await listAlbumsWithTracks({
           sortField: AlbumSortFieldEnum.album_artist,
           sortDirection: SortDirectionEnum.asc,
         });
@@ -256,7 +272,7 @@ describe('/users/list-albums-with-tracks', () => {
       });
 
       it('should sort by album artist DESC', async () => {
-        const { data } = await userApi.listAlbumsWithTracks({
+        const { data } = await listAlbumsWithTracks({
           sortField: AlbumSortFieldEnum.album_artist,
           sortDirection: SortDirectionEnum.desc,
         });
@@ -274,7 +290,7 @@ describe('/users/list-albums-with-tracks', () => {
 
   describe('success', () => {
     it('should return all albums', async () => {
-      const { data } = await userApi.listAlbumsWithTracks();
+      const { data } = await listAlbumsWithTracks({});
       const { albums, total } = data || { albums: [], total: 0 };
       expect(total).toBe(5);
       expect(albums.length).toBe(5);
@@ -287,19 +303,19 @@ describe('/users/list-albums-with-tracks', () => {
     });
 
     it('should paginate results', async () => {
-      const { data } = await userApi.listAlbumsWithTracks({ offset: 0, limit: 2 });
+      const { data } = await listAlbumsWithTracks({ offset: 0, limit: 2 });
       const { albums, total } = data || { albums: [], total: 0 };
       expect(total).toBe(5);
       expect(albums.length).toBe(2);
       expect(albums[0]?.title).toBe('Album 1');
       expect(albums[1]?.title).toBe('Album 2');
-      const { data: data2 } = await userApi.listAlbumsWithTracks({ offset: 2, limit: 2 });
+      const { data: data2 } = await listAlbumsWithTracks({ offset: 2, limit: 2 });
       const { albums: albums2, total: total2 } = data2 || { albums: [], total: 0 };
       expect(total2).toBe(5);
       expect(albums2.length).toBe(2);
       expect(albums2[0]?.title).toBe('Album 3');
       expect(albums2[1]?.title).toBe('Album 4');
-      const { data: data3 } = await userApi.listAlbumsWithTracks({ offset: 4, limit: 2 });
+      const { data: data3 } = await listAlbumsWithTracks({ offset: 4, limit: 2 });
       const { albums: albums3, total: total3 } = data3 || { albums: [], total: 0 };
       expect(total3).toBe(5);
       expect(albums3.length).toBe(1);

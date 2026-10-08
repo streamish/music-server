@@ -1,4 +1,4 @@
-import { SynologyApiEnum, SynologyMethodEnum, components, paths } from './types/api-schema';
+import { SynologyApiEnum, SynologyMethodEnum, UserRoleEnum, components, paths } from './types/api-schema';
 import createClient from 'openapi-fetch';
 import crypto from 'node:crypto';
 import xml2js from 'xml2js';
@@ -8,19 +8,138 @@ export const ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD || 'admin';
 export const USER_USERNAME = process.env.DEFAULT_USER_USERNAME || 'user';
 export const USER_PASSWORD = process.env.DEFAULT_USER_PASSWORD || 'user';
 
-export const guestApi: ReturnType<typeof createClient<paths>> = createClient<paths>({
+export const unauthenticatedApi: ReturnType<typeof createClient<paths>> = createClient<paths>({
   baseUrl: `http://localhost:${process.env.SERVER_PORT}`,
   credentials: 'include',
 });
 
-export const api = guestApi;
+export type AuthenticatedApiClient = ReturnType<typeof createClient<paths>>;
+export type QnapApiClient = AuthenticatedApiClient;
+export type SynologyApiClient = AuthenticatedApiClient;
 
-export * from './test-helper.api.admin';
-export * from './test-helper.api.user';
-export * from './test-helper.api.test';
+export const emptyAuthToken = {
+  params: {
+    header: {
+      Authorization: '',
+    },
+  },
+};
 
-export type QnapApiClient = ReturnType<typeof createClient<paths>>;
-export type SynologyApiClient = ReturnType<typeof createClient<paths>>;
+export const guestApi = {
+  createSession: async (username: string, password: string) => {
+    return unauthenticatedApi.POST(`/api/guest/create-session`, {
+      body: {
+        username,
+        password,
+      },
+    });
+  },
+};
+
+export const testApi = {
+  createAccount: async (username?: string, password?: string, roles?: UserRoleEnum[]) => {
+    const newUsername = username || `new-user-${Date.now()}`;
+    const newRoles = roles || [UserRoleEnum.user];
+    const { data } = await unauthenticatedApi.POST(`/api/test/create-account`, {
+      body: {
+        username: username || newUsername,
+        password: password || USER_PASSWORD,
+        roles: newRoles,
+      },
+    });
+    return {
+      id: data?.accountId || 0,
+      username: data?.username || '',
+      password: password || USER_PASSWORD,
+      roles: newRoles,
+    };
+  },
+
+  deleteAccount: async (id: number) => {
+    return unauthenticatedApi.DELETE(`/api/test/delete-account`, {
+      params: {
+        query: {
+          id,
+        },
+      },
+    });
+  },
+  deleteAccounts: async (accountIds: number[]) => {
+    for (let i = 0; i < accountIds.length; i += 1) {
+      const accountId = accountIds[i];
+      if (accountId) {
+        // eslint-disable-next-line no-await-in-loop
+        await testApi.deleteAccount(accountId);
+      }
+    }
+  },
+  duplicateAccount: async (username: string, newUsername: string) => {
+    return unauthenticatedApi.POST(`/api/test/duplicate-account`, {
+      params: {
+        query: {
+          username,
+        },
+      },
+      body: {
+        newUsername,
+      },
+    });
+  },
+  extraAdminsCleared: async () => {
+    const accounts = await testApi.listAccounts();
+    const adminUsers = accounts.filter((user) => user.roles.includes(UserRoleEnum.admin));
+    if (adminUsers?.length === 1) {
+      return true;
+    }
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+    return testApi.extraAdminsCleared();
+  },
+  listAccounts: async () => {
+    const { data } = await unauthenticatedApi.GET(`/api/test/list-accounts`);
+    const accounts = data?.accounts || [];
+    return accounts;
+  },
+  retrieveAccount: async (username: string) => {
+    const { data } = await unauthenticatedApi.GET(`/api/test/retrieve-account`, {
+      params: {
+        query: {
+          username,
+        },
+      },
+    });
+    const account = data?.account || null;
+    if (!account) {
+      throw new Error(`Account with username "${username}" not found.`);
+    }
+    return account;
+  },
+};
+
+export async function createAuthenticatedApi(
+  username?: string,
+  password?: string,
+): Promise<ReturnType<typeof createClient<paths>>> {
+  const ownUsername = username || ADMIN_USERNAME;
+  const ownPassword = password || ADMIN_PASSWORD;
+  const session = await guestApi.createSession(ownUsername, ownPassword);
+  const jwtToken = session.data?.jwtToken;
+  const client = createClient<paths>({
+    baseUrl: `http://localhost:${process.env.SERVER_PORT}`,
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+    },
+  });
+  client.use({
+    onRequest({ request }) {
+      request.headers.set('Authorization', `Bearer ${jwtToken}`);
+      return request;
+    },
+  });
+  return client;
+}
 
 /**
  * Synology login credentials may be sent over HTTP across your network so they
@@ -55,7 +174,7 @@ export function encryptSynologyCredentials(username: string, password: string, p
  * @returns {Promise<String>} The Synology session cookie as a string.
  */
 export async function createSynologyCookie(username?: string, password?: string): Promise<string> {
-  const encryptionKeyResponse = await guestApi.POST(`/webapi/entry.cgi`, {
+  const encryptionKeyResponse = await unauthenticatedApi.POST(`/webapi/entry.cgi`, {
     body: {
       api: SynologyApiEnum.SYNO_API_Encryption,
       method: SynologyMethodEnum.getinfo,
@@ -73,7 +192,7 @@ export async function createSynologyCookie(username?: string, password?: string)
     encryptionKey.data.public_key,
   );
   // do the sign in
-  const signinResponse = await guestApi.POST(`/webapi/entry.cgi`, {
+  const signinResponse = await unauthenticatedApi.POST(`/webapi/entry.cgi`, {
     body: {
       __cIpHeRtExT: payload,
       client_time: encryptionKey.data.server_time,

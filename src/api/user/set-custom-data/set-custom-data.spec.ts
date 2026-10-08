@@ -1,10 +1,19 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { paths } from 'src/types/api-schema';
 
 describe('/api/user/set-custom-data', () => {
   let accountId: number;
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let trackId: number;
 
   beforeAll(async () => {
@@ -14,10 +23,15 @@ describe('/api/user/set-custom-data', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data: albumData } = await userApi.listAlbumsWithTracks({
-      offset: 0,
-      limit: 1,
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
+    const { data: albumData } = await userApi.GET('/api/user/list-albums-with-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          offset: 0,
+          limit: 1,
+        },
+      },
     });
     if (!albumData?.albums?.[0]) {
       throw new Error('Album not found');
@@ -34,9 +48,36 @@ describe('/api/user/set-custom-data', () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function listTracks() {
+    return userApi.GET('/api/user/list-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          offset: 0,
+          limit: 100_000,
+        },
+      },
+    });
+  }
+
+  async function setCustomData(
+    id: number,
+    body: paths['/api/user/set-custom-data']['put']['requestBody']['content']['application/json'],
+  ) {
+    return userApi.PUT('/api/user/set-custom-data', {
+      body,
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PUT(`/api/user/set-custom-data`, {
+      const { error } = await unauthenticatedApi.PUT(`/api/user/set-custom-data`, {
         body: {
           albumArtists: 'Custom albumArtists',
           albumTitle: 'Custom albumTitle',
@@ -65,7 +106,7 @@ describe('/api/user/set-custom-data', () => {
 
   describe('errors', () => {
     it('should reject invalid file id', async () => {
-      const { error } = await userApi.setCustomData(-1, {
+      const { error } = await setCustomData(-1, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -81,7 +122,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid album artists length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'a'.repeat(1001),
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -97,7 +138,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid album title length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'a'.repeat(1001),
         title: 'Custom title',
@@ -113,7 +154,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid artists length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -129,7 +170,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid comment length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -145,7 +186,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid composers length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -161,7 +202,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid disc number', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -177,7 +218,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid disc number range', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -193,7 +234,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid genres length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -209,7 +250,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid title length', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'a'.repeat(256),
@@ -225,7 +266,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid track number range', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -241,7 +282,7 @@ describe('/api/user/set-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid year range', async () => {
-      const { error } = await userApi.setCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -259,15 +300,12 @@ describe('/api/user/set-custom-data', () => {
 
   describe('success', () => {
     it('should create custom data for the track', async () => {
-      const { data: trackDataBefore } = await userApi.listTracks({
-        offset: 0,
-        limit: 100_000,
-      });
+      const { data: trackDataBefore } = await listTracks();
       const trackBeforeDelete = trackDataBefore?.tracks.find((t) => t.id === trackId);
       if (!trackBeforeDelete) {
         throw new Error('Track not found before delete');
       }
-      const { error, data } = await userApi.setCustomData(trackId, {
+      const { error, data } = await setCustomData(trackId, {
         albumArtists: 'Custom albumArtists',
         albumTitle: 'Custom albumTitle',
         title: 'Custom title',
@@ -282,10 +320,7 @@ describe('/api/user/set-custom-data', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the track
-      const { data: trackData } = await userApi.listTracks({
-        offset: 0,
-        limit: 100_000,
-      });
+      const { data: trackData } = await listTracks();
       const track = trackData?.tracks.find((t) => t.id === trackId);
       if (!track) {
         throw new Error('Track not found');

@@ -1,4 +1,10 @@
-import { AdminApi, api, createAdminApi, createUserApi } from '../../../test-helper';
+import {
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { join } from 'node:path';
@@ -7,19 +13,47 @@ import { tmpdir } from 'node:os';
 
 describe('/api/user/delete-root-path', () => {
   const deleteAccounts: number[] = [];
-  let adminApi: AdminApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    const account = await testApi.createAccount();
+    deleteAccounts.push(account.id);
+    userApi = await createAuthenticatedApi(account.username, account.password);
   });
 
   afterAll(async () => {
-    await adminApi.deleteTestAccounts(deleteAccounts);
+    await testApi.deleteAccounts(deleteAccounts);
   });
+
+  async function createRootPath(rootPath: string) {
+    return userApi.POST(`/api/user/create-root-path`, {
+      ...emptyAuthToken,
+      body: {
+        rootPath,
+      },
+    });
+  }
+
+  async function deleteRootPath(id: number) {
+    return userApi.DELETE(`/api/user/delete-root-path`, {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
+  async function listRootPaths() {
+    return userApi.GET(`/api/user/list-root-paths`, {
+      ...emptyAuthToken,
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.DELETE(`/api/user/delete-root-path`, {
+      const { error } = await unauthenticatedApi.DELETE(`/api/user/delete-root-path`, {
         params: {
           query: {
             id: 1,
@@ -35,37 +69,31 @@ describe('/api/user/delete-root-path', () => {
 
   describe('errors', () => {
     it('should reject invalid path id', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
-      const { error } = await accountApi.deleteRootPath({ id: 1234567890 });
+      const { error } = await deleteRootPath(1234567890);
       expect(error?.message[0]).toBe(ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR);
-      deleteAccounts.push(account.id);
     });
   });
 
   describe('success', () => {
     it('should delete a root path', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
       // create a root path
       const originalRootPath = join(tmpdir(), `test-delete-root-path-${Date.now()}`);
       mkdirSync(originalRootPath, { recursive: true });
-      const { error: error2 } = await accountApi.createRootPath({ rootPath: originalRootPath });
+      const { error: error2 } = await createRootPath(originalRootPath);
       expect(error2).toBeUndefined();
-      const rootPathList = await accountApi.listRootPaths();
+      const rootPathList = await listRootPaths();
       const rootPath = rootPathList.data?.rootPaths.find((path) => path.rootPath === originalRootPath);
       if (!rootPath) {
         throw new Error('Root path not found after creation');
       }
       // delete it
-      const { error: error3, data } = await accountApi.deleteRootPath({ id: rootPath.id });
+      const { error: error3, data } = await deleteRootPath(rootPath.id);
       expect(error3).toBeUndefined();
       expect(data?.success).toBe(true);
       // verify it
-      const updatedRootPathList = await accountApi.listRootPaths();
+      const updatedRootPathList = await listRootPaths();
       const deletedRootPath = updatedRootPathList.data?.rootPaths.find((path) => path.rootPath === originalRootPath);
       expect(deletedRootPath).toBeUndefined();
-      deleteAccounts.push(account.id);
     });
   });
 });

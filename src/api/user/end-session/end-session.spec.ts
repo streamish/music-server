@@ -1,22 +1,36 @@
-import { AdminApi, api, createAdminApi, createUserApi } from '../../../test-helper';
+import {
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/end-session', () => {
   const deleteAccounts: number[] = [];
-  let adminApi: AdminApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    const account = await testApi.createAccount();
+    deleteAccounts.push(account.id);
+    userApi = await createAuthenticatedApi(account.username, account.password);
   });
 
   afterAll(async () => {
-    await adminApi.deleteTestAccounts(deleteAccounts);
+    await testApi.deleteAccounts(deleteAccounts);
   });
+
+  async function endSession() {
+    return userApi.DELETE(`/api/user/end-session`, {
+      ...emptyAuthToken,
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.DELETE(`/api/user/end-session`, {
+      const { error } = await unauthenticatedApi.DELETE(`/api/user/end-session`, {
         params: {
           header: {
             Authorization: '',
@@ -30,15 +44,14 @@ describe('/api/user/end-session', () => {
 
   describe('success', () => {
     it('should end session', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
-      const { error } = await accountApi.endSession();
+      const { error } = await endSession();
       expect(error).toBeUndefined();
       // verify the existing session is now invalid
-      const { error: error2 } = await accountApi.listRootPaths();
+      const { error: error2 } = await userApi.GET('/api/user/list-albums', {
+        ...emptyAuthToken,
+      });
       const typedError = error2 as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.AUTHORIZATION_ERROR);
-      deleteAccounts.push(account.id);
     });
   });
 });

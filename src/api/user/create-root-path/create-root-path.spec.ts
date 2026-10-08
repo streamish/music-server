@@ -1,4 +1,10 @@
-import { AdminApi, api, createAdminApi, createUserApi } from '../../../test-helper';
+import {
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { join } from 'node:path';
@@ -7,28 +13,39 @@ import { tmpdir } from 'node:os';
 
 describe('/api/user/create-root-path', () => {
   const deleteAccounts: number[] = [];
-  let adminApi: AdminApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    userApi = await createAuthenticatedApi();
   });
 
   afterAll(async () => {
-    await adminApi.deleteTestAccounts(deleteAccounts);
+    await testApi.deleteAccounts(deleteAccounts);
   });
+
+  async function createRootPath(rootPath: string) {
+    return userApi.POST(`/api/user/create-root-path`, {
+      body: {
+        rootPath,
+      },
+      ...emptyAuthToken,
+    });
+  }
+
+  async function listRootPaths() {
+    return userApi.GET(`/api/user/list-root-paths`, {
+      ...emptyAuthToken,
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
       const newRootPath = join(tmpdir(), `test-guest-create-unauthorized-access-${Date.now()}`);
-      const { error } = await api.POST(`/api/user/create-root-path`, {
+      const { error } = await unauthenticatedApi.POST(`/api/user/create-root-path`, {
         body: {
           rootPath: newRootPath,
         },
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
+        ...emptyAuthToken,
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -37,25 +54,21 @@ describe('/api/user/create-root-path', () => {
   describe('errors', () => {
     it('should reject invalid path', async () => {
       const invalidPath = join(tmpdir(), `test-create-invalid-${Date.now()}`);
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
-      const { error } = await accountApi.createRootPath({ rootPath: invalidPath });
+      const { error } = await createRootPath(invalidPath);
       expect(error?.message?.[0]).toBe(ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR);
-      deleteAccounts.push(account.id);
     });
   });
 
   describe('success', () => {
     it('should create a new root path for the account', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
+      const account = await testApi.createAccount();
       // create the path
       const originalRootPath = join(tmpdir(), `test-new-root-path-${Date.now()}`);
       mkdirSync(originalRootPath, { recursive: true });
-      const { data } = await accountApi.createRootPath({ rootPath: originalRootPath });
+      const { data } = await createRootPath(originalRootPath);
       expect(data?.success).toBe(true);
       // verify it
-      const updatedRootPathList = await accountApi.listRootPaths();
+      const updatedRootPathList = await listRootPaths();
       const rootPath = updatedRootPathList.data?.rootPaths.find((path) => path.rootPath === originalRootPath);
       expect(rootPath).toBeDefined();
       deleteAccounts.push(account.id);

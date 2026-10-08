@@ -8,8 +8,12 @@ import { TestRetrieveAccountDto } from './retrieve-account.dto';
 export class TestRetrieveAccountService {
   constructor(@InjectModel(AccountEntity) private readonly accountEntity: typeof AccountEntity) {}
 
-  async retrieveAccount(accountId: number): Promise<TestRetrieveAccountDto> {
-    const account = await this.accountEntity.findByPk(accountId);
+  async retrieveAccount(username: string): Promise<TestRetrieveAccountDto> {
+    const account = await this.accountEntity.findOne({
+      where: {
+        username,
+      },
+    });
     if (!account?.id) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }

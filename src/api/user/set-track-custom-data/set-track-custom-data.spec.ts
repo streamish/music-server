@@ -1,9 +1,18 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { paths } from 'src/types/api-schema';
 
 describe('/api/user/set-track-custom-data', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let accountId: number;
   let trackId: number;
 
@@ -14,10 +23,15 @@ describe('/api/user/set-track-custom-data', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data: trackData } = await userApi.listTracks({
-      offset: 0,
-      limit: 1,
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
+    const { data: trackData } = await userApi.GET('/api/user/list-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          offset: 0,
+          limit: 1,
+        },
+      },
     });
     if (!trackData?.tracks[0]?.id) {
       throw new Error('Failed to fetch track data');
@@ -30,9 +44,36 @@ describe('/api/user/set-track-custom-data', () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function listTracks() {
+    return userApi.GET('/api/user/list-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          offset: 0,
+          limit: 100_000,
+        },
+      },
+    });
+  }
+
+  async function setTrackCustomData(
+    id: number,
+    body: paths['/api/user/set-track-custom-data']['patch']['requestBody']['content']['application/json'],
+  ) {
+    return userApi.PATCH('/api/user/set-track-custom-data', {
+      body,
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PATCH(`/api/user/set-track-custom-data`, {
+      const { error } = await unauthenticatedApi.PATCH(`/api/user/set-track-custom-data`, {
         body: {
           title: 'Custom title',
           artists: 'Custom artists',
@@ -59,7 +100,7 @@ describe('/api/user/set-track-custom-data', () => {
 
   describe('errors', () => {
     it('should reject invalid file id', async () => {
-      const { error } = await userApi.setTrackCustomData(-1, {
+      const { error } = await setTrackCustomData(-1, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -73,7 +114,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid artists length', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'a'.repeat(1001),
         comment: 'Custom comment',
@@ -87,7 +128,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid comment length', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'a'.repeat(1001),
@@ -101,7 +142,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid composers length', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -115,7 +156,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid disc number', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -129,7 +170,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid disc number range', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -143,7 +184,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid genres length', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -157,7 +198,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid title length', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'a'.repeat(256),
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -171,7 +212,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid track number range', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -185,7 +226,7 @@ describe('/api/user/set-track-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid year range', async () => {
-      const { error } = await userApi.setTrackCustomData(trackId, {
+      const { error } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -201,10 +242,7 @@ describe('/api/user/set-track-custom-data', () => {
 
   describe('success', () => {
     it('should create custom data for the track', async () => {
-      const { data: trackDataBefore } = await userApi.listTracks({
-        offset: 0,
-        limit: 100_000,
-      });
+      const { data: trackDataBefore } = await listTracks();
       const trackBeforeCustom = trackDataBefore?.tracks.find((t) => t.id === trackId);
       if (!trackBeforeCustom) {
         throw new Error('Track not found before custom data set');
@@ -217,7 +255,7 @@ describe('/api/user/set-track-custom-data', () => {
       expect(trackBeforeCustom.genres.map((genre) => genre.name).join(', ')).not.toBe('Custom genres');
       expect(trackBeforeCustom.trackNumber).not.toBe(7);
       expect(trackBeforeCustom.year).not.toBe(1950);
-      const { error, data } = await userApi.setTrackCustomData(trackId, {
+      const { error, data } = await setTrackCustomData(trackId, {
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -230,10 +268,7 @@ describe('/api/user/set-track-custom-data', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the track
-      const { data: trackData } = await userApi.listTracks({
-        offset: 0,
-        limit: 100_000,
-      });
+      const { data: trackData } = await listTracks();
       const track = trackData?.tracks.find((t) => t.id === trackId);
       if (!track) {
         throw new Error('Track not found');

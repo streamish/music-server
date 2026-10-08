@@ -1,17 +1,30 @@
-import { ADMIN_PASSWORD, ADMIN_USERNAME, UserApi, api, createUserApi } from '../../../test-helper';
+import {
+  ADMIN_PASSWORD,
+  ADMIN_USERNAME,
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/list-indexer-logs', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    userApi = await createUserApi(ADMIN_USERNAME, ADMIN_PASSWORD);
+    userApi = await createAuthenticatedApi(ADMIN_USERNAME, ADMIN_PASSWORD);
   });
+
+  async function listIndexerLogs() {
+    return userApi.GET('/api/user/list-indexer-logs', {
+      ...emptyAuthToken,
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.GET(`/api/user/list-indexer-logs`, {
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-indexer-logs`, {
         params: {
           header: {
             Authorization: '',
@@ -25,7 +38,7 @@ describe('/api/user/list-indexer-logs', () => {
 
   describe('success', () => {
     it('should list indexer logs', async () => {
-      const { error, data } = await userApi.listIndexerLogs();
+      const { error, data } = await listIndexerLogs();
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       expect(data?.logs.length).toBeGreaterThan(0);

@@ -1,47 +1,18 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/set-track-rating', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let accountId: number;
-
-  async function setRating(trackId: number, rating: number) {
-    const { error, data } = await userApi.setTrackRating(
-      {
-        id: trackId,
-      },
-      {
-        rating,
-      },
-    );
-    expect(error).toBeUndefined();
-    expect(data?.success).toBe(true);
-  }
-
-  async function getTrack(index: number) {
-    const { data } = await userApi.listTracks({
-      offset: 0,
-      limit: 100_000,
-    });
-    const track = data?.tracks[index];
-    if (!track) {
-      throw new Error('Track not found');
-    }
-    return track;
-  }
-
-  async function getAlbum(albumId: number) {
-    const { data } = await userApi.listAlbumsWithTracks({
-      offset: 0,
-      limit: 100_000,
-    });
-    const album = data?.albums.find((a) => a.id === albumId);
-    if (!album) {
-      throw new Error('Album not found');
-    }
-    return album;
-  }
 
   beforeAll(async () => {
     const newUsername = `user-${Date.now()}`;
@@ -50,16 +21,71 @@ describe('/api/user/set-track-rating', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
   }, 120_000);
 
   afterAll(async () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function listTracks() {
+    return userApi.GET('/api/user/list-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          offset: 0,
+          limit: 100_000,
+        },
+      },
+    });
+  }
+
+  async function retrieveAlbum(id: number) {
+    return userApi.GET('/api/user/retrieve-album', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
+  async function setRating(trackId: number, rating: number) {
+    return userApi.PUT('/api/user/set-track-rating', {
+      params: {
+        ...emptyAuthToken.params,
+        query: {
+          id: trackId,
+        },
+      },
+      body: {
+        rating,
+      },
+    });
+  }
+
+  async function getAlbum(albumId: number) {
+    const { data } = await retrieveAlbum(albumId);
+    const album = data?.album;
+    if (!album) {
+      throw new Error('Album not found');
+    }
+    return album;
+  }
+
+  async function getTrack(index: number) {
+    const { data } = await listTracks();
+    const track = data?.tracks[index];
+    if (!track) {
+      throw new Error('Track not found');
+    }
+    return track;
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PUT(`/api/user/set-track-rating`, {
+      const { error } = await unauthenticatedApi.PUT(`/api/user/set-track-rating`, {
         body: {
           rating: 3,
         },
@@ -78,14 +104,7 @@ describe('/api/user/set-track-rating', () => {
 
   describe('errors', () => {
     it('should reject invalid track id', async () => {
-      const { error } = await userApi.setTrackRating(
-        {
-          id: -1,
-        },
-        {
-          rating: 5,
-        },
-      );
+      const { error } = await setRating(-1, 5);
       expect(error?.message[0]).toBe(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }, 120_000);
   });

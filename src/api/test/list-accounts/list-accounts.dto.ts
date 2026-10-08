@@ -3,8 +3,12 @@ import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { UserRoleEnum } from 'src/types/enums';
 
-export class TestListAccountDto extends PickType(AccountEntity, ['id', 'username', 'roles'] as const) {}
+export class TestListAccountDto extends PickType(AccountEntity, ['id', 'username'] as const) {
+  @ApiProperty({ enum: UserRoleEnum, enumName: 'UserRoleEnum', isArray: true })
+  declare roles: UserRoleEnum[];
+}
 
 export class TestListAccountsResponseDto extends SuccessResponseDto {
   @ApiProperty({ type: [TestListAccountDto] })

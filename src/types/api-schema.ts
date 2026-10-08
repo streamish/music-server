@@ -371,6 +371,26 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/test/create-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Create account
+     * @description Creates a new account with no root paths or content
+     */
+    post: operations['TestCreateAccountController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/test/delete-account': {
     parameters: {
       query?: never;
@@ -409,6 +429,48 @@ export type paths = {
      *     The new account will be re-indexed after duplication.
      */
     post: operations['TestDuplicateAccountController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/list-accounts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List accounts
+     * @description Retrieves a list of all user accounts.
+     */
+    get: operations['TestListAccountsController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/retrieve-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Delete account
+     * @description Deletes an existing user account.
+     *     All files associated with the account will be removed.
+     *     The account will be permanently deleted.
+     */
+    get: operations['TestRetrieveAccountController_get'];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -1206,7 +1268,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/User/stream-file': {
+  '/api/user/stream-file': {
     parameters: {
       query?: never;
       header?: never;
@@ -6364,6 +6426,25 @@ export type components = {
        */
       success: boolean;
     };
+    TestCreateAccountBodyDto: {
+      /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
+      password: string;
+      roles: components['schemas']['UserRoleEnum'][];
+      /** @description The username for signing in */
+      username: string;
+    };
+    TestCreateAccountResponseDto: {
+      accountId: number;
+      password: string;
+      roles: components['schemas']['UserRoleEnum'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      username: string;
+    };
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
      *     applied during the execution of the request
@@ -6442,6 +6523,80 @@ export type components = {
     TestDuplicateAccountResponseDto: {
       /** @description The ID of the newly created account */
       accountId: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    TestListAccountDto: {
+      /** @description The ID of the table row is an integer that is assigned by the database when the row is created. */
+      id: number;
+      roles: components['schemas']['UserRoleEnum'][];
+      /** @description The username is the main point of authentication */
+      username: string;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    TestListAccountsNotFoundErrorMessage: TestListAccountsNotFoundErrorMessage;
+    TestListAccountsNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default internal-server-error
+       */
+      message: components['schemas']['TestListAccountsNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    TestListAccountsResponseDto: {
+      accounts: components['schemas']['TestListAccountDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    TestRetrieveAccountDto: {
+      /** @description The ID of the table row is an integer that is assigned by the database when the row is created. */
+      id: number;
+      roles: components['schemas']['UserRoleEnum'][];
+      /** @description The username is the main point of authentication */
+      username: string;
+    };
+    /**
+     * @description The error message(s) that occurred during the validation of the request data or additional requirements
+     *     applied during the execution of the request
+     * @enum {string}
+     */
+    TestRetrieveAccountNotFoundErrorMessage: TestRetrieveAccountNotFoundErrorMessage;
+    TestRetrieveAccountNotFoundResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description The error message(s) that occurred during the validation of the request data or additional requirements
+       *     applied during the execution of the request
+       * @default account-not-found-error
+       */
+      message: components['schemas']['TestRetrieveAccountNotFoundErrorMessage'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    TestRetrieveAccountResponseDto: {
+      account: components['schemas']['TestRetrieveAccountDto'];
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -8340,6 +8495,29 @@ export interface operations {
       };
     };
   };
+  TestCreateAccountController_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TestCreateAccountBodyDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestCreateAccountResponseDto'];
+        };
+      };
+    };
+  };
   TestDeleteAccountController_delete: {
     parameters: {
       query: {
@@ -8422,6 +8600,83 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['TestDuplicateAccountNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  TestListAccountsController_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestListAccountsResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestListAccountsNotFoundResponseDto'];
+        };
+      };
+    };
+  };
+  TestRetrieveAccountController_get: {
+    parameters: {
+      query: {
+        /** @description The username of the account */
+        username: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestRetrieveAccountResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TestRetrieveAccountNotFoundResponseDto'];
         };
       };
       500: {
@@ -10992,6 +11247,13 @@ export enum TestDuplicateAccountBadRequestErrorMessageEnum {
 export enum TestDuplicateAccountNotFoundErrorMessage {
   internal_server_error = 'internal-server-error',
   not_found_error = 'not-found-error',
+}
+export enum TestListAccountsNotFoundErrorMessage {
+  internal_server_error = 'internal-server-error',
+  not_found_error = 'not-found-error',
+}
+export enum TestRetrieveAccountNotFoundErrorMessage {
+  account_not_found_error = 'account-not-found-error',
 }
 export enum TrackSortFieldEnum {
   date_added = 'date_added',

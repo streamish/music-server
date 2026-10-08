@@ -1,18 +1,36 @@
-import { ADMIN_PASSWORD, ADMIN_USERNAME, UserApi, api, createUserApi } from '../../../test-helper';
-import { AssociationSortFieldEnum, AssociationTypeEnum, SortDirectionEnum } from '../../../types/api-schema';
+import {
+  ADMIN_PASSWORD,
+  ADMIN_USERNAME,
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  emptyAuthToken,
+  unauthenticatedApi,
+} from '../../../test-helper';
+import { AssociationSortFieldEnum, AssociationTypeEnum, SortDirectionEnum, paths } from '../../../types/api-schema';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/users/list-track-items-with-tracks', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    userApi = await createUserApi(ADMIN_USERNAME, ADMIN_PASSWORD);
+    userApi = await createAuthenticatedApi(ADMIN_USERNAME, ADMIN_PASSWORD);
   });
+
+  async function listTrackAssociationsWithTracks(
+    query: paths['/api/user/list-track-associations-with-tracks']['get']['parameters']['query'],
+  ) {
+    return userApi.GET('/api/user/list-track-associations-with-tracks', {
+      params: {
+        ...emptyAuthToken.params,
+        query,
+      },
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.GET(`/api/user/list-track-associations-with-tracks`, {
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-track-associations-with-tracks`, {
         params: {
           header: {
             Authorization: '',
@@ -29,7 +47,7 @@ describe('/users/list-track-items-with-tracks', () => {
 
   describe('errors', () => {
     it('should reject invalid addedAfter date', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         addedAfter: 'invalid-date',
         associationType: AssociationTypeEnum.artist,
       });
@@ -37,7 +55,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject invalid addedBefore date', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         addedBefore: 'invalid-date',
         associationType: AssociationTypeEnum.artist,
       });
@@ -45,7 +63,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject invalid filter', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         filter: '',
         associationType: AssociationTypeEnum.artist,
       });
@@ -58,7 +76,7 @@ describe('/users/list-track-items-with-tracks', () => {
     // });
 
     it('should reject invalid genre length', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         genre: ['x'.repeat(300)],
         associationType: AssociationTypeEnum.artist,
       });
@@ -66,7 +84,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject negative limit', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         offset: 0,
         limit: -1000,
         associationType: AssociationTypeEnum.artist,
@@ -75,7 +93,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject excessive "limit"', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         offset: 0,
         limit: 1_000_000,
         associationType: AssociationTypeEnum.artist,
@@ -84,7 +102,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject invalid limit', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         offset: 0,
         limit: 'asdf' as unknown as number,
         associationType: AssociationTypeEnum.artist,
@@ -93,7 +111,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject negative offset', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         offset: -1000,
         associationType: AssociationTypeEnum.artist,
       });
@@ -101,7 +119,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject invalid offset', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         offset: 'asdf' as unknown as number,
         associationType: AssociationTypeEnum.artist,
       });
@@ -109,7 +127,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject invalid sortDirection', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         sortDirection: 'invalid-direction' as SortDirectionEnum,
         associationType: AssociationTypeEnum.artist,
       });
@@ -117,7 +135,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should reject invalid sortField', async () => {
-      const { error } = await userApi.listTrackAssociationsWithTracks({
+      const { error } = await listTrackAssociationsWithTracks({
         sortField: 'invalid-field' as unknown as AssociationSortFieldEnum,
         associationType: AssociationTypeEnum.artist,
       });
@@ -128,7 +146,7 @@ describe('/users/list-track-items-with-tracks', () => {
   describe('edge cases', () => {
     describe('filter', () => {
       it('should filter by genre', async () => {
-        const { data } = await userApi.listTrackAssociationsWithTracks({
+        const { data } = await listTrackAssociationsWithTracks({
           genre: ['Rock'],
           associationType: AssociationTypeEnum.artist,
         });
@@ -140,7 +158,7 @@ describe('/users/list-track-items-with-tracks', () => {
       });
 
       it('should filter by search term', async () => {
-        const { data } = await userApi.listTrackAssociationsWithTracks({
+        const { data } = await listTrackAssociationsWithTracks({
           filter: '3',
           associationType: AssociationTypeEnum.artist,
         });
@@ -155,7 +173,7 @@ describe('/users/list-track-items-with-tracks', () => {
 
     describe('sort', () => {
       it('should sort by artist ASC', async () => {
-        const { data } = await userApi.listTrackAssociationsWithTracks({
+        const { data } = await listTrackAssociationsWithTracks({
           sortField: AssociationSortFieldEnum.name,
           sortDirection: SortDirectionEnum.asc,
           associationType: AssociationTypeEnum.artist,
@@ -171,7 +189,7 @@ describe('/users/list-track-items-with-tracks', () => {
       });
 
       it('should sort by artist DESC', async () => {
-        const { data } = await userApi.listTrackAssociationsWithTracks({
+        const { data } = await listTrackAssociationsWithTracks({
           sortField: AssociationSortFieldEnum.name,
           sortDirection: SortDirectionEnum.desc,
           associationType: AssociationTypeEnum.artist,
@@ -190,7 +208,7 @@ describe('/users/list-track-items-with-tracks', () => {
 
   describe('success', () => {
     it('should return all artists', async () => {
-      const { data } = await userApi.listTrackAssociationsWithTracks({ associationType: AssociationTypeEnum.artist });
+      const { data } = await listTrackAssociationsWithTracks({ associationType: AssociationTypeEnum.artist });
       const { items, total } = data || { items: [], total: 0 };
       expect(total).toBe(5);
       expect(items.length).toBe(5);
@@ -209,7 +227,7 @@ describe('/users/list-track-items-with-tracks', () => {
     });
 
     it('should paginate results', async () => {
-      const { data } = await userApi.listTrackAssociationsWithTracks({
+      const { data } = await listTrackAssociationsWithTracks({
         offset: 0,
         limit: 2,
         associationType: AssociationTypeEnum.artist,
@@ -219,7 +237,7 @@ describe('/users/list-track-items-with-tracks', () => {
       expect(items.length).toBe(2);
       expect(items[0]?.name).toBe('Artist 1');
       expect(items[1]?.name).toBe('Artist 2');
-      const { data: data2 } = await userApi.listTrackAssociationsWithTracks({
+      const { data: data2 } = await listTrackAssociationsWithTracks({
         offset: 1,
         limit: 2,
         associationType: AssociationTypeEnum.artist,
@@ -229,7 +247,7 @@ describe('/users/list-track-items-with-tracks', () => {
       expect(associations2.length).toBe(2);
       expect(associations2[0]?.name).toBe('Artist 2');
       expect(associations2[1]?.name).toBe('Artist 3');
-      const { data: data3 } = await userApi.listTrackAssociationsWithTracks({
+      const { data: data3 } = await listTrackAssociationsWithTracks({
         offset: 2,
         limit: 2,
         associationType: AssociationTypeEnum.artist,

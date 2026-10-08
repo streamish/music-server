@@ -6,7 +6,7 @@ import {
   components,
 } from '../../types/api-schema';
 import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
-import { USER_PASSWORD, USER_USERNAME, createTestApi } from '../../test-helper';
+import { USER_PASSWORD, USER_USERNAME, testApi } from '../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/playlist.cgi', () => {
@@ -20,7 +20,6 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
 
   beforeAll(async () => {
     const username = `favorites-user-${Date.now()}`;
-    const testApi = await createTestApi();
     const account = await testApi.duplicateAccount(USER_USERNAME, username);
     accountId = account.data?.accountId || 0;
     if (!accountId) {
@@ -50,7 +49,6 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
   }, 120_000);
 
   afterAll(async () => {
-    const testApi = await createTestApi();
     await testApi.deleteAccount(accountId);
   });
 
@@ -238,7 +236,7 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
     expect(playlist.additional.rules?.[0]?.interval).toBe(0);
   });
 
-  it.only('should update a "smart" playlist', async () => {
+  it('should update a "smart" playlist', async () => {
     const name = `Test playlist ${Date.now()}`;
     const { playlistId } = await createPlaylist(
       name,
@@ -253,7 +251,6 @@ describe('/webapi/AudioStation/playlist.cgi', () => {
         },
       ]),
     );
-    console.log('playlistid', playlistId);
     const newName = `Updated playlist ${Date.now()}`;
     const { playlistId: updatedPlaylistId } = await updatePlaylist(
       playlistId,
