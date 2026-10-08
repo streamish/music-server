@@ -1,73 +1,21 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { ContentTypeEnum, FileTypeEnum } from 'src/types/enums';
 import { IsEnum, IsInt, IsNumber, IsString, Max, Min } from 'class-validator';
-import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum } from '../enums';
-import { SynologyPaginationDto, SynologyPaginationResponseDto, SynologySuccessResponseDto } from './synology.dto';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum } from '../synology.enums';
+import { SynologyBody, SynologyBodyWithPagination } from '../synology.request.dto';
+import { SynologyPaginationResponseDto, SynologySuccessResponseDto } from '../synology.response.dto';
 import { Transform } from 'class-transformer';
 import type { RatingOrUnset } from 'src/types';
 
-export class SynologySongsBodyDto extends SynologyPaginationDto {
+export class SynologySongsBodyDto extends SynologyBodyWithPagination({
+  expectedApi: SynologyApiEnum.SONG,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.LIST,
+}) {
   @IsString()
   @IsEnum(['avg_rating', 'song_tag,song_audio,song_rating'])
   declare additional: string;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but this software has
-   * direct endpoints for their relevant URL paths.  As such this value is ignored for now
-   * but defined to match the Synology API.
-   *
-   * This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyApiEnum,
-    enumName: 'SynologyApiEnum',
-    example: SynologyApiEnum.SONG,
-  })
-  @IsEnum(SynologyApiEnum)
-  declare api: SynologyApiEnum;
-
-  /**
-   * Synology supports having personal and shared libraries but this software does not have a
-   * direct equivalent, users can add the same root path to achieve it.  As such this value
-   * is ignored for now but defined to match the Synology API.
-   *
-   * This endpoint requires a value of `all` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyLibraryEnum,
-    enumName: 'SynologyLibraryEnum',
-    example: SynologyLibraryEnum.ALL,
-  })
-  @IsEnum(SynologyLibraryEnum)
-  declare library: SynologyLibraryEnum;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but for AudioStation the
-   * endpoints have limited functionality, all music-related endpoints `list` except cover
-   * images.  As such this value is ignored for now but defined to match the Synology API.
-   *
-   * This endpoint requires a value of `list` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.LIST,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
-
-  /**
-   * Synology's API has versioned endpoints and some have at least 3 versions.  This software
-   * currently only supports the latest version of the API for each endpoint and ignores this value
-   * for now.  It's possible to build in support for prior versions of an endpoint but that would
-   * require using the `debug-proxy` to capture the request and response payloads to understand the
-   * differences between versions.  If you are running an older DSM NAS and wish to help then check
-   * out the GitHub Issues page and submit a request to support your version of the API.
-   */
-  @Transform(({ value }) => Number.parseInt(value, 10))
-  @IsInt()
-  declare version: number;
 }
 
 export class SynologySongsByAlbumBodyDto extends SynologySongsBodyDto {
@@ -136,22 +84,13 @@ export class SynologySongsByDefaultGenreBodyDto extends SynologySongsBodyDto {
   declare genre_filter: string;
 }
 
-export class SynologySongsRateBodyDto {
-  /**
-   * Synology's API uses this value to route requests appropriately but this software has
-   * direct endpoints for their relevant URL paths.  As such this value is ignored for now
-   * but defined to match the Synology API.
-   *
-   * This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyApiEnum,
-    enumName: 'SynologyApiEnum',
-    example: SynologyApiEnum.SONG,
-  })
-  @IsEnum(SynologyApiEnum)
-  declare api: SynologyApiEnum;
-
+export class SynologySongsRateBodyDto extends OmitType(
+  SynologyBody({
+    expectedApi: SynologyApiEnum.SONG,
+    expectedMethod: SynologyMethodEnum.SET_RATING,
+  }),
+  ['library'],
+) {
   /**
    * The IDs of the track(s) to rate comes in a `music_<id>,music_<id>` format.
    *
@@ -175,18 +114,6 @@ export class SynologySongsRateBodyDto {
   declare id: number[];
 
   /**
-   * Synology's API uses this value to route requests appropriately. This endpoint requires
-   * a value of `setrating` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.SET_RATING,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
-
-  /**
    * The rating of the track
    */
   @ApiProperty({
@@ -196,18 +123,6 @@ export class SynologySongsRateBodyDto {
   @Min(0)
   @Max(5)
   declare rating: RatingOrUnset;
-
-  /**
-   * Synology's API has versioned endpoints and some have at least 3 versions.  This software
-   * currently only supports the latest version of the API for each endpoint and ignores this value
-   * for now.  It's possible to build in support for prior versions of an endpoint but that would
-   * require using the `debug-proxy` to capture the request and response payloads to understand the
-   * differences between versions.  If you are running an older DSM NAS and wish to help then check
-   * out the GitHub Issues page and submit a request to support your version of the API.
-   */
-  @Transform(({ value }) => Number.parseInt(value, 10))
-  @IsInt()
-  declare version: number;
 }
 
 class SynologySongRatingDto {

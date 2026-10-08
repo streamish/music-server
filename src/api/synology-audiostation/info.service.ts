@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SynologyInfoDataDto } from './dtos/info.cgi.dto';
-import { SynologyLibraryEnum } from './enums';
+import { SynologyLibraryEnum } from './synology.enums';
 
 @Injectable()
 export class SynologyInfoService {

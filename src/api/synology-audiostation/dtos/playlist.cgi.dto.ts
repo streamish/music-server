@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, OmitType, PickType } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsNumber, IsString } from 'class-validator';
 import {
   PlaylistTypeEnum,
@@ -8,71 +8,17 @@ import {
   SmartPlaylistIntervalTagEnum,
   SmartPlaylistOperationEnum,
 } from 'src/types/enums';
-import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum } from '../enums';
-import { SynologyPaginationDto, SynologySuccessResponseDto } from './synology.dto';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum } from '../synology.enums';
+import { SynologyBody, SynologyBodyWithPagination } from '../synology.request.dto';
 import { SynologySongDto } from './song.cgi.dto';
+import { SynologySuccessResponseDto } from '../synology.response.dto';
 import { Transform, plainToInstance } from 'class-transformer';
 
-export class SynologyPlaylistBodyDto {
-  /**
-   * Synology's API uses this value to route requests appropriately but this software has
-   * direct endpoints for their relevant URL paths.  As such this value is ignored for now
-   * but defined to match the Synology API.
-   *
-   * This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyApiEnum,
-    enumName: 'SynologyApiEnum',
-    example: SynologyApiEnum.PLAYLIST,
-  })
-  @IsEnum(SynologyApiEnum)
-  declare api: SynologyApiEnum;
-
-  /**
-   * Synology supports having personal and shared libraries but this software does not have a
-   * direct equivalent, users can add the same root path to achieve it.  As such this value
-   * is ignored but defined to match the Synology API.
-   *
-   * This endpoint requires a value of `all` or `personal` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyLibraryEnum,
-    enumName: 'SynologyLibraryEnum',
-    example: SynologyLibraryEnum.ALL,
-  })
-  @IsEnum(SynologyLibraryEnum)
-  declare library: SynologyLibraryEnum;
-
-  /**
-   * Synology's API has versioned endpoints and some have at least 3 versions.  This software
-   * currently only supports the latest version of the API for each endpoint and ignores this value
-   * for now.  It's possible to build in support for prior versions of an endpoint but that would
-   * require using the `debug-proxy` to capture the request and response payloads to understand the
-   * differences between versions.  If you are running an older DSM NAS and wish to help then check
-   * out the GitHub Issues page and submit a request to support your version of the API.
-   */
-  @Transform(({ value }) => Number.parseInt(value, 10))
-  @IsInt()
-  declare version: number;
-}
-
-export class SynologyPlaylistRetrieveBodyDto extends SynologyPlaylistBodyDto {
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `getinfo` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.GET_INFO,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
-
+export class SynologyPlaylistRetrieveBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.GET_INFO,
+}) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -83,39 +29,17 @@ export class SynologyPlaylistRetrieveBodyDto extends SynologyPlaylistBodyDto {
   declare id: string;
 }
 
-export class SynologyPlaylistListBodyDto extends SynologyPlaylistBodyDto {
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `list` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.LIST,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
-}
+export class SynologyPlaylistListBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.LIST,
+}) {}
 
-export class SynologyPlaylistCreateNormalBodyDto extends SynologyPlaylistBodyDto {
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `create` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.CREATE,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
-
+export class SynologyPlaylistCreateNormalBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.CREATE,
+}) {
   /**
    * The name of the playlist to create.
    */
@@ -203,7 +127,11 @@ class SynologySmartListRule {
   }
 }
 
-export class SynologyPlaylistCreateSmartBodyDto extends SynologyPlaylistBodyDto {
+export class SynologyPlaylistCreateSmartBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.CREATE_SMART,
+}) {
   @ApiProperty({
     enum: SmartPlaylistConjugalEnum,
     enumName: 'SmartPlaylistConjugalEnum',
@@ -211,21 +139,6 @@ export class SynologyPlaylistCreateSmartBodyDto extends SynologyPlaylistBodyDto 
   })
   @IsEnum(SmartPlaylistConjugalEnum)
   declare conj_rule: SmartPlaylistConjugalEnum;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `create` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.CREATE_SMART,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 
   /**
    * The name of the playlist to create.
@@ -241,22 +154,13 @@ export class SynologyPlaylistCreateSmartBodyDto extends SynologyPlaylistBodyDto 
   declare rules_json: SynologySmartListRule[];
 }
 
-export class SynologyPlaylistUpdateSmartBodyDto extends SynologyPlaylistCreateSmartBodyDto {
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `update` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.UPDATE_SMART,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
-
+export class SynologyPlaylistUpdateSmartBodyDto extends IntersectionType(
+  PickType(SynologyPlaylistCreateSmartBodyDto, ['conj_rule', 'name', 'rules_json']),
+  SynologyBody({
+    expectedApi: SynologyApiEnum.PLAYLIST,
+    expectedMethod: SynologyMethodEnum.UPDATE_SMART,
+  }),
+) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -267,7 +171,11 @@ export class SynologyPlaylistUpdateSmartBodyDto extends SynologyPlaylistCreateSm
   declare id: string;
 }
 
-export class SynologyPlaylistRenameBodyDto extends SynologyPlaylistBodyDto {
+export class SynologyPlaylistRenameBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.RENAME,
+}) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -276,21 +184,6 @@ export class SynologyPlaylistRenameBodyDto extends SynologyPlaylistBodyDto {
   @Transform(({ value }) => value.split('/').slice(1).join('/'))
   @IsString()
   declare id: string;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `rename` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.RENAME,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 
   /**
    * The name of the playlist to create.
@@ -299,7 +192,11 @@ export class SynologyPlaylistRenameBodyDto extends SynologyPlaylistBodyDto {
   declare new_name: string;
 }
 
-export class SynologyPlaylistDeleteBodyDto extends SynologyPlaylistBodyDto {
+export class SynologyPlaylistDeleteBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.DELETE,
+}) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -321,24 +218,13 @@ export class SynologyPlaylistDeleteBodyDto extends SynologyPlaylistBodyDto {
     }
   })
   declare type: PlaylistTypeEnum;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `delete` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.DELETE,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 }
 
-export class SynologyPlaylistAddOrRemoveItemBodyDto extends SynologyPlaylistBodyDto {
+export class SynologyPlaylistAddOrRemoveItemBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.UPDATE_SONGS,
+}) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -347,21 +233,6 @@ export class SynologyPlaylistAddOrRemoveItemBodyDto extends SynologyPlaylistBody
   @Transform(({ value }) => value.split('/').slice(1).join('/'))
   @IsString()
   declare id: string;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `updatesongs` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.UPDATE_SONGS,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 
   /**
    * The number of items to remove.
@@ -397,7 +268,11 @@ export class SynologyPlaylistAddOrRemoveItemBodyDto extends SynologyPlaylistBody
   declare songs: (number | string)[];
 }
 
-export class SynologyPlaylistMoveItemsBodyDto extends SynologyPlaylistBodyDto {
+export class SynologyPlaylistMoveItemsBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.UPDATE_SONGS,
+}) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -406,21 +281,6 @@ export class SynologyPlaylistMoveItemsBodyDto extends SynologyPlaylistBodyDto {
   @Transform(({ value }) => value.split('/').slice(1).join('/'))
   @IsString()
   declare id: string;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `updatesongs` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.UPDATE_SONGS,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 
   /**
    * The number of items being moved
@@ -432,6 +292,7 @@ export class SynologyPlaylistMoveItemsBodyDto extends SynologyPlaylistBodyDto {
    * The position of the item(s) in the playlist, if `-1` then it is a new item otherwise
    * the list-index for the item.
    */
+  @IsInt()
   declare offset: number;
 
   /**
@@ -443,7 +304,11 @@ export class SynologyPlaylistMoveItemsBodyDto extends SynologyPlaylistBodyDto {
   declare songs: number[];
 }
 
-export class SynologyPlaylistRemoveMissingBodyDto extends SynologyPlaylistBodyDto {
+export class SynologyPlaylistRemoveMissingBodyDto extends SynologyBody({
+  expectedApi: SynologyApiEnum.PLAYLIST,
+  expectedLibrary: SynologyLibraryEnum.ALL,
+  expectedMethod: SynologyMethodEnum.REMOVE_MISSING,
+}) {
   /**
    * The ID of the playlist comes in the format
    * `playlist_<personal|shared>_<normal|smart>/<name>`
@@ -452,24 +317,16 @@ export class SynologyPlaylistRemoveMissingBodyDto extends SynologyPlaylistBodyDt
   @Transform(({ value }) => value.split('/').slice(1).join('/'))
   @IsString()
   declare id: string;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `removemissing` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.REMOVE_MISSING,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 }
 
-export class SynologyPlaylistTrackListBodyDto extends SynologyPaginationDto {
+export class SynologyPlaylistTrackListBodyDto extends OmitType(
+  SynologyBodyWithPagination({
+    expectedApi: SynologyApiEnum.PLAYLIST,
+    expectedLibrary: SynologyLibraryEnum.ALL,
+    expectedMethod: SynologyMethodEnum.LIST,
+  }),
+  ['api', 'version', 'library'] as const,
+) {
   /**
    * Additional data to include in the response.  This field is ignored by the backend for now
    * and a fixed-payload response is returned.
@@ -485,21 +342,6 @@ export class SynologyPlaylistTrackListBodyDto extends SynologyPaginationDto {
   @Transform(({ value }) => value.split('/').slice(1).join('/'))
   @IsString()
   declare id: string;
-
-  /**
-   * Synology's API uses this value to route requests appropriately but NestJS controllers
-   * handle the routing between URL paths so this value is ignored for now but defined to
-   * match the Synology API.
-   *
-   * This endpoint requires a value of `list` be provided for correctness.
-   */
-  @ApiProperty({
-    enum: SynologyMethodEnum,
-    enumName: 'SynologyMethodEnum',
-    example: SynologyMethodEnum.LIST,
-  })
-  @IsEnum(SynologyMethodEnum)
-  declare method: SynologyMethodEnum;
 }
 
 export class SynologyPlaylistIdDataDto {

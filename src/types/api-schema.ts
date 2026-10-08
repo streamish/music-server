@@ -3498,8 +3498,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3507,8 +3505,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3522,8 +3518,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3535,9 +3529,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3547,8 +3545,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3558,8 +3554,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3573,8 +3567,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3586,9 +3578,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3598,8 +3594,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3609,8 +3603,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3624,8 +3616,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3637,9 +3627,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3649,8 +3643,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3659,8 +3651,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3674,8 +3664,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3687,9 +3675,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3699,8 +3691,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3710,8 +3700,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3725,8 +3713,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3738,9 +3724,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3750,8 +3740,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3761,8 +3749,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3776,8 +3762,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3789,9 +3773,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3801,8 +3789,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
        * @example SYNO.AudioStation.Album
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3812,8 +3798,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3827,8 +3811,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3840,9 +3822,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3851,8 +3837,6 @@ export type components = {
      * @description Synology's API uses this value to route requests appropriately but this software has
      *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
      *     but defined to match the Synology API.
-     *
-     *     This endpoint requires a value of `SYNO.AudioStation.Album` be provided for correctness.
      * @enum {string}
      */
     SynologyApiEnum: SynologyApiEnum;
@@ -3887,8 +3871,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Artist` be provided for correctness.
        * @example SYNO.AudioStation.Artist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3896,8 +3878,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3911,8 +3891,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3924,9 +3902,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3936,8 +3918,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Artist` be provided for correctness.
        * @example SYNO.AudioStation.Artist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3946,8 +3926,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -3961,8 +3939,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -3974,9 +3950,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -3986,8 +3966,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Artist` be provided for correctness.
        * @example SYNO.AudioStation.Artist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -3996,8 +3974,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -4011,8 +3987,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4024,9 +3998,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4036,8 +4014,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Composer` be provided for correctness.
        * @example SYNO.AudioStation.Composer
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4045,8 +4021,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -4060,8 +4034,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4073,9 +4045,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4126,26 +4102,26 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Encryption` be provided for correctness.
        * @example SYNO.API.Encryption
        */
       api: components['schemas']['SynologyApiEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `getinfo` for the `method` value for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example getinfo
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4173,28 +4149,28 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Pin` for correctness.
        * @example SYNO.AudioStation.Pin
        */
       api: components['schemas']['SynologyApiEnum'];
       /** @description List of item details to pin */
       items: components['schemas']['SynologyEntryNewPinItemDto'][];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `pin` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example pin
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4204,27 +4180,27 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Pin` for correctness.
        * @example SYNO.AudioStation.Pin
        */
       api: components['schemas']['SynologyApiEnum'];
       items: number[][];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `unpin` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example unpin
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4234,8 +4210,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Pin` for correctness.
        * @example SYNO.AudioStation.Pin
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4246,11 +4220,9 @@ export type components = {
        */
       limit: number;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4262,9 +4234,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4284,26 +4260,26 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.API.Auth` be provided for correctness.
        * @example SYNO.API.Auth
        */
       api: components['schemas']['SynologyApiEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `clearSessionToken` for the `method` value for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example clearSessionToken
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4355,8 +4331,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Playlist` for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4367,20 +4341,22 @@ export type components = {
        */
       id: string;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `add_track` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example add_track
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4390,8 +4366,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Playlist` for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4403,20 +4377,22 @@ export type components = {
        */
       id: string;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `add_track` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example add_track
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4426,8 +4402,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Playlist` for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4439,20 +4413,22 @@ export type components = {
        */
       id: string;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `add_track` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example add_track
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4462,8 +4438,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Playlist` for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4475,20 +4449,22 @@ export type components = {
        */
       id: string;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `add_track` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example add_track
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4528,8 +4504,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Folder` be provided for correctness.
        * @example SYNO.AudioStation.Folder
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4542,8 +4516,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -4557,8 +4529,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4571,9 +4541,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4633,8 +4607,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Genre` be provided for correctness.
        * @example SYNO.AudioStation.Genre
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4642,8 +4614,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -4657,8 +4627,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` or `list_default_genre` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4670,9 +4638,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4717,8 +4689,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Composer` be provided for correctness.
        * @example SYNO.AudioStation.Info
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4726,17 +4696,19 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example getinfo
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4791,8 +4763,6 @@ export type components = {
      * @description Synology supports having personal and shared libraries but this software does not have a
      *     direct equivalent, users can add the same root path to achieve it.  As such this value
      *     is ignored but defined to match the Synology API.
-     *
-     *     This endpoint requires a value of `all` be provided for correctness.
      * @enum {string}
      */
     SynologyLibraryEnum: SynologyLibraryEnum;
@@ -4800,8 +4770,6 @@ export type components = {
      * @description Synology's API uses this value to route requests appropriately but for AudioStation the
      *     endpoints have limited functionality, all music-related endpoints `list` except cover
      *     images.  As such this value is ignored for now but defined to match the Synology API.
-     *
-     *     This endpoint requires a value of `list` be provided for correctness.
      * @enum {string}
      */
     SynologyMethodEnum: SynologyMethodEnum;
@@ -4827,8 +4795,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4842,19 +4808,15 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /** @description The number of items to remove. */
       limit: number;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `updatesongs` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example updatesongs
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4878,9 +4840,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4890,8 +4856,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4899,17 +4863,13 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `create` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example create
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4918,9 +4878,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4930,8 +4894,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4941,17 +4903,13 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `create` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example createsmart
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -4961,9 +4919,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -4978,8 +4940,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -4993,17 +4953,13 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `delete` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example delete
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5012,9 +4968,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5044,8 +5004,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5053,26 +5011,26 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5082,8 +5040,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5097,19 +5053,15 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /** @description The number of items being moved */
       limit: number;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `updatesongs` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example updatesongs
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5126,9 +5078,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5138,8 +5094,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5153,26 +5107,26 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `removemissing` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example removemissing
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5182,8 +5136,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5197,17 +5149,13 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `rename` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example rename
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5216,9 +5164,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5236,8 +5188,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5251,26 +5201,26 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `getinfo` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example getinfo
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5315,11 +5265,9 @@ export type components = {
        */
       limit: number;
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5334,8 +5282,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Playlist
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5351,17 +5297,12 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` or `personal` be provided for correctness.
-       * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
       /**
-       * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-       *     handle the routing between URL paths so this value is ignored for now but defined to
-       *     match the Synology API.
-       *
-       *     This endpoint requires a value of `update` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example updatesmart
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5371,9 +5312,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5403,8 +5348,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Proxy
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5412,8 +5355,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `deletesonginfo` be provided for correctness.
        * @example deletesonginfo
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5422,9 +5363,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5434,8 +5379,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Proxy
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5443,8 +5386,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `getsonginfo` be provided for correctness.
        * @example getsonginfo
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5453,9 +5394,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5475,8 +5420,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
        * @example SYNO.AudioStation.Proxy
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5486,17 +5429,19 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `getstreamid` be provided for correctness.
        * @example getstreamid
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5517,8 +5462,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Radio` be provided for correctness.
        * @example SYNO.AudioStation.Radio
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5528,8 +5471,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `updateradios` be provided for correctness.
        * @example updateradios
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5542,9 +5483,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5554,8 +5499,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Radio` be provided for correctness.
        * @example SYNO.AudioStation.Radio
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5566,8 +5509,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `add` be provided for correctness.
        * @example add
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5582,9 +5523,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5594,8 +5539,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Radio` be provided for correctness.
        * @example SYNO.AudioStation.Radio
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5603,8 +5546,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5616,9 +5557,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5664,8 +5609,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Radio` be provided for correctness.
        * @example SYNO.AudioStation.Radio
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5675,8 +5618,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5688,9 +5629,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5708,8 +5653,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Folder` be provided for correctness.
        * @example SYNO.AudioStation.Folder
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5717,8 +5660,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -5732,8 +5673,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5745,9 +5684,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5767,8 +5710,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Search` be provided for correctness.
        * @example SYNO.AudioStation.Search
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5778,8 +5719,6 @@ export type components = {
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
        *     is ignored but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -5787,17 +5726,19 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5880,17 +5821,13 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -5904,8 +5841,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5917,9 +5852,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5932,8 +5871,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -5941,9 +5878,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -5957,8 +5892,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -5970,9 +5903,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -5985,17 +5922,13 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6009,8 +5942,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6022,9 +5953,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6037,8 +5972,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6047,9 +5980,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6063,8 +5994,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6076,9 +6005,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6091,8 +6024,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6101,9 +6032,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6117,8 +6046,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6130,9 +6057,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6145,8 +6076,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6155,9 +6084,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6171,8 +6098,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6184,9 +6109,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6197,8 +6126,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6206,9 +6133,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6222,8 +6147,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6235,9 +6158,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6248,8 +6175,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6258,9 +6183,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6274,8 +6197,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6287,9 +6208,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6300,8 +6225,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6310,9 +6233,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6326,8 +6247,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6339,9 +6258,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6352,8 +6275,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6362,9 +6283,7 @@ export type components = {
       /**
        * @description Synology supports having personal and shared libraries but this software does not have a
        *     direct equivalent, users can add the same root path to achieve it.  As such this value
-       *     is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `all` be provided for correctness.
+       *     is ignored but defined to match the Synology API.
        * @example all
        */
       library: components['schemas']['SynologyLibraryEnum'];
@@ -6378,8 +6297,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
        *     images.  As such this value is ignored for now but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `list` be provided for correctness.
        * @example list
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6391,9 +6308,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6403,8 +6324,6 @@ export type components = {
        * @description Synology's API uses this value to route requests appropriately but this software has
        *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
        *     but defined to match the Synology API.
-       *
-       *     This endpoint requires a value of `SYNO.AudioStation.Song` be provided for correctness.
        * @example SYNO.AudioStation.Song
        */
       api: components['schemas']['SynologyApiEnum'];
@@ -6417,8 +6336,9 @@ export type components = {
        */
       id: number[];
       /**
-       * @description Synology's API uses this value to route requests appropriately. This endpoint requires
-       *     a value of `setrating` be provided for correctness.
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
        * @example setrating
        */
       method: components['schemas']['SynologyMethodEnum'];
@@ -6427,9 +6347,13 @@ export type components = {
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
-       *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
        *     require using the `debug-proxy` to capture the request and response payloads to understand the
-       *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
        *     out the GitHub Issues page and submit a request to support your version of the API.
        */
       version: number;
@@ -6605,20 +6529,18 @@ export type components = {
     /** @enum {string} */
     TrackSortFieldEnum: TrackSortFieldEnum;
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserCreateRootPathBadRequestErrorMessageEnum: UserCreateRootPathBadRequestErrorMessageEnum;
-    UserCreateRootPathBadRequestResponseDto: {
+    UserCreateRootPathBadRequestErrors: UserCreateRootPathBadRequestErrors;
+    UserCreateRootPathBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default root-path-does-not-exist-error
        */
-      message: components['schemas']['UserCreateRootPathBadRequestErrorMessageEnum'][];
+      message: components['schemas']['UserCreateRootPathBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6637,14 +6559,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserDeleteCustomDataNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserDeleteCustomDataBadRequestErrors: UserDeleteCustomDataBadRequestErrors;
+    UserDeleteCustomDataBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-track-id-error
+       */
+      message: components['schemas']['UserDeleteCustomDataBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserDeleteCustomDataNotFoundErrors: UserDeleteCustomDataNotFoundErrors;
+    UserDeleteCustomDataNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default file-not-found-error
+       * @default track-not-found-error
        */
-      message: UserDeleteCustomDataNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserDeleteCustomDataNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6659,14 +6605,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserDeleteFavoriteNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserDeleteFavoriteBadRequestErrors: UserDeleteFavoriteBadRequestErrors;
+    UserDeleteFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-favorite-item-id-error
+       */
+      message: components['schemas']['UserDeleteFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserDeleteFavoriteNotFoundErrors: UserDeleteFavoriteNotFoundErrors;
+    UserDeleteFavoriteNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default favorite-item-not-found-error
        */
-      message: UserDeleteFavoriteNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserDeleteFavoriteNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6681,14 +6651,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserDeleteRootPathNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserDeleteRootPathBadRequestErrors: UserDeleteRootPathBadRequestErrors;
+    UserDeleteRootPathBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-root-path-id-error
+       */
+      message: components['schemas']['UserDeleteRootPathBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserDeleteRootPathNotFoundErrors: UserDeleteRootPathNotFoundErrors;
+    UserDeleteRootPathNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default root-path-not-found-error
        */
-      message: UserDeleteRootPathNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserDeleteRootPathNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6713,20 +6707,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListAlbumAssociationsBadRequestErrorMessage: UserListAlbumAssociationsBadRequestErrorMessage;
-    UserListAlbumAssociationsBadRequestResponseDto: {
+    UserListAlbumAssociationsBadRequestErrors: UserListAlbumAssociationsBadRequestErrors;
+    UserListAlbumAssociationsBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListAlbumAssociationsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListAlbumAssociationsBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6753,15 +6745,19 @@ export type components = {
        */
       total: number;
     };
-    UserListAlbumAssociationsWithTracksBadRequestResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserListAlbumAssociationsWithTracksBadRequestErrors: UserListAlbumAssociationsWithTracksBadRequestErrors;
+    UserListAlbumAssociationsWithTracksBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-added-after-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-limit-error
        */
-      message: components['schemas']['UserListAlbumAssociationsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListAlbumAssociationsWithTracksBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6772,7 +6768,7 @@ export type components = {
       /** @description The list of albums that match the query parameters, which may be limited by pagination. */
       associations: components['schemas']['LibraryAssociationWithTracksDto'][];
       /**
-       * @description The offset of the first album in the albums array, which may be greater than 0 if
+       * @description The offset of the first association in the associations array, which may be greater than 0 if
        *     pagination is applied.
        */
       offset: number;
@@ -6783,26 +6779,24 @@ export type components = {
        */
       success: boolean;
       /**
-       * @description The total number of albums that match the query parameters, which may be greater
-       *     than the number of albums returned in the albums array if pagination is applied.
+       * @description The total number of associations that match the query parameters, which may be greater
+       *     than the number of associations returned in the associations array if pagination is applied.
        */
       total: number;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request.
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListAlbumsBadRequestErrorMessages: UserListAlbumsBadRequestErrorMessages;
-    UserListAlbumsBadRequestResponseDto: {
+    UserListAlbumsBadRequestErrors: UserListAlbumsBadRequestErrors;
+    UserListAlbumsBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request.
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListAlbumsBadRequestErrorMessages'][];
+      message: components['schemas']['UserListAlbumsBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6830,20 +6824,18 @@ export type components = {
       total: number;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request.
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListAlbumsWithTracksBadRequestErrorMessages: UserListAlbumsWithTracksBadRequestErrorMessages;
-    UserListAlbumsWithTracksBadRequestResponseDto: {
+    UserListAlbumsWithTracksBadRequestErrors: UserListAlbumsWithTracksBadRequestErrors;
+    UserListAlbumsWithTracksBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request.
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListAlbumsWithTracksBadRequestErrorMessages'][];
+      message: components['schemas']['UserListAlbumsWithTracksBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6871,20 +6863,18 @@ export type components = {
       total: number;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListFavoritesBadRequestErrorMessage: UserListFavoritesBadRequestErrorMessage;
-    UserListFavoritesBadRequestResponseDto: {
+    UserListFavoritesBadRequestErrors: UserListFavoritesBadRequestErrors;
+    UserListFavoritesBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
-       * @default internal-server-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-limit-error
        */
-      message: components['schemas']['UserListFavoritesBadRequestErrorMessage'][];
+      message: components['schemas']['UserListFavoritesBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6912,34 +6902,18 @@ export type components = {
       total: number;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListIndexerLogsBadRequestErrorMessageEnum: UserListIndexerLogsBadRequestErrorMessageEnum;
-    UserListIndexerLogsBadRequestResponseDto: {
+    UserListIndexerLogsBadRequestErrors: UserListIndexerLogsBadRequestErrors;
+    UserListIndexerLogsBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-account-id-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-root-path-id-error
        */
-      message: components['schemas']['UserListIndexerLogsBadRequestErrorMessageEnum'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListIndexerLogsNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default invalid-account-id-error
-       */
-      message: UserListIndexerLogsNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserListIndexerLogsBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6966,20 +6940,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListTrackAssociationsBadRequestErrorMessage: UserListTrackAssociationsBadRequestErrorMessage;
-    UserListTrackAssociationsBadRequestResponseDto: {
+    UserListTrackAssociationsBadRequestErrors: UserListTrackAssociationsBadRequestErrors;
+    UserListTrackAssociationsBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListTrackAssociationsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListTrackAssociationsBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7006,15 +6978,19 @@ export type components = {
        */
       total: number;
     };
-    UserListTrackAssociationsWithTracksBadRequestResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserListTrackAssociationsWithTracksBadRequestErrors: UserListTrackAssociationsWithTracksBadRequestErrors;
+    UserListTrackAssociationsWithTracksBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-added-after-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-limit-error
        */
-      message: components['schemas']['UserListTrackAssociationsBadRequestErrorMessage'][];
+      message: components['schemas']['UserListTrackAssociationsWithTracksBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7025,7 +7001,7 @@ export type components = {
       /** @description The list of associations that match the query parameters, which may be limited by pagination. */
       items: components['schemas']['LibraryAssociationWithTracksDto'][];
       /**
-       * @description The offset of the first association in the associations array, which may be greater than 0 if
+       * @description The offset of the first association in the items array, which may be greater than 0 if
        *     pagination is applied.
        */
       offset: number;
@@ -7037,25 +7013,23 @@ export type components = {
       success: boolean;
       /**
        * @description The total number of associations that match the query parameters, which may be greater
-       *     than the number of associations returned in the associations array if pagination is applied.
+       *     than the number of associations returned in the items array if pagination is applied.
        */
       total: number;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserListTracksBadRequestErrorMessages: UserListTracksBadRequestErrorMessages;
-    UserListTracksBadRequestResponseDto: {
+    UserListTracksBadRequestErrors: UserListTracksBadRequestErrors;
+    UserListTracksBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-added-after-error
        */
-      message: components['schemas']['UserListTracksBadRequestErrorMessages'][];
+      message: components['schemas']['UserListTracksBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7097,14 +7071,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserRetrieveAlbumNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserRetrieveAlbumBadRequestErrors: UserRetrieveAlbumBadRequestErrors;
+    UserRetrieveAlbumBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-album-id-error
+       */
+      message: components['schemas']['UserRetrieveAlbumBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserRetrieveAlbumNotFoundErrors: UserRetrieveAlbumNotFoundErrors;
+    UserRetrieveAlbumNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: UserRetrieveAlbumNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserRetrieveAlbumNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7121,14 +7119,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserRetrieveAssociationNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserRetrieveAssociationBadRequestErrors: UserRetrieveAssociationBadRequestErrors;
+    UserRetrieveAssociationBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-association-id-error
+       */
+      message: components['schemas']['UserRetrieveAssociationBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserRetrieveAssociationNotFoundErrors: UserRetrieveAssociationNotFoundErrors;
+    UserRetrieveAssociationNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default artist-not-found-error
+       * @default association-not-found-error
        */
-      message: UserRetrieveAssociationNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserRetrieveAssociationNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7171,20 +7193,18 @@ export type components = {
       updatedAt?: string;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetAlbumCustomDataBadRequestErrorMessage: UserSetAlbumCustomDataBadRequestErrorMessage;
-    UserSetAlbumCustomDataBadRequestResponseDto: {
+    UserSetAlbumCustomDataBadRequestErrors: UserSetAlbumCustomDataBadRequestErrors;
+    UserSetAlbumCustomDataBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-album-id-error
        */
-      message: components['schemas']['UserSetAlbumCustomDataBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetAlbumCustomDataBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7208,14 +7228,19 @@ export type components = {
        */
       year: number;
     };
-    UserSetAlbumCustomDataNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetAlbumCustomDataNotFoundErrors: UserSetAlbumCustomDataNotFoundErrors;
+    UserSetAlbumCustomDataNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: UserSetAlbumCustomDataNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetAlbumCustomDataNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7230,14 +7255,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserSetAlbumFavoriteNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserSetAlbumFavoriteBadRequestErrors: UserSetAlbumFavoriteBadRequestErrors;
+    UserSetAlbumFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-album-id-error
+       */
+      message: components['schemas']['UserSetAlbumFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetAlbumFavoriteNotFoundErrors: UserSetAlbumFavoriteNotFoundErrors;
+    UserSetAlbumFavoriteNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: UserSetAlbumFavoriteNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetAlbumFavoriteNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7306,20 +7355,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetArtistNameBadRequestErrorMessage: UserSetArtistNameBadRequestErrorMessage;
-    UserSetArtistNameBadRequestResponseDto: {
+    UserSetArtistNameBadRequestErrors: UserSetArtistNameBadRequestErrors;
+    UserSetArtistNameBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-artist-id-error
        */
-      message: components['schemas']['UserSetArtistNameBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetArtistNameBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7333,14 +7380,19 @@ export type components = {
        */
       name: string;
     };
-    UserSetArtistNameNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetArtistNameNotFoundErrors: UserSetArtistNameNotFoundErrors;
+    UserSetArtistNameNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default artist-not-found-error
        */
-      message: UserSetArtistNameNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetArtistNameNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7355,14 +7407,38 @@ export type components = {
        */
       success: boolean;
     };
-    UserSetAssociationFavoriteNotFoundResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    UserSetAssociationFavoriteBadRequestErrors: UserSetAssociationFavoriteBadRequestErrors;
+    UserSetAssociationFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-association-type-error
+       */
+      message: components['schemas']['UserSetAssociationFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetAssociationFavoriteNotFoundErrors: UserSetAssociationFavoriteNotFoundErrors;
+    UserSetAssociationFavoriteNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default association-not-found-error
        */
-      message: UserSetAssociationFavoriteNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetAssociationFavoriteNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7378,20 +7454,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetComposerNameBadRequestErrorMessage: UserSetComposerNameBadRequestErrorMessage;
-    UserSetComposerNameBadRequestResponseDto: {
+    UserSetComposerNameBadRequestErrors: UserSetComposerNameBadRequestErrors;
+    UserSetComposerNameBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-association-id-error
        */
-      message: components['schemas']['UserSetComposerNameBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetComposerNameBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7405,14 +7479,19 @@ export type components = {
        */
       name: string;
     };
-    UserSetComposerNameNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetComposerNameNotFoundErrors: UserSetComposerNameNotFoundErrors;
+    UserSetComposerNameNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default composer-not-found-error
        */
-      message: UserSetComposerNameNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetComposerNameNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7428,20 +7507,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetCustomDataBadRequestErrorMessage: UserSetCustomDataBadRequestErrorMessage;
-    UserSetCustomDataBadRequestResponseDto: {
+    UserSetCustomDataBadRequestErrors: UserSetCustomDataBadRequestErrors;
+    UserSetCustomDataBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-track-id-error
        */
-      message: components['schemas']['UserSetCustomDataBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetCustomDataBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7510,14 +7587,19 @@ export type components = {
        */
       year?: number;
     };
-    UserSetCustomDataNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetCustomDataNotFoundErrors: UserSetCustomDataNotFoundErrors;
+    UserSetCustomDataNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default file-not-found-error
+       * @default track-not-found-error
        */
-      message: UserSetCustomDataNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetCustomDataNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7532,14 +7614,19 @@ export type components = {
        */
       success: boolean;
     };
-    UserSetFolderFavoriteNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetFolderFavoriteNotFoundErrors: UserSetFolderFavoriteNotFoundErrors;
+    UserSetFolderFavoriteNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default folder-not-found-error
        */
-      message: UserSetFolderFavoriteNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetFolderFavoriteNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7555,20 +7642,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetGenreNameBadRequestErrorMessage: UserSetGenreNameBadRequestErrorMessage;
-    UserSetGenreNameBadRequestResponseDto: {
+    UserSetGenreNameBadRequestErrors: UserSetGenreNameBadRequestErrors;
+    UserSetGenreNameBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-genre-id-error
        */
-      message: components['schemas']['UserSetGenreNameBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetGenreNameBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7582,14 +7667,19 @@ export type components = {
        */
       name: string;
     };
-    UserSetGenreNameNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetGenreNameNotFoundErrors: UserSetGenreNameNotFoundErrors;
+    UserSetGenreNameNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default genre-not-found-error
        */
-      message: UserSetGenreNameNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetGenreNameNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7605,20 +7695,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetTrackCustomDataBadRequestErrorMessage: UserSetTrackCustomDataBadRequestErrorMessage;
-    UserSetTrackCustomDataBadRequestResponseDto: {
+    UserSetTrackCustomDataBadRequestErrors: UserSetTrackCustomDataBadRequestErrors;
+    UserSetTrackCustomDataBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-track-id-error
        */
-      message: components['schemas']['UserSetTrackCustomDataBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetTrackCustomDataBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7674,14 +7762,19 @@ export type components = {
        */
       year?: number;
     };
-    UserSetTrackCustomDataNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetTrackCustomDataNotFoundErrors: UserSetTrackCustomDataNotFoundErrors;
+    UserSetTrackCustomDataNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default file-not-found-error
+       * @default track-not-found-error
        */
-      message: UserSetTrackCustomDataNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetTrackCustomDataNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7696,14 +7789,19 @@ export type components = {
        */
       success: boolean;
     };
-    UserSetTrackFavoriteNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetTrackFavoriteNotFoundErrors: UserSetTrackFavoriteNotFoundErrors;
+    UserSetTrackFavoriteNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default track-not-found-error
        */
-      message: UserSetTrackFavoriteNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetTrackFavoriteNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7719,20 +7817,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetTrackRatingBadRequestErrorMessage: UserSetTrackRatingBadRequestErrorMessage;
-    UserSetTrackRatingBadRequestResponseDto: {
+    UserSetTrackRatingBadRequestErrors: UserSetTrackRatingBadRequestErrors;
+    UserSetTrackRatingBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
-       * @default invalid-rating-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-track-id-error
        */
-      message: components['schemas']['UserSetTrackRatingBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetTrackRatingBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7746,14 +7842,19 @@ export type components = {
        */
       rating: number;
     };
-    UserSetTrackRatingNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserSetTrackRatingNotFoundErrors: UserSetTrackRatingNotFoundErrors;
+    UserSetTrackRatingNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default track-not-found-error
        */
-      message: UserSetTrackRatingNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserSetTrackRatingNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7768,14 +7869,19 @@ export type components = {
        */
       success: boolean;
     };
-    UserStreamFileNotFoundResponseDto: {
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    UserStreamFileNotFoundErrors: UserStreamFileNotFoundErrors;
+    UserStreamFileNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default file-not-found-error
        */
-      message: UserStreamFileNotFoundResponseDtoMessage[];
+      message: components['schemas']['UserStreamFileNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7783,20 +7889,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserUpdatePasswordBadRequestErrorMessageEnum: UserUpdatePasswordBadRequestErrorMessageEnum;
-    UserUpdatePasswordBadRequestResponseDto: {
+    UserUpdatePasswordBadRequestErrors: UserUpdatePasswordBadRequestErrors;
+    UserUpdatePasswordBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A validation or other error occurred during the processing of the request.
        * @default invalid-password-error
        */
-      message: components['schemas']['UserUpdatePasswordBadRequestErrorMessageEnum'][];
+      message: components['schemas']['UserUpdatePasswordBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -9030,7 +9134,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserCreateRootPathBadRequestResponseDto'];
+          'application/json': components['schemas']['UserCreateRootPathBadRequestResponse'];
         };
       };
       403: {
@@ -9076,7 +9180,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserDeleteCustomDataBadRequestResponse'];
         };
       };
       403: {
@@ -9092,7 +9196,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserDeleteCustomDataNotFoundResponseDto'];
+          'application/json': components['schemas']['UserDeleteCustomDataNotFoundResponse'];
         };
       };
       500: {
@@ -9130,7 +9234,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserDeleteFavoriteBadRequestResponse'];
         };
       };
       403: {
@@ -9146,7 +9250,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserDeleteFavoriteNotFoundResponseDto'];
+          'application/json': components['schemas']['UserDeleteFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -9184,7 +9288,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserDeleteRootPathBadRequestResponse'];
         };
       };
       403: {
@@ -9200,7 +9304,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserDeleteRootPathNotFoundResponseDto'];
+          'application/json': components['schemas']['UserDeleteRootPathNotFoundResponse'];
         };
       };
       500: {
@@ -9252,14 +9356,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
     };
@@ -9316,8 +9412,8 @@ export interface operations {
          */
         addedAfter?: string;
         /**
-         * @description Optional filter for the date the artist was added to the library, which will do an exact match against
-         *     the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
+         * @description Optional filter for the date the association was added to the library, which will do an exact match against
+         *     the date the association was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
         associationType: components['schemas']['AssociationTypeEnum'];
@@ -9357,7 +9453,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumAssociationsBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListAlbumAssociationsBadRequestResponse'];
         };
       };
       403: {
@@ -9387,8 +9483,8 @@ export interface operations {
          */
         addedAfter?: string;
         /**
-         * @description Optional filter for the date the artist was added to the library, which will do an exact match against
-         *     the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
+         * @description Optional filter for the date the association was added to the library, which will do an exact match against
+         *     the date the association was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
         associationType: components['schemas']['AssociationTypeEnum'];
@@ -9428,7 +9524,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumAssociationsWithTracksBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListAlbumAssociationsWithTracksBadRequestResponse'];
         };
       };
       403: {
@@ -9533,7 +9629,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumsBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListAlbumsBadRequestResponse'];
         };
       };
       403: {
@@ -9638,7 +9734,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumsWithTracksBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListAlbumsWithTracksBadRequestResponse'];
         };
       };
       403: {
@@ -9684,7 +9780,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListFavoritesBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListFavoritesBadRequestResponse'];
         };
       };
       403: {
@@ -9730,7 +9826,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListIndexerLogsBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListIndexerLogsBadRequestResponse'];
         };
       };
       403: {
@@ -9739,14 +9835,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserListIndexerLogsNotFoundResponseDto'];
         };
       };
       500: {
@@ -9852,7 +9940,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackAssociationsBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListTrackAssociationsBadRequestResponse'];
         };
       };
       403: {
@@ -9923,7 +10011,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackAssociationsWithTracksBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListTrackAssociationsWithTracksBadRequestResponse'];
         };
       };
       403: {
@@ -10028,7 +10116,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTracksBadRequestResponseDto'];
+          'application/json': components['schemas']['UserListTracksBadRequestResponse'];
         };
       };
       403: {
@@ -10117,7 +10205,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserRetrieveAlbumBadRequestResponse'];
         };
       };
       403: {
@@ -10133,7 +10221,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAlbumNotFoundResponseDto'];
+          'application/json': components['schemas']['UserRetrieveAlbumNotFoundResponse'];
         };
       };
       500: {
@@ -10171,7 +10259,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserRetrieveAssociationBadRequestResponse'];
         };
       };
       403: {
@@ -10187,7 +10275,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAssociationNotFoundResponseDto'];
+          'application/json': components['schemas']['UserRetrieveAssociationNotFoundResponse'];
         };
       };
       500: {
@@ -10229,7 +10317,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumCustomDataBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetAlbumCustomDataBadRequestResponse'];
         };
       };
       403: {
@@ -10245,7 +10333,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumCustomDataNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetAlbumCustomDataNotFoundResponse'];
         };
       };
       500: {
@@ -10283,7 +10371,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetAlbumFavoriteBadRequestResponse'];
         };
       };
       403: {
@@ -10299,7 +10387,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumFavoriteNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetAlbumFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10399,7 +10487,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetArtistNameBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetArtistNameBadRequestResponse'];
         };
       };
       403: {
@@ -10415,7 +10503,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetArtistNameNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetArtistNameNotFoundResponse'];
         };
       };
       500: {
@@ -10454,7 +10542,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetAssociationFavoriteBadRequestResponse'];
         };
       };
       403: {
@@ -10470,7 +10558,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAssociationFavoriteNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetAssociationFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10512,7 +10600,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetComposerNameBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetComposerNameBadRequestResponse'];
         };
       };
       403: {
@@ -10528,7 +10616,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetComposerNameNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetComposerNameNotFoundResponse'];
         };
       };
       500: {
@@ -10570,7 +10658,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetCustomDataBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetCustomDataBadRequestResponse'];
         };
       };
       403: {
@@ -10586,7 +10674,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetCustomDataNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetCustomDataNotFoundResponse'];
         };
       };
       500: {
@@ -10639,7 +10727,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetFolderFavoriteNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetFolderFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10681,7 +10769,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetGenreNameBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetGenreNameBadRequestResponse'];
         };
       };
       403: {
@@ -10697,7 +10785,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetGenreNameNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetGenreNameNotFoundResponse'];
         };
       };
       500: {
@@ -10739,7 +10827,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackCustomDataBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetTrackCustomDataBadRequestResponse'];
         };
       };
       403: {
@@ -10755,7 +10843,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackCustomDataNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetTrackCustomDataNotFoundResponse'];
         };
       };
       500: {
@@ -10809,7 +10897,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackFavoriteNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetTrackFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10851,7 +10939,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackRatingBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetTrackRatingBadRequestResponse'];
         };
       };
       403: {
@@ -10867,7 +10955,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackRatingNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetTrackRatingNotFoundResponse'];
         };
       };
       500: {
@@ -10930,10 +11018,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'audio/flac': components['schemas']['UserStreamFileNotFoundResponseDto'];
-          'audio/mpeg': components['schemas']['UserStreamFileNotFoundResponseDto'];
-          'audio/ogg': components['schemas']['UserStreamFileNotFoundResponseDto'];
-          'audio/wav': components['schemas']['UserStreamFileNotFoundResponseDto'];
+          'audio/flac': components['schemas']['UserStreamFileNotFoundResponse'];
+          'audio/mpeg': components['schemas']['UserStreamFileNotFoundResponse'];
+          'audio/ogg': components['schemas']['UserStreamFileNotFoundResponse'];
+          'audio/wav': components['schemas']['UserStreamFileNotFoundResponse'];
         };
       };
       500: {
@@ -10975,7 +11063,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserUpdatePasswordBadRequestResponseDto'];
+          'application/json': components['schemas']['UserUpdatePasswordBadRequestResponse'];
         };
       };
       403: {
@@ -11887,16 +11975,12 @@ export interface operations {
          * @description Synology's API uses this value to route requests appropriately but this software has
          *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
          *     but defined to match the Synology API.
-         *
-         *     This endpoint requires a value of `SYNO.AudioStation.Proxy` be provided for correctness.
          */
         api: components['schemas']['SynologyApiEnum'];
         /**
          * @description Synology's API uses this value to route requests appropriately but for AudioStation the
          *     endpoints have limited functionality, all music-related endpoints `list` except cover
          *     images.  As such this value is ignored for now but defined to match the Synology API.
-         *
-         *     This endpoint requires a value of `stream` be provided for correctness.
          */
         method: components['schemas']['SynologyMethodEnum'];
         /** @description The SHOUTcast stream ID */
@@ -11904,9 +11988,13 @@ export interface operations {
         /**
          * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
          *     currently only supports the latest version of the API for each endpoint and ignores this value
-         *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+         *     for now.
+         *
+         *     It's possible to build in support for prior versions of an endpoint but that would
          *     require using the `debug-proxy` to capture the request and response payloads to understand the
-         *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+         *     differences between versions.
+         *
+         *     If you are running an older DSM NAS and wish to help then check
          *     out the GitHub Issues page and submit a request to support your version of the API.
          */
         version: number;
@@ -12186,8 +12274,6 @@ export interface operations {
          * @description Synology's API uses this value to route requests appropriately but this software has
          *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
          *     but defined to match the Synology API.
-         *
-         *     This endpoint requires a value of `SYNO.AudioStation.Stream` be provided for correctness.
          */
         api: components['schemas']['SynologyApiEnum'];
         /**
@@ -12197,19 +12283,21 @@ export interface operations {
          */
         id: number;
         /**
-         * @description Synology's API uses this value to route requests appropriately but NestJS controllers
-         *     handle the routing between URL paths so this value is ignored for now but defined to
-         *     match the Synology API.
-         *
-         *     This endpoint requires a value of `stream` be provided for correctness.
+         * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+         *     endpoints have limited functionality, all music-related endpoints `list` except cover
+         *     images.  As such this value is ignored for now but defined to match the Synology API.
          */
         method: components['schemas']['SynologyMethodEnum'];
         /**
          * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
          *     currently only supports the latest version of the API for each endpoint and ignores this value
-         *     for now.  It's possible to build in support for prior versions of an endpoint but that would
+         *     for now.
+         *
+         *     It's possible to build in support for prior versions of an endpoint but that would
          *     require using the `debug-proxy` to capture the request and response payloads to understand the
-         *     differences between versions.  If you are running an older DSM NAS and wish to help then check
+         *     differences between versions.
+         *
+         *     If you are running an older DSM NAS and wish to help then check
          *     out the GitHub Issues page and submit a request to support your version of the API.
          */
         version: number;
@@ -12615,151 +12703,180 @@ export enum TrackSortFieldEnum {
   title = 'title',
   year = 'year',
 }
-export enum UserCreateRootPathBadRequestErrorMessageEnum {
+export enum UserCreateRootPathBadRequestErrors {
   root_path_does_not_exist_error = 'root-path-does-not-exist-error',
   duplicate_root_path_error = 'duplicate-root-path-error',
+  invalid_root_path_error = 'invalid-root-path-error',
 }
-export enum UserDeleteCustomDataNotFoundResponseDtoMessage {
-  file_not_found_error = 'file-not-found-error',
+export enum UserDeleteCustomDataBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
 }
-export enum UserDeleteFavoriteNotFoundResponseDtoMessage {
+export enum UserDeleteCustomDataNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum UserDeleteFavoriteBadRequestErrors {
+  invalid_favorite_item_id_error = 'invalid-favorite-item-id-error',
+}
+export enum UserDeleteFavoriteNotFoundErrors {
   favorite_item_not_found_error = 'favorite-item-not-found-error',
 }
-export enum UserDeleteRootPathNotFoundResponseDtoMessage {
+export enum UserDeleteRootPathBadRequestErrors {
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
+export enum UserDeleteRootPathNotFoundErrors {
   root_path_not_found_error = 'root-path-not-found-error',
 }
-export enum UserListAlbumAssociationsBadRequestErrorMessage {
+export enum UserListAlbumAssociationsBadRequestErrors {
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_error = 'invalid-filter-error',
   invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_genre_error = 'invalid-genre-error',
+  invalid_filter_error = 'invalid-filter-error',
   invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_genre_error = 'invalid-genre-error',
   invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
-export enum UserListAlbumsBadRequestErrorMessages {
+export enum UserListAlbumAssociationsWithTracksBadRequestErrors {
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
-  invalid_artist_error = 'invalid-artist-error',
-  invalid_artist_length_error = 'invalid-artist-length-error',
-  invalid_composer_error = 'invalid-composer-error',
-  invalid_composer_length_error = 'invalid-composer-length-error',
-  invalid_filter_error = 'invalid-filter-error',
   invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_genre_error = 'invalid-genre-error',
+  invalid_filter_error = 'invalid-filter-error',
   invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+}
+export enum UserListAlbumsBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_artist_length_error = 'invalid-artist-length-error',
+  invalid_artist_error = 'invalid-artist-error',
+  invalid_composer_length_error = 'invalid-composer-length-error',
+  invalid_composer_error = 'invalid-composer-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
   invalid_max_rating_error = 'invalid-max-rating-error',
   invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
   invalid_released_after_error = 'invalid-released-after-error',
   invalid_released_before_error = 'invalid-released-before-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
   invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
   invalid_year_error = 'invalid-year-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
-export enum UserListAlbumsWithTracksBadRequestErrorMessages {
+export enum UserListAlbumsWithTracksBadRequestErrors {
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
-  invalid_artist_error = 'invalid-artist-error',
   invalid_artist_length_error = 'invalid-artist-length-error',
-  invalid_composer_error = 'invalid-composer-error',
+  invalid_artist_error = 'invalid-artist-error',
   invalid_composer_length_error = 'invalid-composer-length-error',
-  invalid_filter_error = 'invalid-filter-error',
+  invalid_composer_error = 'invalid-composer-error',
   invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_genre_error = 'invalid-genre-error',
+  invalid_filter_error = 'invalid-filter-error',
   invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
+  invalid_genre_error = 'invalid-genre-error',
   invalid_max_rating_error = 'invalid-max-rating-error',
   invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
   invalid_released_after_error = 'invalid-released-after-error',
   invalid_released_before_error = 'invalid-released-before-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
   invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
   invalid_year_error = 'invalid-year-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
-export enum UserListFavoritesBadRequestErrorMessage {
-  internal_server_error = 'internal-server-error',
+export enum UserListFavoritesBadRequestErrors {
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
-export enum UserListIndexerLogsBadRequestErrorMessageEnum {
-  invalid_account_id_error = 'invalid-account-id-error',
+export enum UserListIndexerLogsBadRequestErrors {
   invalid_root_path_id_error = 'invalid-root-path-id-error',
   invalid_search_length_error = 'invalid-search-length-error',
 }
-export enum UserListIndexerLogsNotFoundResponseDtoMessage {
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
-}
-export enum UserListTrackAssociationsBadRequestErrorMessage {
+export enum UserListTrackAssociationsBadRequestErrors {
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_error = 'invalid-filter-error',
   invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_genre_error = 'invalid-genre-error',
+  invalid_filter_error = 'invalid-filter-error',
   invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_genre_error = 'invalid-genre-error',
   invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
-export enum UserListTracksBadRequestErrorMessages {
+export enum UserListTrackAssociationsWithTracksBadRequestErrors {
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
   invalid_added_after_error = 'invalid-added-after-error',
   invalid_added_before_error = 'invalid-added-before-error',
-  invalid_album_error = 'invalid-album-error',
-  invalid_album_length_error = 'invalid-album-length-error',
-  invalid_artist_error = 'invalid-artist-error',
-  invalid_artist_length_error = 'invalid-artist-length-error',
-  invalid_composer_error = 'invalid-composer-error',
-  invalid_composer_length_error = 'invalid-composer-length-error',
-  invalid_filter_error = 'invalid-filter-error',
   invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_genre_error = 'invalid-genre-error',
+  invalid_filter_error = 'invalid-filter-error',
   invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_limit_range_error = 'invalid-limit-range-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+}
+export enum UserListTracksBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_album_length_error = 'invalid-album-length-error',
+  invalid_album_error = 'invalid-album-error',
+  invalid_artist_length_error = 'invalid-artist-length-error',
+  invalid_artist_error = 'invalid-artist-error',
+  invalid_composer_length_error = 'invalid-composer-length-error',
+  invalid_composer_error = 'invalid-composer-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
   invalid_max_rating_error = 'invalid-max-rating-error',
   invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_offset_range_error = 'invalid-offset-range-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
   invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
   invalid_year_error = 'invalid-year-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
-export enum UserRetrieveAlbumNotFoundResponseDtoMessage {
+export enum UserRetrieveAlbumBadRequestErrors {
+  invalid_album_id_error = 'invalid-album-id-error',
+}
+export enum UserRetrieveAlbumNotFoundErrors {
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserRetrieveAssociationNotFoundResponseDtoMessage {
-  artist_not_found_error = 'artist-not-found-error',
+export enum UserRetrieveAssociationBadRequestErrors {
+  invalid_association_id_error = 'invalid-association-id-error',
+}
+export enum UserRetrieveAssociationNotFoundErrors {
+  association_not_found_error = 'association-not-found-error',
 }
 export enum UserRoleEnum {
   user = 'user',
   admin = 'admin',
 }
-export enum UserSetAlbumCustomDataBadRequestErrorMessage {
+export enum UserSetAlbumCustomDataBadRequestErrors {
   invalid_album_id_error = 'invalid-album-id-error',
-  invalid_artists_error = 'invalid-artists-error',
   invalid_artists_length_error = 'invalid-artists-length-error',
-  invalid_title_error = 'invalid-title-error',
+  invalid_artists_error = 'invalid-artists-error',
   invalid_title_length_error = 'invalid-title-length-error',
-  invalid_year_error = 'invalid-year-error',
+  invalid_title_error = 'invalid-title-error',
   invalid_year_range_error = 'invalid-year-range-error',
+  invalid_year_error = 'invalid-year-error',
 }
-export enum UserSetAlbumCustomDataNotFoundResponseDtoMessage {
+export enum UserSetAlbumCustomDataNotFoundErrors {
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserSetAlbumFavoriteNotFoundResponseDtoMessage {
+export enum UserSetAlbumFavoriteBadRequestErrors {
+  invalid_album_id_error = 'invalid-album-id-error',
+}
+export enum UserSetAlbumFavoriteNotFoundErrors {
   album_not_found_error = 'album-not-found-error',
 }
 export enum UserSetAlbumRatingBadRequestErrors {
@@ -12771,102 +12888,105 @@ export enum UserSetAlbumRatingBadRequestErrors {
 export enum UserSetAlbumRatingNotFoundErrors {
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserSetArtistNameBadRequestErrorMessage {
+export enum UserSetArtistNameBadRequestErrors {
   invalid_artist_id_error = 'invalid-artist-id-error',
-  invalid_name_error = 'invalid-name-error',
   invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
 }
-export enum UserSetArtistNameNotFoundResponseDtoMessage {
+export enum UserSetArtistNameNotFoundErrors {
   artist_not_found_error = 'artist-not-found-error',
 }
-export enum UserSetAssociationFavoriteNotFoundResponseDtoMessage {
+export enum UserSetAssociationFavoriteBadRequestErrors {
+  invalid_association_type_error = 'invalid-association-type-error',
+  invalid_association_id_error = 'invalid-association-id-error',
+}
+export enum UserSetAssociationFavoriteNotFoundErrors {
   association_not_found_error = 'association-not-found-error',
 }
-export enum UserSetComposerNameBadRequestErrorMessage {
+export enum UserSetComposerNameBadRequestErrors {
   invalid_association_id_error = 'invalid-association-id-error',
-  invalid_name_error = 'invalid-name-error',
   invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
 }
-export enum UserSetComposerNameNotFoundResponseDtoMessage {
+export enum UserSetComposerNameNotFoundErrors {
   composer_not_found_error = 'composer-not-found-error',
 }
-export enum UserSetCustomDataBadRequestErrorMessage {
+export enum UserSetCustomDataBadRequestErrors {
   invalid_track_id_error = 'invalid-track-id-error',
-  invalid_album_artists_error = 'invalid-album-artists-error',
   invalid_album_artists_length_error = 'invalid-album-artists-length-error',
-  invalid_album_title_error = 'invalid-album-title-error',
+  invalid_album_artists_error = 'invalid-album-artists-error',
   invalid_album_title_length_error = 'invalid-album-title-length-error',
-  invalid_artists_error = 'invalid-artists-error',
+  invalid_album_title_error = 'invalid-album-title-error',
   invalid_artists_length_error = 'invalid-artists-length-error',
-  invalid_comment_error = 'invalid-comment-error',
-  invalid_comment_length_error = 'invalid-comment-length-error',
-  invalid_composers_error = 'invalid-composers-error',
-  invalid_composers_length_error = 'invalid-composers-length-error',
-  invalid_disc_number_error = 'invalid-disc-number-error',
-  invalid_disc_number_range_error = 'invalid-disc-number-range-error',
-  invalid_genres_error = 'invalid-genres-error',
-  invalid_genres_length_error = 'invalid-genres-length-error',
-  invalid_title_error = 'invalid-title-error',
-  invalid_title_length_error = 'invalid-title-length-error',
-  invalid_track_number_error = 'invalid-track-number-error',
-  invalid_track_number_range_error = 'invalid-track-number-range-error',
-  invalid_year_error = 'invalid-year-error',
-  invalid_year_range_error = 'invalid-year-range-error',
-}
-export enum UserSetCustomDataNotFoundResponseDtoMessage {
-  file_not_found_error = 'file-not-found-error',
-}
-export enum UserSetFolderFavoriteNotFoundResponseDtoMessage {
-  folder_not_found_error = 'folder-not-found-error',
-}
-export enum UserSetGenreNameBadRequestErrorMessage {
-  invalid_genre_id_error = 'invalid-genre-id-error',
-  invalid_name_error = 'invalid-name-error',
-  invalid_name_length_error = 'invalid-name-length-error',
-}
-export enum UserSetGenreNameNotFoundResponseDtoMessage {
-  genre_not_found_error = 'genre-not-found-error',
-}
-export enum UserSetTrackCustomDataBadRequestErrorMessage {
-  invalid_track_id_error = 'invalid-track-id-error',
   invalid_artists_error = 'invalid-artists-error',
-  invalid_artists_length_error = 'invalid-artists-length-error',
-  invalid_comment_error = 'invalid-comment-error',
   invalid_comment_length_error = 'invalid-comment-length-error',
-  invalid_composers_error = 'invalid-composers-error',
+  invalid_comment_error = 'invalid-comment-error',
   invalid_composers_length_error = 'invalid-composers-length-error',
-  invalid_disc_number_error = 'invalid-disc-number-error',
+  invalid_composers_error = 'invalid-composers-error',
   invalid_disc_number_range_error = 'invalid-disc-number-range-error',
-  invalid_genres_error = 'invalid-genres-error',
+  invalid_disc_number_error = 'invalid-disc-number-error',
   invalid_genres_length_error = 'invalid-genres-length-error',
-  invalid_title_error = 'invalid-title-error',
+  invalid_genres_error = 'invalid-genres-error',
   invalid_title_length_error = 'invalid-title-length-error',
-  invalid_track_number_error = 'invalid-track-number-error',
+  invalid_title_error = 'invalid-title-error',
   invalid_track_number_range_error = 'invalid-track-number-range-error',
-  invalid_year_error = 'invalid-year-error',
+  invalid_track_number_error = 'invalid-track-number-error',
   invalid_year_range_error = 'invalid-year-range-error',
+  invalid_year_error = 'invalid-year-error',
 }
-export enum UserSetTrackCustomDataNotFoundResponseDtoMessage {
-  file_not_found_error = 'file-not-found-error',
-}
-export enum UserSetTrackFavoriteNotFoundResponseDtoMessage {
+export enum UserSetCustomDataNotFoundErrors {
   track_not_found_error = 'track-not-found-error',
 }
-export enum UserSetTrackRatingBadRequestErrorMessage {
-  invalid_track_id_error = 'invalid-track-id-error',
-  invalid_album_id_error = 'invalid-album-id-error',
-  invalid_rating_error = 'invalid-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_max_rating_error = 'invalid-max-rating-error',
+export enum UserSetFolderFavoriteNotFoundErrors {
+  folder_not_found_error = 'folder-not-found-error',
 }
-export enum UserSetTrackRatingNotFoundResponseDtoMessage {
+export enum UserSetGenreNameBadRequestErrors {
+  invalid_genre_id_error = 'invalid-genre-id-error',
+  invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
+}
+export enum UserSetGenreNameNotFoundErrors {
+  genre_not_found_error = 'genre-not-found-error',
+}
+export enum UserSetTrackCustomDataBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+  invalid_artists_length_error = 'invalid-artists-length-error',
+  invalid_artists_error = 'invalid-artists-error',
+  invalid_comment_length_error = 'invalid-comment-length-error',
+  invalid_comment_error = 'invalid-comment-error',
+  invalid_composers_length_error = 'invalid-composers-length-error',
+  invalid_composers_error = 'invalid-composers-error',
+  invalid_disc_number_range_error = 'invalid-disc-number-range-error',
+  invalid_disc_number_error = 'invalid-disc-number-error',
+  invalid_genres_length_error = 'invalid-genres-length-error',
+  invalid_genres_error = 'invalid-genres-error',
+  invalid_title_length_error = 'invalid-title-length-error',
+  invalid_title_error = 'invalid-title-error',
+  invalid_track_number_range_error = 'invalid-track-number-range-error',
+  invalid_track_number_error = 'invalid-track-number-error',
+  invalid_year_range_error = 'invalid-year-range-error',
+  invalid_year_error = 'invalid-year-error',
+}
+export enum UserSetTrackCustomDataNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum UserSetTrackFavoriteNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum UserSetTrackRatingBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+  invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_rating_error = 'invalid-rating-error',
+}
+export enum UserSetTrackRatingNotFoundErrors {
   track_not_found_error = 'track-not-found-error',
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserStreamFileNotFoundResponseDtoMessage {
+export enum UserStreamFileNotFoundErrors {
   file_not_found_error = 'file-not-found-error',
 }
-export enum UserUpdatePasswordBadRequestErrorMessageEnum {
+export enum UserUpdatePasswordBadRequestErrors {
   invalid_password_error = 'invalid-password-error',
   invalid_password_length_error = 'invalid-password-length-error',
 }

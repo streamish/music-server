@@ -1,7 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Body, HttpStatus, Post } from '@nestjs/common';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
-import { SynologyMethodEnum } from './enums';
+import { SynologyMethodEnum } from './synology.enums';
 import {
   SynologyPlaylistAddOrRemoveItemBodyDto,
   SynologyPlaylistCreateNormalBodyDto,
@@ -19,7 +19,7 @@ import {
   SynologyPlaylistWithItemsResponseDto,
 } from './dtos/playlist.cgi.dto';
 import { SynologyPlaylistService } from './playlist.service';
-import { SynologySuccessResponseDto } from './dtos/synology.dto';
+import { SynologySuccessResponseDto } from './synology.response.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 
