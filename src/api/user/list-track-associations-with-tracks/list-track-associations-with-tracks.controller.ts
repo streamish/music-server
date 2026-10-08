@@ -3,11 +3,11 @@ import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
-  UserListTrackAssociationsWithTracksBadRequestResponseDto,
   UserListTrackAssociationsWithTracksQueryDto,
   UserListTrackAssociationsWithTracksResponseDto,
 } from './list-track-associations-with-tracks.dto';
 import { UserListTrackAssociationsWithTracksService } from './list-track-associations-with-tracks.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserListTrackAssociationsWithTracksController {
@@ -22,7 +22,7 @@ export class UserListTrackAssociationsWithTracksController {
     includeTrackInformation: true,
     responses: {
       [HttpStatus.OK]: UserListTrackAssociationsWithTracksResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserListTrackAssociationsWithTracksBadRequestResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserListTrackAssociationsWithTracksQueryDto),
     },
   })
   async get(

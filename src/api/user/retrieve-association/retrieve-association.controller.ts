@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserRetrieveAssociationNotFoundResponseDto,
-  UserRetrieveAssociationQueryDto,
-  UserRetrieveAssociationResponseDto,
-} from './retrieve-association.dto';
+import { UserRetrieveAssociationQueryDto, UserRetrieveAssociationResponseDto } from './retrieve-association.dto';
 import { UserRetrieveAssociationService } from './retrieve-association.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserRetrieveAssociationController {
@@ -21,7 +19,8 @@ export class UserRetrieveAssociationController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserRetrieveAssociationResponseDto,
-      [HttpStatus.NOT_FOUND]: UserRetrieveAssociationNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserRetrieveAssociationQueryDto),
     },
   })
   async get(@User() user: AccountEntity, @Query() query: UserRetrieveAssociationQueryDto) {

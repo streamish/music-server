@@ -1,13 +1,14 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
-  UserSetAssociationFavoriteNotFoundResponseDto,
   UserSetAssociationFavoriteQueryDto,
   UserSetAssociationFavoriteResponseDto,
 } from './set-association-favorite.dto';
 import { UserSetAssociationFavoriteService } from './set-association-favorite.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetAssociationFavoriteController {
@@ -21,7 +22,8 @@ export class UserSetAssociationFavoriteController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetAssociationFavoriteResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetAssociationFavoriteNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserSetAssociationFavoriteQueryDto),
     },
   })
   async put(

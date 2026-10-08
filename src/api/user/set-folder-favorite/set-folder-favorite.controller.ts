@@ -1,12 +1,9 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserSetFolderFavoriteNotFoundResponseDto,
-  UserSetFolderFavoriteQueryDto,
-  UserSetFolderFavoriteResponseDto,
-} from './set-folder-favorite.dto';
+import { UserSetFolderFavoriteQueryDto, UserSetFolderFavoriteResponseDto } from './set-folder-favorite.dto';
 import { UserSetFolderFavoriteService } from './set-folder-favorite.service';
 
 @UserController()
@@ -19,7 +16,7 @@ export class UserSetFolderFavoriteController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetFolderFavoriteResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetFolderFavoriteNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.FOLDER_NOT_FOUND_ERROR],
     },
   })
   async put(@User() user: AccountEntity, @Query() query: UserSetFolderFavoriteQueryDto) {

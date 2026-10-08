@@ -1,10 +1,9 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, SuccessResponseDto } from 'src/api/response.dto';
-import { ErrorCodes } from 'src/constants/error-codes';
 import { IsInt } from 'class-validator';
 import { LibraryFavoriteDto } from 'src/library/dtos/library.favorite.dto';
 import { PaginationQueryDto } from 'src/api/request.dto';
+import { SuccessResponseDto } from 'src/api/response.dto';
 
 export class UserListFavoritesQueryDto extends PaginationQueryDto {}
 
@@ -31,18 +30,4 @@ export class UserListFavoritesResponseDto extends SuccessResponseDto {
    */
   @IsInt()
   declare total: number;
-}
-
-export class UserListFavoritesBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.INTERNAL_SERVER_ERROR],
-    enumName: 'UserListFavoritesBadRequestErrorMessage',
-    default: ErrorCodes.INTERNAL_SERVER_ERROR,
-  })
-  declare message: ErrorCodes[];
 }

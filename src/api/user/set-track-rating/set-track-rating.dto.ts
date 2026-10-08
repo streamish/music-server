@@ -1,17 +1,12 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
+import { BadRequestResponseDto, NotFoundResponseDtoFactory, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { IsInt, Max, Min } from 'class-validator';
 import type { RatingOrUnset } from 'src/types';
 
-export class UserSetTrackRatingQueryDto {
-  /**
-   * The ID of a track to rate
-   */
-  @IsInt({ message: ErrorCodes.INVALID_TRACK_ID_ERROR })
-  declare id: number;
-}
+export class UserSetTrackRatingQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_TRACK_ID_ERROR) {}
 
 export class UserSetTrackRatingBodyDto {
   /**
@@ -31,19 +26,10 @@ export class UserSetTrackRatingBodyDto {
 
 export class UserSetTrackRatingResponseDto extends SuccessResponseDto {}
 
-export class UserSetTrackRatingNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.TRACK_NOT_FOUND_ERROR, ErrorCodes.ALBUM_NOT_FOUND_ERROR],
-    enumName: 'UserSetTrackRatingNotFoundErrorMessage',
-    default: ErrorCodes.TRACK_NOT_FOUND_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
+export class UserSetTrackRatingNotFoundResponseDto extends NotFoundResponseDtoFactory('', '', [
+  ErrorCodes.TRACK_NOT_FOUND_ERROR,
+  ErrorCodes.ALBUM_NOT_FOUND_ERROR,
+]) {}
 
 export class UserSetTrackRatingBadRequestResponseDto extends BadRequestResponseDto {
   /**

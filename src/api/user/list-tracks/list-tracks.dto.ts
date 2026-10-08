@@ -1,11 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { LibraryTrackDto } from 'src/library/dtos/library.track.dto';
 import { PaginationQueryDto } from 'src/api/request.dto';
 import { SortDirectionEnum, TrackSortFieldEnum } from 'src/types/enums';
+import { SuccessResponseDto } from 'src/api/response.dto';
 import { Transform } from 'class-transformer';
 
 export class UserListTracksQueryDto extends PaginationQueryDto {
@@ -209,42 +209,4 @@ export class UserListTracksResponseDto extends SuccessResponseDto {
    */
   @IsInt()
   declare total: number;
-}
-
-const UserListTracksBadRequestErrorMessages = [
-  ErrorCodes.INVALID_ADDED_AFTER_ERROR,
-  ErrorCodes.INVALID_ADDED_BEFORE_ERROR,
-  ErrorCodes.INVALID_ALBUM_ERROR,
-  ErrorCodes.INVALID_ALBUM_LENGTH_ERROR,
-  ErrorCodes.INVALID_ARTIST_ERROR,
-  ErrorCodes.INVALID_ARTIST_LENGTH_ERROR,
-  ErrorCodes.INVALID_COMPOSER_ERROR,
-  ErrorCodes.INVALID_COMPOSER_LENGTH_ERROR,
-  ErrorCodes.INVALID_FILTER_ERROR,
-  ErrorCodes.INVALID_FILTER_LENGTH_ERROR,
-  ErrorCodes.INVALID_GENRE_ERROR,
-  ErrorCodes.INVALID_GENRE_LENGTH_ERROR,
-  ErrorCodes.INVALID_LIMIT_ERROR,
-  ErrorCodes.INVALID_LIMIT_RANGE_ERROR,
-  ErrorCodes.INVALID_MAX_RATING_ERROR,
-  ErrorCodes.INVALID_MIN_RATING_ERROR,
-  ErrorCodes.INVALID_OFFSET_ERROR,
-  ErrorCodes.INVALID_OFFSET_RANGE_ERROR,
-  ErrorCodes.INVALID_SORT_FIELD_ERROR,
-  ErrorCodes.INVALID_SORT_ORDER_ERROR,
-  ErrorCodes.INVALID_YEAR_ERROR,
-];
-
-export class UserListTracksBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied while serving the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: UserListTracksBadRequestErrorMessages,
-    enumName: 'UserListTracksBadRequestErrorMessages',
-    default: UserListTracksBadRequestErrorMessages[0],
-  })
-  declare message: ErrorCodes[];
 }

@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserRoleEnum } from 'src/types/enums';
@@ -22,7 +22,7 @@ export class AdminUpdateUserRolesService {
     // verify own password
     const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
     if (!isAdminPasswordValid) {
-      throw new BadRequestException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
+      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     }
     // verify roles are provided
     if (roles.length === 0) {

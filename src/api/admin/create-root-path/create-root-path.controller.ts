@@ -1,13 +1,13 @@
 import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
-  AdminCreateRootPathBadRequestResponseDto,
   AdminCreateRootPathBodyDto,
-  AdminCreateRootPathNotFoundResponseDto,
   AdminCreateRootPathQueryDto,
   AdminCreateRootPathResponseDto,
 } from './create-root-path.dto';
 import { AdminCreateRootPathService } from './create-root-path.service';
 import { Body, HttpStatus, Post, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @AdminController()
 export class AdminCreateRootPathController {
@@ -20,8 +20,14 @@ export class AdminCreateRootPathController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.CREATED]: AdminCreateRootPathResponseDto,
-      [HttpStatus.BAD_REQUEST]: AdminCreateRootPathBadRequestResponseDto,
-      [HttpStatus.NOT_FOUND]: AdminCreateRootPathNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR, ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR,
+        ErrorCodes.DUPLICATE_ROOT_PATH_ERROR,
+        ...getValidationMessages(AdminCreateRootPathQueryDto),
+        ...getValidationMessages(AdminCreateRootPathBodyDto),
+      ],
+      [HttpStatus.UNAUTHORIZED]: [ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR],
     },
   })
   async post(

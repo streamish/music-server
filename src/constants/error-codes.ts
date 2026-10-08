@@ -15,6 +15,7 @@ export enum ErrorCodes {
   INVALID_ARTIST_ID_ERROR = 'invalid-artist-id-error',
   INVALID_ARTISTS_ERROR = 'invalid-artists-error',
   INVALID_ARTISTS_LENGTH_ERROR = 'invalid-artists-length-error',
+  INVALID_ASSOCIATION_TYPE_ERROR = 'invalid-association-type-error',
   INVALID_COMMENT_ERROR = 'invalid-comment-error',
   INVALID_COMMENT_LENGTH_ERROR = 'invalid-comment-length-error',
   INVALID_COMPOSER_ERROR = 'invalid-composer-error',

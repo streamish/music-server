@@ -16,7 +16,9 @@ export type paths = {
     /**
      * Create a new account
      * @description Add a user account with the specified roles.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminCreateAccountController_post'];
@@ -38,7 +40,9 @@ export type paths = {
     /**
      * Add new root path to account
      * @description Add a library root path to an account. This will add media in the path when the indexer reaches it.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminCreateRootPathController_post'];
@@ -64,7 +68,9 @@ export type paths = {
     /**
      * Delete an account
      * @description Deletes the specified account. If it is the only admin account a new one account must be created first.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminDeleteAccountController_delete'];
@@ -83,7 +89,9 @@ export type paths = {
     /**
      * Delete a root path
      * @description Deletes the specified root path for a user and immediately deletes all associated information in the database.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     delete: operations['AdminDeleteRootPathController_delete'];
@@ -102,7 +110,9 @@ export type paths = {
     /**
      * Get the indexer configuration
      * @description Retrieves the current indexer configuration for the platform.  This is currently limited to "on" or "off".
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminIndexerConfigurationController_get'];
@@ -124,7 +134,9 @@ export type paths = {
     /**
      * List all accounts
      * @description Retrieves a list of all accounts in the system.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminListAccountsController_get'];
@@ -146,7 +158,9 @@ export type paths = {
     /**
      * Monitor what the indexer is doing for all libraries
      * @description Retrieves the most recent indexer logs based on any provided query parameters. Logs are held in memory and will clear whenever the server restarts. The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminListIndexerLogsController_get'];
@@ -168,7 +182,9 @@ export type paths = {
     /**
      * List all sources of music for all users
      * @description Retrieves a list of all root paths for all user accounts, eg `/home/<username>/music`. These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminListRootPathsController_get'];
@@ -192,7 +208,9 @@ export type paths = {
     /**
      * Invalidate all user sessions
      * @description Regenerates the master session key for the entire platform, invalidating all sessions for all users.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminRegenerateMasterSessionKeyController_post'];
@@ -214,7 +232,9 @@ export type paths = {
     /**
      * Invalidate a user's sessions
      * @description Regenerates the master session key for a specific user, invalidating all sessions for that user.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminRegenerateUserSessionKeyController_post'];
@@ -236,7 +256,9 @@ export type paths = {
     /**
      * Reset user password
      * @description Resets the password for a specified user account and invalidates their prior sessions.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminResetUserPasswordController_post'];
@@ -262,7 +284,9 @@ export type paths = {
     /**
      * Set the indexer status
      * @description Enables or disables the indexer to allow moving root paths or to preserve system resources.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminSetIndexerStatusController_patch'];
@@ -284,7 +308,9 @@ export type paths = {
     /**
      * Update a root path
      * @description Updates the specified root path with a new path.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminUpdateRootPathController_patch'];
@@ -306,7 +332,9 @@ export type paths = {
     /**
      * Update user roles
      * @description Updates the roles of a specified user account.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminUpdateUserRolesController_patch'];
@@ -470,6 +498,7 @@ export type paths = {
     /**
      * Retrieves cover images for albums
      * @description This endpoint retrieves the cover image for a specified album. The image comes from the first track that contains a cover or a default blank cover. The response supports Etag caching to optimize browser performance.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserAlbumCoverImageController_get'];
@@ -491,6 +520,7 @@ export type paths = {
     /**
      * Retrieves cover images for associated artists, composers and genres
      * @description This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified. The image comes from the first track that contains a cover and credits them as an album artist. If no album cover is found, it falls back to the first track crediting them as a track artist. If the artist has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserAssociationCoverImageController_get'];
@@ -536,6 +566,7 @@ export type paths = {
      * Remove custom data from a file in the user's account
      * @description Deletes the specified custom data in the database immediately.
      *     The file this data is for will revert to its embedded data on its next indexing.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserDeleteCustomDataController_delete'];
@@ -558,6 +589,7 @@ export type paths = {
      * Remove a favorite from the user's account
      * @description Deletes the specified favorite immediately.
      *     The album, association or track will no longer be a favorite but will still exist in the user's library.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserDeleteFavoriteController_delete'];
@@ -580,6 +612,7 @@ export type paths = {
      * Remove a music source from the user's account
      * @description Deletes the specified root path and all associated information in the database immediately.
      *     The songs and folders will no longer be present in your library but the files will remain on the file system.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserDeleteRootPathController_delete'];
@@ -601,6 +634,7 @@ export type paths = {
     /**
      * Terminate the session
      * @description Ends a user session and invalidates the JWT token provided in the `Authorization` header.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserEndSessionController_delete'];
@@ -620,6 +654,7 @@ export type paths = {
      * Retrieve library folder structure
      * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents.
      *     This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserFolderStructureController_get'];
@@ -641,9 +676,13 @@ export type paths = {
     /**
      * List associations credited to albums
      * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
      *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListAlbumAssociationsController_get'];
@@ -665,8 +704,11 @@ export type paths = {
     /**
      * List artists credited to albums and return album/track data
      * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
      *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
      */
     get: operations['UserListAlbumAssociationsWithTracksController_get'];
@@ -688,9 +730,13 @@ export type paths = {
     /**
      * List albums
      * @description Albums can be filtered by an extensive set of criteria and search terms.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
      *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListAlbumsController_get'];
@@ -712,9 +758,13 @@ export type paths = {
     /**
      * List albums and include their track data
      * @description Albums can be filtered by an extensive set of criteria and search terms.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
      *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListAlbumsWithTracksController_get'];
@@ -736,7 +786,9 @@ export type paths = {
     /**
      * List favorites
      * @description Favorites can be albums, tracks, folders, or an associated artist, composer or genre.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListFavoritesController_get'];
@@ -761,6 +813,7 @@ export type paths = {
      *     Logs are held in memory and will clear whenever the server restarts.
      *     The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
      *     If you have multiple users it may be common for this to be empty as the capacity is filled by other users.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserListIndexerLogsController_get'];
@@ -784,6 +837,7 @@ export type paths = {
      * @description Retrieves a list of all root paths associated with the user's account, eg `/home/<username>/music`.',
      *           'These paths are indexed periodically or when files are changed to build the music library.
      *     The indexer works from a single queue so the more root paths the longer the delay between scanning.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserListRootPathsController_get'];
@@ -805,9 +859,13 @@ export type paths = {
     /**
      * List track-associated artists, composers and genres
      * @description Track associations are artists, composers and genres attributed directly to individual tracks.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
      *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListTrackAssociationsController_get'];
@@ -829,9 +887,13 @@ export type paths = {
     /**
      * List track-associated artists, composers and genres and return tracks.
      * @description Track associations are artists, composers and genres attributed directly to individual tracks.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
      *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
      *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListTrackAssociationsWithTracksController_get'];
@@ -853,8 +915,8 @@ export type paths = {
     /**
      * List tracks
      * @description The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserListTracksController_get'];
@@ -880,6 +942,7 @@ export type paths = {
      * @description Regenerates the session key for the user.  This key is used to sign their session tokens.
      *     When a new key is generated any previous sessions of the user become invalid including their current session.
      *     The user will need to authenticate again to continue accessing protected APIs.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     post: operations['UserRegenerateSessionKeyController_post'];
@@ -899,6 +962,7 @@ export type paths = {
     /**
      * Retrieves single albums
      * @description Retrieves an album and its complete track list with all information necessary for viewing and playback.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserRetrieveAlbumController_get'];
@@ -920,6 +984,7 @@ export type paths = {
     /**
      * Retrieves single association
      * @description Retrieves an association and its complete track list with all information necessary for viewing and playback.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserRetrieveAssociationController_get'];
@@ -949,6 +1014,7 @@ export type paths = {
      * @description Assigns custom data to an album, overriding the embedded data within its tracks.
      *     This affects all tracks within the album.
      *     The next indexing pass of the album will reflect the newly set custom data.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetAlbumCustomDataController_patch'];
@@ -965,6 +1031,7 @@ export type paths = {
     /**
      * Mark an album as a favorite
      * @description Favorites the specified album allowing easier access in the user's library.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetAlbumFavoriteController_put'];
@@ -986,6 +1053,7 @@ export type paths = {
     /**
      * Sets or unsets ratings for an album
      * @description Sets or unsets a 1-5 star rating for the tracks within an album.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetAlbumRatingController_put'];
@@ -1014,6 +1082,7 @@ export type paths = {
      * @description Assigns a custom name to an artist, overriding the name embedded in albums.
      *     This affects all tracks and albums the artist is credited on under the previous name.
      *     The next indexing pass of the albums will reflect the newly set custom name.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetArtistNameController_patch'];
@@ -1030,6 +1099,7 @@ export type paths = {
     /**
      * Mark an association as a favorite
      * @description Favorites an associated artist, composer or genre allowing easier access in the user's library.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetAssociationFavoriteController_put'];
@@ -1058,6 +1128,7 @@ export type paths = {
      * @description Assigns a custom name to a composer, overriding the name embedded in tracks.
      *     This affects all tracks the composer is credited on under the previous name.
      *     The next indexing pass of the tracks will reflect the newly set custom name.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetComposerNameController_patch'];
@@ -1076,6 +1147,7 @@ export type paths = {
      * @description Assigns custom data to a track, overriding the embedded data within it.
      *     This data is all-inclusive, compared to similar endpoints that set individual field(s).
      *     The next indexing pass of the track will reflect the newly set custom data.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetCustomDataController_put'];
@@ -1097,6 +1169,7 @@ export type paths = {
     /**
      * Mark a folder as a favorite
      * @description Favorites the specified folder allowing easier access in the user's library.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetFolderFavoriteController_put'];
@@ -1125,6 +1198,7 @@ export type paths = {
      * @description Assigns a custom name to a genre, overriding the name embedded in tracks.
      *     This affects all tracks categorized under the previous genre name.
      *     The next indexing pass of the tracks will reflect the newly set custom name.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetGenreNameController_patch'];
@@ -1147,6 +1221,7 @@ export type paths = {
      * Set custom data for a track in the user's account
      * @description Assigns custom data to a track, overriding the embedded data within it.
      *     The next indexing pass of the file will reflect the newly set custom data.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetTrackCustomDataController_patch'];
@@ -1163,6 +1238,7 @@ export type paths = {
     /**
      * Mark a track as a favorite
      * @description Favorites the specified track allowing easier access in the user's library.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetTrackFavoriteController_put'];
@@ -1184,6 +1260,7 @@ export type paths = {
     /**
      * Sets or unsets rating for a track
      * @description Sets or unsets a 1-5 star rating for a single track.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetTrackRatingController_put'];
@@ -1206,6 +1283,7 @@ export type paths = {
      * @description Downloads audio files from the music library to the client.',
      *           'This is used to stream audio files for playback or to download for offline usage.',
      *           'The audio files are streamed in their original format and the client is responsible for decoding and playback.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserStreamFileController_get'];
@@ -1230,6 +1308,7 @@ export type paths = {
      * Reset password
      * @description Resets the user's password to a new value and invalidates all previous sessions.
      *     The user will need to authenticate again to continue accessing protected APIs.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     post: operations['UserUpdatePasswordController_post'];
@@ -1249,6 +1328,7 @@ export type paths = {
     /**
      * Streams a music file to QMusic clients
      * @description Streams a music file for playback.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['QnapAsGetFileController_get'];
@@ -1336,6 +1416,7 @@ export type paths = {
     /**
      * Retrieves cover images
      * @description This endpoint retrieves the cover image for a specified album, artist, or folder. The image comes from the first song in the album that contains an embedded image. If the album has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance. The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.
+     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['QnapMediaCoverController_get'];
@@ -1359,6 +1440,7 @@ export type paths = {
     /**
      * Reports IP addresses to mobile apps
      * @description This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.
+     *
      *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     post: operations['QnapMediaToolController_get'];
@@ -1401,6 +1483,7 @@ export type paths = {
     /**
      * Handle QNAP Music Station media-list API requests
      * @description Returns albums, songs, genres, folders, artist lists and random artist/album lists. The response format varies based on what is being requested.
+     *
      *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     post: operations['QnapMediaListController_post'];
@@ -1422,7 +1505,9 @@ export type paths = {
     /**
      * Lists albums in the music library
      * @description Lists albums found in the music library.  The albums can be filtered by artist, composer or genre.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyAlbumController_route'];
@@ -1444,7 +1529,9 @@ export type paths = {
     /**
      * Lists artists in the music library
      * @description Lists artists found in the music library.  The artists can be filtered by genre.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyArtistController_route'];
@@ -1466,7 +1553,9 @@ export type paths = {
     /**
      * Lists composers in the music library
      * @description Lists composers found in the music library. These are extracted from song metadata and are not necessarily the same as the artists. This field can be problematic due to inconsistent multi-composer values and erratic metadata like job titles. When a track is recognized as having multiple composers, each composer is counted as a separate composer. A track with the composer "Composer 1, Composer 2" will be counted as both "Composer 1" and "Composer 2".
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyComposerController_route'];
@@ -1486,6 +1575,7 @@ export type paths = {
     /**
      * Retrieves the cover image for an album, artist, composer or song
      * @description Retrieves the cover image for an album, artist, composer or song. The cover image can be retrieved by specifying the appropriate query parameters in the request. If an image is not found a default blank cover image will be returned.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     get: operations['SynologyCoverImageController_route'];
@@ -1509,6 +1599,7 @@ export type paths = {
     /**
      * Lists folders in the music library
      * @description Lists folders found in the music library to enable navigating music by the file path.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyFolderController_route'];
@@ -1550,6 +1641,7 @@ export type paths = {
     /**
      * Returns configuration information for the Synology AudioStation API and client capabilities
      * @description This endpoint returns configuration information for the Synology DS Audio apps.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyInfoController_route'];
@@ -1571,7 +1663,9 @@ export type paths = {
     /**
      * Manages playlists
      * @description This endpoint is used to list, create, delete, rename, and update playlists, and add/remove items. There are two types of supported playlists. "Normal" playlist containing a static list of tracks and radio stations you add. "Smart" playlists are dynamic filters based on criteria such as genre, artist, album, and more. Listing playlists are not returned in a paginated format, but the tracks and radio stations within them are.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyPlaylistController_routeRequest'];
@@ -1597,6 +1691,7 @@ export type paths = {
     /**
      * Proxies SHOUTcast radio streams
      * @description Creates and terminates a basic HTTP proxy to a SHOUTcast radio stream.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyProxyController_route'];
@@ -1638,6 +1733,7 @@ export type paths = {
     /**
      * Searches for artists, albums and songs in the music library
      * @description Searches for artists, albums and songs in the music library matching a search query. The search is case-insensitive and supports partially matching names and titles.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologySearchController_route'];
@@ -1659,7 +1755,9 @@ export type paths = {
     /**
      * Lists songs in the music library
      * @description Lists songs found in the music library.  The songs can be filtered by album, artist, composer, or genre.
+     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologySongController_route'];
@@ -1679,6 +1777,7 @@ export type paths = {
     /**
      * Streams audio files
      * @description Downloads audio files from the music library to the client. This is used to stream audio files for playback or to download for offline usage. The files are streamed in their original format and the client is responsible for decoding and playing audio. Synology implements transcoding for certain formats, but this is not supported in this server.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     get: operations['SynologyStreamController_getStreamCgi'];
@@ -1702,6 +1801,7 @@ export type paths = {
     /**
      * Authentication, session management, playlists and favorites
      * @description This endpoint handles system-level operations such as authentication, and favorite/pinned items, and playlists. Some operations require authentication - logging out, adding to playlists, and listing/managing pinned items. Other operations do not require authentication - retrieving the encryption key and signing in. For the actions requiring authentication the request must be made using a session ID and device ID cookie. To create a session this endpoint first shares the encryption public key so credentials can be submitted. Credentials are then submitted encrypted with the public key before being sent to this endpoint.
+     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyEntryController_route'];
@@ -1741,20 +1841,18 @@ export type components = {
       username: string;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminCreateAccountBadRequestErrorMessageEnum: AdminCreateAccountBadRequestErrorMessageEnum;
-    AdminCreateAccountBadRequestResponseDto: {
+    AdminCreateAccountBadRequestErrors: AdminCreateAccountBadRequestErrors;
+    AdminCreateAccountBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default bad-request-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-username-not-unique-error
        */
-      message: components['schemas']['AdminCreateAccountBadRequestErrorMessageEnum'][];
+      message: components['schemas']['AdminCreateAccountBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1779,20 +1877,37 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminCreateRootPathBadRequestErrorMessageEnum: AdminCreateRootPathBadRequestErrorMessageEnum;
-    AdminCreateRootPathBadRequestResponseDto: {
+    AdminCreateAccountUnauthorizedErrors: AdminCreateAccountUnauthorizedErrors;
+    AdminCreateAccountUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+       * @default invalid-admin-password-error
+       */
+      message: components['schemas']['AdminCreateAccountUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    AdminCreateRootPathBadRequestErrors: AdminCreateRootPathBadRequestErrors;
+    AdminCreateRootPathBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
        * @default root-path-does-not-exist-error
        */
-      message: components['schemas']['AdminCreateRootPathBadRequestErrorMessageEnum'][];
+      message: components['schemas']['AdminCreateRootPathBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1804,20 +1919,18 @@ export type components = {
       rootPath: string;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminCreateRootPathNotFoundErrorMessageEnum: AdminCreateRootPathNotFoundErrorMessageEnum;
-    AdminCreateRootPathNotFoundResponseDto: {
+    AdminCreateRootPathNotFoundErrors: AdminCreateRootPathNotFoundErrors;
+    AdminCreateRootPathNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default account-not-found-error
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default root-path-not-found-error
        */
-      message: components['schemas']['AdminCreateRootPathNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminCreateRootPathNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1833,20 +1946,37 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminDeleteAccountBadRequestErrorMessageEnum: AdminDeleteAccountBadRequestErrorMessageEnum;
-    AdminDeleteAccountBadRequestResponseDto: {
+    AdminCreateRootPathUnauthorizedErrors: AdminCreateRootPathUnauthorizedErrors;
+    AdminCreateRootPathUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-account-id-error
+       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+       * @default invalid-admin-password-error
        */
-      message: components['schemas']['AdminDeleteAccountBadRequestErrorMessageEnum'][];
+      message: components['schemas']['AdminCreateRootPathUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    AdminDeleteAccountBadRequestErrors: AdminDeleteAccountBadRequestErrors;
+    AdminDeleteAccountBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default account-only-admin-error
+       */
+      message: components['schemas']['AdminDeleteAccountBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1858,20 +1988,18 @@ export type components = {
       adminPassword: string;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminDeleteAccountNotFoundErrorMessageEnum: AdminDeleteAccountNotFoundErrorMessageEnum;
-    AdminDeleteAccountNotFoundResponseDto: {
+    AdminDeleteAccountNotFoundErrors: AdminDeleteAccountNotFoundErrors;
+    AdminDeleteAccountNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-account-id-error
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default account-not-found-error
        */
-      message: components['schemas']['AdminDeleteAccountNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminDeleteAccountNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1887,20 +2015,37 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminDeleteRootPathNotFoundErrorMessageEnum: AdminDeleteRootPathNotFoundErrorMessageEnum;
-    AdminDeleteRootPathNotFoundResponseDto: {
+    AdminDeleteAccountUnauthorizedErrors: AdminDeleteAccountUnauthorizedErrors;
+    AdminDeleteAccountUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+       * @default invalid-admin-password-error
+       */
+      message: components['schemas']['AdminDeleteAccountUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    AdminDeleteRootPathNotFoundErrors: AdminDeleteRootPathNotFoundErrors;
+    AdminDeleteRootPathNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default root-path-not-found-error
        */
-      message: components['schemas']['AdminDeleteRootPathNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminDeleteRootPathNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1941,6 +2086,25 @@ export type components = {
        */
       success: boolean;
     };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    AdminListIndexerLogsBadRequestErrors: AdminListIndexerLogsBadRequestErrors;
+    AdminListIndexerLogsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-account-id-error
+       */
+      message: components['schemas']['AdminListIndexerLogsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
     AdminListIndexerLogsResponseDto: {
       logs: components['schemas']['AdminLogEntryDto'][];
       /**
@@ -1978,20 +2142,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminRegenerateUserSessionKeyNotFoundErrorMessageEnum: AdminRegenerateUserSessionKeyNotFoundErrorMessageEnum;
-    AdminRegenerateUserSessionKeyNotFoundResponseDto: {
+    AdminRegenerateUserSessionKeyNotFoundErrors: AdminRegenerateUserSessionKeyNotFoundErrors;
+    AdminRegenerateUserSessionKeyNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default account-not-found-error
        */
-      message: components['schemas']['AdminRegenerateUserSessionKeyNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminRegenerateUserSessionKeyNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2007,20 +2169,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminResetUserPasswordBadRequestErrorMessageEnum: AdminResetUserPasswordBadRequestErrorMessageEnum;
-    AdminResetUserPasswordBadRequestResponseDto: {
+    AdminResetUserPasswordBadRequestErrors: AdminResetUserPasswordBadRequestErrors;
+    AdminResetUserPasswordBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-password-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-account-id-error
        */
-      message: components['schemas']['AdminResetUserPasswordBadRequestErrorMessageEnum'][];
+      message: components['schemas']['AdminResetUserPasswordBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2033,20 +2193,18 @@ export type components = {
       newPassword: string;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminResetUserPasswordNotFoundErrorMessageEnum: AdminResetUserPasswordNotFoundErrorMessageEnum;
-    AdminResetUserPasswordNotFoundResponseDto: {
+    AdminResetUserPasswordNotFoundErrors: AdminResetUserPasswordNotFoundErrors;
+    AdminResetUserPasswordNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default account-not-found-error
        */
-      message: components['schemas']['AdminResetUserPasswordNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminResetUserPasswordNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2058,6 +2216,25 @@ export type components = {
        * Format: constant
        * @description The success being "true" indicates that the request completed.
        * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+     * @enum {string}
+     */
+    AdminResetUserPasswordUnauthorizedErrors: AdminResetUserPasswordUnauthorizedErrors;
+    AdminResetUserPasswordUnauthorizedResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+       * @default invalid-admin-password-error
+       */
+      message: components['schemas']['AdminResetUserPasswordUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
        */
       success: boolean;
     };
@@ -2102,20 +2279,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminUpdateRootPathBadRequestErrorMessageEnum: AdminUpdateRootPathBadRequestErrorMessageEnum;
-    AdminUpdateRootPathBadRequestResponseDto: {
+    AdminUpdateRootPathBadRequestErrors: AdminUpdateRootPathBadRequestErrors;
+    AdminUpdateRootPathBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default root-path-does-not-exist-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-root-path-id-error
        */
-      message: components['schemas']['AdminUpdateRootPathBadRequestErrorMessageEnum'][];
+      message: components['schemas']['AdminUpdateRootPathBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2127,20 +2302,18 @@ export type components = {
       newPath: string;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminUpdateRootPathNotFoundErrorMessageEnum: AdminUpdateRootPathNotFoundErrorMessageEnum;
-    AdminUpdateRootPathNotFoundResponseDto: {
+    AdminUpdateRootPathNotFoundErrors: AdminUpdateRootPathNotFoundErrors;
+    AdminUpdateRootPathNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default root-path-not-found-error
        */
-      message: components['schemas']['AdminUpdateRootPathNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminUpdateRootPathNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2156,20 +2329,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminUpdateUserRolesBadRequestErrorMessageEnum: AdminUpdateUserRolesBadRequestErrorMessageEnum;
-    AdminUpdateUserRolesBadRequestResponseDto: {
+    AdminUpdateUserRolesBadRequestErrors: AdminUpdateUserRolesBadRequestErrors;
+    AdminUpdateUserRolesBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-user-role-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-account-id-error
        */
-      message: components['schemas']['AdminUpdateUserRolesBadRequestErrorMessageEnum'][];
+      message: components['schemas']['AdminUpdateUserRolesBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2182,20 +2353,18 @@ export type components = {
       roles: components['schemas']['UserRoleEnum'][];
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminUpdateUserRolesNotFoundErrorMessageEnum: AdminUpdateUserRolesNotFoundErrorMessageEnum;
-    AdminUpdateUserRolesNotFoundResponseDto: {
+    AdminUpdateUserRolesNotFoundErrors: AdminUpdateUserRolesNotFoundErrors;
+    AdminUpdateUserRolesNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default account-not-found-error
        */
-      message: components['schemas']['AdminUpdateUserRolesNotFoundErrorMessageEnum'][];
+      message: components['schemas']['AdminUpdateUserRolesNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2207,6 +2376,25 @@ export type components = {
        * Format: constant
        * @description The success being "true" indicates that the request completed.
        * @default true
+       */
+      success: boolean;
+    };
+    /**
+     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+     * @enum {string}
+     */
+    AdminUpdateUserRolesUnauthorizedErrors: AdminUpdateUserRolesUnauthorizedErrors;
+    AdminUpdateUserRolesUnauthorizedResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+       * @default invalid-admin-password-error
+       */
+      message: components['schemas']['AdminUpdateUserRolesUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
        */
       success: boolean;
     };
@@ -6283,21 +6471,14 @@ export type components = {
       success: boolean;
       username: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    TestDeleteAccountNotFoundErrorMessage: TestDeleteAccountNotFoundErrorMessage;
     TestDeleteAccountNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default internal-server-error
        */
-      message: components['schemas']['TestDeleteAccountNotFoundErrorMessage'][];
+      message: TestDeleteAccountNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6337,21 +6518,14 @@ export type components = {
       /** @description The new username for the duplicated account */
       newUsername: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    TestDuplicateAccountNotFoundErrorMessage: TestDuplicateAccountNotFoundErrorMessage;
     TestDuplicateAccountNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default internal-server-error
        */
-      message: components['schemas']['TestDuplicateAccountNotFoundErrorMessage'][];
+      message: TestDuplicateAccountNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6375,21 +6549,14 @@ export type components = {
       /** @description The username is the main point of authentication */
       username: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    TestListAccountsNotFoundErrorMessage: TestListAccountsNotFoundErrorMessage;
     TestListAccountsNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default internal-server-error
        */
-      message: components['schemas']['TestListAccountsNotFoundErrorMessage'][];
+      message: TestListAccountsNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6412,21 +6579,14 @@ export type components = {
       /** @description The username is the main point of authentication */
       username: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    TestRetrieveAccountNotFoundErrorMessage: TestRetrieveAccountNotFoundErrorMessage;
     TestRetrieveAccountNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default account-not-found-error
        */
-      message: components['schemas']['TestRetrieveAccountNotFoundErrorMessage'][];
+      message: TestRetrieveAccountNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6477,21 +6637,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserDeleteCustomDataNotFoundErrorMessage: UserDeleteCustomDataNotFoundErrorMessage;
     UserDeleteCustomDataNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default file-not-found-error
        */
-      message: components['schemas']['UserDeleteCustomDataNotFoundErrorMessage'][];
+      message: UserDeleteCustomDataNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6506,21 +6659,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserDeleteFavoriteNotFoundErrorMessage: UserDeleteFavoriteNotFoundErrorMessage;
     UserDeleteFavoriteNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default favorite-item-not-found-error
        */
-      message: components['schemas']['UserDeleteFavoriteNotFoundErrorMessage'][];
+      message: UserDeleteFavoriteNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6535,21 +6681,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserDeleteRootPathNotFoundErrorMessageEnum: UserDeleteRootPathNotFoundErrorMessageEnum;
     UserDeleteRootPathNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default root-path-not-found-error
        */
-      message: components['schemas']['UserDeleteRootPathNotFoundErrorMessageEnum'][];
+      message: UserDeleteRootPathNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6793,21 +6932,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserListIndexerLogsNotFoundErrorMessageEnum: UserListIndexerLogsNotFoundErrorMessageEnum;
     UserListIndexerLogsNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default invalid-account-id-error
        */
-      message: components['schemas']['UserListIndexerLogsNotFoundErrorMessageEnum'][];
+      message: UserListIndexerLogsNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6965,21 +7097,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserRetrieveAlbumNotFoundErrorMessage: UserRetrieveAlbumNotFoundErrorMessage;
     UserRetrieveAlbumNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: components['schemas']['UserRetrieveAlbumNotFoundErrorMessage'][];
+      message: UserRetrieveAlbumNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -6996,21 +7121,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserRetrieveAssociationNotFoundErrorMessage: UserRetrieveAssociationNotFoundErrorMessage;
     UserRetrieveAssociationNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default artist-not-found-error
        */
-      message: components['schemas']['UserRetrieveAssociationNotFoundErrorMessage'][];
+      message: UserRetrieveAssociationNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7090,21 +7208,14 @@ export type components = {
        */
       year: number;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetAlbumCustomDataNotFoundErrorMessage: UserSetAlbumCustomDataNotFoundErrorMessage;
     UserSetAlbumCustomDataNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: components['schemas']['UserSetAlbumCustomDataNotFoundErrorMessage'][];
+      message: UserSetAlbumCustomDataNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7119,21 +7230,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetAlbumFavoriteNotFoundErrorMessage: UserSetAlbumFavoriteNotFoundErrorMessage;
     UserSetAlbumFavoriteNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: components['schemas']['UserSetAlbumFavoriteNotFoundErrorMessage'][];
+      message: UserSetAlbumFavoriteNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7149,20 +7253,18 @@ export type components = {
       success: boolean;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    UserSetAlbumRatingBadRequestErrorMessage: UserSetAlbumRatingBadRequestErrorMessage;
-    UserSetAlbumRatingBadRequestResponseDto: {
+    UserSetAlbumRatingBadRequestErrors: UserSetAlbumRatingBadRequestErrors;
+    UserSetAlbumRatingBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
-       * @default invalid-rating-error
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-album-id-error
        */
-      message: components['schemas']['UserSetAlbumRatingBadRequestErrorMessage'][];
+      message: components['schemas']['UserSetAlbumRatingBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7177,20 +7279,18 @@ export type components = {
       rating: number;
     };
     /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
+     * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    UserSetAlbumRatingNotFoundErrorMessage: UserSetAlbumRatingNotFoundErrorMessage;
-    UserSetAlbumRatingNotFoundResponseDto: {
+    UserSetAlbumRatingNotFoundErrors: UserSetAlbumRatingNotFoundErrors;
+    UserSetAlbumRatingNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default album-not-found-error
        */
-      message: components['schemas']['UserSetAlbumRatingNotFoundErrorMessage'][];
+      message: components['schemas']['UserSetAlbumRatingNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7233,21 +7333,14 @@ export type components = {
        */
       name: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetArtistNameNotFoundErrorMessage: UserSetArtistNameNotFoundErrorMessage;
     UserSetArtistNameNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default artist-not-found-error
        */
-      message: components['schemas']['UserSetArtistNameNotFoundErrorMessage'][];
+      message: UserSetArtistNameNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7262,21 +7355,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetAssociationFavoriteNotFoundErrorMessage: UserSetAssociationFavoriteNotFoundErrorMessage;
     UserSetAssociationFavoriteNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default association-not-found-error
        */
-      message: components['schemas']['UserSetAssociationFavoriteNotFoundErrorMessage'][];
+      message: UserSetAssociationFavoriteNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7319,21 +7405,14 @@ export type components = {
        */
       name: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetComposerNameNotFoundErrorMessage: UserSetComposerNameNotFoundErrorMessage;
     UserSetComposerNameNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default composer-not-found-error
        */
-      message: components['schemas']['UserSetComposerNameNotFoundErrorMessage'][];
+      message: UserSetComposerNameNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7431,21 +7510,14 @@ export type components = {
        */
       year?: number;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetCustomDataNotFoundErrorMessage: UserSetCustomDataNotFoundErrorMessage;
     UserSetCustomDataNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default file-not-found-error
        */
-      message: components['schemas']['UserSetCustomDataNotFoundErrorMessage'][];
+      message: UserSetCustomDataNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7460,21 +7532,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetFolderFavoriteNotFoundErrorMessage: UserSetFolderFavoriteNotFoundErrorMessage;
     UserSetFolderFavoriteNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default folder-not-found-error
        */
-      message: components['schemas']['UserSetFolderFavoriteNotFoundErrorMessage'][];
+      message: UserSetFolderFavoriteNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7517,21 +7582,14 @@ export type components = {
        */
       name: string;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetGenreNameNotFoundErrorMessage: UserSetGenreNameNotFoundErrorMessage;
     UserSetGenreNameNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default genre-not-found-error
        */
-      message: components['schemas']['UserSetGenreNameNotFoundErrorMessage'][];
+      message: UserSetGenreNameNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7616,21 +7674,14 @@ export type components = {
        */
       year?: number;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetTrackCustomDataNotFoundErrorMessage: UserSetTrackCustomDataNotFoundErrorMessage;
     UserSetTrackCustomDataNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default file-not-found-error
        */
-      message: components['schemas']['UserSetTrackCustomDataNotFoundErrorMessage'][];
+      message: UserSetTrackCustomDataNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7645,21 +7696,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetTrackFavoriteNotFoundErrorMessage: UserSetTrackFavoriteNotFoundErrorMessage;
     UserSetTrackFavoriteNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default track-not-found-error
        */
-      message: components['schemas']['UserSetTrackFavoriteNotFoundErrorMessage'][];
+      message: UserSetTrackFavoriteNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7702,21 +7746,14 @@ export type components = {
        */
       rating: number;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied during the execution of the request
-     * @enum {string}
-     */
-    UserSetTrackRatingNotFoundErrorMessage: UserSetTrackRatingNotFoundErrorMessage;
     UserSetTrackRatingNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied during the execution of the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default track-not-found-error
        */
-      message: components['schemas']['UserSetTrackRatingNotFoundErrorMessage'][];
+      message: UserSetTrackRatingNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7731,21 +7768,14 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    UserStreamFileNotFoundErrorMessage: UserStreamFileNotFoundErrorMessage;
     UserStreamFileNotFoundResponseDto: {
       /** @description General description of the error class */
       error: string;
       /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
+       * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default file-not-found-error
        */
-      message: components['schemas']['UserStreamFileNotFoundErrorMessage'][];
+      message: UserStreamFileNotFoundResponseDtoMessage[];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -7827,7 +7857,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminCreateAccountBadRequestResponseDto'];
+          'application/json': components['schemas']['AdminCreateAccountBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminCreateAccountUnauthorizedResponse'];
         };
       };
       403: {
@@ -7851,7 +7889,7 @@ export interface operations {
   AdminCreateRootPathController_post: {
     parameters: {
       query: {
-        /** @description The ID of the account to create the root path for. */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -7885,7 +7923,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminCreateRootPathBadRequestResponseDto'];
+          'application/json': components['schemas']['AdminCreateRootPathBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminCreateRootPathUnauthorizedResponse'];
         };
       };
       403: {
@@ -7901,7 +7947,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminCreateRootPathNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminCreateRootPathNotFoundResponse'];
         };
       };
       500: {
@@ -7917,7 +7963,7 @@ export interface operations {
   AdminDeleteAccountController_delete: {
     parameters: {
       query: {
-        /** @description The ID of the account to be deleted. */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -7943,7 +7989,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminDeleteAccountBadRequestResponseDto'];
+          'application/json': components['schemas']['AdminDeleteAccountBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminDeleteAccountUnauthorizedResponse'];
         };
       };
       403: {
@@ -7959,7 +8013,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminDeleteAccountNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminDeleteAccountNotFoundResponse'];
         };
       };
       500: {
@@ -7975,7 +8029,7 @@ export interface operations {
   AdminDeleteRootPathController_delete: {
     parameters: {
       query: {
-        /** @description The ID of the root path to delete */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -8013,7 +8067,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminDeleteRootPathNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminDeleteRootPathNotFoundResponse'];
         };
       };
       500: {
@@ -8138,7 +8192,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['AdminListIndexerLogsBadRequestResponse'];
         };
       };
       403: {
@@ -8248,7 +8302,7 @@ export interface operations {
   AdminRegenerateUserSessionKeyController_post: {
     parameters: {
       query: {
-        /** @description The ID of the account to regenerate the session key for. */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -8286,7 +8340,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminRegenerateUserSessionKeyNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminRegenerateUserSessionKeyNotFoundResponse'];
         };
       };
       500: {
@@ -8302,7 +8356,7 @@ export interface operations {
   AdminResetUserPasswordController_post: {
     parameters: {
       query: {
-        /** @description The ID of the account whose password is to be reset. */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -8328,7 +8382,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminResetUserPasswordBadRequestResponseDto'];
+          'application/json': components['schemas']['AdminResetUserPasswordBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminResetUserPasswordUnauthorizedResponse'];
         };
       };
       403: {
@@ -8344,7 +8406,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminResetUserPasswordNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminResetUserPasswordNotFoundResponse'];
         };
       };
       500: {
@@ -8407,7 +8469,7 @@ export interface operations {
   AdminUpdateRootPathController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the root path to update */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -8433,7 +8495,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminUpdateRootPathBadRequestResponseDto'];
+          'application/json': components['schemas']['AdminUpdateRootPathBadRequestResponse'];
         };
       };
       403: {
@@ -8449,7 +8511,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminUpdateRootPathNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminUpdateRootPathNotFoundResponse'];
         };
       };
       500: {
@@ -8465,7 +8527,7 @@ export interface operations {
   AdminUpdateUserRolesController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the account whose roles are changing. */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -8491,7 +8553,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminUpdateUserRolesBadRequestResponseDto'];
+          'application/json': components['schemas']['AdminUpdateUserRolesBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminUpdateUserRolesUnauthorizedResponse'];
         };
       };
       403: {
@@ -8507,7 +8577,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminUpdateUserRolesNotFoundResponseDto'];
+          'application/json': components['schemas']['AdminUpdateUserRolesNotFoundResponse'];
         };
       };
       500: {
@@ -8644,7 +8714,7 @@ export interface operations {
   TestDeleteAccountController_delete: {
     parameters: {
       query: {
-        /** @description The ID of the account */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -8815,7 +8885,7 @@ export interface operations {
   UserAlbumCoverImageController_get: {
     parameters: {
       query: {
-        /** @description The ID of the association */
+        /** @description The database ID of the resource */
         id: number;
         /** @description The width/height size of the image in pixels */
         size: number;
@@ -8871,7 +8941,7 @@ export interface operations {
   UserAssociationCoverImageController_get: {
     parameters: {
       query: {
-        /** @description The ID of the association */
+        /** @description The database ID of the resource */
         id: number;
         /** @description The width/height size of the image in pixels */
         size: number;
@@ -8984,7 +9054,7 @@ export interface operations {
   UserDeleteCustomDataController_delete: {
     parameters: {
       query: {
-        /** @description The ID of the file */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -9038,7 +9108,7 @@ export interface operations {
   UserDeleteFavoriteController_delete: {
     parameters: {
       query: {
-        /** @description The ID of the favorite item to be deleted */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -9092,7 +9162,7 @@ export interface operations {
   UserDeleteRootPathController_delete: {
     parameters: {
       query: {
-        /** @description The ID of the root path to delete */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10025,7 +10095,7 @@ export interface operations {
   UserRetrieveAlbumController_get: {
     parameters: {
       query: {
-        /** @description The ID of the album */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10079,7 +10149,7 @@ export interface operations {
   UserRetrieveAssociationController_get: {
     parameters: {
       query: {
-        /** @description The ID of the association */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10133,7 +10203,7 @@ export interface operations {
   UserSetAlbumCustomDataController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the album */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10191,7 +10261,7 @@ export interface operations {
   UserSetAlbumFavoriteController_put: {
     parameters: {
       query: {
-        /** @description The ID of the album */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10245,7 +10315,7 @@ export interface operations {
   UserSetAlbumRatingController_put: {
     parameters: {
       query: {
-        /** @description The ID of an album to rate, which will apply the rating to all tracks within it. */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10271,7 +10341,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumRatingBadRequestResponseDto'];
+          'application/json': components['schemas']['UserSetAlbumRatingBadRequestResponse'];
         };
       };
       403: {
@@ -10287,7 +10357,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumRatingNotFoundResponseDto'];
+          'application/json': components['schemas']['UserSetAlbumRatingNotFoundResponse'];
         };
       };
       500: {
@@ -10303,7 +10373,7 @@ export interface operations {
   UserSetArtistNameController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the artist */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10362,7 +10432,7 @@ export interface operations {
     parameters: {
       query: {
         associationType: components['schemas']['AssociationTypeEnum'];
-        /** @description The ID of the association */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10416,7 +10486,7 @@ export interface operations {
   UserSetComposerNameController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the composer */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10474,7 +10544,7 @@ export interface operations {
   UserSetCustomDataController_put: {
     parameters: {
       query: {
-        /** @description The ID of the track */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10585,7 +10655,7 @@ export interface operations {
   UserSetGenreNameController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the genre */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10643,7 +10713,7 @@ export interface operations {
   UserSetTrackCustomDataController_patch: {
     parameters: {
       query: {
-        /** @description The ID of the file */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10701,7 +10771,7 @@ export interface operations {
   UserSetTrackFavoriteController_put: {
     parameters: {
       query: {
-        /** @description The ID of the track to mark as favorite */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10755,7 +10825,7 @@ export interface operations {
   UserSetTrackRatingController_put: {
     parameters: {
       query: {
-        /** @description The ID of a track to rate */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -10813,7 +10883,7 @@ export interface operations {
   UserStreamFileController_get: {
     parameters: {
       query: {
-        /** @description The ID of the file */
+        /** @description The database ID of the resource */
         id: number;
       };
       header?: never;
@@ -12297,71 +12367,88 @@ export interface operations {
     };
   };
 }
-export enum AdminCreateAccountBadRequestErrorMessageEnum {
+export enum AdminCreateAccountBadRequestErrors {
+  invalid_username_not_unique_error = 'invalid-username-not-unique-error',
   invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
-  invalid_role_error = 'invalid-role-error',
-  invalid_user_role_error = 'invalid-user-role-error',
   invalid_username_error = 'invalid-username-error',
   invalid_username_length_error = 'invalid-username-length-error',
-  invalid_username_not_unique_error = 'invalid-username-not-unique-error',
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+  invalid_user_role_error = 'invalid-user-role-error',
+  invalid_role_error = 'invalid-role-error',
 }
-export enum AdminCreateRootPathBadRequestErrorMessageEnum {
+export enum AdminCreateAccountUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum AdminCreateRootPathBadRequestErrors {
   root_path_does_not_exist_error = 'root-path-does-not-exist-error',
   duplicate_root_path_error = 'duplicate-root-path-error',
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_root_path_error = 'invalid-root-path-error',
 }
-export enum AdminCreateRootPathNotFoundErrorMessageEnum {
+export enum AdminCreateRootPathNotFoundErrors {
+  root_path_not_found_error = 'root-path-not-found-error',
   account_not_found_error = 'account-not-found-error',
 }
-export enum AdminDeleteAccountBadRequestErrorMessageEnum {
+export enum AdminCreateRootPathUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum AdminDeleteAccountBadRequestErrors {
   account_only_admin_error = 'account-only-admin-error',
   invalid_account_id_error = 'invalid-account-id-error',
-  invalid_account_error = 'invalid-account-error',
   invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
 }
-export enum AdminDeleteAccountNotFoundErrorMessageEnum {
-  invalid_account_id_error = 'invalid-account-id-error',
+export enum AdminDeleteAccountNotFoundErrors {
   account_not_found_error = 'account-not-found-error',
 }
-export enum AdminDeleteRootPathNotFoundErrorMessageEnum {
+export enum AdminDeleteAccountUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum AdminDeleteRootPathNotFoundErrors {
   root_path_not_found_error = 'root-path-not-found-error',
 }
-export enum AdminRegenerateUserSessionKeyNotFoundErrorMessageEnum {
+export enum AdminListIndexerLogsBadRequestErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+  invalid_search_length_error = 'invalid-search-length-error',
+}
+export enum AdminRegenerateUserSessionKeyNotFoundErrors {
   account_not_found_error = 'account-not-found-error',
 }
-export enum AdminResetUserPasswordBadRequestErrorMessageEnum {
+export enum AdminResetUserPasswordBadRequestErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
   invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
   invalid_new_password_error = 'invalid-new-password-error',
   invalid_new_password_length_error = 'invalid-new-password-length-error',
 }
-export enum AdminResetUserPasswordNotFoundErrorMessageEnum {
+export enum AdminResetUserPasswordNotFoundErrors {
   account_not_found_error = 'account-not-found-error',
 }
-export enum AdminUpdateRootPathBadRequestErrorMessageEnum {
-  root_path_does_not_exist_error = 'root-path-does-not-exist-error',
-  duplicate_root_path_error = 'duplicate-root-path-error',
+export enum AdminResetUserPasswordUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
 }
-export enum AdminUpdateRootPathNotFoundErrorMessageEnum {
+export enum AdminUpdateRootPathBadRequestErrors {
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+  invalid_root_path_error = 'invalid-root-path-error',
+}
+export enum AdminUpdateRootPathNotFoundErrors {
   root_path_not_found_error = 'root-path-not-found-error',
 }
-export enum AdminUpdateUserRolesBadRequestErrorMessageEnum {
-  account_only_admin_error = 'account-only-admin-error',
+export enum AdminUpdateUserRolesBadRequestErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
   invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
   invalid_user_role_error = 'invalid-user-role-error',
+  invalid_role_error = 'invalid-role-error',
 }
-export enum AdminUpdateUserRolesNotFoundErrorMessageEnum {
+export enum AdminUpdateUserRolesNotFoundErrors {
   account_not_found_error = 'account-not-found-error',
+}
+export enum AdminUpdateUserRolesUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
 }
 export enum AlbumSortFieldEnum {
   album = 'album',
@@ -12497,7 +12584,7 @@ export enum SynologyPlaylistDeleteBodyDtoType {
   normal = 'normal',
   smart = 'smart',
 }
-export enum TestDeleteAccountNotFoundErrorMessage {
+export enum TestDeleteAccountNotFoundResponseDtoMessage {
   internal_server_error = 'internal-server-error',
   not_found_error = 'not-found-error',
 }
@@ -12507,15 +12594,15 @@ export enum TestDuplicateAccountBadRequestErrorMessageEnum {
   invalid_new_username_error = 'invalid-new-username-error',
   invalid_new_username_length_error = 'invalid-new-username-length-error',
 }
-export enum TestDuplicateAccountNotFoundErrorMessage {
+export enum TestDuplicateAccountNotFoundResponseDtoMessage {
   internal_server_error = 'internal-server-error',
   not_found_error = 'not-found-error',
 }
-export enum TestListAccountsNotFoundErrorMessage {
+export enum TestListAccountsNotFoundResponseDtoMessage {
   internal_server_error = 'internal-server-error',
   not_found_error = 'not-found-error',
 }
-export enum TestRetrieveAccountNotFoundErrorMessage {
+export enum TestRetrieveAccountNotFoundResponseDtoMessage {
   account_not_found_error = 'account-not-found-error',
 }
 export enum TrackSortFieldEnum {
@@ -12532,13 +12619,13 @@ export enum UserCreateRootPathBadRequestErrorMessageEnum {
   root_path_does_not_exist_error = 'root-path-does-not-exist-error',
   duplicate_root_path_error = 'duplicate-root-path-error',
 }
-export enum UserDeleteCustomDataNotFoundErrorMessage {
+export enum UserDeleteCustomDataNotFoundResponseDtoMessage {
   file_not_found_error = 'file-not-found-error',
 }
-export enum UserDeleteFavoriteNotFoundErrorMessage {
+export enum UserDeleteFavoriteNotFoundResponseDtoMessage {
   favorite_item_not_found_error = 'favorite-item-not-found-error',
 }
-export enum UserDeleteRootPathNotFoundErrorMessageEnum {
+export enum UserDeleteRootPathNotFoundResponseDtoMessage {
   root_path_not_found_error = 'root-path-not-found-error',
 }
 export enum UserListAlbumAssociationsBadRequestErrorMessage {
@@ -12609,7 +12696,7 @@ export enum UserListIndexerLogsBadRequestErrorMessageEnum {
   invalid_root_path_id_error = 'invalid-root-path-id-error',
   invalid_search_length_error = 'invalid-search-length-error',
 }
-export enum UserListIndexerLogsNotFoundErrorMessageEnum {
+export enum UserListIndexerLogsNotFoundResponseDtoMessage {
   invalid_account_id_error = 'invalid-account-id-error',
   invalid_root_path_id_error = 'invalid-root-path-id-error',
 }
@@ -12650,10 +12737,10 @@ export enum UserListTracksBadRequestErrorMessages {
   invalid_sort_order_error = 'invalid-sort-order-error',
   invalid_year_error = 'invalid-year-error',
 }
-export enum UserRetrieveAlbumNotFoundErrorMessage {
+export enum UserRetrieveAlbumNotFoundResponseDtoMessage {
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserRetrieveAssociationNotFoundErrorMessage {
+export enum UserRetrieveAssociationNotFoundResponseDtoMessage {
   artist_not_found_error = 'artist-not-found-error',
 }
 export enum UserRoleEnum {
@@ -12669,19 +12756,19 @@ export enum UserSetAlbumCustomDataBadRequestErrorMessage {
   invalid_year_error = 'invalid-year-error',
   invalid_year_range_error = 'invalid-year-range-error',
 }
-export enum UserSetAlbumCustomDataNotFoundErrorMessage {
+export enum UserSetAlbumCustomDataNotFoundResponseDtoMessage {
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserSetAlbumFavoriteNotFoundErrorMessage {
+export enum UserSetAlbumFavoriteNotFoundResponseDtoMessage {
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserSetAlbumRatingBadRequestErrorMessage {
+export enum UserSetAlbumRatingBadRequestErrors {
   invalid_album_id_error = 'invalid-album-id-error',
-  invalid_rating_error = 'invalid-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
   invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_rating_error = 'invalid-rating-error',
 }
-export enum UserSetAlbumRatingNotFoundErrorMessage {
+export enum UserSetAlbumRatingNotFoundErrors {
   album_not_found_error = 'album-not-found-error',
 }
 export enum UserSetArtistNameBadRequestErrorMessage {
@@ -12689,10 +12776,10 @@ export enum UserSetArtistNameBadRequestErrorMessage {
   invalid_name_error = 'invalid-name-error',
   invalid_name_length_error = 'invalid-name-length-error',
 }
-export enum UserSetArtistNameNotFoundErrorMessage {
+export enum UserSetArtistNameNotFoundResponseDtoMessage {
   artist_not_found_error = 'artist-not-found-error',
 }
-export enum UserSetAssociationFavoriteNotFoundErrorMessage {
+export enum UserSetAssociationFavoriteNotFoundResponseDtoMessage {
   association_not_found_error = 'association-not-found-error',
 }
 export enum UserSetComposerNameBadRequestErrorMessage {
@@ -12700,7 +12787,7 @@ export enum UserSetComposerNameBadRequestErrorMessage {
   invalid_name_error = 'invalid-name-error',
   invalid_name_length_error = 'invalid-name-length-error',
 }
-export enum UserSetComposerNameNotFoundErrorMessage {
+export enum UserSetComposerNameNotFoundResponseDtoMessage {
   composer_not_found_error = 'composer-not-found-error',
 }
 export enum UserSetCustomDataBadRequestErrorMessage {
@@ -12726,10 +12813,10 @@ export enum UserSetCustomDataBadRequestErrorMessage {
   invalid_year_error = 'invalid-year-error',
   invalid_year_range_error = 'invalid-year-range-error',
 }
-export enum UserSetCustomDataNotFoundErrorMessage {
+export enum UserSetCustomDataNotFoundResponseDtoMessage {
   file_not_found_error = 'file-not-found-error',
 }
-export enum UserSetFolderFavoriteNotFoundErrorMessage {
+export enum UserSetFolderFavoriteNotFoundResponseDtoMessage {
   folder_not_found_error = 'folder-not-found-error',
 }
 export enum UserSetGenreNameBadRequestErrorMessage {
@@ -12737,7 +12824,7 @@ export enum UserSetGenreNameBadRequestErrorMessage {
   invalid_name_error = 'invalid-name-error',
   invalid_name_length_error = 'invalid-name-length-error',
 }
-export enum UserSetGenreNameNotFoundErrorMessage {
+export enum UserSetGenreNameNotFoundResponseDtoMessage {
   genre_not_found_error = 'genre-not-found-error',
 }
 export enum UserSetTrackCustomDataBadRequestErrorMessage {
@@ -12759,10 +12846,10 @@ export enum UserSetTrackCustomDataBadRequestErrorMessage {
   invalid_year_error = 'invalid-year-error',
   invalid_year_range_error = 'invalid-year-range-error',
 }
-export enum UserSetTrackCustomDataNotFoundErrorMessage {
+export enum UserSetTrackCustomDataNotFoundResponseDtoMessage {
   file_not_found_error = 'file-not-found-error',
 }
-export enum UserSetTrackFavoriteNotFoundErrorMessage {
+export enum UserSetTrackFavoriteNotFoundResponseDtoMessage {
   track_not_found_error = 'track-not-found-error',
 }
 export enum UserSetTrackRatingBadRequestErrorMessage {
@@ -12772,11 +12859,11 @@ export enum UserSetTrackRatingBadRequestErrorMessage {
   invalid_min_rating_error = 'invalid-min-rating-error',
   invalid_max_rating_error = 'invalid-max-rating-error',
 }
-export enum UserSetTrackRatingNotFoundErrorMessage {
+export enum UserSetTrackRatingNotFoundResponseDtoMessage {
   track_not_found_error = 'track-not-found-error',
   album_not_found_error = 'album-not-found-error',
 }
-export enum UserStreamFileNotFoundErrorMessage {
+export enum UserStreamFileNotFoundResponseDtoMessage {
   file_not_found_error = 'file-not-found-error',
 }
 export enum UserUpdatePasswordBadRequestErrorMessageEnum {

@@ -98,6 +98,11 @@ describe('/api/user/set-track-rating', () => {
   describe('errors', () => {
     it('should reject invalid track id', async () => {
       const { error } = await setRating(-1, 5);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
+    }, 120_000);
+
+    it('should reject nonexistent track id', async () => {
+      const { error } = await setRating(999999, 5);
       expect(error?.message[0]).toBe(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }, 120_000);
   });

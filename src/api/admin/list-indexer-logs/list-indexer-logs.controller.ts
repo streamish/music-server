@@ -2,6 +2,7 @@ import { AdminController, ApiEndpoint } from '../../api.decorator';
 import { AdminListIndexerLogsQueryDto, AdminListIndexerLogsResponseDto } from './list-indexer-logs.dto';
 import { AdminListIndexerLogsService } from './list-indexer-logs.service';
 import { Get, HttpStatus, Query } from '@nestjs/common';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @AdminController()
 export class AdminListIndexerLogsController {
@@ -18,6 +19,7 @@ export class AdminListIndexerLogsController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.OK]: AdminListIndexerLogsResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(AdminListIndexerLogsQueryDto),
     },
   })
   async get(@Query() query: AdminListIndexerLogsQueryDto): Promise<AdminListIndexerLogsResponseDto> {

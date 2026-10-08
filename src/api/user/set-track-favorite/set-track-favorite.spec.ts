@@ -75,6 +75,11 @@ describe('/api/user/set-track-favorite', () => {
   describe('errors', () => {
     it('should reject invalid track id', async () => {
       const { error } = await setTrackFavorite(-1);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
+    }, 120_000);
+
+    it('should reject nonexistent track id', async () => {
+      const { error } = await setTrackFavorite(999999);
       expect(error?.message[0]).toBe(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }, 120_000);
   });

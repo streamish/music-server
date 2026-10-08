@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Delete, HttpStatus, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
-import {
-  UserDeleteFavoriteNotFoundResponseDto,
-  UserDeleteFavoriteQueryDto,
-  UserDeleteFavoriteResponseDto,
-} from './delete-favorite.dto';
+import { UserDeleteFavoriteQueryDto, UserDeleteFavoriteResponseDto } from './delete-favorite.dto';
 import { UserDeleteFavoriteService } from './delete-favorite.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserDeleteFavoriteController {
@@ -22,7 +20,8 @@ export class UserDeleteFavoriteController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserDeleteFavoriteResponseDto,
-      [HttpStatus.NOT_FOUND]: UserDeleteFavoriteNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.FAVORITE_ITEM_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserDeleteFavoriteQueryDto),
     },
   })
   async delete(

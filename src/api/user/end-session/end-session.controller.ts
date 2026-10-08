@@ -1,9 +1,8 @@
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
-import { ApiInternalServerErrorResponse, ApiResponse } from '@nestjs/swagger';
-import { BadRequestResponseDto, InternalServerErrorResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { Delete, HttpStatus, Logger } from '@nestjs/common';
 import { Session } from 'src/api/session.decorator';
 import { SessionEntity } from 'src/database/entities';
+import { SuccessResponseDto } from 'src/api/response.dto';
 import { UserEndSessionService } from './end-session.service';
 
 @UserController()
@@ -19,14 +18,8 @@ export class UserEndSessionController {
     ),
     isAuthenticated: true,
     responses: {
-      [HttpStatus.BAD_REQUEST]: BadRequestResponseDto,
+      [HttpStatus.OK]: SuccessResponseDto,
     },
-  })
-  @ApiResponse({
-    type: SuccessResponseDto,
-  })
-  @ApiInternalServerErrorResponse({
-    type: InternalServerErrorResponseDto,
   })
   async delete(@Session() session: SessionEntity): Promise<SuccessResponseDto> {
     try {

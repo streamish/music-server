@@ -1,7 +1,8 @@
 import { AUDIO_MIME_TYPES, BINARY_RESPONSE } from 'src/constants/swagger';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
-import { UserStreamFileNotFoundResponseDto, UserStreamFileQueryDto } from './stream-file.dto';
+import { UserStreamFileQueryDto } from './stream-file.dto';
 import { UserStreamFileService } from './stream-file.service';
 import { getAudioContentType } from 'src/utils/strings';
 import { readFileSync } from 'node:fs';
@@ -24,7 +25,7 @@ export class UserStreamFileController {
     produces: [...AUDIO_MIME_TYPES],
     responses: {
       [HttpStatus.OK]: BINARY_RESPONSE,
-      [HttpStatus.NOT_FOUND]: UserStreamFileNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.FILE_NOT_FOUND_ERROR],
     },
   })
   async get(

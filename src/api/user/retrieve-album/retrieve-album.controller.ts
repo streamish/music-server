@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserRetrieveAlbumNotFoundResponseDto,
-  UserRetrieveAlbumQueryDto,
-  UserRetrieveAlbumResponseDto,
-} from './retrieve-album.dto';
+import { UserRetrieveAlbumQueryDto, UserRetrieveAlbumResponseDto } from './retrieve-album.dto';
 import { UserRetrieveAlbumService } from './retrieve-album.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserRetrieveAlbumController {
@@ -21,7 +19,8 @@ export class UserRetrieveAlbumController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserRetrieveAlbumResponseDto,
-      [HttpStatus.NOT_FOUND]: UserRetrieveAlbumNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ALBUM_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserRetrieveAlbumQueryDto),
     },
   })
   async get(

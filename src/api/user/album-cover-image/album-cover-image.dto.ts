@@ -1,14 +1,8 @@
 import { ErrorCodes } from 'src/constants/error-codes';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { IsInt, Max, Min } from 'class-validator';
 
-export class UserAlbumCoverImageQueryDto {
-  /**
-   * The ID of the association
-   */
-  @IsInt({ message: ErrorCodes.INVALID_ALBUM_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_ALBUM_ID_ERROR })
-  declare id: number;
-
+export class UserAlbumCoverImageQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_ALBUM_ID_ERROR) {
   /**
    * The width/height size of the image in pixels
    */

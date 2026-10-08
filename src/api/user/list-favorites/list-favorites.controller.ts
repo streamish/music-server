@@ -2,12 +2,9 @@ import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserListFavoritesBadRequestResponseDto,
-  UserListFavoritesQueryDto,
-  UserListFavoritesResponseDto,
-} from './list-favorites.dto';
+import { UserListFavoritesQueryDto, UserListFavoritesResponseDto } from './list-favorites.dto';
 import { UserListFavoritesService } from './list-favorites.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserListFavoritesController {
@@ -20,7 +17,7 @@ export class UserListFavoritesController {
     isPaginated: true,
     responses: {
       [HttpStatus.OK]: UserListFavoritesResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserListFavoritesBadRequestResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserListFavoritesQueryDto),
     },
   })
   async get(@User() user: AccountEntity, @Query() query: UserListFavoritesQueryDto) {

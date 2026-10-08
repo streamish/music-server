@@ -75,6 +75,11 @@ describe('/api/user/set-album-rating', () => {
   describe('errors', () => {
     it('should reject invalid album id', async () => {
       const { error } = await setRating(-1, 5);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_ID_ERROR);
+    }, 120_000);
+
+    it('should reject nonexistent album id', async () => {
+      const { error } = await setRating(999999, 5);
       expect(error?.message[0]).toBe(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }, 120_000);
   });

@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Delete, HttpStatus, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
-import {
-  UserDeleteCustomDataNotFoundResponseDto,
-  UserDeleteCustomDataQueryDto,
-  UserDeleteCustomDataResponseDto,
-} from './delete-custom-data.dto';
+import { UserDeleteCustomDataQueryDto, UserDeleteCustomDataResponseDto } from './delete-custom-data.dto';
 import { UserDeleteCustomDataService } from './delete-custom-data.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserDeleteCustomDataController {
@@ -22,7 +20,8 @@ export class UserDeleteCustomDataController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserDeleteCustomDataResponseDto,
-      [HttpStatus.NOT_FOUND]: UserDeleteCustomDataNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.TRACK_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserDeleteCustomDataQueryDto),
     },
   })
   async delete(@User() user: AccountEntity, @Query() query: UserDeleteCustomDataQueryDto) {

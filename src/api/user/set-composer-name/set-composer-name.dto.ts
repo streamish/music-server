@@ -1,17 +1,10 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { IsInt, IsString, Length, Min } from 'class-validator';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
+import { IsString, Length } from 'class-validator';
+import { SuccessResponseDto } from 'src/api/response.dto';
 
-export class UserSetComposerNameQueryDto {
-  /**
-   * The ID of the composer
-   */
-  @IsInt({ message: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR })
-  declare id: number;
-}
+export class UserSetComposerNameQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_ASSOCIATION_ID_ERROR) {}
 
 export class UserSetComposerNameBodyDto {
   /**
@@ -24,35 +17,3 @@ export class UserSetComposerNameBodyDto {
 }
 
 export class UserSetComposerNameResponseDto extends SuccessResponseDto {}
-
-export class UserSetComposerNameNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.COMPOSER_NOT_FOUND_ERROR],
-    enumName: 'UserSetComposerNameNotFoundErrorMessage',
-    default: ErrorCodes.COMPOSER_NOT_FOUND_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
-
-export class UserSetComposerNameBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [
-      ErrorCodes.INVALID_ASSOCIATION_ID_ERROR,
-      ErrorCodes.INVALID_NAME_ERROR,
-      ErrorCodes.INVALID_NAME_LENGTH_ERROR,
-    ],
-    enumName: 'UserSetComposerNameBadRequestErrorMessage',
-    default: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR,
-  })
-  declare message: ErrorCodes[];
-}

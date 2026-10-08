@@ -78,6 +78,12 @@ describe('/api/admin/create-root-path', () => {
     it('should reject invalid account id', async () => {
       const { error } = await createRootPath(0, tmpdir());
       const typedError = error as unknown as Record<string, string | string[]>;
+      expect(typedError?.message?.[0]).toBe(ErrorCodes.INVALID_ACCOUNT_ID_ERROR);
+    });
+
+    it('should reject nonexistent account id', async () => {
+      const { error } = await createRootPath(999999, tmpdir());
+      const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     });
 

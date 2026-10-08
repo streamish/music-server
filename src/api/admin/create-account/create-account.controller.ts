@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { AdminController, ApiEndpoint } from '../../api.decorator';
-import {
-  AdminCreateAccountBadRequestResponseDto,
-  AdminCreateAccountBodyDto,
-  AdminCreateAccountResponseDto,
-} from './create-account.dto';
+import { AdminCreateAccountBodyDto, AdminCreateAccountResponseDto } from './create-account.dto';
 import { AdminCreateAccountService } from './create-account.service';
 import { Body, HttpStatus, Post } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @AdminController()
 export class AdminCreateAccountController {
@@ -20,7 +18,11 @@ export class AdminCreateAccountController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.CREATED]: AdminCreateAccountResponseDto,
-      [HttpStatus.BAD_REQUEST]: AdminCreateAccountBadRequestResponseDto,
+      [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.INVALID_USERNAME_NOT_UNIQUE_ERROR,
+        ...getValidationMessages(AdminCreateAccountBodyDto),
+      ],
+      [HttpStatus.UNAUTHORIZED]: [ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR],
     },
   })
   async post(

@@ -1,11 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { AssociationSortFieldEnum, AssociationTypeEnum, SortDirectionEnum } from 'src/types/enums';
-import { BadRequestResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { LibraryAssociationDto } from 'src/library/dtos';
 import { PaginationQueryDto } from 'src/api/request.dto';
+import { SuccessResponseDto } from 'src/api/response.dto';
 import { Transform } from 'class-transformer';
 
 export class UserListAlbumAssociationsQueryDto extends PaginationQueryDto {
@@ -28,8 +28,8 @@ export class UserListAlbumAssociationsQueryDto extends PaginationQueryDto {
   addedAfter?: Date;
 
   /**
-   * Optional filter for the date the artist was added to the library, which will do an exact match against
-   * the date the artist was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
+   * Optional filter for the date the association was added to the library, which will do an exact match against
+   * the date the association was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
    */
   @ApiProperty({
     type: 'string',
@@ -125,33 +125,4 @@ export class UserListAlbumAssociationsResponseDto extends SuccessResponseDto {
    */
   @IsInt()
   declare total: number;
-}
-
-const UserListAlbumAssociationsBadRequestErrorMessages = [
-  ErrorCodes.INVALID_ADDED_AFTER_ERROR,
-  ErrorCodes.INVALID_ADDED_BEFORE_ERROR,
-  ErrorCodes.INVALID_FILTER_ERROR,
-  ErrorCodes.INVALID_FILTER_LENGTH_ERROR,
-  ErrorCodes.INVALID_GENRE_ERROR,
-  ErrorCodes.INVALID_GENRE_LENGTH_ERROR,
-  ErrorCodes.INVALID_LIMIT_ERROR,
-  ErrorCodes.INVALID_LIMIT_RANGE_ERROR,
-  ErrorCodes.INVALID_OFFSET_ERROR,
-  ErrorCodes.INVALID_OFFSET_RANGE_ERROR,
-  ErrorCodes.INVALID_SORT_FIELD_ERROR,
-  ErrorCodes.INVALID_SORT_ORDER_ERROR,
-];
-
-export class UserListAlbumAssociationsBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied while serving the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: UserListAlbumAssociationsBadRequestErrorMessages,
-    enumName: 'UserListAlbumAssociationsBadRequestErrorMessage',
-    default: UserListAlbumAssociationsBadRequestErrorMessages[0],
-  })
-  declare message: ErrorCodes[];
 }

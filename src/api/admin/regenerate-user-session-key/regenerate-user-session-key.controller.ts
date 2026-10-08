@@ -1,10 +1,10 @@
 import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
-  AdminRegenerateUserSessionKeyNotFoundResponseDto,
   AdminRegenerateUserSessionKeyQueryDto,
   AdminRegenerateUserSessionKeyResponseDto,
 } from './regenerate-user-session-key.dto';
 import { AdminRegenerateUserSessionKeyService } from './regenerate-user-session-key.service';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpStatus, Post, Query } from '@nestjs/common';
 
 @AdminController()
@@ -18,7 +18,7 @@ export class AdminRegenerateUserSessionKeyController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.OK]: AdminRegenerateUserSessionKeyResponseDto,
-      [HttpStatus.NOT_FOUND]: AdminRegenerateUserSessionKeyNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
     },
   })
   async post(@Query() query: AdminRegenerateUserSessionKeyQueryDto): Promise<AdminRegenerateUserSessionKeyResponseDto> {

@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { Guid } from 'typescript-guid';
 import { InjectModel } from '@nestjs/sequelize';
@@ -24,11 +24,7 @@ export class AdminCreateAccountService {
     // verify own password
     const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
     if (!isAdminPasswordValid) {
-      throw new NotFoundException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
-    }
-    // verify roles are provided
-    if (!roles.length) {
-      throw new BadRequestException(ErrorCodes.INVALID_USER_ROLE_ERROR);
+      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     }
     // verify username is unique
     const exists = await this.accountEntity.findOne({

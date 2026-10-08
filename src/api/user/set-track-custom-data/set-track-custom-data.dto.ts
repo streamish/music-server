@@ -1,17 +1,10 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { IsInt, IsOptional, IsString, Length, Max, Min, ValidateIf } from 'class-validator';
+import { SuccessResponseDto } from 'src/api/response.dto';
 
-export class UserSetTrackCustomDataQueryDto {
-  /**
-   * The ID of the file
-   */
-  @IsInt({ message: ErrorCodes.INVALID_TRACK_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_TRACK_ID_ERROR })
-  declare id: number;
-}
+export class UserSetTrackCustomDataQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_TRACK_ID_ERROR) {}
 
 export class UserSetTrackCustomDataBodyDto {
   /**
@@ -102,51 +95,3 @@ export class UserSetTrackCustomDataBodyDto {
 }
 
 export class UserSetTrackCustomDataResponseDto extends SuccessResponseDto {}
-
-export class UserSetTrackCustomDataNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.FILE_NOT_FOUND_ERROR],
-    enumName: 'UserSetTrackCustomDataNotFoundErrorMessage',
-    default: ErrorCodes.FILE_NOT_FOUND_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
-
-const UserSetTrackCustomDataBadRequestErrorMessage = [
-  ErrorCodes.INVALID_TRACK_ID_ERROR,
-  ErrorCodes.INVALID_ARTISTS_ERROR,
-  ErrorCodes.INVALID_ARTISTS_LENGTH_ERROR,
-  ErrorCodes.INVALID_COMMENT_ERROR,
-  ErrorCodes.INVALID_COMMENT_LENGTH_ERROR,
-  ErrorCodes.INVALID_COMPOSERS_ERROR,
-  ErrorCodes.INVALID_COMPOSERS_LENGTH_ERROR,
-  ErrorCodes.INVALID_DISC_NUMBER_ERROR,
-  ErrorCodes.INVALID_DISC_NUMBER_RANGE_ERROR,
-  ErrorCodes.INVALID_GENRES_ERROR,
-  ErrorCodes.INVALID_GENRES_LENGTH_ERROR,
-  ErrorCodes.INVALID_TITLE_ERROR,
-  ErrorCodes.INVALID_TITLE_LENGTH_ERROR,
-  ErrorCodes.INVALID_TRACK_NUMBER_ERROR,
-  ErrorCodes.INVALID_TRACK_NUMBER_RANGE_ERROR,
-  ErrorCodes.INVALID_YEAR_ERROR,
-  ErrorCodes.INVALID_YEAR_RANGE_ERROR,
-];
-
-export class UserSetTrackCustomDataBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: UserSetTrackCustomDataBadRequestErrorMessage,
-    enumName: 'UserSetTrackCustomDataBadRequestErrorMessage',
-    default: ErrorCodes.INVALID_TRACK_ID_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
