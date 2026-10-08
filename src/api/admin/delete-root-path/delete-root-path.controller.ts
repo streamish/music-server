@@ -1,11 +1,8 @@
 import { AdminController, ApiEndpoint } from '../../api.decorator';
-import {
-  AdminDeleteRootPathNotFoundResponseDto,
-  AdminDeleteRootPathQueryDto,
-  AdminDeleteRootPathResponseDto,
-} from './delete-root-path.dto';
+import { AdminDeleteRootPathQueryDto, AdminDeleteRootPathResponseDto } from './delete-root-path.dto';
 import { AdminDeleteRootPathService } from './delete-root-path.service';
 import { Delete, HttpStatus, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 
 @AdminController()
 export class AdminDeleteRootPathController {
@@ -19,7 +16,7 @@ export class AdminDeleteRootPathController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.OK]: AdminDeleteRootPathResponseDto,
-      [HttpStatus.NOT_FOUND]: AdminDeleteRootPathNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
     },
   })
   async delete(@Query() query: AdminDeleteRootPathQueryDto): Promise<AdminDeleteRootPathResponseDto> {

@@ -2,12 +2,9 @@ import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Post } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserUpdatePasswordBadRequestResponseDto,
-  UserUpdatePasswordBodyDto,
-  UserUpdatePasswordResponseDto,
-} from './update-password.dto';
+import { UserUpdatePasswordBodyDto, UserUpdatePasswordResponseDto } from './update-password.dto';
 import { UserUpdatePasswordService } from './update-password.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserUpdatePasswordController {
@@ -22,7 +19,7 @@ export class UserUpdatePasswordController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserUpdatePasswordResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserUpdatePasswordBadRequestResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserUpdatePasswordBodyDto),
     },
   })
   async post(

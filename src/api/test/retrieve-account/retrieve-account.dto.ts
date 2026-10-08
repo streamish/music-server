@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
+import { BadRequestResponseDto, NotFoundResponseDtoFactory, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { UserRoleEnum } from 'src/types/enums';
@@ -26,19 +26,9 @@ export class TestRetrieveAccountResponseDto extends SuccessResponseDto {
   declare account: TestRetrieveAccountDto;
 }
 
-export class TestRetrieveAccountNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
-    enumName: 'TestRetrieveAccountNotFoundErrorMessage',
-    default: ErrorCodes.ACCOUNT_NOT_FOUND_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
+export class TestRetrieveAccountNotFoundResponseDto extends NotFoundResponseDtoFactory('', '', [
+  ErrorCodes.ACCOUNT_NOT_FOUND_ERROR,
+]) {}
 
 export class TestRetrieveAccountBadRequestResponseDto extends BadRequestResponseDto {
   /**

@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
+import { BadRequestResponseDto, NotFoundResponseDtoFactory, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsInt, IsNotEmpty, IsString, Length } from 'class-validator';
 
@@ -32,19 +32,10 @@ export class TestDuplicateAccountResponseDto extends SuccessResponseDto {
   declare accountId: number;
 }
 
-export class TestDuplicateAccountNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.INTERNAL_SERVER_ERROR, ErrorCodes.NOT_FOUND_ERROR],
-    enumName: 'TestDuplicateAccountNotFoundErrorMessage',
-    default: ErrorCodes.INTERNAL_SERVER_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
+export class TestDuplicateAccountNotFoundResponseDto extends NotFoundResponseDtoFactory('', '', [
+  ErrorCodes.INTERNAL_SERVER_ERROR,
+  ErrorCodes.NOT_FOUND_ERROR,
+]) {}
 
 export class TestDuplicateAccountBadRequestResponseDto extends BadRequestResponseDto {
   /**

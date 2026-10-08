@@ -1,13 +1,13 @@
 import { AdminController, ApiEndpoint } from 'src/api/api.decorator';
 import {
-  AdminUpdateRootPathBadRequestResponseDto,
   AdminUpdateRootPathBodyDto,
-  AdminUpdateRootPathNotFoundResponseDto,
   AdminUpdateRootPathQueryDto,
   AdminUpdateRootPathResponseDto,
 } from './update-root-path.dto';
 import { AdminUpdateRootPathService } from './update-root-path.service';
 import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @AdminController()
 export class AdminUpdateRootPathController {
@@ -20,8 +20,11 @@ export class AdminUpdateRootPathController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.OK]: AdminUpdateRootPathResponseDto,
-      [HttpStatus.BAD_REQUEST]: AdminUpdateRootPathBadRequestResponseDto,
-      [HttpStatus.NOT_FOUND]: AdminUpdateRootPathNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(AdminUpdateRootPathQueryDto),
+        ...getValidationMessages(AdminUpdateRootPathBodyDto),
+      ],
     },
   })
   async patch(

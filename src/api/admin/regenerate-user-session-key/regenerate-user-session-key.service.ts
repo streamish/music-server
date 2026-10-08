@@ -14,7 +14,7 @@ export class AdminRegenerateUserSessionKeyService {
   async regenerateSessionKey(accountId: number): Promise<void> {
     const account = await this.accountEntity.findByPk(accountId);
     if (!account) {
-      throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR, 'Account not found');
+      throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
     await this.accountEntity.update(
       {

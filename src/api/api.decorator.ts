@@ -12,6 +12,14 @@ import {
 } from 'src/constants/swagger';
 import { AllowedRoles, RoleGuard } from './role.guard';
 import {
+  ApiBadRequestErrors,
+  ApiNotFoundErrors,
+  ApiUnauthorizedErrors,
+  BadRequestResponseDto,
+  ForbiddenErrorResponseDto,
+  InternalServerErrorResponseDto,
+} from './response.dto';
+import {
   ApiBearerAuth,
   ApiHeader,
   ApiHeaderOptions,
@@ -20,13 +28,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponseDto, ForbiddenErrorResponseDto, InternalServerErrorResponseDto } from './response.dto';
 import { ContentObject, SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { Controller, HttpCode, HttpStatus, Type, UseGuards, applyDecorators } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { UserRoleEnum } from 'src/types/enums';
 
 export type ResponseDefinition =
-  | Type<unknown>
   | {
       schema: SchemaObject;
     }
@@ -34,6 +41,8 @@ export type ResponseDefinition =
       description?: string;
       content: ContentObject;
     }
+  | string[]
+  | Type<unknown>
   | Type<unknown>[];
 
 export type ResponseTypes = Partial<
@@ -43,7 +52,8 @@ export type ResponseTypes = Partial<
     | HttpStatus.BAD_REQUEST
     | HttpStatus.NOT_FOUND
     | HttpStatus.INTERNAL_SERVER_ERROR
-    | HttpStatus.FORBIDDEN,
+    | HttpStatus.FORBIDDEN
+    | HttpStatus.UNAUTHORIZED,
     ResponseDefinition
   >
 >;
@@ -166,12 +176,21 @@ export function ApiEndpoint(
         ...(isPaginated ? [PAGINATED_DATA_DESCRIPTION] : []),
       ]
         .map((line) => line.trim())
-        .join('\n'),
+        .join('\n\n'),
     }),
     // responses
     ...(produces ? [ApiProduces(...produces)] : []),
     ...(header ? [ApiHeader(header)] : []),
     ...Object.entries(allResponses).map(([status, dto]) => {
+      if (status === '400' && Array.isArray(dto)) {
+        return ApiBadRequestErrors(dto as ErrorCodes[]);
+      }
+      if (status === '401' && Array.isArray(dto)) {
+        return ApiUnauthorizedErrors(dto as ErrorCodes[]);
+      }
+      if (status === '404' && Array.isArray(dto)) {
+        return ApiNotFoundErrors(dto as ErrorCodes[]);
+      }
       if ('schema' in dto) {
         return ApiResponse({ status: Number(status), schema: dto.schema });
       }

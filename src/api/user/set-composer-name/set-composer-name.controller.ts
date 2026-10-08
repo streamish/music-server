@@ -1,15 +1,15 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
 import {
-  UserSetComposerNameBadRequestResponseDto,
   UserSetComposerNameBodyDto,
-  UserSetComposerNameNotFoundResponseDto,
   UserSetComposerNameQueryDto,
   UserSetComposerNameResponseDto,
 } from './set-composer-name.dto';
 import { UserSetComposerNameService } from './set-composer-name.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetComposerNameController {
@@ -25,8 +25,11 @@ export class UserSetComposerNameController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetComposerNameResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetComposerNameNotFoundResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserSetComposerNameBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.COMPOSER_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(UserSetComposerNameQueryDto),
+        ...getValidationMessages(UserSetComposerNameBodyDto),
+      ],
     },
   })
   async patch(

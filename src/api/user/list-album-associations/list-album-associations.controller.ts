@@ -2,12 +2,9 @@ import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserListAlbumAssociationsBadRequestResponseDto,
-  UserListAlbumAssociationsQueryDto,
-  UserListAlbumAssociationsResponseDto,
-} from './list-album-associations.dto';
+import { UserListAlbumAssociationsQueryDto, UserListAlbumAssociationsResponseDto } from './list-album-associations.dto';
 import { UserListAlbumAssociationsService } from './list-album-associations.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserListAlbumAssociationsController {
@@ -23,7 +20,7 @@ export class UserListAlbumAssociationsController {
     excludeTrackInformation: true,
     responses: {
       [HttpStatus.OK]: UserListAlbumAssociationsResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserListAlbumAssociationsBadRequestResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserListAlbumAssociationsQueryDto),
     },
   })
   async get(

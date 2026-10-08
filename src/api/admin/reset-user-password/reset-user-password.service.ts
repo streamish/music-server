@@ -2,7 +2,7 @@ import { AccountEntity } from 'src/database/entities';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class AdminResetUserPasswordService {
@@ -21,7 +21,7 @@ export class AdminResetUserPasswordService {
     // verify own password
     const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
     if (!isAdminPasswordValid) {
-      throw new NotFoundException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
+      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
     }
     // apply new password
     const userAccount = await this.accountEntity.findByPk(userAccountId);

@@ -2,13 +2,9 @@ import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserListIndexerLogsBadRequestResponseDto,
-  UserListIndexerLogsNotFoundResponseDto,
-  UserListIndexerLogsQueryDto,
-  UserListIndexerLogsResponseDto,
-} from './list-indexer-logs.dto';
+import { UserListIndexerLogsQueryDto, UserListIndexerLogsResponseDto } from './list-indexer-logs.dto';
 import { UserListIndexerLogsService } from './list-indexer-logs.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserListIndexerLogsController {
@@ -25,8 +21,7 @@ export class UserListIndexerLogsController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserListIndexerLogsResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserListIndexerLogsBadRequestResponseDto,
-      [HttpStatus.NOT_FOUND]: UserListIndexerLogsNotFoundResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserListIndexerLogsQueryDto),
     },
   })
   async get(

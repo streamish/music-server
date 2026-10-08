@@ -62,6 +62,12 @@ describe('/api/admin/regenerate-user-session-key', () => {
     it('should reject invalid account id', async () => {
       const { error } = await regenerateUserSessionKey(0);
       const typedError = error as unknown as Record<string, string | string[]>;
+      expect(typedError?.message?.[0]).toBe(ErrorCodes.INVALID_ACCOUNT_ID_ERROR);
+    });
+
+    it('should reject nonexistent account id', async () => {
+      const { error } = await regenerateUserSessionKey(99999);
+      const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     });
   });

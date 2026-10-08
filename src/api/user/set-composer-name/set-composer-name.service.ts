@@ -1,6 +1,9 @@
+import { AssociationTypeEnum } from 'src/types/enums';
 import { CustomDataService } from 'src/custom-data/custom-data.service';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { IndexerService } from 'src/indexer/indexer.service';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { LibraryService } from 'src/library/library.service';
 
 @Injectable()
 export class UserSetComposerNameService {
@@ -8,9 +11,25 @@ export class UserSetComposerNameService {
     private readonly customDataService: CustomDataService,
     @Inject(IndexerService)
     private readonly indexerService: IndexerService,
+    private readonly libraryService: LibraryService,
   ) {}
 
   async setComposerName(accountId: number, composerId: number, name: string) {
+    const albumAssociations = await this.libraryService.retrieveAlbumAssociation(
+      accountId,
+      composerId,
+      AssociationTypeEnum.COMPOSER,
+    );
+    if (!albumAssociations?.length) {
+      const trackAssociations = await this.libraryService.retrieveTrackAssociation(
+        accountId,
+        composerId,
+        AssociationTypeEnum.COMPOSER,
+      );
+      if (!trackAssociations?.length) {
+        throw new NotFoundException(ErrorCodes.COMPOSER_NOT_FOUND_ERROR);
+      }
+    }
     const trackIds = await this.customDataService.setCustomTrackComposerName(accountId, composerId, name);
     for (let i = 0, len = trackIds.length; i < len; i += 1) {
       const trackId = trackIds[i];

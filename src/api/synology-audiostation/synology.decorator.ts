@@ -89,7 +89,7 @@ export function SynologyApiEndpoint(
         ...(isAuthenticated ? [SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION] : []),
       ]
         .map((line) => line.trim())
-        .join('\n'),
+        .join('\n\n'),
     }),
     // responses
     Header('Content-Type', 'application/json'),
@@ -102,7 +102,7 @@ export function SynologyApiEndpoint(
       }
       if (Array.isArray(dto)) {
         return applyDecorators(
-          ApiExtraModels(...dto),
+          ApiExtraModels(...(dto as Type<unknown>[])),
           ApiResponse({
             status: Number(status),
             schema: {

@@ -1,15 +1,15 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
 import {
-  UserSetTrackCustomDataBadRequestResponseDto,
   UserSetTrackCustomDataBodyDto,
-  UserSetTrackCustomDataNotFoundResponseDto,
   UserSetTrackCustomDataQueryDto,
   UserSetTrackCustomDataResponseDto,
 } from './set-track-custom-data.dto';
 import { UserSetTrackCustomDataService } from './set-track-custom-data.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetTrackCustomDataController {
@@ -24,8 +24,11 @@ export class UserSetTrackCustomDataController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetTrackCustomDataResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetTrackCustomDataNotFoundResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserSetTrackCustomDataBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.TRACK_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(UserSetTrackCustomDataQueryDto),
+        ...getValidationMessages(UserSetTrackCustomDataBodyDto),
+      ],
     },
   })
   async patch(

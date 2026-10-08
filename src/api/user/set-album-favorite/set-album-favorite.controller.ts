@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserSetAlbumFavoriteNotFoundResponseDto,
-  UserSetAlbumFavoriteQueryDto,
-  UserSetAlbumFavoriteResponseDto,
-} from './set-album-favorite.dto';
+import { UserSetAlbumFavoriteQueryDto, UserSetAlbumFavoriteResponseDto } from './set-album-favorite.dto';
 import { UserSetAlbumFavoriteService } from './set-album-favorite.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetAlbumFavoriteController {
@@ -19,7 +17,8 @@ export class UserSetAlbumFavoriteController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetAlbumFavoriteResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetAlbumFavoriteNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ALBUM_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserSetAlbumFavoriteQueryDto),
     },
   })
   async put(

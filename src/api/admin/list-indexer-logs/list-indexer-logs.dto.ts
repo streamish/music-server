@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsDate, IsInt, IsOptional, IsString, Length } from 'class-validator';
+import { SuccessResponseDto } from 'src/api/response.dto';
 
 export class AdminLogEntryDto {
   @IsInt()
@@ -45,36 +45,4 @@ export class AdminListIndexerLogsResponseDto extends SuccessResponseDto {
     isArray: true,
   })
   declare logs: AdminLogEntryDto[];
-}
-
-export class AdminListIndexerLogsNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied while serving the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.INVALID_ACCOUNT_ID_ERROR, ErrorCodes.INVALID_ROOT_PATH_ID_ERROR],
-    enumName: 'AdminListIndexerLogsNotFoundErrorMessageEnum',
-    default: ErrorCodes.INVALID_ACCOUNT_ID_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
-
-export class AdminListIndexerLogsBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied while serving the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [
-      ErrorCodes.INVALID_ACCOUNT_ID_ERROR,
-      ErrorCodes.INVALID_ROOT_PATH_ID_ERROR,
-      ErrorCodes.INVALID_SEARCH_LENGTH_ERROR,
-    ],
-    enumName: 'AdminListIndexerLogsBadRequestErrorMessageEnum',
-    default: ErrorCodes.INVALID_ACCOUNT_ID_ERROR,
-  })
-  declare message: ErrorCodes[];
 }

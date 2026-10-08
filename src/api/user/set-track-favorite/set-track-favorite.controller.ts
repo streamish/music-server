@@ -1,12 +1,9 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import {
-  UserSetTrackFavoriteNotFoundResponseDto,
-  UserSetTrackFavoriteQueryDto,
-  UserSetTrackFavoriteResponseDto,
-} from './set-track-favorite.dto';
+import { UserSetTrackFavoriteQueryDto, UserSetTrackFavoriteResponseDto } from './set-track-favorite.dto';
 import { UserSetTrackFavoriteService } from './set-track-favorite.service';
 
 @UserController()
@@ -19,7 +16,7 @@ export class UserSetTrackFavoriteController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetTrackFavoriteResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetTrackFavoriteNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.TRACK_NOT_FOUND_ERROR],
     },
   })
   async put(

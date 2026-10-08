@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Delete, HttpStatus, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
-import {
-  UserDeleteRootPathNotFoundResponseDto,
-  UserDeleteRootPathQueryDto,
-  UserDeleteRootPathResponseDto,
-} from './delete-root-path.dto';
+import { UserDeleteRootPathQueryDto, UserDeleteRootPathResponseDto } from './delete-root-path.dto';
 import { UserDeleteRootPathService } from './delete-root-path.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserDeleteRootPathController {
@@ -22,7 +20,8 @@ export class UserDeleteRootPathController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserDeleteRootPathResponseDto,
-      [HttpStatus.NOT_FOUND]: UserDeleteRootPathNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UserDeleteRootPathQueryDto),
     },
   })
   async delete(

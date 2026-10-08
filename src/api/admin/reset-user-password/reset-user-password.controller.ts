@@ -1,15 +1,15 @@
 import { AccountEntity } from 'src/database/entities';
 import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
-  AdminResetUserPasswordBadRequestResponseDto,
   AdminResetUserPasswordBodyDto,
-  AdminResetUserPasswordNotFoundResponseDto,
   AdminResetUserPasswordQueryDto,
   AdminResetUserPasswordResponseDto,
 } from './reset-user-password.dto';
 import { AdminResetUserPasswordService } from './reset-user-password.service';
 import { Body, HttpStatus, Post, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @AdminController()
 export class AdminResetUserPasswordController {
@@ -22,8 +22,12 @@ export class AdminResetUserPasswordController {
     isAdministratorOnly: true,
     responses: {
       [HttpStatus.OK]: AdminResetUserPasswordResponseDto,
-      [HttpStatus.BAD_REQUEST]: AdminResetUserPasswordBadRequestResponseDto,
-      [HttpStatus.NOT_FOUND]: AdminResetUserPasswordNotFoundResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(AdminResetUserPasswordQueryDto),
+        ...getValidationMessages(AdminResetUserPasswordBodyDto),
+      ],
+      [HttpStatus.UNAUTHORIZED]: [ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR],
     },
   })
   async post(

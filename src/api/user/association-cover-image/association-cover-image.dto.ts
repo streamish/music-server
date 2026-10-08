@@ -1,16 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 
-export class UserAssociationCoverImageQueryDto {
-  /**
-   * The ID of the association
-   */
-  @IsInt({ message: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_ASSOCIATION_ID_ERROR })
-  declare id: number;
-
+export class UserAssociationCoverImageQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_ASSOCIATION_ID_ERROR) {
   /**
    * The width/height size of the image in pixels
    */

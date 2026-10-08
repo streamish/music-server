@@ -1,15 +1,15 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Put, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
 import {
-  UserSetAlbumRatingBadRequestResponseDto,
   UserSetAlbumRatingBodyDto,
-  UserSetAlbumRatingNotFoundResponseDto,
   UserSetAlbumRatingQueryDto,
   UserSetAlbumRatingResponseDto,
 } from './set-album-rating.dto';
 import { UserSetAlbumRatingService } from './set-album-rating.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetAlbumRatingController {
@@ -21,8 +21,11 @@ export class UserSetAlbumRatingController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetAlbumRatingResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetAlbumRatingNotFoundResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserSetAlbumRatingBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ALBUM_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(UserSetAlbumRatingQueryDto),
+        ...getValidationMessages(UserSetAlbumRatingBodyDto),
+      ],
     },
   })
   async put(

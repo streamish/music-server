@@ -1,15 +1,15 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Put, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
 import {
-  UserSetCustomDataBadRequestResponseDto,
   UserSetCustomDataBodyDto,
-  UserSetCustomDataNotFoundResponseDto,
   UserSetCustomDataQueryDto,
   UserSetCustomDataResponseDto,
 } from './set-custom-data.dto';
 import { UserSetCustomDataService } from './set-custom-data.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetCustomDataController {
@@ -25,8 +25,11 @@ export class UserSetCustomDataController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetCustomDataResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetCustomDataNotFoundResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserSetCustomDataBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.TRACK_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(UserSetCustomDataQueryDto),
+        ...getValidationMessages(UserSetCustomDataBodyDto),
+      ],
     },
   })
   async put(

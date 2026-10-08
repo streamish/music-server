@@ -17,9 +17,9 @@ export class UserSetCustomDataService {
   ) {}
 
   async setCustomData(accountId: number, trackId: number, body: UserSetCustomDataBodyDto): Promise<void> {
-    const file = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
-    if (!file) {
-      throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
+    const track = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
+    if (!track) {
+      throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }
     const existingCustomData = await this.trackCustomDataEntity.findOne({ where: { trackId } });
     if (existingCustomData) {

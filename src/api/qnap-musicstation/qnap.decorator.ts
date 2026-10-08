@@ -74,7 +74,7 @@ export function QnapApiEndpoint(
       summary,
       description: [description, ...(isAuthenticated ? [QNAP_AUTHENTICATED_REQUEST_DESCRIPTION] : [])]
         .map((line) => line.trim())
-        .join('\n'),
+        .join('\n\n'),
     }),
     // responses
     Header('Content-Type', 'application/xml'),
@@ -87,7 +87,7 @@ export function QnapApiEndpoint(
       }
       if (Array.isArray(dto)) {
         return applyDecorators(
-          ApiExtraModels(...dto),
+          ApiExtraModels(...(dto as Type<unknown>[])),
           ApiResponse({
             status: Number(status),
             schema: {

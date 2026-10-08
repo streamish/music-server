@@ -75,7 +75,13 @@ describe('/api/admin/reset-user-password', () => {
 
   describe('errors', () => {
     it('should reject invalid account id', async () => {
-      const { error } = await resetUserPassword(0, ADMIN_PASSWORD, 'new-password');
+      const { error } = await resetUserPassword(-1, ADMIN_PASSWORD, 'new-password');
+      const typedError = error as unknown as Record<string, string | string[]>;
+      expect(typedError?.message?.[0]).toBe(ErrorCodes.INVALID_ACCOUNT_ID_ERROR);
+    });
+
+    it('should reject nonexistent account id', async () => {
+      const { error } = await resetUserPassword(999999, ADMIN_PASSWORD, 'new-password');
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     });

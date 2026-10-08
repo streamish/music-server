@@ -1,15 +1,15 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
 import {
-  UserSetAlbumCustomDataBadRequestResponseDto,
   UserSetAlbumCustomDataBodyDto,
-  UserSetAlbumCustomDataNotFoundResponseDto,
   UserSetAlbumCustomDataQueryDto,
   UserSetAlbumCustomDataResponseDto,
 } from './set-album-custom-data.dto';
 import { UserSetAlbumCustomDataService } from './set-album-custom-data.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetAlbumCustomDataController {
@@ -25,8 +25,11 @@ export class UserSetAlbumCustomDataController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetAlbumCustomDataResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetAlbumCustomDataNotFoundResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserSetAlbumCustomDataBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ALBUM_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(UserSetAlbumCustomDataQueryDto),
+        ...getValidationMessages(UserSetAlbumCustomDataBodyDto),
+      ],
     },
   })
   async patch(

@@ -1,15 +1,11 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
-import {
-  UserSetGenreNameBadRequestResponseDto,
-  UserSetGenreNameBodyDto,
-  UserSetGenreNameNotFoundResponseDto,
-  UserSetGenreNameQueryDto,
-  UserSetGenreNameResponseDto,
-} from './set-genre-name.dto';
+import { UserSetGenreNameBodyDto, UserSetGenreNameQueryDto, UserSetGenreNameResponseDto } from './set-genre-name.dto';
 import { UserSetGenreNameService } from './set-genre-name.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserSetGenreNameController {
@@ -25,8 +21,11 @@ export class UserSetGenreNameController {
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: UserSetGenreNameResponseDto,
-      [HttpStatus.NOT_FOUND]: UserSetGenreNameNotFoundResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserSetGenreNameBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.GENRE_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(UserSetGenreNameQueryDto),
+        ...getValidationMessages(UserSetGenreNameBodyDto),
+      ],
     },
   })
   async patch(

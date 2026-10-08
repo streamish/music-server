@@ -1,18 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { IsInt, Min } from 'class-validator';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { LibraryAlbumWithTracksDto } from 'src/library/dtos/library.album.dto';
-import { NotFoundResponseDto, SuccessResponseDto } from 'src/api/response.dto';
+import { SuccessResponseDto } from 'src/api/response.dto';
 
-export class UserRetrieveAlbumQueryDto {
-  /**
-   * The ID of the album
-   */
-  @IsInt({ message: ErrorCodes.INVALID_ALBUM_ID_ERROR })
-  @Min(1, { message: ErrorCodes.INVALID_ALBUM_ID_ERROR })
-  declare id: number;
-}
+export class UserRetrieveAlbumQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_ALBUM_ID_ERROR) {}
 
 export class UserRetrieveAlbumResponseDto extends SuccessResponseDto {
   /**
@@ -22,18 +15,4 @@ export class UserRetrieveAlbumResponseDto extends SuccessResponseDto {
     type: LibraryAlbumWithTracksDto,
   })
   declare album: LibraryAlbumWithTracksDto;
-}
-
-export class UserRetrieveAlbumNotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied while serving the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.ALBUM_NOT_FOUND_ERROR],
-    enumName: 'UserRetrieveAlbumNotFoundErrorMessage',
-    default: ErrorCodes.ALBUM_NOT_FOUND_ERROR,
-  })
-  declare message: ErrorCodes[];
 }

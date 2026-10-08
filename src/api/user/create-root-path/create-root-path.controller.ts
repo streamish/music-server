@@ -1,13 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint, UserController } from 'src/api/api.decorator';
 import { Body, HttpStatus, Post } from '@nestjs/common';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { User } from 'src/api/user.decorator';
-import {
-  UserCreateRootPathBadRequestResponseDto,
-  UserCreateRootPathBodyDto,
-  UserCreateRootPathResponseDto,
-} from './create-root-path.dto';
+import { UserCreateRootPathBodyDto, UserCreateRootPathResponseDto } from './create-root-path.dto';
 import { UserCreateRootPathService } from './create-root-path.service';
+import { getValidationMessages } from 'src/api/response.dto';
 
 @UserController()
 export class UserCreateRootPathController {
@@ -21,7 +19,11 @@ export class UserCreateRootPathController {
     ].join(' '),
     responses: {
       [HttpStatus.CREATED]: UserCreateRootPathResponseDto,
-      [HttpStatus.BAD_REQUEST]: UserCreateRootPathBadRequestResponseDto,
+      [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR,
+        ErrorCodes.DUPLICATE_ROOT_PATH_ERROR,
+        ...getValidationMessages(UserCreateRootPathBodyDto),
+      ],
     },
   })
   async post(

@@ -1,8 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import { ApiProperty } from '@nestjs/swagger';
-import { BadRequestResponseDto, SuccessResponseDto } from 'src/api/response.dto';
+import { ArrayNotEmpty, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import { SuccessResponseDto } from 'src/api/response.dto';
 import { UserRoleEnum } from 'src/types/enums';
 
 export class AdminCreateAccountBodyDto {
@@ -36,31 +36,8 @@ export class AdminCreateAccountBodyDto {
     isArray: true,
   })
   @IsEnum(UserRoleEnum, { each: true, message: ErrorCodes.INVALID_ROLE_ERROR })
-  @IsNotEmpty({ message: ErrorCodes.INVALID_USER_ROLE_ERROR })
+  @ArrayNotEmpty({ message: ErrorCodes.INVALID_USER_ROLE_ERROR })
   declare roles: UserRoleEnum[];
 }
 
 export class AdminCreateAccountResponseDto extends SuccessResponseDto {}
-
-export class AdminCreateAccountBadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied while serving the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [
-      ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR,
-      ErrorCodes.INVALID_ADMIN_PASSWORD_LENGTH_ERROR,
-      ErrorCodes.INVALID_PASSWORD_ERROR,
-      ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR,
-      ErrorCodes.INVALID_ROLE_ERROR,
-      ErrorCodes.INVALID_USER_ROLE_ERROR,
-      ErrorCodes.INVALID_USERNAME_ERROR,
-      ErrorCodes.INVALID_USERNAME_LENGTH_ERROR,
-      ErrorCodes.INVALID_USERNAME_NOT_UNIQUE_ERROR,
-    ],
-    enumName: 'AdminCreateAccountBadRequestErrorMessageEnum',
-  })
-  declare message: ErrorCodes[];
-}
