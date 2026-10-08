@@ -24,6 +24,7 @@ export class AdminUpdateUserRolesController {
       [HttpStatus.OK]: AdminUpdateUserRolesResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.ACCOUNT_ONLY_ADMIN_ERROR,
         ...getValidationMessages(AdminUpdateUserRolesQueryDto),
         ...getValidationMessages(AdminUpdateUserRolesBodyDto),
       ],

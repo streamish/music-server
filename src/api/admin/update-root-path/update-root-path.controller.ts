@@ -22,6 +22,8 @@ export class AdminUpdateRootPathController {
       [HttpStatus.OK]: AdminUpdateRootPathResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR,
+        ErrorCodes.DUPLICATE_ROOT_PATH_ERROR,
         ...getValidationMessages(AdminUpdateRootPathQueryDto),
         ...getValidationMessages(AdminUpdateRootPathBodyDto),
       ],
