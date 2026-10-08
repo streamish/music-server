@@ -1,20 +1,6 @@
 import { AllowGuest } from '../role.guard';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiHeader,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Query, Res, UseGuards } from '@nestjs/common';
-import {
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
-import { SynologyGuard } from './synology.guard';
+import { Body, Get, HttpStatus, Logger, Post, Query, Res } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import {
   SynologyProxyDeleteSongInfoBodyDto,
   SynologyProxySongInfoBodyDto,
@@ -28,64 +14,25 @@ import { SynologySuccessResponseDto } from './dtos/synology.dto';
 import { plainToInstance } from 'class-transformer';
 import type { Response } from 'express';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologyProxyController {
   private readonly logger: Logger = new Logger(SynologyProxyController.name);
 
   constructor(private readonly proxyService: SynologyProxyService) {}
 
-  @Post('/webapi/AudioStation/proxy.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Post, '/AudioStation/proxy.cgi', HttpStatus.OK, {
     summary: 'Proxies SHOUTcast radio streams',
-    description: [
-      `Creates and terminates a basic HTTP proxy to a SHOUTcast radio stream.`,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiOkResponse({
-    description: 'Proxies a SHOUTcast radio stream',
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyProxyStreamInfoResponseDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyProxySongInfoResponseDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySuccessResponseDto),
-        },
+    description: `Creates and terminates a basic HTTP proxy to a SHOUTcast radio stream.`,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: [
+        SynologyProxyStreamInfoResponseDto,
+        SynologyProxySongInfoResponseDto,
+        SynologySuccessResponseDto,
       ],
     },
+    bodyModels: [SynologyProxyStreamInfoBodyDto, SynologyProxySongInfoBodyDto, SynologyProxyDeleteSongInfoBodyDto],
   })
-  @ApiBody({
-    description: 'Creates a new SHOUTcast radio stream',
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyProxyStreamInfoBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyProxySongInfoBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyProxyDeleteSongInfoBodyDto),
-        },
-      ],
-    },
-  })
-  @ApiExtraModels(
-    SynologyProxyStreamInfoBodyDto,
-    SynologyProxySongInfoBodyDto,
-    SynologyProxyDeleteSongInfoBodyDto,
-    SynologyProxyStreamInfoResponseDto,
-    SynologyProxySongInfoResponseDto,
-    SynologySuccessResponseDto,
-  )
   async route(
     @Body()
     variousBodies: SynologyProxyStreamInfoBodyDto | SynologyProxySongInfoBodyDto | SynologyProxyDeleteSongInfoBodyDto,
@@ -116,11 +63,9 @@ export class SynologyProxyController {
     };
   }
 
-  @Get('/webapi/AudioStation/proxy.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Get, '/AudioStation/proxy.cgi', HttpStatus.OK, {
     summary: 'Proxies SHOUTcast radio streams',
-    description: `Pipes the SHOUTcast radio stream to the client.`,
+    description: 'Pipes the SHOUTcast radio stream to the client.',
   })
   @AllowGuest()
   async getProxyCgi(@Query() query: SynologyProxyStreamQueryDto, @Res() response: Response): Promise<void> {

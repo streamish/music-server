@@ -1,10 +1,5 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
+import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
   AdminDeleteAccountBadRequestResponseDto,
   AdminDeleteAccountBodyDto,
@@ -13,49 +8,24 @@ import {
   AdminDeleteAccountResponseDto,
 } from './delete-account.dto';
 import { AdminDeleteAccountService } from './delete-account.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/admin',
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminDeleteAccountController {
   constructor(private readonly deleteAccountService: AdminDeleteAccountService) {}
 
-  @Patch('delete-account')
-  @ApiOperation({
+  @ApiEndpoint(Patch, 'delete-account', HttpStatus.OK, {
     summary: 'Delete an account',
-    description: [
-      'Deletes the specified account.  If it is the only admin account a new one account must be created first.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    type: AdminDeleteAccountResponseDto,
-    description: 'Account deleted successfully',
-  })
-  @ApiNotFoundResponse({
-    type: AdminDeleteAccountNotFoundResponseDto,
-    description: 'Account not found',
-  })
-  @ApiBadRequestResponse({
-    type: AdminDeleteAccountBadRequestResponseDto,
-    description: 'Invalid account ID or account does not exist',
+    description:
+      'Deletes the specified account. If it is the only admin account a new one account must be created first.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.OK]: AdminDeleteAccountResponseDto,
+      [HttpStatus.BAD_REQUEST]: AdminDeleteAccountBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: AdminDeleteAccountNotFoundResponseDto,
+    },
   })
   async delete(
     @User() user: AccountEntity,

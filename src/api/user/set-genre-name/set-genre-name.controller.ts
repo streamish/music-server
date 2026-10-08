@@ -1,17 +1,7 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetGenreNameBadRequestResponseDto,
   UserSetGenreNameBodyDto,
@@ -21,37 +11,23 @@ import {
 } from './set-genre-name.dto';
 import { UserSetGenreNameService } from './set-genre-name.service';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserSetGenreNameController {
   constructor(private readonly setGenreNameService: UserSetGenreNameService) {}
 
-  @Patch('set-genre-name')
-  @ApiOperation({
+  @ApiEndpoint(Patch, 'set-genre-name', HttpStatus.OK, {
     summary: `Set custom name for a genre, overriding the name embedded in tracks.`,
     description: [
       `Assigns a custom name to a genre, overriding the name embedded in tracks.`,
       `This affects all tracks categorized under the previous genre name.`,
       `The next indexing pass of the tracks will reflect the newly set custom name.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Custom data set successfully',
-    type: UserSetGenreNameResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Genre not found',
-    type: UserSetGenreNameNotFoundResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request failed',
-    type: UserSetGenreNameBadRequestResponseDto,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserSetGenreNameResponseDto,
+      [HttpStatus.NOT_FOUND]: UserSetGenreNameNotFoundResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserSetGenreNameBadRequestResponseDto,
+    },
   })
   async patch(
     @User() user: AccountEntity,

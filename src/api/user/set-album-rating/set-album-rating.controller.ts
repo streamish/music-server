@@ -1,17 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Put, Query, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Body, HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetAlbumRatingBadRequestResponseDto,
   UserSetAlbumRatingBodyDto,
@@ -21,35 +11,19 @@ import {
 } from './set-album-rating.dto';
 import { UserSetAlbumRatingService } from './set-album-rating.service';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserSetAlbumRatingController {
   constructor(private readonly setRatingService: UserSetAlbumRatingService) {}
 
-  @Put('set-album-rating')
-  @ApiOperation({
+  @ApiEndpoint(Put, 'set-album-rating', HttpStatus.OK, {
     summary: `Sets or unsets ratings for an album`,
-    description: [
-      `Sets or unsets a 1-5 star rating for the tracks within an album.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Rating set successfully',
-    type: UserSetAlbumRatingResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Track or album not found',
-    type: UserSetAlbumRatingNotFoundResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request failed',
-    type: UserSetAlbumRatingBadRequestResponseDto,
+    description: [`Sets or unsets a 1-5 star rating for the tracks within an album.`].join('\n'),
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserSetAlbumRatingResponseDto,
+      [HttpStatus.NOT_FOUND]: UserSetAlbumRatingNotFoundResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserSetAlbumRatingBadRequestResponseDto,
+    },
   })
   async put(
     @User() user: AccountEntity,

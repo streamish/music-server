@@ -1,28 +1,7 @@
 import { AccountEntity, SessionEntity } from 'src/database/entities';
-import { AllowGuest } from '../role.guard';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiHeader,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Logger,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { SYNOLOGY_AUDIOSTATION_APIS, SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION } from 'src/constants/swagger';
+import { BadRequestException, Body, HttpStatus, Logger, Post, Req, Res } from '@nestjs/common';
 import { Session } from '../session.decorator';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import { SynologyApiEnum, SynologyMethodEnum } from './enums';
 import {
   SynologyEntryCertificateBodyDto,
@@ -41,108 +20,49 @@ import {
   SynologyEntrySignInResponseDto,
 } from './dtos';
 import { SynologyEntryService } from './entry.service';
-import { SynologyGuard } from './synology.guard';
 import { SynologySuccessResponseDto } from './dtos/synology.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 import type { Response } from 'express';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController({ allowGuest: true })
 export class SynologyEntryController {
   private readonly logger: Logger = new Logger(SynologyEntryController.name);
 
   constructor(private readonly entryService: SynologyEntryService) {}
 
-  /**
-   * The `entry.cgi` endpoint collates a bunch of system endpoints pertaining to session management, user
-   * settings and system information.
-   * @returns
-   */
-  @Post('/webapi/entry.cgi')
-  @AllowGuest()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Authentication, session management, and miscellaneous operations for playlists and favorites',
+  @SynologyApiEndpoint(Post, '/entry.cgi', HttpStatus.OK, {
+    summary: 'Authentication, session management, playlists and favorites',
     description: [
-      // eslint-disable-next-line max-len
-      `This endpoint handles various system-level operations such as authentication, along with certain operations such as listing and managing favorite/pinned items, and adding certain items to playlists.\n\nSome of the operations require authentication - logging out, adding items to playlists, and listing/managing pinned items.  Other operations do not require authentication - retrieving the encryption key and signing in.`,
-      // eslint-disable-next-line max-len
-      `For the actions requiring authentication, the request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the \`entry.cgi\` endpoint, a two-step process requesting the encryption public key from \`/certs\` and then submitting credentials encrypted with it.`,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader({
-    name: 'cookie',
-    description:
-      'The session ID and device ID cookies if requesting "pins", "playlist" or the "clearSessionToken" methods',
-    required: false,
-  })
-  @ApiOkResponse({
-    description: 'Handles various entry.cgi requests',
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(SynologyEntryCertificateResponseDto) },
-        { $ref: getSchemaPath(SynologyEntrySignInResponseDto) },
-        { $ref: getSchemaPath(SynologyEntryListPinsResponseDto) },
-        { $ref: getSchemaPath(SynologyEntryLogoutResponseDto) },
-        { $ref: getSchemaPath(SynologySuccessResponseDto) },
+      'This endpoint handles system-level operations such as authentication, and favorite/pinned items, and playlists.',
+      'Some operations require authentication - logging out, adding to playlists, and listing/managing pinned items.',
+      'Other operations do not require authentication - retrieving the encryption key and signing in.',
+      'For the actions requiring authentication the request must be made using a session ID and device ID cookie.',
+      'To create a session this endpoint first shares the encryption public key so credentials can be submitted.',
+      'Credentials are then submitted encrypted with the public key before being sent to this endpoint.',
+    ].join(' '),
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: [
+        SynologyEntryCertificateResponseDto,
+        SynologyEntrySignInResponseDto,
+        SynologyEntryListPinsResponseDto,
+        SynologyEntryLogoutResponseDto,
+        SynologySuccessResponseDto,
       ],
     },
-  })
-  @ApiExtraModels(
-    SynologyEntryCertificateBodyDto,
-    SynologyEntrySignInBodyDto,
-    SynologyEntryListPinsBodyDto,
-    SynologyEntryCreatePinBodyDto,
-    SynologyEntryDeletePinBodyDto,
-    SynologyEntryLogoutBodyDto,
-    SynologyEntryPlaylistAddAlbumBodyDto,
-    SynologyEntryPlaylistAddArtistBodyDto,
-    SynologyEntryPlaylistAddComposerBodyDto,
-    SynologyEntryPlaylistAddGenreBodyDto,
-    SynologyEntryCertificateResponseDto,
-    SynologyEntrySignInResponseDto,
-    SynologyEntryListPinsResponseDto,
-    SynologyEntryLogoutResponseDto,
-    SynologySuccessResponseDto,
-  )
-  @ApiBody({
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyEntryCertificateBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntrySignInBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryListPinsBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryLogoutBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryCreatePinBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryDeletePinBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryPlaylistAddAlbumBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryPlaylistAddArtistBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryPlaylistAddComposerBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyEntryPlaylistAddGenreBodyDto),
-        },
-      ],
-    },
+    bodyModels: [
+      SynologyEntryCertificateBodyDto,
+      SynologyEntrySignInBodyDto,
+      SynologyEntryListPinsBodyDto,
+      SynologyEntryCreatePinBodyDto,
+      SynologyEntryDeletePinBodyDto,
+      SynologyEntryLogoutBodyDto,
+      SynologyEntryPlaylistAddAlbumBodyDto,
+      SynologyEntryPlaylistAddArtistBodyDto,
+      SynologyEntryPlaylistAddComposerBodyDto,
+      SynologyEntryPlaylistAddGenreBodyDto,
+    ],
   })
   async route(
     @Body()

@@ -1,51 +1,23 @@
-import { AllowedRoles } from 'src/api/role.guard';
-import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiProduces, ApiTags, getSchemaPath } from '@nestjs/swagger';
-import { Controller, Header, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
-import { QNAP_AUTHENTICATED_REQUEST_DESCRIPTION, QNAP_MUSICSTATION_APIS, XML_MIME_TYPE } from 'src/constants/swagger';
-import { QnapGuard } from './qnap.guard';
+import { ApiExtraModels } from '@nestjs/swagger';
+import { HttpStatus, Post, Query } from '@nestjs/common';
+import { QnapApiEndpoint, QnapController } from './qnap.decorator';
 import { QnapMediaToolQueryDto, QnapMediaToolResponseDto } from './dtos/media-tool.dto';
 import { QnapMediaToolService } from './media-tool.service';
-import { UserRoleEnum } from 'src/types/enums';
 import { objectToXml } from 'src/utils/xml';
 
-@Controller({
-  path: '/musicstation/api',
-})
-@ApiTags(QNAP_MUSICSTATION_APIS)
-@UseGuards(QnapGuard)
+@QnapController()
 export class QnapMediaToolController {
   constructor(private readonly mediaToolApiService: QnapMediaToolService) {}
 
-  @Post('mediatool_api.php')
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @HttpCode(HttpStatus.OK)
-  @Header('Content-Type', XML_MIME_TYPE)
-  @ApiProduces(XML_MIME_TYPE)
-  @ApiOkResponse({
-    description: 'QNAP authentication response',
-    content: {
-      'application/xml': {
-        schema: {
-          allOf: [
-            {
-              $ref: getSchemaPath(QnapMediaToolResponseDto),
-            },
-          ],
-          xml: {
-            name: 'QDocRoot',
-          },
-        },
-      },
+  @QnapApiEndpoint(Post, 'mediatool_api.php', HttpStatus.OK, {
+    summary: 'Reports IP addresses to mobile apps',
+    description: 'This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.',
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: [QnapMediaToolResponseDto],
     },
   })
   @ApiExtraModels(QnapMediaToolResponseDto)
-  @ApiOperation({
-    summary: 'Reports IP addresses to mobile apps',
-    description: [
-      'This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.',
-      QNAP_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
-  })
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get(@Query() query: QnapMediaToolQueryDto | unknown) {
     const info = await this.mediaToolApiService.getIpList();

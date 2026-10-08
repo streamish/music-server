@@ -1,35 +1,24 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Get, HttpStatus } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserFolderStructureResponseDto } from './folder-structure.dto';
 import { UserFolderStructureService } from './folder-structure.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserFolderStructureController {
   constructor(private readonly listFoldersService: UserFolderStructureService) {}
 
-  @Get('folder-structure')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'folder-structure', HttpStatus.OK, {
     summary: 'Retrieve library folder structure',
     description: [
       `Returns a tree structure starting with the root folders and nesting their folder and music file contents.`,
       `This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Successfully retrieved the tree of folders and file contents.',
-    type: UserFolderStructureResponseDto,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserFolderStructureResponseDto,
+    },
   })
   async get(@User() user: AccountEntity) {
     const items = await this.listFoldersService.getTreeStructure(user.id);

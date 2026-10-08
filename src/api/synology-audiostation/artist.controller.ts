@@ -1,20 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiHeader,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
-import {
-  PAGINATED_DATA_DESCRIPTION,
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
+import { Body, HttpStatus, Logger, Post } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import {
   SynologyArtistResponseDto,
   SynologyArtistsBodyDto,
@@ -22,48 +8,24 @@ import {
   SynologyArtistsByGenreBodyDto,
 } from './dtos';
 import { SynologyArtistService } from './artist.service';
-import { SynologyGuard } from './synology.guard';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologyArtistController {
   private readonly logger: Logger = new Logger(SynologyArtistController.name);
 
   constructor(private readonly artistService: SynologyArtistService) {}
 
-  @Post('/webapi/AudioStation/artist.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Post, '/AudioStation/artist.cgi', HttpStatus.OK, {
     summary: 'Lists artists in the music library',
-    description: [
-      `Lists artists found in the music library.  The artists can be filtered by genre.`,
-      PAGINATED_DATA_DESCRIPTION,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiOkResponse({
-    description: 'Returns a list of artists',
-    type: SynologyArtistResponseDto,
-  })
-  @ApiExtraModels(SynologyArtistsBodyDto, SynologyArtistsByGenreBodyDto, SynologyArtistsByDefaultGenreBodyDto)
-  @ApiBody({
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyArtistsBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyArtistsByGenreBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyArtistsByDefaultGenreBodyDto),
-        },
-      ],
+    description: 'Lists artists found in the music library.  The artists can be filtered by genre.',
+    isAuthenticated: true,
+    isPaginated: true,
+    responses: {
+      [HttpStatus.OK]: SynologyArtistResponseDto,
     },
+    bodyModels: [SynologyArtistsBodyDto, SynologyArtistsByGenreBodyDto, SynologyArtistsByDefaultGenreBodyDto],
   })
   async route(
     @User() user: AccountEntity,

@@ -1,16 +1,9 @@
 import { AccountEntity } from 'src/database/entities';
-import { ApiHeader, ApiOkResponse, ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
-import {
-  BINARY_RESPONSE,
-  IMAGE_MIME_TYPES,
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
-import { Controller, Get, HttpCode, HttpStatus, Logger, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
 import { CoverCgiAlbumQueryDto, CoverCgiArtistQueryDto, CoverCgiComposerQueryDto, CoverCgiSongQueryDto } from './dtos';
+import { Get, HttpStatus, Logger, Query, Req, Res } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import { SynologyCoverImageService } from './cover-image.service';
-import { SynologyGuard } from './synology.guard';
 import { User } from '../user.decorator';
 import { join, sep } from 'node:path';
 import { readFileSync } from 'node:fs';
@@ -19,27 +12,25 @@ import type { Request, Response } from 'express';
 let blankBuffer: Buffer;
 const emptyBuffer = Buffer.alloc(0);
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologyCoverImageController {
   private readonly logger: Logger = new Logger(SynologyCoverImageController.name);
 
   constructor(private readonly coverImageService: SynologyCoverImageService) {}
 
-  @Get('/webapi/AudioStation/cover.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Get, '/AudioStation/cover.cgi', HttpStatus.OK, {
     summary: 'Retrieves the cover image for an album, artist, composer or song',
     description: [
-      // eslint-disable-next-line max-len
-      `Retrieves the cover image for an album, artist, composer or song.  The cover image can be retrieved by specifying the appropriate query parameters in the request.  If an image is not found a default blank cover image will be returned.`,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
+      'Retrieves the cover image for an album, artist, composer or song.',
+      'The cover image can be retrieved by specifying the appropriate query parameters in the request.',
+      'If an image is not found a default blank cover image will be returned.',
+    ].join(' '),
+    isAuthenticated: true,
+    produces: IMAGE_MIME_TYPES,
+    responses: {
+      [HttpStatus.OK]: BINARY_RESPONSE,
+    },
   })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiProduces(...IMAGE_MIME_TYPES)
-  @ApiOkResponse(BINARY_RESPONSE)
   async route(
     @User() user: AccountEntity,
     @Req() request: Request,

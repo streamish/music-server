@@ -1,12 +1,10 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiHeader, ApiOkResponse, ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
-import { BINARY_RESPONSE, COOKIE_TOKEN_HEADER, IMAGE_MIME_TYPES, USER_APIS } from 'src/constants/swagger';
-import { Controller, Get, Query, Req, Res, StreamableFile, UseGuards } from '@nestjs/common';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
+import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserAssociationCoverImageQueryDto } from './association-cover-image.dto';
 import { UserAssociationCoverImageService } from './association-cover-image.service';
-import { UserRoleEnum } from 'src/types/enums';
 import { join, sep } from 'node:path';
 import { readFileSync } from 'node:fs';
 import type { Request, Response } from 'express';
@@ -14,29 +12,25 @@ import type { Request, Response } from 'express';
 let blankBuffer: Buffer;
 const emptyBuffer = Buffer.alloc(0);
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserAssociationCoverImageController {
   constructor(private readonly coverImageService: UserAssociationCoverImageService) {}
 
-  @Get('association-cover-image')
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiOperation({
+  @ApiEndpoint(Get, 'association-cover-image', HttpStatus.OK, {
     summary: 'Retrieves cover images for associated artists, composers and genres',
     description: [
       'This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified.',
-      // eslint-disable-next-line max-len
-      'The image comes from the first track that contains a cover and credits them as an album artist, falling back to the first track crediting them as a track artist.',
+      'The image comes from the first track that contains a cover and credits them as an album artist.',
+      'If no album cover is found, it falls back to the first track crediting them as a track artist.',
       'If the artist has no cover image a default blank cover is returned.',
       'The response supports Etag caching to optimize browser performance.',
-    ].join('\n'),
+    ].join(' '),
+    isAuthenticated: true,
+    produces: [...IMAGE_MIME_TYPES],
+    responses: {
+      [HttpStatus.OK]: BINARY_RESPONSE,
+    },
   })
-  @ApiHeader(COOKIE_TOKEN_HEADER)
-  @ApiProduces(...IMAGE_MIME_TYPES)
-  @ApiOkResponse(BINARY_RESPONSE)
   async get(
     @User() user: AccountEntity,
     @Query() query: UserAssociationCoverImageQueryDto,

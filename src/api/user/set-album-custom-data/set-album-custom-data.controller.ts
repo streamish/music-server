@@ -1,17 +1,7 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Patch, Query, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetAlbumCustomDataBadRequestResponseDto,
   UserSetAlbumCustomDataBodyDto,
@@ -21,37 +11,23 @@ import {
 } from './set-album-custom-data.dto';
 import { UserSetAlbumCustomDataService } from './set-album-custom-data.service';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserSetAlbumCustomDataController {
   constructor(private readonly setAlbumCustomDataService: UserSetAlbumCustomDataService) {}
 
-  @Patch('set-album-custom-data')
-  @ApiOperation({
+  @ApiEndpoint(Patch, 'set-album-custom-data', HttpStatus.OK, {
     summary: `Set custom data for an album in the user's account`,
     description: [
       `Assigns custom data to an album, overriding the embedded data within its tracks.`,
       `This affects all tracks within the album.`,
       `The next indexing pass of the album will reflect the newly set custom data.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Custom data set successfully',
-    type: UserSetAlbumCustomDataResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'File not found',
-    type: UserSetAlbumCustomDataNotFoundResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request failed',
-    type: UserSetAlbumCustomDataBadRequestResponseDto,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserSetAlbumCustomDataResponseDto,
+      [HttpStatus.NOT_FOUND]: UserSetAlbumCustomDataNotFoundResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserSetAlbumCustomDataBadRequestResponseDto,
+    },
   })
   async patch(
     @User() user: AccountEntity,

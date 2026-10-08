@@ -1,10 +1,5 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
+import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
   AdminResetUserPasswordBadRequestResponseDto,
   AdminResetUserPasswordBodyDto,
@@ -13,51 +8,23 @@ import {
   AdminResetUserPasswordResponseDto,
 } from './reset-user-password.dto';
 import { AdminResetUserPasswordService } from './reset-user-password.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Post, Query, Scope, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Post, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/admin',
-  scope: Scope.REQUEST,
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminResetUserPasswordController {
   constructor(private readonly resetPasswordService: AdminResetUserPasswordService) {}
 
-  @Post('reset-user-password')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @ApiEndpoint(Post, 'reset-user-password', HttpStatus.OK, {
     summary: 'Reset user password',
-    description: [
-      `Resets the password for a specified user account and invalidates their prior sessions.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    type: AdminResetUserPasswordResponseDto,
-    description: 'Password reset successfully',
-  })
-  @ApiBadRequestResponse({
-    type: AdminResetUserPasswordBadRequestResponseDto,
-    description: 'Invalid request data or additional requirements not met',
-  })
-  @ApiNotFoundResponse({
-    type: AdminResetUserPasswordNotFoundResponseDto,
-    description: 'Account not found',
+    description: 'Resets the password for a specified user account and invalidates their prior sessions.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.OK]: AdminResetUserPasswordResponseDto,
+      [HttpStatus.BAD_REQUEST]: AdminResetUserPasswordBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: AdminResetUserPasswordNotFoundResponseDto,
+    },
   })
   async post(
     @User() user: AccountEntity,

@@ -1,21 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiHeader,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import {
-  PAGINATED_DATA_DESCRIPTION,
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
-import { SynologyGuard } from './synology.guard';
+import { Body, HttpStatus, Post } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import { SynologyMethodEnum } from './enums';
 import {
   SynologyPlaylistAddOrRemoveItemBodyDto,
@@ -38,93 +23,42 @@ import { SynologySuccessResponseDto } from './dtos/synology.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologyPlaylistController {
   constructor(private readonly playlistService: SynologyPlaylistService) {}
 
-  @Post('/webapi/AudioStation/playlist.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Post, '/AudioStation/playlist.cgi', HttpStatus.OK, {
     summary: 'Manages playlists',
     description: [
-      // eslint-disable-next-line max-len
-      `Manages playlists in the music library.  This endpoint is used to list, create, delete, rename, and update playlists, as well as add and remove tracks and radio stations from playlists.  It provides the ability to retrieve playlist information and track/radio lists for playlists.`,
-      // eslint-disable-next-line max-len
-      `Playlists can be a "normal" playlist containing a static list of tracks and radio stations you add, or a "smart" playlist which is a dynamic filter based on criteria such as genre, artist, album, and more.`,
-      `Listing playlists are not returned in a paginated format, but the tracks and radio stations within them are.`,
-      PAGINATED_DATA_DESCRIPTION,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiOkResponse({
-    description: 'Endpoints for creating and managing playlists',
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(SynologySuccessResponseDto) },
-        { $ref: getSchemaPath(SynologyPlaylistResponseDto) },
-        { $ref: getSchemaPath(SynologyPlaylistIdResponseDto) },
-        { $ref: getSchemaPath(SynologyPlaylistWithItemsResponseDto) },
+      'This endpoint is used to list, create, delete, rename, and update playlists, and add/remove items.',
+      'There are two types of supported playlists.',
+      '"Normal" playlist containing a static list of tracks and radio stations you add.',
+      '"Smart" playlists are dynamic filters based on criteria such as genre, artist, album, and more.',
+      'Listing playlists are not returned in a paginated format, but the tracks and radio stations within them are.',
+    ].join(' '),
+    isAuthenticated: true,
+    isPaginated: true,
+    responses: {
+      [HttpStatus.OK]: [
+        SynologySuccessResponseDto,
+        SynologyPlaylistResponseDto,
+        SynologyPlaylistIdResponseDto,
+        SynologyPlaylistWithItemsResponseDto,
       ],
     },
-  })
-  @ApiExtraModels(
-    SynologyPlaylistAddOrRemoveItemBodyDto,
-    SynologyPlaylistCreateNormalBodyDto,
-    SynologyPlaylistCreateSmartBodyDto,
-    SynologyPlaylistDeleteBodyDto,
-    SynologyPlaylistListBodyDto,
-    SynologyPlaylistMoveItemsBodyDto,
-    SynologyPlaylistRemoveMissingBodyDto,
-    SynologyPlaylistRenameBodyDto,
-    SynologyPlaylistRetrieveBodyDto,
-    SynologyPlaylistTrackListBodyDto,
-    SynologyPlaylistUpdateSmartBodyDto,
-    SynologySuccessResponseDto,
-    SynologyPlaylistIdResponseDto,
-    SynologyPlaylistResponseDto,
-    SynologyPlaylistWithItemsResponseDto,
-  )
-  @ApiBody({
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyPlaylistAddOrRemoveItemBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistCreateNormalBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistCreateSmartBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistDeleteBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistMoveItemsBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistRemoveMissingBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistRenameBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistTrackListBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistUpdateSmartBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistRetrieveBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyPlaylistListBodyDto),
-        },
-      ],
-    },
+    bodyModels: [
+      SynologyPlaylistAddOrRemoveItemBodyDto,
+      SynologyPlaylistCreateNormalBodyDto,
+      SynologyPlaylistCreateSmartBodyDto,
+      SynologyPlaylistDeleteBodyDto,
+      SynologyPlaylistListBodyDto,
+      SynologyPlaylistMoveItemsBodyDto,
+      SynologyPlaylistRemoveMissingBodyDto,
+      SynologyPlaylistRenameBodyDto,
+      SynologyPlaylistRetrieveBodyDto,
+      SynologyPlaylistTrackListBodyDto,
+      SynologyPlaylistUpdateSmartBodyDto,
+    ],
   })
   async routeRequest(
     @User() user: AccountEntity,

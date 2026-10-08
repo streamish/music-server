@@ -1,21 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiHeader,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
-import {
-  PAGINATED_DATA_DESCRIPTION,
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
-import { SynologyGuard } from './synology.guard';
+import { Body, HttpStatus, Logger, Post } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import {
   SynologySongResponseDto,
   SynologySongsBodyDto,
@@ -35,84 +20,36 @@ import { SynologySuccessResponseDto } from './dtos/synology.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologySongController {
   private readonly logger: Logger = new Logger(SynologySongController.name);
 
   constructor(private readonly songService: SynologySongService) {}
 
-  @Post('/webapi/AudioStation/song.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Post, '/AudioStation/song.cgi', HttpStatus.OK, {
     summary: 'Lists songs in the music library',
-    description: [
-      `Lists songs found in the music library.  The songs can be filtered by album, artist, composer, or genre.`,
-      PAGINATED_DATA_DESCRIPTION,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiOkResponse({
-    description: 'Returns a list of songs',
-    schema: {
-      oneOf: [{ $ref: getSchemaPath(SynologySongResponseDto) }, { $ref: getSchemaPath(SynologySuccessResponseDto) }],
+    description:
+      'Lists songs found in the music library.  The songs can be filtered by album, artist, composer, or genre.',
+    isAuthenticated: true,
+    isPaginated: true,
+    responses: {
+      [HttpStatus.OK]: [SynologySongResponseDto, SynologySuccessResponseDto],
     },
-  })
-  @ApiExtraModels(
-    SynologySongsBodyDto,
-    SynologySongsByAlbumArtistBodyDto,
-    SynologySongsByAlbumBodyDto,
-    SynologySongsByAlbumComposerBodyDto,
-    SynologySongsByAlbumDefaultGenreBodyDto,
-    SynologySongsByAlbumGenreBodyDto,
-    SynologySongsByArtistBodyDto,
-    SynologySongsByComposerBodyDto,
-    SynologySongsByDefaultGenreBodyDto,
-    SynologySongsByGenreBodyDto,
-    SynologySongsRateBodyDto,
-    SynologySongResponseDto,
-    SynologySuccessResponseDto,
-  )
-  @ApiBody({
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologySongsBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByAlbumBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByArtistBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByAlbumArtistBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByComposerBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByAlbumComposerBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByAlbumGenreBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByGenreBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByAlbumDefaultGenreBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsByDefaultGenreBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySongsRateBodyDto),
-        },
-      ],
-    },
+    bodyModels: [
+      SynologySongsBodyDto,
+      SynologySongsByAlbumArtistBodyDto,
+      SynologySongsByAlbumBodyDto,
+      SynologySongsByAlbumComposerBodyDto,
+      SynologySongsByAlbumDefaultGenreBodyDto,
+      SynologySongsByAlbumGenreBodyDto,
+      SynologySongsByArtistBodyDto,
+      SynologySongsByComposerBodyDto,
+      SynologySongsByDefaultGenreBodyDto,
+      SynologySongsByGenreBodyDto,
+      SynologySongsRateBodyDto,
+      SynologySongResponseDto,
+      SynologySuccessResponseDto,
+    ],
   })
   async route(
     @User() user: AccountEntity,

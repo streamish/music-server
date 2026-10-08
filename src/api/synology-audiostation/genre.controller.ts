@@ -1,54 +1,29 @@
 import { AccountEntity } from 'src/database/entities';
-import { ApiExtraModels, ApiHeader, ApiOkResponse, ApiOperation, ApiTags, getSchemaPath } from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
-import {
-  PAGINATED_DATA_DESCRIPTION,
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
+import { Body, HttpStatus, Logger, Post } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import { SynologyDefaultGenreResponseDto, SynologyGenreBodyDto, SynologyGenreResponseDto } from './dtos';
 import { SynologyGenreService } from './genre.service';
-import { SynologyGuard } from './synology.guard';
 import { SynologyMethodEnum } from './enums';
 import { User } from '../user.decorator';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologyGenreController {
   private readonly logger: Logger = new Logger(SynologyGenreController.name);
 
   constructor(private readonly genreService: SynologyGenreService) {}
 
-  @Post('/webapi/AudioStation/genre.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Post, '/AudioStation/genre.cgi', HttpStatus.OK, {
     summary: 'Lists genres in the music library or default genres',
     description: [
-      // eslint-disable-next-line max-len
-      `Returns a list of genres found in the music library, or a hard-coded list of default genres.  The default genres are a hard-coded list that Synology appears to internally remap to actual genres, for instance "Rock/Metal" encompasses the "AlternRock" genre.  Exactly what they remap is unclear.`,
-      // eslint-disable-next-line max-len
-      `Each track can have one or more genres separated by \`,\` and they will each be counted as a separate genre.  For instance, a track with the genre "Rock, Pop" will be counted as both "Rock" and "Pop".`,
-      PAGINATED_DATA_DESCRIPTION,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiOkResponse({
-    description: 'Returns a list of genres found in the music library, or a hard-coded list of default genres',
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyGenreResponseDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyDefaultGenreResponseDto),
-        },
-      ],
+      'Returns a list of genres found in the music library, or a hard-coded list of default genres.',
+      'The default genres are hard-coded, Synology internally remaps them to actual genres but this server does not.',
+      'Each track can have one or more genres separated by `,` and they will each be counted as a separate genre.',
+      'For instance, a track with the genre "Rock, Pop" will be counted as both "Rock" and "Pop".',
+    ].join(' '),
+    responses: {
+      [HttpStatus.OK]: [SynologyGenreResponseDto, SynologyDefaultGenreResponseDto],
     },
   })
-  @ApiExtraModels(SynologyGenreResponseDto, SynologyDefaultGenreResponseDto)
   async route(
     @User() user: AccountEntity,
     @Body() body: SynologyGenreBodyDto,

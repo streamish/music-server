@@ -1,15 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import {
-  FILTERED_DATA_DESCRIPTION,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-  PAGINATED_DATA_DESCRIPTION,
-  TRACK_INFORMATION_EXCLUDED,
-  USER_APIS,
-} from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
   UserListAlbumsBadRequestResponseDto,
@@ -17,36 +8,22 @@ import {
   UserListAlbumsResponseDto,
 } from './list-albums.dto';
 import { UserListAlbumsService } from './list-albums.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserListAlbumsController {
   constructor(private readonly listAlbumsService: UserListAlbumsService) {}
 
-  @Get('list-albums')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'list-albums', HttpStatus.OK, {
     summary: 'List albums',
-    description: [
-      `Albums can be filtered by an extensive set of criteria and search terms.`,
-      FILTERED_DATA_DESCRIPTION,
-      TRACK_INFORMATION_EXCLUDED,
-      PAGINATED_DATA_DESCRIPTION,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Successful response with an array of data and pagination information.',
-    type: UserListAlbumsResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Failure response with error information relating to missing or invalid parameters.',
-    type: UserListAlbumsBadRequestResponseDto,
+    description: 'Albums can be filtered by an extensive set of criteria and search terms.',
+    isAuthenticated: true,
+    isFiltered: true,
+    isPaginated: true,
+    excludeTrackInformation: true,
+    responses: {
+      [HttpStatus.OK]: UserListAlbumsResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserListAlbumsBadRequestResponseDto,
+    },
   })
   async get(@User() user: AccountEntity, @Query() query: UserListAlbumsQueryDto): Promise<UserListAlbumsResponseDto> {
     const data = await this.listAlbumsService.listAlbums(user.id, query);

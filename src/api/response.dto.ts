@@ -113,3 +113,19 @@ export class NotFoundResponseDto extends FailedResponseDto {
   })
   declare readonly message: ErrorCodes[];
 }
+
+/**
+ * The response data structure for requests that fail unexpectedly with an internal server error.
+ */
+export class ForbiddenErrorResponseDto extends FailedResponseDto {
+  /**
+   * A forbidden error occurred due to the user not having the necessary permissions to access the resource.
+   */
+  @ApiProperty({
+    enum: [ErrorCodes.FORBIDDEN_ERROR],
+    enumName: 'ForbiddenErrorEnum',
+    default: ErrorCodes.FORBIDDEN_ERROR,
+    isArray: true,
+  })
+  declare readonly message: ErrorCodes[];
+}

@@ -1,9 +1,4 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
+import { AdminController, ApiEndpoint } from 'src/api/api.decorator';
 import {
   AdminUpdateRootPathBadRequestResponseDto,
   AdminUpdateRootPathBodyDto,
@@ -12,50 +7,22 @@ import {
   AdminUpdateRootPathResponseDto,
 } from './update-root-path.dto';
 import { AdminUpdateRootPathService } from './update-root-path.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Patch, Query, Scope, UseGuards } from '@nestjs/common';
-import { UserRoleEnum } from 'src/types/enums';
+import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
 
-@Controller({
-  path: '/api/admin',
-  scope: Scope.REQUEST,
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminUpdateRootPathController {
   constructor(private readonly updateRootPathService: AdminUpdateRootPathService) {}
 
-  @Patch('update-root-path')
-  @ApiOperation({
+  @ApiEndpoint(Patch, 'update-root-path', HttpStatus.OK, {
     summary: 'Update a root path',
-    description: [
-      'Updates the specified root path with a new path.',
-      'If the scanner is running then all previous data will be removed and recreated when it indexes the new path.',
-      'If the scanner is paused you may move files then resume the scanner to retain their data.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    type: AdminUpdateRootPathResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Root path not found',
-    type: AdminUpdateRootPathNotFoundResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid root path, either malformed or nonexistent',
-    type: AdminUpdateRootPathBadRequestResponseDto,
+    description: 'Updates the specified root path with a new path.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.OK]: AdminUpdateRootPathResponseDto,
+      [HttpStatus.BAD_REQUEST]: AdminUpdateRootPathBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: AdminUpdateRootPathNotFoundResponseDto,
+    },
   })
   async patch(
     @Query() query: AdminUpdateRootPathQueryDto,

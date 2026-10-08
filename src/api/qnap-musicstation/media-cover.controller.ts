@@ -1,19 +1,12 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles } from '../role.guard';
-import { ApiOkResponse, ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
-import {
-  BINARY_RESPONSE,
-  IMAGE_MIME_TYPES,
-  QNAP_AUTHENTICATED_REQUEST_DESCRIPTION,
-  QNAP_MUSICSTATION_APIS,
-} from 'src/constants/swagger';
-import { Controller, Get, HttpCode, HttpStatus, NotFoundException, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiEndpoint } from '../api.decorator';
+import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
 import { CoverImage } from 'src/types/cover-image';
-import { QnapGuard } from './qnap.guard';
+import { Get, HttpStatus, NotFoundException, Query, Req, Res } from '@nestjs/common';
+import { QnapController } from './qnap.decorator';
 import { QnapMediaCoverQueryDto } from './dtos/media-cover.dto';
 import { QnapMediaCoverService } from './media-cover.service';
 import { User } from '../user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 import { join, sep } from 'node:path';
 import { readFileSync } from 'node:fs';
 import type { Request, Response } from 'express';
@@ -22,20 +15,11 @@ let blankAlbumBuffer: Buffer;
 let blankFolderBuffer: Buffer;
 const emptyBuffer = Buffer.alloc(0);
 
-@Controller({
-  path: '/musicstation/api',
-})
-@ApiTags(QNAP_MUSICSTATION_APIS)
-@UseGuards(QnapGuard)
+@QnapController()
 export class QnapMediaCoverController {
   constructor(private readonly mediaCoverApiService: QnapMediaCoverService) {}
 
-  @Get('mediacover_api.php')
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @HttpCode(HttpStatus.OK)
-  @ApiProduces(...IMAGE_MIME_TYPES)
-  @ApiOkResponse(BINARY_RESPONSE)
-  @ApiOperation({
+  @ApiEndpoint(Get, 'mediacover_api.php', HttpStatus.OK, {
     summary: 'Retrieves cover images',
     description: [
       'This endpoint retrieves the cover image for a specified album, artist, or folder.',
@@ -43,8 +27,12 @@ export class QnapMediaCoverController {
       'If the album has no cover image a default blank cover is returned.',
       'The response supports Etag caching to optimize browser performance.',
       'The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.',
-      QNAP_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
+    ].join(' '),
+    isAuthenticated: true,
+    produces: IMAGE_MIME_TYPES,
+    responses: {
+      [HttpStatus.OK]: BINARY_RESPONSE,
+    },
   })
   async get(
     @User() user: AccountEntity,
