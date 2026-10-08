@@ -42,11 +42,7 @@ EOF
 # The DTO file
 cat <<EOF > $FILE_PATH/${SERVICE_FILE}.dto.ts
 /* eslint-disable max-classes-per-file */
-import {
-  BadRequestResponseDto,
-  NotFoundResponseDto,
-  SuccessResponseDto,
-} from 'src/api/response.dto';
+import { SuccessResponseDto } from 'src/api/response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
 
@@ -61,35 +57,6 @@ export class ${SERVICE_CLASS}BodyDto {
 import { SuccessResponseDto } from 'src/api/response.dto';
 
 export class ${SERVICE_CLASS}ResponseDto extends SuccessResponseDto {}
-
-export class ${SERVICE_CLASS}NotFoundResponseDto extends NotFoundResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.INTERNAL_SERVER_ERROR, ErrorCodes.NOT_FOUND_ERROR],
-    enumName: '${SERVICE_CLASS}NotFoundErrorMessage',
-    default: ErrorCodes.INTERNAL_SERVER_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
-
-export class ${SERVICE_CLASS}BadRequestResponseDto extends BadRequestResponseDto {
-  /**
-   * The error message(s) that occurred during the validation of the request data or additional requirements
-   * applied during the execution of the request
-   */
-  @ApiProperty({
-    isArray: true,
-    enum: [ErrorCodes.INTERNAL_SERVER_ERROR],
-    enumName: '${SERVICE_CLASS}BadRequestErrorMessage',
-    default: ErrorCodes.INTERNAL_SERVER_ERROR,
-  })
-  declare message: ErrorCodes[];
-}
-
 EOF
 
 # The Service file
@@ -121,28 +88,28 @@ elif [ "$API_PATH" == "api/user" ]; then
   API_TAGS="USER_APIS"
 fi
 
+CONTROLLER=""
+if [ "$API_PATH" == "api/admin" ]; then
+  CONTROLLER="@AdminController()"
+elif [ "$API_PATH" == "api/user" ]; then
+  CONTROLLER="@UserController()"
+fi
+
 cat <<EOF > $FILE_PATH/${SERVICE_FILE}.controller.ts
-import { ${API_TAGS}, JWT_BEARER_AUTH } from 'src/constants/swagger';
-import {
-  ApiBearerAuth,
-  ApiCookieAuth, ApiHeader,
-  ApiTags,
-} from '@nestjs/swagger';
 import { ${METHOD}, Controller } from '@nestjs/common';
 import { ${SERVICE_CLASS}Service } from './${SERVICE_FILE}.service';
 import { AllowedRoles } from 'src/api/role.guard';
 import { UserRoleEnum } from 'src/constants/enums';
 
-@Controller({
-  path: '/${API_PATH}',
-})
-@ApiTags(${API_TAGS})
+${CONTROLLER}
 export class ${SERVICE_CLASS}Controller {
   constructor(private readonly ${SERVICE_REFERENCE,}Service: ${SERVICE_CLASS}Service) { }
 
   // eslint-disable-next-line class-methods-use-this
-  @${METHOD}('${SERVICE_FILE}')
-  ${DECORATORS}
+  @ApiEndpoint(${METHOD}, '/${SERVICE_FILE}', HttpStatus.OK, {
+  responses: {
+    [HttpStatus.OK]:${SERVICE_CLASS}ResponseDto,
+  }})
   async ${METHOD,,}() {
     // Implement your endpoint logic here
   }
