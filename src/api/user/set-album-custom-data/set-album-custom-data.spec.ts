@@ -1,10 +1,18 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { paths } from 'src/types/api-schema';
 
 describe('/api/user/set-album-custom-data', () => {
   let accountId: number;
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let albumId: number;
 
   beforeAll(async () => {
@@ -14,10 +22,14 @@ describe('/api/user/set-album-custom-data', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
-    const { data: albumData } = await userApi.listAlbums({
-      offset: 0,
-      limit: 1,
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
+    const { data: albumData } = await userApi.GET('/api/user/list-albums', {
+      params: {
+        query: {
+          offset: 0,
+          limit: 1,
+        },
+      },
     });
     if (!albumData?.albums?.[0]) {
       throw new Error('Album not found');
@@ -30,9 +42,31 @@ describe('/api/user/set-album-custom-data', () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function listTracks(query: paths['/api/user/list-tracks']['get']['parameters']['query']) {
+    return userApi.GET('/api/user/list-tracks', {
+      params: {
+        query,
+      },
+    });
+  }
+
+  async function setAlbumCustomData(
+    id: number,
+    body: paths['/api/user/set-album-custom-data']['patch']['requestBody']['content']['application/json'],
+  ) {
+    return userApi.PATCH('/api/user/set-album-custom-data', {
+      body,
+      params: {
+        query: {
+          id,
+        },
+      },
+    });
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PATCH(`/api/user/set-album-custom-data`, {
+      const { error } = await unauthenticatedApi.PATCH(`/api/user/set-album-custom-data`, {
         body: {
           artists: 'Custom albumArtists',
           title: 'Custom title',
@@ -42,9 +76,6 @@ describe('/api/user/set-album-custom-data', () => {
           query: {
             id: 1,
           },
-          header: {
-            Authorization: '',
-          },
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
@@ -53,7 +84,7 @@ describe('/api/user/set-album-custom-data', () => {
 
   describe('errors', () => {
     it('should reject invalid album id', async () => {
-      const { error } = await userApi.setAlbumCustomData(-1, {
+      const { error } = await setAlbumCustomData(-1, {
         artists: 'Custom albumArtists',
         title: 'Custom title',
         year: 2026,
@@ -62,7 +93,7 @@ describe('/api/user/set-album-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid artists length', async () => {
-      const { error } = await userApi.setAlbumCustomData(albumId, {
+      const { error } = await setAlbumCustomData(albumId, {
         artists: 'a'.repeat(1001),
         title: 'Custom title',
         year: 2026,
@@ -71,7 +102,7 @@ describe('/api/user/set-album-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid title length', async () => {
-      const { error } = await userApi.setAlbumCustomData(albumId, {
+      const { error } = await setAlbumCustomData(albumId, {
         artists: 'Custom albumArtists',
         title: 'a'.repeat(1001),
         year: 2026,
@@ -80,7 +111,7 @@ describe('/api/user/set-album-custom-data', () => {
     }, 120_000);
 
     it('should reject invalid year range', async () => {
-      const { error } = await userApi.setAlbumCustomData(albumId, {
+      const { error } = await setAlbumCustomData(albumId, {
         artists: 'Custom albumArtists',
         title: 'Custom albumTitle',
         year: 32230,
@@ -91,7 +122,7 @@ describe('/api/user/set-album-custom-data', () => {
 
   describe('success', () => {
     it('should create custom data for the album', async () => {
-      const { data: trackDataBefore } = await userApi.listTracks({
+      const { data: trackDataBefore } = await listTracks({
         offset: 0,
         limit: 100_000,
       });
@@ -107,7 +138,7 @@ describe('/api/user/set-album-custom-data', () => {
           expect(track.year).not.toBe(1950);
         }
       }
-      const { error, data } = await userApi.setAlbumCustomData(albumId, {
+      const { error, data } = await setAlbumCustomData(albumId, {
         artists: 'Custom albumArtists',
         title: 'Custom albumTitle',
         year: 1950,
@@ -115,7 +146,7 @@ describe('/api/user/set-album-custom-data', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the track
-      const { data: trackDataAfter } = await userApi.listTracks({
+      const { data: trackDataAfter } = await listTracks({
         offset: 0,
         limit: 99_999,
       });

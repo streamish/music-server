@@ -1,11 +1,24 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/search.cgi', () => {
-  let synologyApi: SynologyApi;
+  let api: Awaited<SynologyApiClient>;
+
+  beforeAll(async () => {
+    api = await createSynologyApi();
+  });
 
   async function search(keyword: string) {
-    const { data, error } = await synologyApi.search(keyword);
+    const { data, error } = await api.POST('/webapi/AudioStation/search.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Search,
+        method: SynologyMethodEnum.list,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        keyword,
+      },
+    });
     return {
       data,
       error,
@@ -17,10 +30,6 @@ describe('/webapi/AudioStation/search.cgi', () => {
       songTotal: data?.data.songTotal || 0,
     };
   }
-
-  beforeAll(async () => {
-    synologyApi = await createSynologyApi();
-  });
 
   it('should return artists', async () => {
     const { artists } = await search('artist');

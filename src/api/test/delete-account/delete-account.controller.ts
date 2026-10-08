@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { Controller, Delete, Query } from '@nestjs/common';
 import { InternalServerErrorResponseDto } from 'src/api/response.dto';
+import { TEST_APIS } from 'src/constants/swagger';
 import {
   TestDeleteAccountNotFoundResponseDto,
   TestDeleteAccountQueryDto,
@@ -17,7 +18,7 @@ import { TestDeleteAccountService } from './delete-account.service';
 @Controller({
   path: '/api/test',
 })
-@ApiTags()
+@ApiTags(TEST_APIS)
 export class TestDeleteAccountController {
   constructor(private readonly deleteAccountService: TestDeleteAccountService) {}
 

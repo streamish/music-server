@@ -1,8 +1,8 @@
 import { AccountEntity } from 'src/database/entities';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
+import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
 import { User } from 'src/api/user.decorator';
 import { UserRegenerateSessionKeyResponseDto } from './regenerate-session-key.dto';
 import { UserRegenerateSessionKeyService } from './regenerate-session-key.service';
@@ -28,8 +28,7 @@ export class UserRegenerateSessionKeyController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     type: UserRegenerateSessionKeyResponseDto,
     description: 'Session key regenerated successfully',

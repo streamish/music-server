@@ -1,7 +1,7 @@
 import {
   ADMIN_APIS,
   GUEST_APIS,
-  JWT_TOKEN,
+  JWT_BEARER_AUTH,
   QNAP_MUSICSTATION_APIS,
   SYNOLOGY_AUDIOSTATION_APIS,
   USER_APIS,
@@ -111,11 +111,9 @@ async function bootstrap() {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
-          name: 'JWT',
           description: 'Enter your session token.  These can be issued by the `create-session` endpoint.',
-          in: 'header',
         },
-        JWT_TOKEN,
+        JWT_BEARER_AUTH,
       )
       .build();
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentOptions);

@@ -2,14 +2,13 @@ import {
   ADMINISTRATOR_ONLY_ROUTE,
   ADMIN_APIS,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
 } from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
 import { AdminRegenerateMasterSessionKeyResponseDto } from './regenerate-master-session-key.dto';
 import { AdminRegenerateMasterSessionKeyService } from './regenerate-master-session-key.service';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, HttpCode, HttpStatus, Post, Scope, UseGuards } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
@@ -34,8 +33,7 @@ export class AdminRegenerateMasterSessionKeyController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     type: AdminRegenerateMasterSessionKeyResponseDto,
     description: 'Master session key regenerated successfully',

@@ -1,13 +1,40 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyMethodEnum, type components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from '../../types/api-schema';
 
 describe('/webapi/AudioStation/proxy.cgi', () => {
-  let synologyApi: SynologyApi;
+  let api: Awaited<SynologyApiClient>;
   let station: components['schemas']['SynologyRadioItemDto'];
 
+  beforeAll(async () => {
+    api = await createSynologyApi();
+    // skip this test in CI because GitHub Actions can't proxy the stream
+    if (process.env.CI) {
+      return;
+    }
+    const { data } = await api.POST('/webapi/AudioStation/radio.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Radio,
+        container: 'SHOUTcast_genre_Blues',
+        method: SynologyMethodEnum.list,
+        version: 1,
+        offset: 0,
+        limit: 100_000,
+      },
+    });
+    const typedData = data as components['schemas']['SynologyRadioItemResponseDto'];
+    station = typedData.data.radios[0]!;
+  });
+
   async function getStreamId(stationId: string) {
-    const { data, error } = await synologyApi.getStreamId(stationId);
+    const { data, error } = await api.POST('/webapi/AudioStation/proxy.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Proxy,
+        method: SynologyMethodEnum.getstreamid,
+        version: 1,
+        id: stationId,
+      },
+    });
     const typedData = data as components['schemas']['SynologyProxyStreamInfoResponseDto'];
     return {
       data: typedData,
@@ -16,16 +43,19 @@ describe('/webapi/AudioStation/proxy.cgi', () => {
     };
   }
 
-  beforeAll(async () => {
-    synologyApi = await createSynologyApi();
-    // skip this test in CI because GitHub Actions can't proxy the stream
-    if (process.env.CI) {
-      return;
-    }
-    const { data } = await synologyApi.listStationsInContainer('SHOUTcast_genre_Blues');
-    const typedData = data as components['schemas']['SynologyRadioItemResponseDto'];
-    station = typedData.data.radios[0]!;
-  });
+  async function getStreamSongInfo(streamId: string) {
+    return api.POST('/webapi/AudioStation/proxy.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Proxy,
+        method: SynologyMethodEnum.getsonginfo,
+        version: 1,
+        // this value is transformed into a number so the posted payload mismatches the type
+        // also this ID value is dependent on no other stream having been created, there currently
+        // isn't a mechanism for fetching the actual ID which might be 2, 3 etc.
+        stream_id: streamId as unknown as number,
+      },
+    });
+  }
 
   it('should create a stream ID', async () => {
     // skip this test in CI because GitHub Actions can't proxy the stream
@@ -48,7 +78,7 @@ describe('/webapi/AudioStation/proxy.cgi', () => {
     if (!streamId) {
       throw new Error('Stream ID not found for station');
     }
-    const { data } = await synologyApi.getStreamSongInfo(streamId);
+    const { data } = await getStreamSongInfo(streamId);
     const typedData = data as components['schemas']['SynologyProxySongInfoResponseDto'];
     expect(typedData?.data.title).toBeDefined();
   });

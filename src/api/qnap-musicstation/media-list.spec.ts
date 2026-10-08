@@ -1,4 +1,4 @@
-import { QnapApi, createQnapApi } from '../../test-helper.qnap';
+import { QnapApiClient, createQnapApi } from '../../test-helper';
 import { SortDirectionEnum, components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
@@ -16,23 +16,26 @@ type ListFolders = components['schemas']['QnapMediaListFoldersResponseDto'];
 type ListTracks = components['schemas']['QnapMediaListTracksResponseDto'];
 
 describe('/musicstation/api/medialist_api.php', () => {
-  let qnapApi: QnapApi;
-
-  async function listMedia<R>(filter: ListMediaQueryDto, currpage = 0, pagesize = 100) {
-    const paginated = filter as components['schemas']['QnapMediaListGeneralQueryDto'];
-    const { data, error } = await qnapApi.listMedia(
-      filter,
-      paginated.currpage || currpage,
-      paginated.pagesize || pagesize,
-    );
-    const typedData = data as R;
-    return { data: typedData, error };
-  }
+  let api: QnapApiClient;
 
   beforeAll(async () => {
-    qnapApi = await createQnapApi();
+    api = await createQnapApi();
   });
 
+  async function listMedia<ResponseType>(filters: ListMediaQueryDto, currpage = 0, pagesize = 100) {
+    const paginated = filters as components['schemas']['QnapMediaListGeneralQueryDto'];
+    const { data, error } = await api.POST('/musicstation/api/medialist_api.php', {
+      params: {
+        query: {
+          ...filters,
+          currpage: paginated.currpage || currpage,
+          pagesize: paginated.pagesize || pagesize,
+        },
+      } as never,
+    });
+    const typedData = data as ResponseType;
+    return { data: typedData, error };
+  }
   it('should list recently-added', async () => {
     const { error, data } = await listMedia<ListTracks>({
       act: 'list',

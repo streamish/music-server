@@ -1,18 +1,45 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum, components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from '../../types/api-schema';
 
 describe('/webapi/AudioStation/genre.cgi', () => {
-  let synologyApi: SynologyApi;
+  let api: Awaited<SynologyApiClient>;
+
+  beforeAll(async () => {
+    api = await createSynologyApi();
+  });
 
   async function listGenres(offset = 0, limit = 0) {
-    const { data, error } = await synologyApi.listGenres(offset, limit);
+    const { data, error } = await api.POST('/webapi/AudioStation/genre.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Genre,
+        method: SynologyMethodEnum.list,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        offset: offset || 0,
+        limit: limit || 100000,
+      },
+    });
     const typedData = data as components['schemas']['SynologyGenreResponseDto'];
-    return { data: typedData, error, genres: typedData?.data.genres || [], total: typedData?.data.total || 0 };
+    return {
+      data: typedData,
+      error,
+      genres: typedData?.data.genres || [],
+      total: typedData?.data.total || 0,
+    };
   }
 
   async function listDefaultGenres() {
-    const { data, error } = await synologyApi.listDefaultGenres();
+    const { data, error } = await api.POST('/webapi/AudioStation/genre.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Genre,
+        method: SynologyMethodEnum.list_default_genre,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        offset: 0,
+        limit: 100000,
+      },
+    });
     const typedData = data as components['schemas']['SynologyDefaultGenreResponseDto'];
     return {
       data: typedData,
@@ -21,10 +48,6 @@ describe('/webapi/AudioStation/genre.cgi', () => {
       total: typedData?.data.total || 0,
     };
   }
-
-  beforeAll(async () => {
-    synologyApi = await createSynologyApi();
-  });
 
   it('should list all genres with no filters', async () => {
     const { genres, total } = await listGenres();

@@ -1,28 +1,28 @@
-import { AdminApi, api, createAdminApi, createUserApi } from '../../../test-helper';
+import { AuthenticatedApiClient, createAuthenticatedApi, testApi, unauthenticatedApi } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/regenerate-session-key', () => {
   const deleteAccounts: number[] = [];
-  let adminApi: AdminApi;
+  let userApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    const account = await testApi.createAccount();
+    userApi = await createAuthenticatedApi(account.username, account.password);
+    deleteAccounts.push(account.id);
   });
 
   afterAll(async () => {
-    await adminApi.deleteTestAccounts(deleteAccounts);
+    await testApi.deleteAccounts(deleteAccounts);
   });
+
+  async function regenerateSessionKey() {
+    return userApi.POST('/api/user/regenerate-session-key', {});
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.POST(`/api/user/regenerate-session-key`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.POST(`/api/user/regenerate-session-key`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -30,15 +30,12 @@ describe('/api/user/regenerate-session-key', () => {
 
   describe('success', () => {
     it('should generate new user session key', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
-      const { error, data } = await accountApi.regenerateSessionKey();
+      const { error, data } = await regenerateSessionKey();
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
-      const { error: error2 } = await accountApi.listRootPaths();
+      const { error: error2 } = await userApi.GET('/api/user/list-root-paths', {});
       const typedError2 = error2 as unknown as Record<string, string | string[]>;
       expect(typedError2?.message?.[0]).toBe(ErrorCodes.AUTHORIZATION_ERROR);
-      deleteAccounts.push(account.id);
     });
   });
 });

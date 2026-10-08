@@ -1,28 +1,39 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/set-album-rating', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let accountId: number;
 
   async function setRating(albumId: number, rating: number) {
-    const { error, data } = await userApi.setAlbumRating(
-      {
-        id: albumId,
-      },
-      {
+    return userApi.PUT('/api/user/set-album-rating', {
+      body: {
         rating,
       },
-    );
-    expect(error).toBeUndefined();
-    expect(data?.success).toBe(true);
+      params: {
+        query: {
+          id: albumId,
+        },
+      },
+    });
   }
 
   async function getAlbum(index: number) {
-    const { data } = await userApi.listAlbumsWithTracks({
-      offset: 0,
-      limit: 100_000,
+    const { data } = await userApi.GET('/api/user/list-albums-with-tracks', {
+      params: {
+        query: {
+          offset: 0,
+          limit: index + 1,
+        },
+      },
     });
     const album = data?.albums[index];
     if (!album) {
@@ -38,7 +49,7 @@ describe('/api/user/set-album-rating', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
   }, 120_000);
 
   afterAll(async () => {
@@ -47,16 +58,13 @@ describe('/api/user/set-album-rating', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.PUT(`/api/user/set-album-rating`, {
+      const { error } = await unauthenticatedApi.PUT(`/api/user/set-album-rating`, {
         body: {
           rating: 3,
         },
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });
@@ -66,14 +74,7 @@ describe('/api/user/set-album-rating', () => {
 
   describe('errors', () => {
     it('should reject invalid album id', async () => {
-      const { error } = await userApi.setAlbumRating(
-        {
-          id: -1,
-        },
-        {
-          rating: 5,
-        },
-      );
+      const { error } = await setRating(-1, 5);
       expect(error?.message[0]).toBe(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }, 120_000);
   });

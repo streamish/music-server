@@ -2,13 +2,12 @@ import {
   ADMINISTRATOR_ONLY_ROUTE,
   ADMIN_APIS,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
 } from 'src/constants/swagger';
 import { AdminListRootPathsResponseDto } from './list-root-paths.dto';
 import { AdminListRootPathsService } from './list-root-paths.service';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Scope, UseGuards } from '@nestjs/common';
 import { UserRoleEnum } from 'src/types/enums';
 
@@ -33,8 +32,7 @@ export class AdminListRootPathsController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     type: AdminListRootPathsResponseDto,
   })

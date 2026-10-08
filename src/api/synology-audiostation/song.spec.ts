@@ -1,19 +1,43 @@
-import { SynologyApi, createSynologyApi } from '../../test-helper.synology';
+import { RatingOrUnset } from '../../types/rating';
+import { type SynologyApiClient, createSynologyApi } from '../../test-helper';
+import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum, type components } from '../../types/api-schema';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from '../../types/api-schema';
 
 describe('/webapi/AudioStation/song.cgi', () => {
-  let synologyApi: SynologyApi;
+  let api: Awaited<SynologyApiClient>;
 
-  async function listSongs(filter: Record<string, string>, offset = 0, limit = 100) {
-    const { data, error } = await synologyApi.listSongs(filter, offset, limit);
+  beforeAll(async () => {
+    api = await createSynologyApi();
+  });
+
+  async function listSongs(filters: Record<string, string>, offset = 0, limit = 100) {
+    const { data, error } = await api.POST('/webapi/AudioStation/song.cgi', {
+      body: {
+        additional: 'avg_rating',
+        api: SynologyApiEnum.SYNO_AudioStation_Song,
+        method: SynologyMethodEnum.list,
+        version: 1,
+        library: SynologyLibraryEnum.all,
+        ...filters,
+        offset: offset || 0,
+        limit: limit || 100000,
+      },
+    });
     const typedData = data as components['schemas']['SynologySongResponseDto'];
     return { data: typedData, error, songs: typedData?.data.songs || [], total: typedData?.data.total || 0 };
   }
 
-  beforeAll(async () => {
-    synologyApi = await createSynologyApi();
-  });
+  async function rateSongs(items: number[], rating: RatingOrUnset) {
+    return api.POST('/webapi/AudioStation/song.cgi', {
+      body: {
+        api: SynologyApiEnum.SYNO_AudioStation_Song,
+        method: SynologyMethodEnum.setrating,
+        version: 1,
+        id: items.map((id) => `music_${id}`).join(',') as unknown as number[],
+        rating,
+      },
+    });
+  }
 
   it('should list album songs', async () => {
     const { songs, total } = await listSongs({
@@ -594,7 +618,7 @@ describe('/webapi/AudioStation/song.cgi', () => {
     if (!song) {
       throw new Error('No song found to rate');
     }
-    const { data } = await synologyApi.rateSongs([Number(song.id.substring('music_'.length))], 5);
+    const { data } = await rateSongs([Number(song.id.substring('music_'.length))], 5);
     expect(data?.success).toBe(true);
     const { songs: songs2 } = await listSongs({
       album: 'Album 5',
@@ -614,7 +638,7 @@ describe('/webapi/AudioStation/song.cgi', () => {
     if (!song1 || !song2 || !song3) {
       throw new Error('No song found to rate');
     }
-    const { data } = await synologyApi.rateSongs(
+    const { data } = await rateSongs(
       [
         Number(song1.id.substring('music_'.length)),
         Number(song2.id.substring('music_'.length)),
@@ -643,7 +667,7 @@ describe('/webapi/AudioStation/song.cgi', () => {
     if (!song1 || !song2 || !song3) {
       throw new Error('No song found to rate');
     }
-    const { data } = await synologyApi.rateSongs(
+    const { data } = await rateSongs(
       [
         Number(song1.id.substring('music_'.length)),
         Number(song2.id.substring('music_'.length)),

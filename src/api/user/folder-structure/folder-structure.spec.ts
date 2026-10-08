@@ -1,9 +1,16 @@
+import {
+  AuthenticatedApiClient,
+  USER_PASSWORD,
+  USER_USERNAME,
+  createAuthenticatedApi,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
-import { USER_PASSWORD, USER_USERNAME, UserApi, api, createUserApi, testApi } from '../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/users/folder-structure', () => {
-  let userApi: UserApi;
+  let userApi: AuthenticatedApiClient;
   let accountId: number;
 
   beforeAll(async () => {
@@ -13,22 +20,20 @@ describe('/users/folder-structure', () => {
       throw new Error('Failed to create new account');
     }
     accountId = newAccount.data.accountId;
-    userApi = await createUserApi(newUsername, USER_PASSWORD);
+    userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
   });
 
   afterAll(async () => {
     await testApi.deleteAccount(accountId);
   }, 120_000);
 
+  async function folderStructure() {
+    return userApi.GET(`/api/user/folder-structure`, {});
+  }
+
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.GET(`/api/user/folder-structure`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/user/folder-structure`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -36,7 +41,7 @@ describe('/users/folder-structure', () => {
 
   describe('success', () => {
     it('should return nested folder list', async () => {
-      const { data } = await userApi.folderStructure();
+      const { data } = await folderStructure();
       const artist1 = data?.items?.[0];
       const artist2 = data?.items?.[1];
       expect(data?.items.length).toBe(3);
@@ -58,7 +63,7 @@ describe('/users/folder-structure', () => {
     });
 
     it('should return file list', async () => {
-      const { data } = await userApi.folderStructure();
+      const { data } = await folderStructure();
       const artist1 = data?.items?.[0];
       const artist2 = data?.items?.[1];
       expect(artist1?.children?.[0]?.folder).toBe('Album 1');

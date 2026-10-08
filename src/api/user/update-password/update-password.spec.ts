@@ -1,29 +1,44 @@
-import { AdminApi, api, createAdminApi, createUserApi, guestApi } from '../../../test-helper';
+import {
+  AuthenticatedApiClient,
+  createAuthenticatedApi,
+  guestApi,
+  testApi,
+  unauthenticatedApi,
+} from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/user/update-password', () => {
   const deleteAccounts: number[] = [];
-  let adminApi: AdminApi;
+  let userApi: AuthenticatedApiClient;
+  let username: string;
+  let password: string;
 
   beforeAll(async () => {
-    adminApi = await createAdminApi();
+    const account = await testApi.createAccount();
+    userApi = await createAuthenticatedApi(account.username, account.password);
+    username = account.username;
+    password = account.password;
+    deleteAccounts.push(account.id);
   });
 
   afterAll(async () => {
-    await adminApi.deleteTestAccounts(deleteAccounts);
+    await testApi.deleteAccounts(deleteAccounts);
   });
+
+  async function updatePassword(newPassword: string) {
+    return userApi.POST('/api/user/update-password', {
+      body: {
+        newPassword,
+      },
+    });
+  }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await api.POST(`/api/user/update-password`, {
+      const { error } = await unauthenticatedApi.POST(`/api/user/update-password`, {
         body: {
           newPassword: 'testpassword',
-        },
-        params: {
-          header: {
-            Authorization: '',
-          },
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
@@ -32,33 +47,27 @@ describe('/api/user/update-password', () => {
 
   describe('errors', () => {
     it('should reject missing password', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
-      const { error } = await accountApi.updatePassword('');
+      const { error } = await updatePassword('');
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
-      deleteAccounts.push(account.id);
     });
 
     it('should reject invalid password length', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
-      const { error } = await accountApi.updatePassword('x'.repeat(256));
+      const { error } = await updatePassword('x'.repeat(256));
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR);
-      deleteAccounts.push(account.id);
     });
   });
 
   describe('success', () => {
     it('should reset user password', async () => {
-      const account = await adminApi.createTestAccount();
-      const accountApi = await createUserApi(account.username, account.password);
       // reset their password
-      const { data } = await accountApi.updatePassword('newpassword');
+      const { data } = await updatePassword('newpassword');
       expect(data?.success).toBe(true);
+      // verify old does not work
+      const { error: oldSessionError } = await guestApi.createSession(username, password);
+      expect(oldSessionError?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
       // verify it
-      const { data: newSession } = await guestApi.createSession(account.username, 'newpassword');
+      const { data: newSession } = await guestApi.createSession(username, 'newpassword');
       expect(newSession?.jwtToken).toBeDefined();
-      deleteAccounts.push(account.id);
     });
   });
 });

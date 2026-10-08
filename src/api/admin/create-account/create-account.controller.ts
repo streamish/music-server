@@ -2,8 +2,7 @@ import {
   ADMINISTRATOR_ONLY_ROUTE,
   ADMIN_APIS,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
 } from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
 import {
@@ -13,14 +12,7 @@ import {
 } from './create-account.dto';
 import { AdminCreateAccountService } from './create-account.service';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiHeader,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Post, Scope, UseGuards } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import { UserRoleEnum } from 'src/types/enums';
@@ -44,8 +36,7 @@ export class AdminCreateAccountController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiCreatedResponse({
     type: AdminCreateAccountResponseDto,
   })
