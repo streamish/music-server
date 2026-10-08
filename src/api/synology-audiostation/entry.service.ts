@@ -24,7 +24,7 @@ import {
   SynologyEntrySignInBodyDto,
   SynologyEntrySignInDataDto,
 } from './dtos';
-import { SynologyPinTypeEnum } from './enums';
+import { SynologyPinTypeEnum } from './synology.enums';
 import { normalizeString, replaceDoubleQuotes } from 'src/utils/strings';
 import { readFileSync } from 'node:fs';
 import { sep } from 'node:path';

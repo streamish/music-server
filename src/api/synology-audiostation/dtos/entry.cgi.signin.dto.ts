@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
-import { SynologySuccessResponseDto } from './synology.dto';
+import { SynologySuccessResponseDto } from '../synology.response.dto';
 import { Transform } from 'class-transformer';
 
 export class SynologyEntrySignInBodyDto {

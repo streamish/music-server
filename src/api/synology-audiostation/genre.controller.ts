@@ -3,7 +3,7 @@ import { Body, HttpStatus, Logger, Post } from '@nestjs/common';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import { SynologyDefaultGenreResponseDto, SynologyGenreBodyDto, SynologyGenreResponseDto } from './dtos';
 import { SynologyGenreService } from './genre.service';
-import { SynologyMethodEnum } from './enums';
+import { SynologyMethodEnum } from './synology.enums';
 import { User } from '../user.decorator';
 
 @SynologyController()

@@ -2,7 +2,7 @@ import { AccountEntity, SessionEntity } from 'src/database/entities';
 import { BadRequestException, Body, HttpStatus, Logger, Post, Req, Res } from '@nestjs/common';
 import { Session } from '../session.decorator';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
-import { SynologyApiEnum, SynologyMethodEnum } from './enums';
+import { SynologyApiEnum, SynologyMethodEnum } from './synology.enums';
 import {
   SynologyEntryCertificateBodyDto,
   SynologyEntryCertificateResponseDto,
@@ -20,7 +20,7 @@ import {
   SynologyEntrySignInResponseDto,
 } from './dtos';
 import { SynologyEntryService } from './entry.service';
-import { SynologySuccessResponseDto } from './dtos/synology.dto';
+import { SynologySuccessResponseDto } from './synology.response.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 import type { Response } from 'express';

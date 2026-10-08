@@ -16,7 +16,7 @@ import {
   SynologySongsRateBodyDto,
 } from './dtos';
 import { SynologySongService } from './song.service';
-import { SynologySuccessResponseDto } from './dtos/synology.dto';
+import { SynologySuccessResponseDto } from './synology.response.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 

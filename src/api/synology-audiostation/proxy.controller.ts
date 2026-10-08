@@ -10,7 +10,7 @@ import {
   SynologyProxyStreamQueryDto,
 } from './dtos/proxy.cgi.dto';
 import { SynologyProxyService } from './proxy.service';
-import { SynologySuccessResponseDto } from './dtos/synology.dto';
+import { SynologySuccessResponseDto } from './synology.response.dto';
 import { plainToInstance } from 'class-transformer';
 import type { Response } from 'express';
 
