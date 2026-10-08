@@ -1,7 +1,6 @@
 import {
   AuthenticatedApiClient,
   createAuthenticatedApi,
-  emptyAuthToken,
   guestApi,
   testApi,
   unauthenticatedApi,
@@ -29,7 +28,6 @@ describe('/api/user/update-password', () => {
 
   async function updatePassword(newPassword: string) {
     return userApi.POST('/api/user/update-password', {
-      ...emptyAuthToken,
       body: {
         newPassword,
       },
@@ -41,11 +39,6 @@ describe('/api/user/update-password', () => {
       const { error } = await unauthenticatedApi.POST(`/api/user/update-password`, {
         body: {
           newPassword: 'testpassword',
-        },
-        params: {
-          header: {
-            Authorization: '',
-          },
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);

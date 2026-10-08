@@ -3,7 +3,6 @@ import {
   ADMIN_USERNAME,
   AuthenticatedApiClient,
   createAuthenticatedApi,
-  emptyAuthToken,
   unauthenticatedApi,
 } from '../../../test-helper';
 import { AlbumSortFieldEnum, SortDirectionEnum, paths } from '../../../types/api-schema';
@@ -20,7 +19,6 @@ describe('/users/list-albums', () => {
   async function listAlbums(query: paths['/api/user/list-albums']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-albums', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -28,13 +26,7 @@ describe('/users/list-albums', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET(`/api/user/list-albums`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-albums`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });

@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -32,7 +31,6 @@ describe('/api/user/list-favorites', () => {
   async function listAlbums(query: paths['/api/user/list-albums']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-albums', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -41,16 +39,13 @@ describe('/api/user/list-favorites', () => {
   async function listTracks(query: paths['/api/user/list-tracks']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
   }
 
   async function folderStructure() {
-    return userApi.GET('/api/user/folder-structure', {
-      ...emptyAuthToken,
-    });
+    return userApi.GET('/api/user/folder-structure', {});
   }
 
   async function listAlbumAssociations(
@@ -58,7 +53,6 @@ describe('/api/user/list-favorites', () => {
   ) {
     return userApi.GET('/api/user/list-album-associations', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -67,7 +61,6 @@ describe('/api/user/list-favorites', () => {
   async function listFavorites(query: paths['/api/user/list-favorites']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-favorites', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -76,7 +69,6 @@ describe('/api/user/list-favorites', () => {
   async function setAlbumFavorite(id: number) {
     return userApi.PUT('/api/user/set-album-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -87,7 +79,6 @@ describe('/api/user/list-favorites', () => {
   async function setTrackFavorite(id: number) {
     return userApi.PUT('/api/user/set-track-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -98,7 +89,6 @@ describe('/api/user/list-favorites', () => {
   async function setFolderFavorite(folderPath: string) {
     return userApi.PUT('/api/user/set-folder-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           folder: folderPath,
         },
@@ -109,7 +99,6 @@ describe('/api/user/list-favorites', () => {
   async function setAssociationFavorite(id: number, associationType: AssociationTypeEnum) {
     return userApi.PUT('/api/user/set-association-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
           associationType,
@@ -120,13 +109,7 @@ describe('/api/user/list-favorites', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET(`/api/user/list-favorites`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-favorites`, {});
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     }, 120_000);
   });

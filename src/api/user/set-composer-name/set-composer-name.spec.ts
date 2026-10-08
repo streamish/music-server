@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -26,7 +25,6 @@ describe('/api/user/set-composer-name', () => {
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
     const { data: composerData } = await userApi.GET('/api/user/list-track-associations', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           associationType: AssociationTypeEnum.composer,
           offset: 0,
@@ -47,7 +45,6 @@ describe('/api/user/set-composer-name', () => {
   async function listTracks() {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 100_000,
@@ -62,7 +59,6 @@ describe('/api/user/set-composer-name', () => {
   ) {
     return userApi.PATCH(`/api/user/set-composer-name`, {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -82,9 +78,6 @@ describe('/api/user/set-composer-name', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

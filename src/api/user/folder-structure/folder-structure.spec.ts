@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -29,20 +28,12 @@ describe('/users/folder-structure', () => {
   }, 120_000);
 
   async function folderStructure() {
-    return userApi.GET(`/api/user/folder-structure`, {
-      ...emptyAuthToken,
-    });
+    return userApi.GET(`/api/user/folder-structure`, {});
   }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET(`/api/user/folder-structure`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/user/folder-structure`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });

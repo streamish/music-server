@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/admin/delete-root-path', () => {
         rootPath,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: accountId,
         },
@@ -42,7 +40,6 @@ describe('/api/admin/delete-root-path', () => {
   async function deleteRootPath(pathId: number) {
     return adminApi.DELETE('/api/admin/delete-root-path', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: pathId,
         },
@@ -51,16 +48,13 @@ describe('/api/admin/delete-root-path', () => {
   }
 
   async function listRootPaths() {
-    return adminApi.GET('/api/admin/list-root-paths', {
-      ...emptyAuthToken,
-    });
+    return adminApi.GET('/api/admin/list-root-paths', {});
   }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
       const { error } = await unauthenticatedApi.DELETE(`/api/admin/delete-root-path`, {
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },
@@ -73,7 +67,6 @@ describe('/api/admin/delete-root-path', () => {
       const nonAuthenticatedApiClient = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
       const { error } = await nonAuthenticatedApiClient.DELETE('/api/admin/delete-root-path', {
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },

@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -26,7 +25,6 @@ describe('/api/user/set-association-favorite', () => {
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
     const { data } = await userApi.GET('/api/user/list-track-associations', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           associationType: AssociationTypeEnum.artist,
           offset: 0,
@@ -48,7 +46,6 @@ describe('/api/user/set-association-favorite', () => {
   async function listFavorites() {
     return userApi.GET('/api/user/list-favorites', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 100_000,
@@ -60,7 +57,6 @@ describe('/api/user/set-association-favorite', () => {
   async function setAssociationFavorite(id: number, associationType: AssociationTypeEnum) {
     return userApi.PUT('/api/user/set-association-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
           associationType,
@@ -76,9 +72,6 @@ describe('/api/user/set-association-favorite', () => {
           query: {
             id: associationId,
             associationType: AssociationTypeEnum.artist,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

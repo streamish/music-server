@@ -2,8 +2,7 @@ import {
   ADMINISTRATOR_ONLY_ROUTE,
   ADMIN_APIS,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
 } from 'src/constants/swagger';
 import {
   AdminListIndexerLogsBadRequestResponseDto,
@@ -16,7 +15,6 @@ import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -45,8 +43,7 @@ export class AdminListIndexerLogsController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     type: AdminListIndexerLogsResponseDto,
   })

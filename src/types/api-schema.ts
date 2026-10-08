@@ -7958,10 +7958,7 @@ export interface operations {
   AdminCreateAccountController_post: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -7995,10 +7992,7 @@ export interface operations {
         /** @description The ID of the account to create the root path for. */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8043,10 +8037,7 @@ export interface operations {
         /** @description The ID of the account to be deleted. */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8091,10 +8082,7 @@ export interface operations {
         /** @description The ID of the root path to delete */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8123,10 +8111,7 @@ export interface operations {
   AdminIndexerConfigurationController_get: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8145,10 +8130,7 @@ export interface operations {
   AdminListAccountsController_get: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8172,10 +8154,7 @@ export interface operations {
         rootPathId?: number;
         search?: string;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8210,10 +8189,7 @@ export interface operations {
   AdminListRootPathsController_get: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8232,10 +8208,7 @@ export interface operations {
   AdminRegenerateMasterSessionKeyController_post: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8258,10 +8231,7 @@ export interface operations {
         /** @description The ID of the account to regenerate the session key for. */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8293,10 +8263,7 @@ export interface operations {
         /** @description The ID of the account whose password is to be reset. */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8338,10 +8305,7 @@ export interface operations {
   AdminSetIndexerStatusController_patch: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8368,10 +8332,7 @@ export interface operations {
         /** @description The ID of the root path to update */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8415,10 +8376,7 @@ export interface operations {
         /** @description The ID of the account whose roles are changing. */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8752,10 +8710,7 @@ export interface operations {
   UserCreateRootPathController_post: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8791,10 +8746,7 @@ export interface operations {
         /** @description The ID of the file */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8826,10 +8778,7 @@ export interface operations {
         /** @description The ID of the favorite item to be deleted */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8861,10 +8810,7 @@ export interface operations {
         /** @description The ID of the root path to delete */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8893,10 +8839,7 @@ export interface operations {
   UserEndSessionController_delete: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8939,10 +8882,7 @@ export interface operations {
   UserFolderStructureController_get: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8990,10 +8930,7 @@ export interface operations {
         /** @description Optional filter for the field to sort results by. */
         sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9050,10 +8987,7 @@ export interface operations {
         /** @description Optional filter for the field to sort results by. */
         sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9144,10 +9078,7 @@ export interface operations {
          */
         year?: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9238,10 +9169,7 @@ export interface operations {
          */
         year?: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9273,10 +9201,7 @@ export interface operations {
         limit?: number;
         offset?: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9308,10 +9233,7 @@ export interface operations {
         rootPathId?: number;
         search?: string;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9347,10 +9269,7 @@ export interface operations {
   UserListRootPathsController_get: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9397,10 +9316,7 @@ export interface operations {
         /** @description Optional filter for the field to sort results by. */
         sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9457,10 +9373,7 @@ export interface operations {
         /** @description Optional filter for the field to sort results by. */
         sortField?: components['schemas']['AssociationSortFieldEnum'];
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9551,10 +9464,7 @@ export interface operations {
          */
         year?: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9583,10 +9493,7 @@ export interface operations {
   UserRegenerateSessionKeyController_post: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9609,10 +9516,7 @@ export interface operations {
         /** @description The ID of the album */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9644,10 +9548,7 @@ export interface operations {
         /** @description The ID of the association */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9679,10 +9580,7 @@ export interface operations {
         /** @description The ID of the album */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9727,10 +9625,7 @@ export interface operations {
         /** @description The ID of the album */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9762,10 +9657,7 @@ export interface operations {
         /** @description The ID of an album to rate, which will apply the rating to all tracks within it. */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9810,10 +9702,7 @@ export interface operations {
         /** @description The ID of the artist */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9859,10 +9748,7 @@ export interface operations {
         /** @description The ID of the association */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9894,10 +9780,7 @@ export interface operations {
         /** @description The ID of the composer */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9942,10 +9825,7 @@ export interface operations {
         /** @description The ID of the track */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -9989,10 +9869,7 @@ export interface operations {
       query: {
         folder: string;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -10024,10 +9901,7 @@ export interface operations {
         /** @description The ID of the genre */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -10072,10 +9946,7 @@ export interface operations {
         /** @description The ID of the file */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -10120,10 +9991,7 @@ export interface operations {
         /** @description The ID of the track to mark as favorite */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -10155,10 +10023,7 @@ export interface operations {
         /** @description The ID of a track to rate */
         id: number;
       };
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -10240,10 +10105,7 @@ export interface operations {
   UserUpdatePasswordController_post: {
     parameters: {
       query?: never;
-      header: {
-        /** @description JWT token for authentication */
-        Authorization: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };

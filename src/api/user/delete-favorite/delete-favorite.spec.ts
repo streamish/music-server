@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/user/delete-favorite', () => {
   async function setAlbumFavorite(id: number) {
     return userApi.PUT(`/api/user/set-album-favorite`, {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -42,7 +40,6 @@ describe('/api/user/delete-favorite', () => {
   async function deleteFavorite(id: number) {
     return userApi.DELETE(`/api/user/delete-favorite`, {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -51,9 +48,7 @@ describe('/api/user/delete-favorite', () => {
   }
 
   async function listFavorites() {
-    return userApi.GET(`/api/user/list-favorites`, {
-      ...emptyAuthToken,
-    });
+    return userApi.GET(`/api/user/list-favorites`, {});
   }
 
   describe('authorized access', () => {
@@ -62,9 +57,6 @@ describe('/api/user/delete-favorite', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });
@@ -81,9 +73,7 @@ describe('/api/user/delete-favorite', () => {
 
   describe('success', () => {
     it('should delete favorite for the album', async () => {
-      const { data: albumData } = await userApi.GET(`/api/user/list-albums`, {
-        ...emptyAuthToken,
-      });
+      const { data: albumData } = await userApi.GET(`/api/user/list-albums`, {});
       const album = albumData?.albums[0];
       if (!album) {
         throw new Error('Album not found');

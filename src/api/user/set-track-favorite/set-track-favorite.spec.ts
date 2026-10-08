@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/user/set-track-favorite', () => {
   async function listFavorites() {
     return userApi.GET('/api/user/list-favorites', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 100_000,
@@ -43,7 +41,6 @@ describe('/api/user/set-track-favorite', () => {
   async function listTracks() {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 100_000,
@@ -55,7 +52,6 @@ describe('/api/user/set-track-favorite', () => {
   async function setTrackFavorite(id: number) {
     return userApi.PUT('/api/user/set-track-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -69,9 +65,6 @@ describe('/api/user/set-track-favorite', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

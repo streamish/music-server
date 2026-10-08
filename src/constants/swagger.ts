@@ -37,17 +37,7 @@ export const TEST_APIS = 'Test APIs';
  * browser.  It is signed with a secret constructed from a platform-level token, account-level token, and random
  * session token
  */
-export const JWT_TOKEN = 'Session token';
-
-/**
- * Authorization header decorator for sessions
- */
-export const JWT_TOKEN_HEADER = {
-  name: 'Authorization',
-  description: 'JWT token for authentication',
-  example: 'Bearer <JWT_TOKEN>',
-  required: true,
-};
+export const JWT_BEARER_AUTH = 'bearerAuth';
 
 /**
  * Cookie header decorator for sessions

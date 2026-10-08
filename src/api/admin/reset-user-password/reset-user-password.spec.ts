@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   guestApi,
   testApi,
   unauthenticatedApi,
@@ -32,7 +31,6 @@ describe('/api/admin/reset-user-password', () => {
         password: adminPassword,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: userId,
         },
@@ -52,9 +50,6 @@ describe('/api/admin/reset-user-password', () => {
           query: {
             id: 1,
           },
-          header: {
-            Authorization: '',
-          },
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
@@ -69,7 +64,6 @@ describe('/api/admin/reset-user-password', () => {
           password: ADMIN_PASSWORD,
         },
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },

@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/user/delete-custom-data', () => {
   async function deleteCustomData(id: number) {
     return userApi.DELETE(`/api/user/delete-custom-data`, {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -42,7 +40,6 @@ describe('/api/user/delete-custom-data', () => {
   async function listTracks(params: { offset: number; limit: number }) {
     return userApi.GET(`/api/user/list-tracks`, {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: params.offset,
           limit: params.limit,
@@ -80,7 +77,6 @@ describe('/api/user/delete-custom-data', () => {
         year: params.year,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -95,7 +91,6 @@ describe('/api/user/delete-custom-data', () => {
           query: {
             id: 1,
           },
-          ...emptyAuthToken.params,
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
@@ -106,7 +101,6 @@ describe('/api/user/delete-custom-data', () => {
     it('should reject invalid file id', async () => {
       const { error } = await userApi.DELETE(`/api/user/delete-custom-data`, {
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: -1,
           },

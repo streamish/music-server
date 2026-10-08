@@ -3,7 +3,6 @@ import {
   ADMIN_USERNAME,
   AuthenticatedApiClient,
   createAuthenticatedApi,
-  emptyAuthToken,
   unauthenticatedApi,
 } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
@@ -20,7 +19,6 @@ describe('/users/list-tracks', () => {
   async function listTracks(query: paths['/api/user/list-tracks']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -28,13 +26,7 @@ describe('/users/list-tracks', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET(`/api/user/list-tracks`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-tracks`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });

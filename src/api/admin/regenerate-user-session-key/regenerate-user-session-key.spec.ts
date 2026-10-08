@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -25,7 +24,6 @@ describe('/api/admin/regenerate-user-session-key', () => {
   async function regenerateUserSessionKey(userId: number) {
     return adminApi.POST('/api/admin/regenerate-user-session-key', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: userId,
         },
@@ -40,9 +38,6 @@ describe('/api/admin/regenerate-user-session-key', () => {
           query: {
             id: 1,
           },
-          header: {
-            Authorization: '',
-          },
         },
       });
       const typedError = error as unknown as Record<string, string | string[]>;
@@ -53,7 +48,6 @@ describe('/api/admin/regenerate-user-session-key', () => {
       const nonAuthenticatedApiClient = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
       const { error } = await nonAuthenticatedApiClient.POST('/api/admin/regenerate-user-session-key', {
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 2,
           },
@@ -80,9 +74,7 @@ describe('/api/admin/regenerate-user-session-key', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // verify
-      const { error: error2 } = await accountApi.GET('/api/user/list-root-paths', {
-        ...emptyAuthToken,
-      });
+      const { error: error2 } = await accountApi.GET('/api/user/list-root-paths', {});
       const typedError2 = error2 as unknown as Record<string, string | string[]>;
       expect(typedError2?.message?.[0]).toBe(ErrorCodes.AUTHORIZATION_ERROR);
       deleteAccounts.push(account.id);

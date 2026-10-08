@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -32,7 +31,6 @@ describe('/api/user/set-album-favorite', () => {
   async function listAlbums(query: paths['/api/user/list-albums']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-albums', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -41,7 +39,6 @@ describe('/api/user/set-album-favorite', () => {
   async function listFavorites(query: paths['/api/user/list-favorites']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-favorites', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -50,7 +47,6 @@ describe('/api/user/set-album-favorite', () => {
   async function setAlbumFavorite(id: number) {
     return userApi.PUT('/api/user/set-album-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -64,9 +60,6 @@ describe('/api/user/set-album-favorite', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

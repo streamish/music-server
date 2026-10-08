@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -32,7 +31,6 @@ describe('/api/admin/delete-account', () => {
         password,
         roles: [UserRoleEnum.user],
       },
-      ...emptyAuthToken,
     });
     return testApi.retrieveAccount(username);
   }
@@ -43,7 +41,6 @@ describe('/api/admin/delete-account', () => {
         adminPassword,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: accountId,
         },
@@ -61,9 +58,6 @@ describe('/api/admin/delete-account', () => {
           query: {
             id: 1,
           },
-          header: {
-            Authorization: '',
-          },
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
@@ -76,7 +70,6 @@ describe('/api/admin/delete-account', () => {
           adminPassword: ADMIN_PASSWORD,
         },
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 2,
           },

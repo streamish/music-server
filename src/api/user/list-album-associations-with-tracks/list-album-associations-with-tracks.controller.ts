@@ -1,12 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import {
   FILTERED_DATA_DESCRIPTION,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
   PAGINATED_DATA_DESCRIPTION,
   TRACK_INFORMATION_INCLUDED,
   USER_APIS,
@@ -40,8 +39,7 @@ export class UserListAlbumAssociationsWithTracksController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     description: 'Successful response with an array of data and pagination information.',
     type: UserListAlbumAssociationsWithTracksResponseDto,

@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   unauthenticatedApi,
 } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
@@ -17,27 +16,19 @@ describe('/api/admin/list-indexer-logs', () => {
   });
 
   async function listIndexerLogs() {
-    return adminApi.GET('/api/admin/list-indexer-logs', {
-      ...emptyAuthToken,
-    });
+    return adminApi.GET('/api/admin/list-indexer-logs', {});
   }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET(`/api/admin/list-indexer-logs`, {
-        params: {
-          ...emptyAuthToken.params,
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/admin/list-indexer-logs`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
 
     it('should reject non-admin access', async () => {
       const nonAuthenticatedApiClient = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
-      const { error } = await nonAuthenticatedApiClient.GET('/api/admin/list-indexer-logs', {
-        ...emptyAuthToken,
-      });
+      const { error } = await nonAuthenticatedApiClient.GET('/api/admin/list-indexer-logs', {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });

@@ -2,7 +2,6 @@ import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOperation,
   ApiResponse,
@@ -10,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { BadRequestResponseDto, InternalServerErrorResponseDto, SuccessResponseDto } from 'src/api/response.dto';
 import { Controller, Delete, Logger, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_TOKEN, JWT_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
+import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
 import { Session } from 'src/api/session.decorator';
 import { SessionEntity } from 'src/database/entities';
 import { UserEndSessionService } from './end-session.service';
@@ -35,8 +34,7 @@ export class UserEndSessionController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiResponse({
     type: SuccessResponseDto,
   })

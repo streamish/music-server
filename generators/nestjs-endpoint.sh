@@ -106,7 +106,7 @@ EOF
 DECORATORS=""
 if [ "$API_PATH" == "api/admin" ]; then
   DECORATORS="@AllowedRoles([UserRoleEnum.ADMIN])
-@ApiBearerAuth(JWT_TOKEN)
+@ApiBearerAuth(JWT_BEARER_AUTH)
 @ApiHeader({
   name: 'Authorization',
   description: 'Bearer token for authentication',
@@ -122,7 +122,7 @@ elif [ "$API_PATH" == "api/user" ]; then
 fi
 
 cat <<EOF > $FILE_PATH/${SERVICE_FILE}.controller.ts
-import { ${API_TAGS}, JWT_TOKEN } from 'src/constants/swagger';
+import { ${API_TAGS}, JWT_BEARER_AUTH } from 'src/constants/swagger';
 import {
   ApiBearerAuth,
   ApiCookieAuth, ApiHeader,

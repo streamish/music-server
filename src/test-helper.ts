@@ -17,14 +17,6 @@ export type AuthenticatedApiClient = ReturnType<typeof createClient<paths>>;
 export type QnapApiClient = AuthenticatedApiClient;
 export type SynologyApiClient = AuthenticatedApiClient;
 
-export const emptyAuthToken = {
-  params: {
-    header: {
-      Authorization: '',
-    },
-  },
-};
-
 export const guestApi = {
   createSession: async (username: string, password: string) => {
     return unauthenticatedApi.POST(`/api/guest/create-session`, {

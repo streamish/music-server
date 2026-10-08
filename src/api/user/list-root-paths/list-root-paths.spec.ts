@@ -1,10 +1,4 @@
-import {
-  AuthenticatedApiClient,
-  createAuthenticatedApi,
-  emptyAuthToken,
-  testApi,
-  unauthenticatedApi,
-} from '../../../test-helper';
+import { AuthenticatedApiClient, createAuthenticatedApi, testApi, unauthenticatedApi } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { join } from 'node:path';
@@ -27,7 +21,6 @@ describe('/api/user/list-root-paths', () => {
 
   async function createRootPath(rootPath: string) {
     return userApi.POST('/api/user/create-root-path', {
-      ...emptyAuthToken,
       body: {
         rootPath,
       },
@@ -35,20 +28,12 @@ describe('/api/user/list-root-paths', () => {
   }
 
   async function listRootPaths() {
-    return userApi.GET('/api/user/list-root-paths', {
-      ...emptyAuthToken,
-    });
+    return userApi.GET('/api/user/list-root-paths', {});
   }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET(`/api/user/list-root-paths`, {
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
-      });
+      const { error } = await unauthenticatedApi.GET(`/api/user/list-root-paths`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });

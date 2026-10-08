@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -26,7 +25,6 @@ describe('/api/user/set-artist-name', () => {
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
     const { data: artistData } = await userApi.GET('/api/user/list-album-associations', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           associationType: AssociationTypeEnum.artist,
           offset: 0,
@@ -47,7 +45,6 @@ describe('/api/user/set-artist-name', () => {
   async function listTracks() {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           associationType: AssociationTypeEnum.artist,
           offset: 0,
@@ -61,7 +58,6 @@ describe('/api/user/set-artist-name', () => {
     return userApi.PATCH('/api/user/set-artist-name', {
       body,
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -80,9 +76,6 @@ describe('/api/user/set-artist-name', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

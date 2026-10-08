@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   unauthenticatedApi,
 } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
@@ -17,25 +16,19 @@ describe('/api/admin/regenerate-master-session-key', () => {
   });
 
   async function regenerateMasterSessionKey() {
-    return adminApi.POST('/api/admin/regenerate-master-session-key', {
-      ...emptyAuthToken,
-    });
+    return adminApi.POST('/api/admin/regenerate-master-session-key', {});
   }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.POST(`/api/admin/regenerate-master-session-key`, {
-        ...emptyAuthToken,
-      });
+      const { error } = await unauthenticatedApi.POST(`/api/admin/regenerate-master-session-key`, {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
 
     it('should reject non-admin access', async () => {
       const nonAuthenticatedApiClient = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
-      const { error } = await nonAuthenticatedApiClient.POST('/api/admin/regenerate-master-session-key', {
-        ...emptyAuthToken,
-      });
+      const { error } = await nonAuthenticatedApiClient.POST('/api/admin/regenerate-master-session-key', {});
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -47,9 +40,7 @@ describe('/api/admin/regenerate-master-session-key', () => {
       const { error, data } = await regenerateMasterSessionKey();
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
-      const { error: error2 } = await adminApi.GET('/api/admin/list-accounts', {
-        ...emptyAuthToken,
-      });
+      const { error: error2 } = await adminApi.GET('/api/admin/list-accounts', {});
       const typedError2 = error2 as unknown as Record<string, string | string[]>;
       expect(typedError2?.message?.[0]).toBe(ErrorCodes.AUTHORIZATION_ERROR);
     });

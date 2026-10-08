@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -32,7 +31,6 @@ describe('/api/admin/create-account', () => {
         password,
         roles,
       },
-      ...emptyAuthToken,
     });
     if (error) {
       return {
@@ -57,11 +55,6 @@ describe('/api/admin/create-account', () => {
           password: 'testpassword',
           roles: [UserRoleEnum.admin],
         },
-        params: {
-          header: {
-            Authorization: '',
-          },
-        },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -76,7 +69,6 @@ describe('/api/admin/create-account', () => {
           password: 'test-123',
           roles: [UserRoleEnum.user],
         },
-        ...emptyAuthToken,
       });
       expect(error?.message[0]).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });

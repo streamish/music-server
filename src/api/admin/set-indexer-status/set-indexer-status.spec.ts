@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   unauthenticatedApi,
 } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
@@ -17,9 +16,7 @@ describe('/api/admin/set-indexer-status', () => {
   });
 
   async function getIndexerConfiguration() {
-    return adminApi.GET('/api/admin/indexer-configuration', {
-      ...emptyAuthToken,
-    });
+    return adminApi.GET('/api/admin/indexer-configuration', {});
   }
 
   async function setIndexerStatus(enabled: boolean) {
@@ -27,8 +24,6 @@ describe('/api/admin/set-indexer-status', () => {
       body: {
         enabled,
       },
-
-      ...emptyAuthToken,
     });
   }
 
@@ -37,11 +32,6 @@ describe('/api/admin/set-indexer-status', () => {
       const { error } = await unauthenticatedApi.PATCH(`/api/admin/set-indexer-status`, {
         body: {
           enabled: true,
-        },
-        params: {
-          header: {
-            Authorization: '',
-          },
         },
       });
       const typedError = error as unknown as Record<string, string | string[]>;
@@ -54,8 +44,6 @@ describe('/api/admin/set-indexer-status', () => {
         body: {
           enabled: true,
         },
-
-        ...emptyAuthToken,
       });
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.message?.[0]).toBe(ErrorCodes.FORBIDDEN_ERROR);

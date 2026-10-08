@@ -2,8 +2,7 @@ import {
   ADMINISTRATOR_ONLY_ROUTE,
   ADMIN_APIS,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
 } from 'src/constants/swagger';
 import {
   AdminDeleteRootPathNotFoundResponseDto,
@@ -12,7 +11,7 @@ import {
 } from './delete-root-path.dto';
 import { AdminDeleteRootPathService } from './delete-root-path.service';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiHeader, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Delete, Query, Scope, UseGuards } from '@nestjs/common';
 import { UserRoleEnum } from 'src/types/enums';
 
@@ -36,8 +35,7 @@ export class AdminDeleteRootPathController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     description: 'Root path deleted successfully',
     type: AdminDeleteRootPathResponseDto,

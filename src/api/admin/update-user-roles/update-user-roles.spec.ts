@@ -4,7 +4,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/admin/update-user-roles', () => {
         roles,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: accountId,
         },
@@ -47,7 +45,6 @@ describe('/api/admin/update-user-roles', () => {
           roles: [UserRoleEnum.admin],
         },
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },
@@ -64,7 +61,6 @@ describe('/api/admin/update-user-roles', () => {
           roles: [UserRoleEnum.admin],
         },
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },

@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/admin/create-root-path', () => {
         rootPath,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: accountId,
         },
@@ -40,9 +38,7 @@ describe('/api/admin/create-root-path', () => {
   }
 
   async function listRootPaths() {
-    return adminApi.GET('/api/admin/list-root-paths', {
-      ...emptyAuthToken,
-    });
+    return adminApi.GET('/api/admin/list-root-paths', {});
   }
 
   describe('authorized access', () => {
@@ -55,9 +51,6 @@ describe('/api/admin/create-root-path', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });
@@ -72,7 +65,6 @@ describe('/api/admin/create-root-path', () => {
           rootPath: newRootPath,
         },
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },

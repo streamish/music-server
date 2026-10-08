@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -26,7 +25,6 @@ describe('/api/user/set-album-custom-data', () => {
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
     const { data: albumData } = await userApi.GET('/api/user/list-albums', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 1,
@@ -47,7 +45,6 @@ describe('/api/user/set-album-custom-data', () => {
   async function listTracks(query: paths['/api/user/list-tracks']['get']['parameters']['query']) {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -60,7 +57,6 @@ describe('/api/user/set-album-custom-data', () => {
     return userApi.PATCH('/api/user/set-album-custom-data', {
       body,
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -79,9 +75,6 @@ describe('/api/user/set-album-custom-data', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

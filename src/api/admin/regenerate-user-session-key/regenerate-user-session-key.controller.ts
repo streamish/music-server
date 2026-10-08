@@ -2,8 +2,7 @@ import {
   ADMINISTRATOR_ONLY_ROUTE,
   ADMIN_APIS,
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_TOKEN,
-  JWT_TOKEN_HEADER,
+  JWT_BEARER_AUTH,
 } from 'src/constants/swagger';
 import {
   AdminRegenerateUserSessionKeyNotFoundResponseDto,
@@ -12,7 +11,7 @@ import {
 } from './regenerate-user-session-key.dto';
 import { AdminRegenerateUserSessionKeyService } from './regenerate-user-session-key.service';
 import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiHeader, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { UserRoleEnum } from 'src/types/enums';
 
@@ -35,8 +34,7 @@ export class AdminRegenerateUserSessionKeyController {
     ].join('\n'),
   })
   @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_TOKEN)
-  @ApiHeader(JWT_TOKEN_HEADER)
+  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiOkResponse({
     type: AdminRegenerateUserSessionKeyResponseDto,
     description: 'Session key regenerated successfully',

@@ -1,10 +1,4 @@
-import {
-  AuthenticatedApiClient,
-  createAuthenticatedApi,
-  emptyAuthToken,
-  testApi,
-  unauthenticatedApi,
-} from '../../../test-helper';
+import { AuthenticatedApiClient, createAuthenticatedApi, testApi, unauthenticatedApi } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { join } from 'node:path';
@@ -27,7 +21,6 @@ describe('/api/user/delete-root-path', () => {
 
   async function createRootPath(rootPath: string) {
     return userApi.POST(`/api/user/create-root-path`, {
-      ...emptyAuthToken,
       body: {
         rootPath,
       },
@@ -37,7 +30,6 @@ describe('/api/user/delete-root-path', () => {
   async function deleteRootPath(id: number) {
     return userApi.DELETE(`/api/user/delete-root-path`, {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -46,9 +38,7 @@ describe('/api/user/delete-root-path', () => {
   }
 
   async function listRootPaths() {
-    return userApi.GET(`/api/user/list-root-paths`, {
-      ...emptyAuthToken,
-    });
+    return userApi.GET(`/api/user/list-root-paths`, {});
   }
 
   describe('authorized access', () => {
@@ -57,9 +47,6 @@ describe('/api/user/delete-root-path', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

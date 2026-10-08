@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/user/set-track-rating', () => {
   async function listTracks() {
     return userApi.GET('/api/user/list-tracks', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 100_000,
@@ -43,7 +41,6 @@ describe('/api/user/set-track-rating', () => {
   async function retrieveAlbum(id: number) {
     return userApi.GET('/api/user/retrieve-album', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id,
         },
@@ -54,7 +51,6 @@ describe('/api/user/set-track-rating', () => {
   async function setRating(trackId: number, rating: number) {
     return userApi.PUT('/api/user/set-track-rating', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: trackId,
         },
@@ -92,9 +88,6 @@ describe('/api/user/set-track-rating', () => {
         params: {
           query: {
             id: 1,
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

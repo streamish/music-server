@@ -70,7 +70,7 @@ export enum ErrorCodes {
   INVALID_OFFSET_ERROR = 'invalid-offset-error',
   INVALID_OFFSET_RANGE_ERROR = 'invalid-offset-range-error',
   // session and user role errors
-  INVALID_JWT_TOKEN_ERROR = 'invalid-jwt-token-error',
+  INVALID_JWT_BEARER_AUTH_ERROR = 'invalid-jwt-token-error',
   INVALID_ROLE_ERROR = 'invalid-role-error',
   INVALID_SESSION_ERROR = 'invalid-session-error',
   INVALID_SESSION_KEY_ERROR = 'invalid-session-key-error',

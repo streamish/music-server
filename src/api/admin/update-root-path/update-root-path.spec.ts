@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/admin/update-root-path', () => {
         rootPath,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: accountId,
         },
@@ -40,11 +38,7 @@ describe('/api/admin/update-root-path', () => {
   }
 
   async function listRootPaths() {
-    return adminApi.GET('/api/admin/list-root-paths', {
-      params: {
-        ...emptyAuthToken.params,
-      },
-    });
+    return adminApi.GET('/api/admin/list-root-paths', {});
   }
 
   async function updateRootPath(rootPathId: number, newPath: string) {
@@ -53,7 +47,6 @@ describe('/api/admin/update-root-path', () => {
         newPath,
       },
       params: {
-        ...emptyAuthToken.params,
         query: {
           id: rootPathId,
         },
@@ -71,9 +64,6 @@ describe('/api/admin/update-root-path', () => {
           query: {
             id: 1,
           },
-          header: {
-            Authorization: '',
-          },
         },
       });
       const typedError = error as unknown as Record<string, string | string[]>;
@@ -87,7 +77,6 @@ describe('/api/admin/update-root-path', () => {
           newPath: tmpdir(),
         },
         params: {
-          ...emptyAuthToken.params,
           query: {
             id: 1,
           },

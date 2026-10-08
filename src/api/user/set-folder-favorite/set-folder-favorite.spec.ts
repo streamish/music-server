@@ -3,7 +3,6 @@ import {
   USER_PASSWORD,
   USER_USERNAME,
   createAuthenticatedApi,
-  emptyAuthToken,
   testApi,
   unauthenticatedApi,
 } from '../../../test-helper';
@@ -31,7 +30,6 @@ describe('/api/user/set-folder-favorite', () => {
   async function listFavorites() {
     return userApi.GET('/api/user/list-favorites', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           offset: 0,
           limit: 100_000,
@@ -43,7 +41,6 @@ describe('/api/user/set-folder-favorite', () => {
   async function setFolderFavorite(folderPath: string) {
     return userApi.PUT('/api/user/set-folder-favorite', {
       params: {
-        ...emptyAuthToken.params,
         query: {
           folder: folderPath,
         },
@@ -57,9 +54,6 @@ describe('/api/user/set-folder-favorite', () => {
         params: {
           query: {
             folder: '/Artist 1/Album 1',
-          },
-          header: {
-            Authorization: '',
           },
         },
       });

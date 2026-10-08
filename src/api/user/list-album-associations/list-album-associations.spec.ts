@@ -3,7 +3,6 @@ import {
   ADMIN_USERNAME,
   AuthenticatedApiClient,
   createAuthenticatedApi,
-  emptyAuthToken,
   unauthenticatedApi,
 } from '../../../test-helper';
 import { AssociationSortFieldEnum, AssociationTypeEnum, SortDirectionEnum, paths } from '../../../types/api-schema';
@@ -22,7 +21,6 @@ describe('/users/list-album-associations', () => {
   ) {
     return userApi.GET('/api/user/list-album-associations', {
       params: {
-        ...emptyAuthToken.params,
         query,
       },
     });
@@ -32,9 +30,6 @@ describe('/users/list-album-associations', () => {
     it('should reject guest access', async () => {
       const { error } = await unauthenticatedApi.GET(`/api/user/list-album-associations`, {
         params: {
-          header: {
-            Authorization: '',
-          },
           query: {
             associationType: AssociationTypeEnum.artist,
           },
