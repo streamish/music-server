@@ -1,10 +1,7 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Put, Query, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetAssociationFavoriteNotFoundResponseDto,
   UserSetAssociationFavoriteQueryDto,
@@ -12,31 +9,20 @@ import {
 } from './set-association-favorite.dto';
 import { UserSetAssociationFavoriteService } from './set-association-favorite.service';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserSetAssociationFavoriteController {
   constructor(private readonly setAssociationFavoriteService: UserSetAssociationFavoriteService) {}
 
-  @Put('set-association-favorite')
-  @ApiOperation({
+  @ApiEndpoint(Put, 'set-association-favorite', HttpStatus.OK, {
     summary: `Mark an association as a favorite`,
     description: [
       `Favorites an associated artist, composer or genre allowing easier access in the user's library.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Favorite set successfully',
-    type: UserSetAssociationFavoriteResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Favorite not found',
-    type: UserSetAssociationFavoriteNotFoundResponseDto,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserSetAssociationFavoriteResponseDto,
+      [HttpStatus.NOT_FOUND]: UserSetAssociationFavoriteNotFoundResponseDto,
+    },
   })
   async put(
     @User() user: AccountEntity,

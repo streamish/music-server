@@ -1,19 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles } from '../role.guard';
-import {
-  ApiExtraModels,
-  ApiOkResponse,
-  ApiOperation,
-  ApiProduces,
-  ApiTags,
-  IntersectionType,
-  PartialType,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { Body, Controller, Header, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
-import { QNAP_AUTHENTICATED_REQUEST_DESCRIPTION, QNAP_MUSICSTATION_APIS, XML_MIME_TYPE } from 'src/constants/swagger';
-import { QnapGuard } from './qnap.guard';
+import { Body, HttpStatus, Post, Query } from '@nestjs/common';
+import { IntersectionType, PartialType } from '@nestjs/swagger';
+import { QnapApiEndpoint, QnapController } from './qnap.decorator';
 import {
   QnapMediaListAlbumsResponseDto,
   QnapMediaListArtistsResponseDto,
@@ -27,7 +16,7 @@ import {
   QnapMediaListTracksResponseDto,
 } from './dtos/media-list.dto';
 import { QnapMediaListService } from './media-list.service';
-import { SortDirectionEnum, UserRoleEnum } from 'src/types/enums';
+import { SortDirectionEnum } from 'src/types/enums';
 import { User } from '../user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import { plainToInstance } from 'class-transformer';
@@ -36,71 +25,32 @@ class QnapMediaListQueryDto extends PartialType(
   IntersectionType(QnapMediaListRandomQueryDto, QnapMediaListGeneralQueryDto, QnapMediaListBucketQueryDto),
 ) {}
 
-@Controller({
-  path: '/musicstation/api',
-})
-@ApiTags(QNAP_MUSICSTATION_APIS)
-@UseGuards(QnapGuard)
+@QnapController({ path: '/musicstation/api' })
 export class QnapMediaListController {
   constructor(private readonly mediaListApiService: QnapMediaListService) {}
 
-  @Post('medialist_api.php')
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @HttpCode(HttpStatus.OK)
-  @Header('Content-Type', XML_MIME_TYPE)
-  @ApiProduces(XML_MIME_TYPE)
-  @ApiOperation({
+  @QnapApiEndpoint(Post, 'medialist_api.php', HttpStatus.OK, {
     summary: 'Handle QNAP Music Station media-list API requests',
     description: [
       'Returns albums, songs, genres, folders, artist lists and random artist/album lists.',
       'The response format varies based on what is being requested.',
-      QNAP_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
-  })
-  @ApiOkResponse({
-    description: 'List of songs, artists, albums, genres, folders, or tracks',
-    content: {
-      'application/xml': {
-        schema: {
-          oneOf: [
-            {
-              $ref: getSchemaPath(QnapMediaListArtistsResponseDto),
-            },
-            {
-              $ref: getSchemaPath(QnapMediaListAlbumsResponseDto),
-            },
-            {
-              $ref: getSchemaPath(QnapMediaListGenresResponseDto),
-            },
-            {
-              $ref: getSchemaPath(QnapMediaListFoldersResponseDto),
-            },
-            {
-              $ref: getSchemaPath(QnapMediaListTracksResponseDto),
-            },
-            {
-              $ref: getSchemaPath(QnapMediaListRandomArtistsResponseDto),
-            },
-            {
-              $ref: getSchemaPath(QnapMediaListRandomAlbumsResponseDto),
-            },
-          ],
-        },
-      },
+    ].join(' '),
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: [
+        QnapMediaListRandomQueryDto,
+        QnapMediaListGeneralQueryDto,
+        QnapMediaListBucketQueryDto,
+        QnapMediaListRandomArtistsResponseDto,
+        QnapMediaListRandomAlbumsResponseDto,
+        QnapMediaListArtistsResponseDto,
+        QnapMediaListAlbumsResponseDto,
+        QnapMediaListGenresResponseDto,
+        QnapMediaListFoldersResponseDto,
+        QnapMediaListTracksResponseDto,
+      ],
     },
   })
-  @ApiExtraModels(
-    QnapMediaListRandomQueryDto,
-    QnapMediaListGeneralQueryDto,
-    QnapMediaListBucketQueryDto,
-    QnapMediaListRandomArtistsResponseDto,
-    QnapMediaListRandomAlbumsResponseDto,
-    QnapMediaListArtistsResponseDto,
-    QnapMediaListAlbumsResponseDto,
-    QnapMediaListGenresResponseDto,
-    QnapMediaListFoldersResponseDto,
-    QnapMediaListTracksResponseDto,
-  )
   async post(
     @User() user: AccountEntity,
     @Query() variousQueries: QnapMediaListQueryDto | Record<string, unknown>,

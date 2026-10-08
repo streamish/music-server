@@ -1,10 +1,8 @@
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiHeader, ApiOkResponse, ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
-import { BINARY_RESPONSE, COOKIE_TOKEN_HEADER, IMAGE_MIME_TYPES, USER_APIS } from 'src/constants/swagger';
-import { Controller, Get, Query, Req, Res, StreamableFile, UseGuards } from '@nestjs/common';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
+import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { UserAlbumCoverImageQueryDto } from './album-cover-image.dto';
 import { UserAlbumCoverImageService } from './album-cover-image.service';
-import { UserRoleEnum } from 'src/types/enums';
 import { join, sep } from 'node:path';
 import { readFileSync } from 'node:fs';
 import type { Request, Response } from 'express';
@@ -12,27 +10,23 @@ import type { Request, Response } from 'express';
 let blankBuffer: Buffer;
 const emptyBuffer = Buffer.alloc(0);
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserAlbumCoverImageController {
   constructor(private readonly coverImageService: UserAlbumCoverImageService) {}
 
-  @Get('album-cover-image')
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiOperation({
+  @ApiEndpoint(Get, 'album-cover-image', HttpStatus.OK, {
     summary: 'Retrieves cover images for albums',
     description: [
       'This endpoint retrieves the cover image for a specified album.',
       'The image comes from the first track that contains a cover or a default blank cover.',
       'The response supports Etag caching to optimize browser performance.',
-    ].join('\n'),
+    ].join(' '),
+    isAuthenticated: true,
+    produces: [...IMAGE_MIME_TYPES],
+    responses: {
+      [HttpStatus.OK]: BINARY_RESPONSE,
+    },
   })
-  @ApiHeader(COOKIE_TOKEN_HEADER)
-  @ApiProduces(...IMAGE_MIME_TYPES)
-  @ApiOkResponse(BINARY_RESPONSE)
   async get(
     @Query() query: UserAlbumCoverImageQueryDto,
     @Req() request: Request,

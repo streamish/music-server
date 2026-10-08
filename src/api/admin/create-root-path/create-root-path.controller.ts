@@ -1,9 +1,4 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
+import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
   AdminCreateRootPathBadRequestResponseDto,
   AdminCreateRootPathBodyDto,
@@ -12,48 +7,22 @@ import {
   AdminCreateRootPathResponseDto,
 } from './create-root-path.dto';
 import { AdminCreateRootPathService } from './create-root-path.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Post, Query, UseGuards } from '@nestjs/common';
-import { UserRoleEnum } from 'src/types/enums';
+import { Body, HttpStatus, Post, Query } from '@nestjs/common';
 
-@Controller({
-  path: '/api/admin',
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminCreateRootPathController {
   constructor(private readonly createRootPathService: AdminCreateRootPathService) {}
 
-  @Post('create-root-path')
-  @ApiOperation({
+  @ApiEndpoint(Post, 'create-root-path', HttpStatus.CREATED, {
     summary: 'Add new root path to account',
-    description: [
-      'Add a library root path to an account.  This will add media in the path when the indexer reaches it.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiCreatedResponse({
-    description: 'Root path created successfully',
-    type: AdminCreateRootPathResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid request data',
-    type: AdminCreateRootPathBadRequestResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Account not found',
-    type: AdminCreateRootPathNotFoundResponseDto,
+    description: 'Add a library root path to an account. This will add media in the path when the indexer reaches it.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.CREATED]: AdminCreateRootPathResponseDto,
+      [HttpStatus.BAD_REQUEST]: AdminCreateRootPathBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: AdminCreateRootPathNotFoundResponseDto,
+    },
   })
   async post(
     @Query() query: AdminCreateRootPathQueryDto,

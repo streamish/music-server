@@ -16,9 +16,7 @@ export type paths = {
     /**
      * Create a new account
      * @description Add a user account with the specified roles.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminCreateAccountController_post'];
@@ -39,10 +37,8 @@ export type paths = {
     put?: never;
     /**
      * Add new root path to account
-     * @description Add a library root path to an account.  This will add media in the path when the indexer reaches it.
-     *
+     * @description Add a library root path to an account. This will add media in the path when the indexer reaches it.
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminCreateRootPathController_post'];
@@ -67,10 +63,8 @@ export type paths = {
     head?: never;
     /**
      * Delete an account
-     * @description Deletes the specified account.  If it is the only admin account a new one account must be created first.
-     *
+     * @description Deletes the specified account. If it is the only admin account a new one account must be created first.
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminDeleteAccountController_delete'];
@@ -89,10 +83,7 @@ export type paths = {
     /**
      * Delete a root path
      * @description Deletes the specified root path for a user and immediately deletes all associated information in the database.
-     *     This will not affect any files on the file system but they will no longer be present in the user's library.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     delete: operations['AdminDeleteRootPathController_delete'];
@@ -111,9 +102,7 @@ export type paths = {
     /**
      * Get the indexer configuration
      * @description Retrieves the current indexer configuration for the platform.  This is currently limited to "on" or "off".
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminIndexerConfigurationController_get'];
@@ -135,9 +124,7 @@ export type paths = {
     /**
      * List all accounts
      * @description Retrieves a list of all accounts in the system.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminListAccountsController_get'];
@@ -158,12 +145,8 @@ export type paths = {
     };
     /**
      * Monitor what the indexer is doing for all libraries
-     * @description Retrieves the most recent indexer logs based on any provided query parameters.
-     *     Logs are held in memory and will clear whenever the server restarts.
-     *     The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
-     *
+     * @description Retrieves the most recent indexer logs based on any provided query parameters. Logs are held in memory and will clear whenever the server restarts. The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminListIndexerLogsController_get'];
@@ -184,12 +167,8 @@ export type paths = {
     };
     /**
      * List all sources of music for all users
-     * @description Retrieves a list of all root paths for all user accounts, eg `/home/<username>/music`.',
-     *           'These paths are indexed periodically or when files are changed to build the music library.
-     *     The indexer works from a single queue so the more root paths the longer the delay between scanning.
-     *
+     * @description Retrieves a list of all root paths for all user accounts, eg `/home/<username>/music`. These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     get: operations['AdminListRootPathsController_get'];
@@ -213,9 +192,7 @@ export type paths = {
     /**
      * Invalidate all user sessions
      * @description Regenerates the master session key for the entire platform, invalidating all sessions for all users.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminRegenerateMasterSessionKeyController_post'];
@@ -237,9 +214,7 @@ export type paths = {
     /**
      * Invalidate a user's sessions
      * @description Regenerates the master session key for a specific user, invalidating all sessions for that user.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminRegenerateUserSessionKeyController_post'];
@@ -261,9 +236,7 @@ export type paths = {
     /**
      * Reset user password
      * @description Resets the password for a specified user account and invalidates their prior sessions.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['AdminResetUserPasswordController_post'];
@@ -289,9 +262,7 @@ export type paths = {
     /**
      * Set the indexer status
      * @description Enables or disables the indexer to allow moving root paths or to preserve system resources.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminSetIndexerStatusController_patch'];
@@ -313,11 +284,7 @@ export type paths = {
     /**
      * Update a root path
      * @description Updates the specified root path with a new path.
-     *     If the scanner is running then all previous data will be removed and recreated when it indexes the new path.
-     *     If the scanner is paused you may move files then resume the scanner to retain their data.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminUpdateRootPathController_patch'];
@@ -338,12 +305,8 @@ export type paths = {
     head?: never;
     /**
      * Update user roles
-     * @description Updates the roles of a specified user account
-     *     There must always be at least one administrator account so you cannot remove the only `admin` role.
-     *     To remove the only admin role, create a new administrator account first.
-     *
+     * @description Updates the roles of a specified user account.
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['AdminUpdateUserRolesController_patch'];
@@ -365,6 +328,26 @@ export type paths = {
      *     Sessions are locked to the APIs that created them, these tokens cannot access QNAP or Synology APIs.
      */
     post: operations['GuestCreateSessionController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/guest/healthcheck': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Healthcheck
+     * @description Checks the health status of the server.
+     */
+    get: operations['GuestHealthcheckController_healthcheck'];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -486,9 +469,8 @@ export type paths = {
     };
     /**
      * Retrieves cover images for albums
-     * @description This endpoint retrieves the cover image for a specified album.
-     *     The image comes from the first track that contains a cover or a default blank cover.
-     *     The response supports Etag caching to optimize browser performance.
+     * @description This endpoint retrieves the cover image for a specified album. The image comes from the first track that contains a cover or a default blank cover. The response supports Etag caching to optimize browser performance.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserAlbumCoverImageController_get'];
     put?: never;
@@ -508,10 +490,8 @@ export type paths = {
     };
     /**
      * Retrieves cover images for associated artists, composers and genres
-     * @description This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified.
-     *     The image comes from the first track that contains a cover and credits them as an album artist, falling back to the first track crediting them as a track artist.
-     *     If the artist has no cover image a default blank cover is returned.
-     *     The response supports Etag caching to optimize browser performance.
+     * @description This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified. The image comes from the first track that contains a cover and credits them as an album artist. If no album cover is found, it falls back to the first track crediting them as a track artist. If the artist has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserAssociationCoverImageController_get'];
     put?: never;
@@ -532,12 +512,8 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Add a new source of music to the user's account
-     * @description Creates a new root path for the specified account, a folder containing music eg `/home/<username>/music`.
-     *     Users can have multiple root paths however indexing uses a single queue so the more paths the longer it takes.
-     *     Ensure that the specified path is accessible and has read access.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     * Add a new source of music to the user account
+     * @description Adds a new root path to the user's account. This folder must exist and be accessible, allowing any music it contains to be indexed.
      */
     post: operations['UserCreateRootPathController_post'];
     delete?: never;
@@ -560,7 +536,6 @@ export type paths = {
      * Remove custom data from a file in the user's account
      * @description Deletes the specified custom data in the database immediately.
      *     The file this data is for will revert to its embedded data on its next indexing.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserDeleteCustomDataController_delete'];
@@ -583,7 +558,6 @@ export type paths = {
      * Remove a favorite from the user's account
      * @description Deletes the specified favorite immediately.
      *     The album, association or track will no longer be a favorite but will still exist in the user's library.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserDeleteFavoriteController_delete'];
@@ -606,7 +580,6 @@ export type paths = {
      * Remove a music source from the user's account
      * @description Deletes the specified root path and all associated information in the database immediately.
      *     The songs and folders will no longer be present in your library but the files will remain on the file system.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserDeleteRootPathController_delete'];
@@ -628,7 +601,6 @@ export type paths = {
     /**
      * Terminate the session
      * @description Ends a user session and invalidates the JWT token provided in the `Authorization` header.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     delete: operations['UserEndSessionController_delete'];
@@ -648,7 +620,6 @@ export type paths = {
      * Retrieve library folder structure
      * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents.
      *     This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserFolderStructureController_get'];
@@ -670,14 +641,10 @@ export type paths = {
     /**
      * List associations credited to albums
      * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListAlbumAssociationsController_get'];
     put?: never;
@@ -698,14 +665,9 @@ export type paths = {
     /**
      * List artists credited to albums and return album/track data
      * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
      */
     get: operations['UserListAlbumAssociationsWithTracksController_get'];
     put?: never;
@@ -726,14 +688,10 @@ export type paths = {
     /**
      * List albums
      * @description Albums can be filtered by an extensive set of criteria and search terms.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListAlbumsController_get'];
     put?: never;
@@ -754,14 +712,10 @@ export type paths = {
     /**
      * List albums and include their track data
      * @description Albums can be filtered by an extensive set of criteria and search terms.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListAlbumsWithTracksController_get'];
     put?: never;
@@ -782,10 +736,8 @@ export type paths = {
     /**
      * List favorites
      * @description Favorites can be albums, tracks, folders, or an associated artist, composer or genre.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListFavoritesController_get'];
     put?: never;
@@ -809,7 +761,6 @@ export type paths = {
      *     Logs are held in memory and will clear whenever the server restarts.
      *     The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
      *     If you have multiple users it may be common for this to be empty as the capacity is filled by other users.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserListIndexerLogsController_get'];
@@ -833,7 +784,6 @@ export type paths = {
      * @description Retrieves a list of all root paths associated with the user's account, eg `/home/<username>/music`.',
      *           'These paths are indexed periodically or when files are changed to build the music library.
      *     The indexer works from a single queue so the more root paths the longer the delay between scanning.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserListRootPathsController_get'];
@@ -855,14 +805,10 @@ export type paths = {
     /**
      * List track-associated artists, composers and genres
      * @description Track associations are artists, composers and genres attributed directly to individual tracks.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListTrackAssociationsController_get'];
     put?: never;
@@ -883,14 +829,10 @@ export type paths = {
     /**
      * List track-associated artists, composers and genres and return tracks.
      * @description Track associations are artists, composers and genres attributed directly to individual tracks.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
      */
     get: operations['UserListTrackAssociationsWithTracksController_get'];
     put?: never;
@@ -913,7 +855,6 @@ export type paths = {
      * @description The data can be filtered based on various criteria and search terms allowing for more precise queries.
      *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserListTracksController_get'];
@@ -939,7 +880,6 @@ export type paths = {
      * @description Regenerates the session key for the user.  This key is used to sign their session tokens.
      *     When a new key is generated any previous sessions of the user become invalid including their current session.
      *     The user will need to authenticate again to continue accessing protected APIs.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     post: operations['UserRegenerateSessionKeyController_post'];
@@ -959,7 +899,6 @@ export type paths = {
     /**
      * Retrieves single albums
      * @description Retrieves an album and its complete track list with all information necessary for viewing and playback.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserRetrieveAlbumController_get'];
@@ -981,7 +920,6 @@ export type paths = {
     /**
      * Retrieves single association
      * @description Retrieves an association and its complete track list with all information necessary for viewing and playback.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserRetrieveAssociationController_get'];
@@ -1011,7 +949,6 @@ export type paths = {
      * @description Assigns custom data to an album, overriding the embedded data within its tracks.
      *     This affects all tracks within the album.
      *     The next indexing pass of the album will reflect the newly set custom data.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetAlbumCustomDataController_patch'];
@@ -1028,7 +965,6 @@ export type paths = {
     /**
      * Mark an album as a favorite
      * @description Favorites the specified album allowing easier access in the user's library.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetAlbumFavoriteController_put'];
@@ -1050,7 +986,6 @@ export type paths = {
     /**
      * Sets or unsets ratings for an album
      * @description Sets or unsets a 1-5 star rating for the tracks within an album.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetAlbumRatingController_put'];
@@ -1079,7 +1014,6 @@ export type paths = {
      * @description Assigns a custom name to an artist, overriding the name embedded in albums.
      *     This affects all tracks and albums the artist is credited on under the previous name.
      *     The next indexing pass of the albums will reflect the newly set custom name.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetArtistNameController_patch'];
@@ -1096,7 +1030,6 @@ export type paths = {
     /**
      * Mark an association as a favorite
      * @description Favorites an associated artist, composer or genre allowing easier access in the user's library.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetAssociationFavoriteController_put'];
@@ -1125,7 +1058,6 @@ export type paths = {
      * @description Assigns a custom name to a composer, overriding the name embedded in tracks.
      *     This affects all tracks the composer is credited on under the previous name.
      *     The next indexing pass of the tracks will reflect the newly set custom name.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetComposerNameController_patch'];
@@ -1144,7 +1076,6 @@ export type paths = {
      * @description Assigns custom data to a track, overriding the embedded data within it.
      *     This data is all-inclusive, compared to similar endpoints that set individual field(s).
      *     The next indexing pass of the track will reflect the newly set custom data.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetCustomDataController_put'];
@@ -1166,7 +1097,6 @@ export type paths = {
     /**
      * Mark a folder as a favorite
      * @description Favorites the specified folder allowing easier access in the user's library.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetFolderFavoriteController_put'];
@@ -1195,7 +1125,6 @@ export type paths = {
      * @description Assigns a custom name to a genre, overriding the name embedded in tracks.
      *     This affects all tracks categorized under the previous genre name.
      *     The next indexing pass of the tracks will reflect the newly set custom name.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetGenreNameController_patch'];
@@ -1218,7 +1147,6 @@ export type paths = {
      * Set custom data for a track in the user's account
      * @description Assigns custom data to a track, overriding the embedded data within it.
      *     The next indexing pass of the file will reflect the newly set custom data.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     patch: operations['UserSetTrackCustomDataController_patch'];
@@ -1235,7 +1163,6 @@ export type paths = {
     /**
      * Mark a track as a favorite
      * @description Favorites the specified track allowing easier access in the user's library.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetTrackFavoriteController_put'];
@@ -1257,7 +1184,6 @@ export type paths = {
     /**
      * Sets or unsets rating for a track
      * @description Sets or unsets a 1-5 star rating for a single track.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     put: operations['UserSetTrackRatingController_put'];
@@ -1277,7 +1203,10 @@ export type paths = {
     };
     /**
      * Serves audio files
-     * @description Downloads audio files from the music library to the client.  This is used to stream audio files for playback or to download for offline usage.  The audio files are streamed in their original format and the client is responsible for decoding and playing the audio.
+     * @description Downloads audio files from the music library to the client.',
+     *           'This is used to stream audio files for playback or to download for offline usage.',
+     *           'The audio files are streamed in their original format and the client is responsible for decoding and playback.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     get: operations['UserStreamFileController_get'];
     put?: never;
@@ -1301,10 +1230,72 @@ export type paths = {
      * Reset password
      * @description Resets the user's password to a new value and invalidates all previous sessions.
      *     The user will need to authenticate again to continue accessing protected APIs.
-     *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      */
     post: operations['UserUpdatePasswordController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/cgi-bin/as_get_file_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Streams a music file to QMusic clients
+     * @description Streams a music file for playback.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    get: operations['QnapAsGetFileController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/cgi-bin/as_localplayback.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Handles local playback requests from QMusic clients
+     * @description This endpoint manages local playback status for QMusic clients.
+     */
+    post: operations['QnapAsLocalPlaybackController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/cgi-bin/as_login_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * System configuration for iPhone
+     * @description Part of the QNAP authentication chain
+     *     This endpoint returns information to the iPhone and Android apps as part of the authentication process.
+     *     The JWT token is sent as `ssid` in the querystring by the Android app and in the POST body by the iOS app.
+     */
+    post: operations['QnapAsLoginController_post'];
     delete?: never;
     options?: never;
     head?: never;
@@ -1319,26 +1310,58 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * QNAP authentication handler (Android)
-     * @description Handles various QNAP Music Station authentication requests.
-     *     Preauthentication requests return password configuration and system information.
-     *     Authentication requests validate the username and password, which is sent base-64 encoded.
-     *     Validating sessions confirms a JWT token and returns system configuration information.
-     *     Resuming sessions does not validate the JWT token and returns system configuration information.
-     *     The Android QMusic app uses `GET` and querystring parameters, the iPhone app `POSTS` and uses the `POST` body.
+     * QNAP authentication handler
+     * @description Handles various QNAP Music Station authentication requests. Preauthentication requests return password configuration and system information. Authentication requests validate the username and password, which is sent base-64 encoded. Validating sessions confirms a JWT token and returns system configuration information. Resuming sessions does not validate the JWT token and returns system configuration information. The Android QMusic app uses `GET` and querystring parameters, the iPhone app `POST` and uses the `POST` body.
      */
     get: operations['QnapAuthLoginController_routeRequest'];
     put?: never;
     /**
      * QNAP authentication handler (iPhone)
-     * @description Handles various QNAP Music Station authentication requests.
-     *     Preauthentication requests return password configuration and system information.
-     *     Authentication requests validate the username and password, which is sent base-64 encoded.
-     *     Validating sessions confirms a JWT token and returns system configuration information.
-     *     Resuming sessions does not validate the JWT token and returns system configuration information.
-     *     This is the same as the GET handler except the data is provided in the POST body by the iPhone app. The backend consolidates handling these requests.
+     * @description Handles various QNAP Music Station authentication requests. Preauthentication requests return password configuration and system information. Authentication requests validate the username and password, which is sent base-64 encoded. Validating sessions confirms a JWT token and returns system configuration information. Resuming sessions does not validate the JWT token and returns system configuration information. This is the same as the GET handler except the data is provided in the POST body by the iPhone app. The backend consolidates handling these requests.
      */
     post: operations['QnapAuthLoginController_postRequest'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/cgi-bin/mediacover_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieves cover images
+     * @description This endpoint retrieves the cover image for a specified album, artist, or folder. The image comes from the first song in the album that contains an embedded image. If the album has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance. The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     */
+    get: operations['QnapMediaCoverController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/cgi-bin/mediatool_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Reports IP addresses to mobile apps
+     * @description This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.
+     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
+     */
+    post: operations['QnapMediaToolController_get'];
     delete?: never;
     options?: never;
     head?: never;
@@ -1366,76 +1389,6 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/musicstation/api/as_get_file_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Streams a music file to QMusic clients
-     * @description Streams a music file for playback.
-     *
-     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
-     */
-    get: operations['QnapAsGetFileController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/musicstation/api/as_login_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * System configuration for iPhone
-     * @description Part of the QNAP authentication chain
-     *     This endpoint returns information to the iPhone and Android apps as part of the authentication process.
-     *     The JWT token is sent as `ssid` in the querystring by the Android app and in the POST body by the iOS app.
-     */
-    post: operations['QnapAsLoginController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/musicstation/api/mediacover_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images
-     * @description This endpoint retrieves the cover image for a specified album, artist, or folder.
-     *     The image comes from the first song in the album that contains an embedded image.
-     *     If the album has no cover image a default blank cover is returned.
-     *     The response supports Etag caching to optimize browser performance.
-     *     The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.
-     *
-     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
-     */
-    get: operations['QnapMediaCoverController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/musicstation/api/medialist_api.php': {
     parameters: {
       query?: never;
@@ -1447,34 +1400,10 @@ export type paths = {
     put?: never;
     /**
      * Handle QNAP Music Station media-list API requests
-     * @description Returns albums, songs, genres, folders, artist lists and random artist/album lists.
-     *     The response format varies based on what is being requested.
-     *
+     * @description Returns albums, songs, genres, folders, artist lists and random artist/album lists. The response format varies based on what is being requested.
      *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     post: operations['QnapMediaListController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/musicstation/api/mediatool_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Reports IP addresses to mobile apps
-     * @description This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.
-     *
-     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
-     */
-    post: operations['QnapMediaToolController_get'];
     delete?: never;
     options?: never;
     head?: never;
@@ -1493,11 +1422,7 @@ export type paths = {
     /**
      * Lists albums in the music library
      * @description Lists albums found in the music library.  The albums can be filtered by artist, composer or genre.
-     *
-     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyAlbumController_route'];
@@ -1519,11 +1444,7 @@ export type paths = {
     /**
      * Lists artists in the music library
      * @description Lists artists found in the music library.  The artists can be filtered by genre.
-     *
-     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyArtistController_route'];
@@ -1544,14 +1465,8 @@ export type paths = {
     put?: never;
     /**
      * Lists composers in the music library
-     * @description Lists composers found in the music library.  These are extracted from song metadata and are not necessarily the same as the artists.  This field can be problematic due to inconsistent structure for multiple composers, such as "Composer 1, Composer 2" vs "Composer 1; Composer 2" vs "Composer 1 & Composer 2".
-     *
-     *     When a track is recognized as having multiple composers, each composer is counted as a separate composer.  For  instance, a track with the composer "Composer 1, Composer 2" will be counted as both "Composer 1" and "Composer 2".
-     *
-     *
+     * @description Lists composers found in the music library. These are extracted from song metadata and are not necessarily the same as the artists. This field can be problematic due to inconsistent multi-composer values and erratic metadata like job titles. When a track is recognized as having multiple composers, each composer is counted as a separate composer. A track with the composer "Composer 1, Composer 2" will be counted as both "Composer 1" and "Composer 2".
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyComposerController_route'];
@@ -1570,9 +1485,7 @@ export type paths = {
     };
     /**
      * Retrieves the cover image for an album, artist, composer or song
-     * @description Retrieves the cover image for an album, artist, composer or song.  The cover image can be retrieved by specifying the appropriate query parameters in the request.  If an image is not found a default blank cover image will be returned.
-     *
-     *
+     * @description Retrieves the cover image for an album, artist, composer or song. The cover image can be retrieved by specifying the appropriate query parameters in the request. If an image is not found a default blank cover image will be returned.
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     get: operations['SynologyCoverImageController_route'];
@@ -1595,11 +1508,7 @@ export type paths = {
     put?: never;
     /**
      * Lists folders in the music library
-     * @description Lists folders found in the music library to enable navigating music by the file path.  In this server the root folders are presented as the top-level contents.
-     *
-     *     The folders are returned in a paginated format, with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the list and the limit specifies the maximum number of folders to return.
-     *
-     *
+     * @description Lists folders found in the music library to enable navigating music by the file path.
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyFolderController_route'];
@@ -1620,15 +1529,7 @@ export type paths = {
     put?: never;
     /**
      * Lists genres in the music library or default genres
-     * @description Returns a list of genres found in the music library, or a hard-coded list of default genres.  The default genres are a hard-coded list that Synology appears to internally remap to actual genres, for instance "Rock/Metal" encompasses the "AlternRock" genre.  Exactly what they remap is unclear.
-     *
-     *     Each track can have one or more genres separated by `,` and they will each be counted as a separate genre.  For instance, a track with the genre "Rock, Pop" will be counted as both "Rock" and "Pop".
-     *
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *
-     *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
+     * @description Returns a list of genres found in the music library, or a hard-coded list of default genres. The default genres are hard-coded, Synology internally remaps them to actual genres but this server does not. Each track can have one or more genres separated by `,` and they will each be counted as a separate genre. For instance, a track with the genre "Rock, Pop" will be counted as both "Rock" and "Pop".
      */
     post: operations['SynologyGenreController_route'];
     delete?: never;
@@ -1648,11 +1549,7 @@ export type paths = {
     put?: never;
     /**
      * Returns configuration information for the Synology AudioStation API and client capabilities
-     * @description The `info.cgi` endpoint returns configuration information for the Synology DS Audio apps.
-     *
-     *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then submitting credentials encrypted with it.
-     *
-     *
+     * @description This endpoint returns configuration information for the Synology DS Audio apps.
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyInfoController_route'];
@@ -1673,16 +1570,8 @@ export type paths = {
     put?: never;
     /**
      * Manages playlists
-     * @description Manages playlists in the music library.  This endpoint is used to list, create, delete, rename, and update playlists, as well as add and remove tracks and radio stations from playlists.  It provides the ability to retrieve playlist information and track/radio lists for playlists.
-     *
-     *     Playlists can be a "normal" playlist containing a static list of tracks and radio stations you add, or a "smart" playlist which is a dynamic filter based on criteria such as genre, artist, album, and more.
-     *
-     *     Listing playlists are not returned in a paginated format, but the tracks and radio stations within them are.
-     *
-     *
+     * @description This endpoint is used to list, create, delete, rename, and update playlists, and add/remove items. There are two types of supported playlists. "Normal" playlist containing a static list of tracks and radio stations you add. "Smart" playlists are dynamic filters based on criteria such as genre, artist, album, and more. Listing playlists are not returned in a paginated format, but the tracks and radio stations within them are.
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyPlaylistController_routeRequest'];
@@ -1708,8 +1597,6 @@ export type paths = {
     /**
      * Proxies SHOUTcast radio streams
      * @description Creates and terminates a basic HTTP proxy to a SHOUTcast radio stream.
-     *
-     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyProxyController_route'];
@@ -1730,14 +1617,7 @@ export type paths = {
     put?: never;
     /**
      * Manages SHOUTcast radio integration
-     * @description SHOUTcast radio integration is a feature of Synology AudioStation that allows users to listen to SHOUTcast radio stations directly from the AudioStation interface. This endpoint provides information about available SHOUTcast genres and stations
-     *
-     *     The genres are a hard-coded list.  The stations are retrieved from the SHOUTcast API and briefly cached.
-     *
-     *     The integration does not require a SHOUTcast account, but it does require an active internet connection.
-     *
-     *
-     *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
+     * @description SHOUTcast radio integration is a feature of Synology AudioStation that allows users to stream radio stations. This endpoint provides information about available SHOUTcast genres and stations. The genres are a hard-coded list. The stations are retrieved from the SHOUTcast API and briefly cached. The integration does not require a SHOUTcast account, but it does require an active internet connection.
      */
     post: operations['SynologyRadioController_routeRequests'];
     delete?: never;
@@ -1757,11 +1637,7 @@ export type paths = {
     put?: never;
     /**
      * Searches for artists, albums and songs in the music library
-     * @description Searches for artists, albums and songs in the music library matching a search query.  The search  is case-insensitive and supports partially matching names and titles, a search for "beat" will match "The Beatles" and "Beat It".
-     *
-     *     The search results are unpaginated.
-     *
-     *
+     * @description Searches for artists, albums and songs in the music library matching a search query. The search is case-insensitive and supports partially matching names and titles.
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologySearchController_route'];
@@ -1783,11 +1659,7 @@ export type paths = {
     /**
      * Lists songs in the music library
      * @description Lists songs found in the music library.  The songs can be filtered by album, artist, composer, or genre.
-     *
-     *
      *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologySongController_route'];
@@ -1806,9 +1678,7 @@ export type paths = {
     };
     /**
      * Streams audio files
-     * @description Downloads audio files from the music library to the client.  This is used to stream audio files for playback or to download for offline usage.  The audio files are streamed in their original format, and the client is responsible for decoding and playing the audio.  Synology implements transcoding for certain formats, but this is not supported in this server.
-     *
-     *
+     * @description Downloads audio files from the music library to the client. This is used to stream audio files for playback or to download for offline usage. The files are streamed in their original format and the client is responsible for decoding and playing audio. Synology implements transcoding for certain formats, but this is not supported in this server.
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     get: operations['SynologyStreamController_getStreamCgi'];
@@ -1830,14 +1700,8 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Authentication, session management, and miscellaneous operations for playlists and favorites
-     * @description This endpoint handles various system-level operations such as authentication, along with certain operations such as listing and managing favorite/pinned items, and adding certain items to playlists.
-     *
-     *     Some of the operations require authentication - logging out, adding items to playlists, and listing/managing pinned items.  Other operations do not require authentication - retrieving the encryption key and signing in.
-     *
-     *     For the actions requiring authentication, the request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then submitting credentials encrypted with it.
-     *
-     *
+     * Authentication, session management, playlists and favorites
+     * @description This endpoint handles system-level operations such as authentication, and favorite/pinned items, and playlists. Some operations require authentication - logging out, adding to playlists, and listing/managing pinned items. Other operations do not require authentication - retrieving the encryption key and signing in. For the actions requiring authentication the request must be made using a session ID and device ID cookie. To create a session this endpoint first shares the encryption public key so credentials can be submitted. Credentials are then submitted encrypted with the public key before being sent to this endpoint.
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
     post: operations['SynologyEntryController_route'];
@@ -1858,10 +1722,7 @@ export type paths = {
     put?: never;
     /**
      * Returns information about the Synology AudioStation API
-     * @description Provides information to Synology DS Audio apps about the server and its capabilities.
-     *
-     *
-     *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
+     * @description Provides information to Synology DS Audio apps about the server and its capabilities. This endpoint omits information that is not relevant to AudioStation.
      */
     post: operations['SynologyQueryController_route'];
     delete?: never;
@@ -2077,48 +1938,6 @@ export type components = {
        * Format: constant
        * @description The success being "true" indicates that the request completed.
        * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    AdminListIndexerLogsBadRequestErrorMessageEnum: AdminListIndexerLogsBadRequestErrorMessageEnum;
-    AdminListIndexerLogsBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-account-id-error
-       */
-      message: components['schemas']['AdminListIndexerLogsBadRequestErrorMessageEnum'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    AdminListIndexerLogsNotFoundErrorMessageEnum: AdminListIndexerLogsNotFoundErrorMessageEnum;
-    AdminListIndexerLogsNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default invalid-account-id-error
-       */
-      message: components['schemas']['AdminListIndexerLogsNotFoundErrorMessageEnum'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
        */
       success: boolean;
     };
@@ -2441,6 +2260,25 @@ export type components = {
      * @enum {string}
      */
     FileTypeEnum: FileTypeEnum;
+    /**
+     * @description A forbidden error occurred due to the user not having the necessary permissions to access the resource.
+     * @enum {string}
+     */
+    ForbiddenErrorEnum: ForbiddenErrorEnum;
+    ForbiddenErrorResponseDto: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A forbidden error occurred due to the user not having the necessary permissions to access the resource.
+       * @default forbidden-error
+       */
+      message: components['schemas']['ForbiddenErrorEnum'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
     /**
      * @description The error message(s) that occurred during the validation of the request data or additional requirements
      *     applied while serving the request
@@ -7968,6 +7806,14 @@ export interface operations {
       };
     };
     responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminCreateAccountResponseDto'];
+        };
+      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -7982,6 +7828,22 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['AdminCreateAccountBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8002,7 +7864,14 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Root path created successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminCreateRootPathResponseDto'];
+        };
+      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -8011,7 +7880,6 @@ export interface operations {
           'application/json': components['schemas']['AdminCreateRootPathResponseDto'];
         };
       };
-      /** @description Invalid request data */
       400: {
         headers: {
           [name: string]: unknown;
@@ -8020,13 +7888,28 @@ export interface operations {
           'application/json': components['schemas']['AdminCreateRootPathBadRequestResponseDto'];
         };
       };
-      /** @description Account not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminCreateRootPathNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8047,7 +7930,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Account deleted successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8056,7 +7938,6 @@ export interface operations {
           'application/json': components['schemas']['AdminDeleteAccountResponseDto'];
         };
       };
-      /** @description Invalid account ID or account does not exist */
       400: {
         headers: {
           [name: string]: unknown;
@@ -8065,13 +7946,28 @@ export interface operations {
           'application/json': components['schemas']['AdminDeleteAccountBadRequestResponseDto'];
         };
       };
-      /** @description Account not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminDeleteAccountNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8088,7 +7984,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Root path deleted successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8097,13 +7992,36 @@ export interface operations {
           'application/json': components['schemas']['AdminDeleteRootPathResponseDto'];
         };
       };
-      /** @description Root path not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminDeleteRootPathNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8125,6 +8043,30 @@ export interface operations {
           'application/json': components['schemas']['AdminIndexerConfigurationResponseDto'];
         };
       };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
     };
   };
   AdminListAccountsController_get: {
@@ -8136,13 +8078,36 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Accounts listed successfully */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminListAccountsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8173,15 +8138,23 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminListIndexerLogsBadRequestResponseDto'];
+          'application/json': components['schemas']['BadRequestResponseDto'];
         };
       };
-      404: {
+      403: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['AdminListIndexerLogsNotFoundResponseDto'];
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8203,6 +8176,30 @@ export interface operations {
           'application/json': components['schemas']['AdminListRootPathsResponseDto'];
         };
       };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
     };
   };
   AdminRegenerateMasterSessionKeyController_post: {
@@ -8214,13 +8211,36 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Master session key regenerated successfully */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminRegenerateMasterSessionKeyResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8237,7 +8257,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Session key regenerated successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8246,13 +8265,36 @@ export interface operations {
           'application/json': components['schemas']['AdminRegenerateUserSessionKeyResponseDto'];
         };
       };
-      /** @description Account not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminRegenerateUserSessionKeyNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8273,7 +8315,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Password reset successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8282,7 +8323,6 @@ export interface operations {
           'application/json': components['schemas']['AdminResetUserPasswordResponseDto'];
         };
       };
-      /** @description Invalid request data or additional requirements not met */
       400: {
         headers: {
           [name: string]: unknown;
@@ -8291,13 +8331,28 @@ export interface operations {
           'application/json': components['schemas']['AdminResetUserPasswordBadRequestResponseDto'];
         };
       };
-      /** @description Account not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminResetUserPasswordNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8315,13 +8370,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Scanner status updated successfully */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminSetIndexerStatusResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8350,7 +8428,6 @@ export interface operations {
           'application/json': components['schemas']['AdminUpdateRootPathResponseDto'];
         };
       };
-      /** @description Invalid root path, either malformed or nonexistent */
       400: {
         headers: {
           [name: string]: unknown;
@@ -8359,13 +8436,28 @@ export interface operations {
           'application/json': components['schemas']['AdminUpdateRootPathBadRequestResponseDto'];
         };
       };
-      /** @description Root path not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminUpdateRootPathNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8394,7 +8486,6 @@ export interface operations {
           'application/json': components['schemas']['AdminUpdateUserRolesResponseDto'];
         };
       };
-      /** @description Invalid user role or account only admin error */
       400: {
         headers: {
           [name: string]: unknown;
@@ -8403,13 +8494,28 @@ export interface operations {
           'application/json': components['schemas']['AdminUpdateUserRolesBadRequestResponseDto'];
         };
       };
-      /** @description Account not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['AdminUpdateUserRolesNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8427,6 +8533,14 @@ export interface operations {
       };
     };
     responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GuestCreateSessionResponseDto'];
+        };
+      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -8441,6 +8555,57 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['GuestCreateSessionBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  GuestHealthcheckController_healthcheck: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -8655,10 +8820,7 @@ export interface operations {
         /** @description The width/height size of the image in pixels */
         size: number;
       };
-      header: {
-        /** @description The JWT token provided via cookie */
-        cookie: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8672,6 +8834,36 @@ export interface operations {
           'image/jpeg': string;
           'image/png': string;
           'image/webp': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['BadRequestResponseDto'];
+          'image/png': components['schemas']['BadRequestResponseDto'];
+          'image/webp': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/png': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/webp': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['InternalServerErrorResponseDto'];
+          'image/png': components['schemas']['InternalServerErrorResponseDto'];
+          'image/webp': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8686,10 +8878,7 @@ export interface operations {
         /** @description The type of association */
         type?: components['schemas']['AssociationTypeEnum'];
       };
-      header: {
-        /** @description The JWT token provided via cookie */
-        cookie: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -8703,6 +8892,36 @@ export interface operations {
           'image/jpeg': string;
           'image/png': string;
           'image/webp': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['BadRequestResponseDto'];
+          'image/png': components['schemas']['BadRequestResponseDto'];
+          'image/webp': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/png': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/webp': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['InternalServerErrorResponseDto'];
+          'image/png': components['schemas']['InternalServerErrorResponseDto'];
+          'image/webp': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8720,7 +8939,14 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Root path created successfully */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UserCreateRootPathResponseDto'];
+        };
+      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -8729,13 +8955,28 @@ export interface operations {
           'application/json': components['schemas']['UserCreateRootPathResponseDto'];
         };
       };
-      /** @description Invalid request data */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserCreateRootPathBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8752,7 +8993,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Custom data deleted successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8761,13 +9001,36 @@ export interface operations {
           'application/json': components['schemas']['UserDeleteCustomDataResponseDto'];
         };
       };
-      /** @description File not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserDeleteCustomDataNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8784,7 +9047,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Favorite deleted successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8793,13 +9055,36 @@ export interface operations {
           'application/json': components['schemas']['UserDeleteFavoriteResponseDto'];
         };
       };
-      /** @description Favorite not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserDeleteFavoriteNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8816,7 +9101,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Root path deleted successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8825,13 +9109,36 @@ export interface operations {
           'application/json': components['schemas']['UserDeleteRootPathResponseDto'];
         };
       };
-      /** @description Root path not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserDeleteRootPathNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8861,6 +9168,14 @@ export interface operations {
           'application/json': components['schemas']['BadRequestResponseDto'];
         };
       };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       500: {
         headers: {
           [name: string]: unknown;
@@ -8888,13 +9203,36 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successfully retrieved the tree of folders and file contents. */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserFolderStructureResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8936,7 +9274,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -8945,13 +9282,28 @@ export interface operations {
           'application/json': components['schemas']['UserListAlbumAssociationsResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListAlbumAssociationsBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -8993,7 +9345,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9002,13 +9353,28 @@ export interface operations {
           'application/json': components['schemas']['UserListAlbumAssociationsWithTracksResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListAlbumAssociationsWithTracksBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9084,7 +9450,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9093,13 +9458,28 @@ export interface operations {
           'application/json': components['schemas']['UserListAlbumsResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListAlbumsBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9175,7 +9555,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9184,13 +9563,28 @@ export interface operations {
           'application/json': components['schemas']['UserListAlbumsWithTracksResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListAlbumsWithTracksBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9207,7 +9601,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9216,13 +9609,28 @@ export interface operations {
           'application/json': components['schemas']['UserListFavoritesResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListFavoritesBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9239,7 +9647,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9256,12 +9663,28 @@ export interface operations {
           'application/json': components['schemas']['UserListIndexerLogsBadRequestResponseDto'];
         };
       };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListIndexerLogsNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9281,6 +9704,30 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['UserListRootPathsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9322,7 +9769,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9331,13 +9777,28 @@ export interface operations {
           'application/json': components['schemas']['UserListTrackAssociationsResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListTrackAssociationsBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9379,7 +9840,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9388,13 +9848,28 @@ export interface operations {
           'application/json': components['schemas']['UserListTrackAssociationsWithTracksResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListTrackAssociationsWithTracksBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9470,7 +9945,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successful response with an array of data and pagination information. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9479,13 +9953,28 @@ export interface operations {
           'application/json': components['schemas']['UserListTracksResponseDto'];
         };
       };
-      /** @description Failure response with error information relating to missing or invalid parameters. */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserListTracksBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9499,13 +9988,36 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Session key regenerated successfully */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserRegenerateSessionKeyResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9522,7 +10034,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successfully retrieved the album data for the user. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9531,13 +10042,36 @@ export interface operations {
           'application/json': components['schemas']['UserRetrieveAlbumResponseDto'];
         };
       };
-      /** @description Album not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserRetrieveAlbumNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9554,7 +10088,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Successfully retrieved the association data for the user. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9563,13 +10096,36 @@ export interface operations {
           'application/json': components['schemas']['UserRetrieveAssociationResponseDto'];
         };
       };
-      /** @description Association not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserRetrieveAssociationNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9590,7 +10146,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Custom data set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9599,7 +10154,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetAlbumCustomDataResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9608,13 +10162,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetAlbumCustomDataBadRequestResponseDto'];
         };
       };
-      /** @description File not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetAlbumCustomDataNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9631,7 +10200,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Favorite set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9640,13 +10208,36 @@ export interface operations {
           'application/json': components['schemas']['UserSetAlbumFavoriteResponseDto'];
         };
       };
-      /** @description Favorite not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetAlbumFavoriteNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9667,7 +10258,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Rating set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9676,7 +10266,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetAlbumRatingResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9685,13 +10274,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetAlbumRatingBadRequestResponseDto'];
         };
       };
-      /** @description Track or album not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetAlbumRatingNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9712,7 +10316,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Custom data set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9721,7 +10324,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetArtistNameResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9730,13 +10332,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetArtistNameBadRequestResponseDto'];
         };
       };
-      /** @description Artist not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetArtistNameNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9754,7 +10371,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Favorite set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9763,13 +10379,36 @@ export interface operations {
           'application/json': components['schemas']['UserSetAssociationFavoriteResponseDto'];
         };
       };
-      /** @description Favorite not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetAssociationFavoriteNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9790,7 +10429,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Custom data set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9799,7 +10437,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetComposerNameResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9808,13 +10445,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetComposerNameBadRequestResponseDto'];
         };
       };
-      /** @description Composer not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetComposerNameNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9835,7 +10487,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Custom data set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9844,7 +10495,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetCustomDataResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9853,13 +10503,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetCustomDataBadRequestResponseDto'];
         };
       };
-      /** @description File not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetCustomDataNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9875,7 +10540,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Favorite set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9884,13 +10548,36 @@ export interface operations {
           'application/json': components['schemas']['UserSetFolderFavoriteResponseDto'];
         };
       };
-      /** @description Favorite not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetFolderFavoriteNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9911,7 +10598,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Custom data set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9920,7 +10606,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetGenreNameResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9929,13 +10614,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetGenreNameBadRequestResponseDto'];
         };
       };
-      /** @description Genre not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetGenreNameNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9956,7 +10656,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Custom data set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -9965,7 +10664,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetTrackCustomDataResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -9974,13 +10672,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetTrackCustomDataBadRequestResponseDto'];
         };
       };
-      /** @description Track not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetTrackCustomDataNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -9997,7 +10710,6 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Favorite set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10006,13 +10718,36 @@ export interface operations {
           'application/json': components['schemas']['UserSetTrackFavoriteResponseDto'];
         };
       };
-      /** @description Favorite not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetTrackFavoriteNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10033,7 +10768,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Rating set successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10042,7 +10776,6 @@ export interface operations {
           'application/json': components['schemas']['UserSetTrackRatingResponseDto'];
         };
       };
-      /** @description Request failed */
       400: {
         headers: {
           [name: string]: unknown;
@@ -10051,13 +10784,28 @@ export interface operations {
           'application/json': components['schemas']['UserSetTrackRatingBadRequestResponseDto'];
         };
       };
-      /** @description Track or album not found */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserSetTrackRatingNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10068,10 +10816,7 @@ export interface operations {
         /** @description The ID of the file */
         id: number;
       };
-      header: {
-        /** @description The JWT token provided via cookie */
-        cookie: string;
-      };
+      header?: never;
       path?: never;
       cookie?: never;
     };
@@ -10088,7 +10833,28 @@ export interface operations {
           'audio/wav': string;
         };
       };
-      /** @description The requested file was not found */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'audio/flac': components['schemas']['BadRequestResponseDto'];
+          'audio/mpeg': components['schemas']['BadRequestResponseDto'];
+          'audio/ogg': components['schemas']['BadRequestResponseDto'];
+          'audio/wav': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'audio/flac': components['schemas']['ForbiddenErrorResponseDto'];
+          'audio/mpeg': components['schemas']['ForbiddenErrorResponseDto'];
+          'audio/ogg': components['schemas']['ForbiddenErrorResponseDto'];
+          'audio/wav': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
       404: {
         headers: {
           [name: string]: unknown;
@@ -10098,6 +10864,17 @@ export interface operations {
           'audio/mpeg': components['schemas']['UserStreamFileNotFoundResponseDto'];
           'audio/ogg': components['schemas']['UserStreamFileNotFoundResponseDto'];
           'audio/wav': components['schemas']['UserStreamFileNotFoundResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'audio/flac': components['schemas']['InternalServerErrorResponseDto'];
+          'audio/mpeg': components['schemas']['InternalServerErrorResponseDto'];
+          'audio/ogg': components['schemas']['InternalServerErrorResponseDto'];
+          'audio/wav': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10115,7 +10892,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Password reset successfully */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10124,13 +10900,171 @@ export interface operations {
           'application/json': components['schemas']['UserUpdatePasswordResponseDto'];
         };
       };
-      /** @description Invalid request data or additional requirements not met */
       400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['UserUpdatePasswordBadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapAsGetFileController_get: {
+    parameters: {
+      query: {
+        addcounts?: number;
+        ext: string;
+        f: number;
+        from?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapAsLocalPlaybackController_post: {
+    parameters: {
+      query: {
+        act: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapAsLoginController_post: {
+    parameters: {
+      query?: {
+        act?: string;
+        ssid?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['QnapAsLoginBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['QnapUserAsLoginDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10164,17 +11098,40 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description QNAP authentication response */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/xml':
+          'application/json':
             | components['schemas']['QnapPreauthenticateDto']
             | components['schemas']['QnapAuthLoginDto']
             | components['schemas']['QnapAuthLoginFailedDto']
             | components['schemas']['QnapAuthResumeSessionDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10197,83 +11154,35 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'text/xml': string;
+          'application/json':
+            | components['schemas']['QnapPreauthenticateDto']
+            | components['schemas']['QnapAuthLoginDto']
+            | components['schemas']['QnapAuthLoginFailedDto']
+            | components['schemas']['QnapAuthResumeSessionDto'];
         };
       };
-    };
-  };
-  QnapSysRequestController_routeRequest: {
-    parameters: {
-      query: {
-        sid: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description QNAP user login information */
-      200: {
+      400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/xml': components['schemas']['QnapSysRequestDto'];
+          'application/json': components['schemas']['BadRequestResponseDto'];
         };
       };
-    };
-  };
-  QnapAsGetFileController_get: {
-    parameters: {
-      query: {
-        addcounts?: number;
-        ext: string;
-        f: number;
-        from?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
+      403: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'audio/flac': string;
-          'audio/mpeg': string;
-          'audio/ogg': string;
-          'audio/wav': string;
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
-    };
-  };
-  QnapAsLoginController_post: {
-    parameters: {
-      query?: {
-        act?: string;
-        ssid?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['QnapAsLoginBodyDto'];
-      };
-    };
-    responses: {
-      /** @description QNAP user login information */
-      200: {
+      500: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/xml': components['schemas']['QnapUserAsLoginDto'];
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10302,31 +11211,34 @@ export interface operations {
           'image/webp': string;
         };
       };
-    };
-  };
-  QnapMediaListController_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description List of songs, artists, albums, genres, folders, or tracks */
-      200: {
+      400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/xml':
-            | components['schemas']['QnapMediaListArtistsResponseDto']
-            | components['schemas']['QnapMediaListAlbumsResponseDto']
-            | components['schemas']['QnapMediaListGenresResponseDto']
-            | components['schemas']['QnapMediaListFoldersResponseDto']
-            | components['schemas']['QnapMediaListTracksResponseDto']
-            | components['schemas']['QnapMediaListRandomArtistsResponseDto']
-            | components['schemas']['QnapMediaListRandomAlbumsResponseDto'];
+          'image/jpeg': components['schemas']['BadRequestResponseDto'];
+          'image/png': components['schemas']['BadRequestResponseDto'];
+          'image/webp': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/png': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/webp': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['InternalServerErrorResponseDto'];
+          'image/png': components['schemas']['InternalServerErrorResponseDto'];
+          'image/webp': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10340,13 +11252,134 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description QNAP authentication response */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          'application/xml': components['schemas']['QnapMediaToolResponseDto'];
+          'application/json': components['schemas']['QnapMediaToolResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapSysRequestController_routeRequest: {
+    parameters: {
+      query: {
+        sid: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['QnapSysRequestDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapMediaListController_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json':
+            | components['schemas']['QnapMediaListRandomQueryDto']
+            | components['schemas']['QnapMediaListGeneralQueryDto']
+            | components['schemas']['QnapMediaListBucketQueryDto']
+            | components['schemas']['QnapMediaListRandomArtistsResponseDto']
+            | components['schemas']['QnapMediaListRandomAlbumsResponseDto']
+            | components['schemas']['QnapMediaListArtistsResponseDto']
+            | components['schemas']['QnapMediaListAlbumsResponseDto']
+            | components['schemas']['QnapMediaListGenresResponseDto']
+            | components['schemas']['QnapMediaListFoldersResponseDto']
+            | components['schemas']['QnapMediaListTracksResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10374,13 +11407,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of albums */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SynologyAlbumResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10404,13 +11460,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of artists */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SynologyArtistResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10431,13 +11510,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of composers */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SynologyComposerResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10459,9 +11561,31 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'image/jpeg': string;
-          'image/png': string;
-          'image/webp': string;
+          'application/json': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10484,13 +11608,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of folders starting from the root paths and then traversing down their folder trees */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SynologyFolderResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10511,7 +11658,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of genres found in the music library, or a hard-coded list of default genres */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10520,6 +11666,30 @@ export interface operations {
           'application/json':
             | components['schemas']['SynologyGenreResponseDto']
             | components['schemas']['SynologyDefaultGenreResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10541,13 +11711,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns configuration information for the Synology AudioStation API and client capabilities */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SynologyInfoResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10569,17 +11762,16 @@ export interface operations {
           | components['schemas']['SynologyPlaylistCreateNormalBodyDto']
           | components['schemas']['SynologyPlaylistCreateSmartBodyDto']
           | components['schemas']['SynologyPlaylistDeleteBodyDto']
+          | components['schemas']['SynologyPlaylistListBodyDto']
           | components['schemas']['SynologyPlaylistMoveItemsBodyDto']
           | components['schemas']['SynologyPlaylistRemoveMissingBodyDto']
           | components['schemas']['SynologyPlaylistRenameBodyDto']
-          | components['schemas']['SynologyPlaylistTrackListBodyDto']
-          | components['schemas']['SynologyPlaylistUpdateSmartBodyDto']
           | components['schemas']['SynologyPlaylistRetrieveBodyDto']
-          | components['schemas']['SynologyPlaylistListBodyDto'];
+          | components['schemas']['SynologyPlaylistTrackListBodyDto']
+          | components['schemas']['SynologyPlaylistUpdateSmartBodyDto'];
       };
     };
     responses: {
-      /** @description Endpoints for creating and managing playlists */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10590,6 +11782,30 @@ export interface operations {
             | components['schemas']['SynologyPlaylistResponseDto']
             | components['schemas']['SynologyPlaylistIdResponseDto']
             | components['schemas']['SynologyPlaylistWithItemsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10625,7 +11841,10 @@ export interface operations {
          */
         version: number;
       };
-      header?: never;
+      header?: {
+        /** @description The session ID and device ID cookies for the user `id={sessionId}; did={deviceId}` */
+        cookie?: string;
+      };
       path?: never;
       cookie?: never;
     };
@@ -10636,6 +11855,30 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
       };
     };
   };
@@ -10649,7 +11892,6 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    /** @description Creates a new SHOUTcast radio stream */
     requestBody: {
       content: {
         'application/json':
@@ -10659,7 +11901,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Proxies a SHOUTcast radio stream */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10669,6 +11910,30 @@ export interface operations {
             | components['schemas']['SynologyProxyStreamInfoResponseDto']
             | components['schemas']['SynologyProxySongInfoResponseDto']
             | components['schemas']['SynologySuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10693,7 +11958,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of genres found in the music library, or a hard-coded list of default genres */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10702,6 +11966,30 @@ export interface operations {
           'application/json':
             | components['schemas']['SynologyRadioItemResponseDto']
             | components['schemas']['SynologySuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10722,13 +12010,36 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Returns a list of artists, albums and songs matching a search query */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           'application/json': components['schemas']['SynologySearchResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10747,20 +12058,21 @@ export interface operations {
       content: {
         'application/json':
           | components['schemas']['SynologySongsBodyDto']
-          | components['schemas']['SynologySongsByAlbumBodyDto']
-          | components['schemas']['SynologySongsByArtistBodyDto']
           | components['schemas']['SynologySongsByAlbumArtistBodyDto']
-          | components['schemas']['SynologySongsByComposerBodyDto']
+          | components['schemas']['SynologySongsByAlbumBodyDto']
           | components['schemas']['SynologySongsByAlbumComposerBodyDto']
-          | components['schemas']['SynologySongsByAlbumGenreBodyDto']
-          | components['schemas']['SynologySongsByGenreBodyDto']
           | components['schemas']['SynologySongsByAlbumDefaultGenreBodyDto']
+          | components['schemas']['SynologySongsByAlbumGenreBodyDto']
+          | components['schemas']['SynologySongsByArtistBodyDto']
+          | components['schemas']['SynologySongsByComposerBodyDto']
           | components['schemas']['SynologySongsByDefaultGenreBodyDto']
-          | components['schemas']['SynologySongsRateBodyDto'];
+          | components['schemas']['SynologySongsByGenreBodyDto']
+          | components['schemas']['SynologySongsRateBodyDto']
+          | components['schemas']['SynologySongResponseDto']
+          | components['schemas']['SynologySuccessResponseDto'];
       };
     };
     responses: {
-      /** @description Returns a list of songs */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10769,6 +12081,30 @@ export interface operations {
           'application/json':
             | components['schemas']['SynologySongResponseDto']
             | components['schemas']['SynologySuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10822,10 +12158,31 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'audio/flac': string;
-          'audio/mpeg': string;
-          'audio/ogg': string;
-          'audio/wav': string;
+          'application/json': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -10834,7 +12191,7 @@ export interface operations {
     parameters: {
       query?: never;
       header?: {
-        /** @description The session ID and device ID cookies if requesting "pins", "playlist" or the "clearSessionToken" methods */
+        /** @description The session ID and device ID cookies for the user `id={sessionId}; did={deviceId}` */
         cookie?: string;
       };
       path?: never;
@@ -10846,9 +12203,9 @@ export interface operations {
           | components['schemas']['SynologyEntryCertificateBodyDto']
           | components['schemas']['SynologyEntrySignInBodyDto']
           | components['schemas']['SynologyEntryListPinsBodyDto']
-          | components['schemas']['SynologyEntryLogoutBodyDto']
           | components['schemas']['SynologyEntryCreatePinBodyDto']
           | components['schemas']['SynologyEntryDeletePinBodyDto']
+          | components['schemas']['SynologyEntryLogoutBodyDto']
           | components['schemas']['SynologyEntryPlaylistAddAlbumBodyDto']
           | components['schemas']['SynologyEntryPlaylistAddArtistBodyDto']
           | components['schemas']['SynologyEntryPlaylistAddComposerBodyDto']
@@ -10856,7 +12213,6 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Handles various entry.cgi requests */
       200: {
         headers: {
           [name: string]: unknown;
@@ -10870,12 +12226,39 @@ export interface operations {
             | components['schemas']['SynologySuccessResponseDto'];
         };
       };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
     };
   };
   SynologyQueryController_route: {
     parameters: {
       query?: never;
-      header?: never;
+      header?: {
+        /** @description The session ID and device ID cookies for the user `id={sessionId}; did={deviceId}` */
+        cookie?: string;
+      };
       path?: never;
       cookie?: never;
     };
@@ -10886,6 +12269,30 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
       };
     };
   };
@@ -10923,15 +12330,6 @@ export enum AdminDeleteAccountNotFoundErrorMessageEnum {
 }
 export enum AdminDeleteRootPathNotFoundErrorMessageEnum {
   root_path_not_found_error = 'root-path-not-found-error',
-}
-export enum AdminListIndexerLogsBadRequestErrorMessageEnum {
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
-  invalid_search_length_error = 'invalid-search-length-error',
-}
-export enum AdminListIndexerLogsNotFoundErrorMessageEnum {
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
 }
 export enum AdminRegenerateUserSessionKeyNotFoundErrorMessageEnum {
   account_not_found_error = 'account-not-found-error',
@@ -11000,6 +12398,9 @@ export enum FileTypeEnum {
   m4a = 'm4a',
   mp3 = 'mp3',
   ogg = 'ogg',
+}
+export enum ForbiddenErrorEnum {
+  forbidden_error = 'forbidden-error',
 }
 export enum GuestCreateSessionBadRequestErrorMessageEnum {
   invalid_username_error = 'invalid-username-error',

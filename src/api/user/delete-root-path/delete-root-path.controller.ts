@@ -1,8 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Delete, Query, Scope, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Delete, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
   UserDeleteRootPathNotFoundResponseDto,
@@ -10,35 +8,22 @@ import {
   UserDeleteRootPathResponseDto,
 } from './delete-root-path.dto';
 import { UserDeleteRootPathService } from './delete-root-path.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-  scope: Scope.REQUEST,
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserDeleteRootPathController {
   constructor(private readonly deleteRootPathService: UserDeleteRootPathService) {}
 
-  @Delete('delete-root-path')
-  @ApiOperation({
+  @ApiEndpoint(Delete, 'delete-root-path', HttpStatus.OK, {
     summary: `Remove a music source from the user's account`,
     description: [
       `Deletes the specified root path and all associated information in the database immediately.`,
       `The songs and folders will no longer be present in your library but the files will remain on the file system.`,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Root path deleted successfully',
-    type: UserDeleteRootPathResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Root path not found',
-    type: UserDeleteRootPathNotFoundResponseDto,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserDeleteRootPathResponseDto,
+      [HttpStatus.NOT_FOUND]: UserDeleteRootPathNotFoundResponseDto,
+    },
   })
   async delete(
     @User() user: AccountEntity,

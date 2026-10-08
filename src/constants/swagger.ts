@@ -69,6 +69,7 @@ export const BINARY_RESPONSE = {
 export const AUDIO_MIME_TYPES = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/flac'];
 export const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export const XML_MIME_TYPE = 'text/xml';
+export const JSON_MIME_TYPE = 'application/json';
 
 export const SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION = `\nThe request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the \`/entry.cgi\` endpoint, a two-step process requesting the encryption public key from \`/certs\` and then  submitting credentials encrypted with it.`;
 

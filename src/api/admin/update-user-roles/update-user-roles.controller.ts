@@ -1,10 +1,5 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
+import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
   AdminUpdateUserRolesBadRequestResponseDto,
   AdminUpdateUserRolesBodyDto,
@@ -13,51 +8,23 @@ import {
   AdminUpdateUserRolesResponseDto,
 } from './update-user-roles.dto';
 import { AdminUpdateUserRolesService } from './update-user-roles.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Patch, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/admin',
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminUpdateUserRolesController {
   constructor(private readonly updateRolesService: AdminUpdateUserRolesService) {}
 
-  @Patch('update-user-roles')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @ApiEndpoint(Patch, 'update-user-roles', HttpStatus.OK, {
     summary: 'Update user roles',
-    description: [
-      'Updates the roles of a specified user account',
-      'There must always be at least one administrator account so you cannot remove the only `admin` role.',
-      'To remove the only admin role, create a new administrator account first.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    type: AdminUpdateUserRolesResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Account not found',
-    type: AdminUpdateUserRolesNotFoundResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid user role or account only admin error',
-    type: AdminUpdateUserRolesBadRequestResponseDto,
+    description: 'Updates the roles of a specified user account.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.OK]: AdminUpdateUserRolesResponseDto,
+      [HttpStatus.BAD_REQUEST]: AdminUpdateUserRolesBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: AdminUpdateUserRolesNotFoundResponseDto,
+    },
   })
   async patch(
     @User() user: AccountEntity,

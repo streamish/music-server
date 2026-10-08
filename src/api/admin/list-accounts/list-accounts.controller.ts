@@ -1,39 +1,20 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
+import { AdminController, ApiEndpoint } from '../../api.decorator';
 import { AdminListAccountsResponseDto } from './list-accounts.dto';
 import { AdminListAccountsService } from './list-accounts.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Scope, UseGuards } from '@nestjs/common';
-import { UserRoleEnum } from 'src/types/enums';
+import { Get, HttpStatus } from '@nestjs/common';
 
-@Controller({
-  path: '/api/admin',
-  scope: Scope.REQUEST,
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminListAccountsController {
   constructor(private readonly listAccountsService: AdminListAccountsService) {}
 
-  @Get('list-accounts')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'list-accounts', HttpStatus.OK, {
     summary: 'List all accounts',
-    description: [
-      'Retrieves a list of all accounts in the system.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Accounts listed successfully',
-    type: AdminListAccountsResponseDto,
+    description: 'Retrieves a list of all accounts in the system.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.OK]: AdminListAccountsResponseDto,
+    },
   })
   async get(): Promise<AdminListAccountsResponseDto> {
     const accounts = await this.listAccountsService.listAccounts();

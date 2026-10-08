@@ -1,47 +1,27 @@
-import {
-  ADMINISTRATOR_ONLY_ROUTE,
-  ADMIN_APIS,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-} from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
+import { AdminController, ApiEndpoint } from '../../api.decorator';
 import {
   AdminCreateAccountBadRequestResponseDto,
   AdminCreateAccountBodyDto,
   AdminCreateAccountResponseDto,
 } from './create-account.dto';
 import { AdminCreateAccountService } from './create-account.service';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Post, Scope, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Post } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/admin',
-  scope: Scope.REQUEST,
-})
-@ApiTags(ADMIN_APIS)
-@UseGuards(RoleGuard)
+@AdminController()
 export class AdminCreateAccountController {
   constructor(private readonly createAccountService: AdminCreateAccountService) {}
 
-  @Post('create-account')
-  @ApiOperation({
+  @ApiEndpoint(Post, 'create-account', HttpStatus.CREATED, {
     summary: 'Create a new account',
-    description: [
-      'Add a user account with the specified roles.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-      ADMINISTRATOR_ONLY_ROUTE,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiCreatedResponse({
-    type: AdminCreateAccountResponseDto,
-  })
-  @ApiBadRequestResponse({
-    type: AdminCreateAccountBadRequestResponseDto,
+    description: 'Add a user account with the specified roles.',
+    isAuthenticated: true,
+    isAdministratorOnly: true,
+    responses: {
+      [HttpStatus.CREATED]: AdminCreateAccountResponseDto,
+      [HttpStatus.BAD_REQUEST]: AdminCreateAccountBadRequestResponseDto,
+    },
   })
   async post(
     @User() user: AccountEntity,

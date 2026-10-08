@@ -1,15 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import {
-  FILTERED_DATA_DESCRIPTION,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-  PAGINATED_DATA_DESCRIPTION,
-  TRACK_INFORMATION_INCLUDED,
-  USER_APIS,
-} from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
   UserListTrackAssociationsWithTracksBadRequestResponseDto,
@@ -17,36 +8,22 @@ import {
   UserListTrackAssociationsWithTracksResponseDto,
 } from './list-track-associations-with-tracks.dto';
 import { UserListTrackAssociationsWithTracksService } from './list-track-associations-with-tracks.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserListTrackAssociationsWithTracksController {
   constructor(private readonly listTrackAssociationsWithTracksService: UserListTrackAssociationsWithTracksService) {}
 
-  @Get('list-track-associations-with-tracks')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'list-track-associations-with-tracks', HttpStatus.OK, {
     summary: 'List track-associated artists, composers and genres and return tracks.',
-    description: [
-      `Track associations are artists, composers and genres attributed directly to individual tracks.`,
-      FILTERED_DATA_DESCRIPTION,
-      TRACK_INFORMATION_INCLUDED,
-      PAGINATED_DATA_DESCRIPTION,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Successful response with an array of data and pagination information.',
-    type: UserListTrackAssociationsWithTracksResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Failure response with error information relating to missing or invalid parameters.',
-    type: UserListTrackAssociationsWithTracksBadRequestResponseDto,
+    description: 'Track associations are artists, composers and genres attributed directly to individual tracks.',
+    isAuthenticated: true,
+    isFiltered: true,
+    isPaginated: true,
+    includeTrackInformation: true,
+    responses: {
+      [HttpStatus.OK]: UserListTrackAssociationsWithTracksResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserListTrackAssociationsWithTracksBadRequestResponseDto,
+    },
   })
   async get(
     @User() user: AccountEntity,

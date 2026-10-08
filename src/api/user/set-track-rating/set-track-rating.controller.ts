@@ -1,17 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Put, Query, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Body, HttpStatus, Put, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
-import { UserRoleEnum } from 'src/types/enums';
 import {
   UserSetTrackRatingBadRequestResponseDto,
   UserSetTrackRatingBodyDto,
@@ -21,34 +11,19 @@ import {
 } from './set-track-rating.dto';
 import { UserSetTrackRatingService } from './set-track-rating.service';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserSetTrackRatingController {
   constructor(private readonly setRatingService: UserSetTrackRatingService) {}
 
-  @Put('set-track-rating')
-  @ApiOperation({
+  @ApiEndpoint(Put, 'set-track-rating', HttpStatus.OK, {
     summary: `Sets or unsets rating for a track`,
-    description: [`Sets or unsets a 1-5 star rating for a single track.`, JWT_AUTHENTICATED_REQUEST_DESCRIPTION].join(
-      '\n',
-    ),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Rating set successfully',
-    type: UserSetTrackRatingResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: 'Track or album not found',
-    type: UserSetTrackRatingNotFoundResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request failed',
-    type: UserSetTrackRatingBadRequestResponseDto,
+    description: [`Sets or unsets a 1-5 star rating for a single track.`].join('\n'),
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserSetTrackRatingResponseDto,
+      [HttpStatus.NOT_FOUND]: UserSetTrackRatingNotFoundResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserSetTrackRatingBadRequestResponseDto,
+    },
   })
   async put(
     @User() user: AccountEntity,

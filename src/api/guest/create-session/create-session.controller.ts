@@ -1,12 +1,5 @@
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiInternalServerErrorResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Body, Controller, Post, Req } from '@nestjs/common';
-import { GUEST_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, GuestController } from 'src/api/api.decorator';
+import { Body, HttpStatus, Post, Req } from '@nestjs/common';
 import {
   GuestCreateSessionBadRequestResponseDto,
   GuestCreateSessionBodyDto,
@@ -16,30 +9,22 @@ import { GuestCreateSessionService } from './create-session.service';
 import { InternalServerErrorResponseDto } from 'src/api/response.dto';
 import type { Request } from 'express';
 
-@Controller({
-  path: '/api/guest',
-})
-@ApiTags(GUEST_APIS)
+@GuestController()
 export class GuestCreateSessionController {
   constructor(private readonly createSessionService: GuestCreateSessionService) {}
 
-  @Post('create-session')
-  @ApiOperation({
+  @ApiEndpoint(Post, 'create-session', HttpStatus.CREATED, {
     summary: 'Sign in',
     description: [
       'Creates a user session and returns a JWT token used for authenticated API requests.',
       'The session can be lasting or temporary.',
       'Sessions are locked to the APIs that created them, these tokens cannot access QNAP or Synology APIs.',
     ].join('\n'),
-  })
-  @ApiCreatedResponse({
-    type: GuestCreateSessionResponseDto,
-  })
-  @ApiBadRequestResponse({
-    type: GuestCreateSessionBadRequestResponseDto,
-  })
-  @ApiInternalServerErrorResponse({
-    type: InternalServerErrorResponseDto,
+    responses: {
+      [HttpStatus.CREATED]: GuestCreateSessionResponseDto,
+      [HttpStatus.BAD_REQUEST]: GuestCreateSessionBadRequestResponseDto,
+      [HttpStatus.INTERNAL_SERVER_ERROR]: InternalServerErrorResponseDto,
+    },
   })
   async post(@Req() req: Request, @Body() body: GuestCreateSessionBodyDto): Promise<GuestCreateSessionResponseDto> {
     const userAgent = req.headers['user-agent'] || '';

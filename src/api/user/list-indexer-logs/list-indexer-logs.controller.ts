@@ -1,15 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
   UserListIndexerLogsBadRequestResponseDto,
@@ -18,38 +9,25 @@ import {
   UserListIndexerLogsResponseDto,
 } from './list-indexer-logs.dto';
 import { UserListIndexerLogsService } from './list-indexer-logs.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserListIndexerLogsController {
   constructor(private readonly listIndexerLogsService: UserListIndexerLogsService) {}
 
-  @Get('list-indexer-logs')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'list-indexer-logs', HttpStatus.OK, {
     summary: 'Monitor what the indexer is doing for your library',
     description: [
       'Retrieves the most recent indexer logs based on any provided query parameters.',
       `Logs are held in memory and will clear whenever the server restarts.`,
       'The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.',
       'If you have multiple users it may be common for this to be empty as the capacity is filled by other users.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
     ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Successful response with an array of data and pagination information.',
-    type: UserListIndexerLogsResponseDto,
-  })
-  @ApiBadRequestResponse({
-    type: UserListIndexerLogsBadRequestResponseDto,
-  })
-  @ApiNotFoundResponse({
-    type: UserListIndexerLogsNotFoundResponseDto,
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.OK]: UserListIndexerLogsResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserListIndexerLogsBadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: UserListIndexerLogsNotFoundResponseDto,
+    },
   })
   async get(
     @User() user: AccountEntity,

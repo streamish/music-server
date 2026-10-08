@@ -1,15 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import {
-  FILTERED_DATA_DESCRIPTION,
-  JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-  JWT_BEARER_AUTH,
-  PAGINATED_DATA_DESCRIPTION,
-  TRACK_INFORMATION_EXCLUDED,
-  USER_APIS,
-} from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Get, HttpStatus, Query } from '@nestjs/common';
 import { User } from 'src/api/user.decorator';
 import {
   UserListAlbumAssociationsBadRequestResponseDto,
@@ -17,36 +8,23 @@ import {
   UserListAlbumAssociationsResponseDto,
 } from './list-album-associations.dto';
 import { UserListAlbumAssociationsService } from './list-album-associations.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserListAlbumAssociationsController {
   constructor(private readonly listAlbumAssociationsService: UserListAlbumAssociationsService) {}
 
-  @Get('list-album-associations')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'list-album-associations', HttpStatus.OK, {
     summary: 'List associations credited to albums',
-    description: [
-      `Associations are artists attributed directly to an album and the composers and genres attributed to tracks.`,
-      FILTERED_DATA_DESCRIPTION,
-      TRACK_INFORMATION_EXCLUDED,
-      PAGINATED_DATA_DESCRIPTION,
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
-  })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
-  @ApiOkResponse({
-    description: 'Successful response with an array of data and pagination information.',
-    type: UserListAlbumAssociationsResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Failure response with error information relating to missing or invalid parameters.',
-    type: UserListAlbumAssociationsBadRequestResponseDto,
+    description:
+      'Associations are artists attributed directly to an album and the composers and genres attributed to tracks.',
+    isAuthenticated: true,
+    isPaginated: true,
+    isFiltered: true,
+    excludeTrackInformation: true,
+    responses: {
+      [HttpStatus.OK]: UserListAlbumAssociationsResponseDto,
+      [HttpStatus.BAD_REQUEST]: UserListAlbumAssociationsBadRequestResponseDto,
+    },
   })
   async get(
     @User() user: AccountEntity,

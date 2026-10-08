@@ -1,20 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiHeader,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  getSchemaPath,
-} from '@nestjs/swagger';
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
-import {
-  SYNOLOGY_AUDIOSTATION_APIS,
-  SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-  SYNOLOGY_COOKIE_HEADER,
-} from 'src/constants/swagger';
-import { SynologyGuard } from './synology.guard';
+import { Body, HttpStatus, Logger, Post } from '@nestjs/common';
+import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import {
   SynologyRadioAddOrUpdateItemBodyDto,
   SynologyRadioAddUserStationBodyDto,
@@ -27,72 +13,31 @@ import { SynologySuccessResponseDto } from './dtos/synology.dto';
 import { User } from '../user.decorator';
 import { plainToInstance } from 'class-transformer';
 
-@Controller()
-@ApiTags(SYNOLOGY_AUDIOSTATION_APIS)
-@UseGuards(SynologyGuard)
+@SynologyController()
 export class SynologyRadioController {
   private readonly logger: Logger = new Logger(SynologyRadioController.name);
 
   constructor(private readonly radioService: SynologyRadioService) {}
 
-  /**
-   * SHOUTcast radio integration is a feature of Synology AudioStation that allows users
-   * to listen to SHOUTcast radio stations directly from the AudioStation interface. This
-   * endpoint provides information about available SHOUTcast genres and stations.
-   * @returns The JSON response containing the API information.
-   */
-  @Post('/webapi/AudioStation/radio.cgi')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
+  @SynologyApiEndpoint(Post, '/AudioStation/radio.cgi', HttpStatus.OK, {
     summary: 'Manages SHOUTcast radio integration',
     description: [
-      // eslint-disable-next-line max-len
-      `SHOUTcast radio integration is a feature of Synology AudioStation that allows users to listen to SHOUTcast radio stations directly from the AudioStation interface. This endpoint provides information about available SHOUTcast genres and stations`,
-      `The genres are a hard-coded list.  The stations are retrieved from the SHOUTcast API and briefly cached.`,
-      `The integration does not require a SHOUTcast account, but it does require an active internet connection.`,
-      SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n\n'),
-  })
-  @ApiHeader(SYNOLOGY_COOKIE_HEADER)
-  @ApiOkResponse({
-    description: 'Returns a list of genres found in the music library, or a hard-coded list of default genres',
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyRadioItemResponseDto),
-        },
-        {
-          $ref: getSchemaPath(SynologySuccessResponseDto),
-        },
-      ],
+      'SHOUTcast radio integration is a feature of Synology AudioStation that allows users to stream radio stations.',
+      'This endpoint provides information about available SHOUTcast genres and stations.',
+      'The genres are a hard-coded list.',
+      'The stations are retrieved from the SHOUTcast API and briefly cached.',
+      'The integration does not require a SHOUTcast account, but it does require an active internet connection.',
+    ].join(' '),
+    responses: {
+      [HttpStatus.OK]: [SynologyRadioItemResponseDto, SynologySuccessResponseDto],
     },
+    bodyModels: [
+      SynologyRadioContainerListBodyDto,
+      SynologyRadioItemListBodyDto,
+      SynologyRadioAddOrUpdateItemBodyDto,
+      SynologyRadioAddUserStationBodyDto,
+    ],
   })
-  @ApiBody({
-    schema: {
-      oneOf: [
-        {
-          $ref: getSchemaPath(SynologyRadioContainerListBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyRadioItemListBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyRadioAddOrUpdateItemBodyDto),
-        },
-        {
-          $ref: getSchemaPath(SynologyRadioAddUserStationBodyDto),
-        },
-      ],
-    },
-  })
-  @ApiExtraModels(
-    SynologyRadioContainerListBodyDto,
-    SynologyRadioItemListBodyDto,
-    SynologyRadioAddOrUpdateItemBodyDto,
-    SynologyRadioAddUserStationBodyDto,
-    SynologyRadioItemResponseDto,
-    SynologySuccessResponseDto,
-  )
   async routeRequests(
     @User() user: AccountEntity,
     @Body()

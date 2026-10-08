@@ -1,45 +1,29 @@
-import { AllowedRoles, RoleGuard } from 'src/api/role.guard';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiInternalServerErrorResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { ApiInternalServerErrorResponse, ApiResponse } from '@nestjs/swagger';
 import { BadRequestResponseDto, InternalServerErrorResponseDto, SuccessResponseDto } from 'src/api/response.dto';
-import { Controller, Delete, Logger, UseGuards } from '@nestjs/common';
-import { JWT_AUTHENTICATED_REQUEST_DESCRIPTION, JWT_BEARER_AUTH, USER_APIS } from 'src/constants/swagger';
+import { Delete, HttpStatus, Logger } from '@nestjs/common';
 import { Session } from 'src/api/session.decorator';
 import { SessionEntity } from 'src/database/entities';
 import { UserEndSessionService } from './end-session.service';
-import { UserRoleEnum } from 'src/types/enums';
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserEndSessionController {
   private readonly logger: Logger = new Logger(UserEndSessionController.name);
 
   constructor(private readonly endSessionService: UserEndSessionService) {}
 
-  @Delete('end-session')
-  @ApiOperation({
+  @ApiEndpoint(Delete, 'end-session', HttpStatus.OK, {
     summary: 'Terminate the session',
-    description: [
-      'Ends a user session and invalidates the JWT token provided in the `Authorization` header.',
-      JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
-    ].join('\n'),
+    description: ['Ends a user session and invalidates the JWT token provided in the `Authorization` header.'].join(
+      '\n',
+    ),
+    isAuthenticated: true,
+    responses: {
+      [HttpStatus.BAD_REQUEST]: BadRequestResponseDto,
+    },
   })
-  @AllowedRoles([UserRoleEnum.USER, UserRoleEnum.ADMIN])
-  @ApiBearerAuth(JWT_BEARER_AUTH)
   @ApiResponse({
     type: SuccessResponseDto,
-  })
-  @ApiBadRequestResponse({
-    type: BadRequestResponseDto,
   })
   @ApiInternalServerErrorResponse({
     type: InternalServerErrorResponseDto,

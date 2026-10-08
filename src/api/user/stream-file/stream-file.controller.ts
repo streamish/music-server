@@ -1,7 +1,6 @@
-import { AUDIO_MIME_TYPES, BINARY_RESPONSE, COOKIE_TOKEN_HEADER, USER_APIS } from 'src/constants/swagger';
-import { ApiHeader, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Query, Req, Res, StreamableFile, UseGuards } from '@nestjs/common';
-import { RoleGuard } from 'src/api/role.guard';
+import { AUDIO_MIME_TYPES, BINARY_RESPONSE } from 'src/constants/swagger';
+import { ApiEndpoint, UserController } from 'src/api/api.decorator';
+import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { UserStreamFileNotFoundResponseDto, UserStreamFileQueryDto } from './stream-file.dto';
 import { UserStreamFileService } from './stream-file.service';
 import { getAudioContentType } from 'src/utils/strings';
@@ -10,29 +9,24 @@ import type { Request, Response } from 'express';
 
 const emptyBuffer = Buffer.alloc(0);
 
-@Controller({
-  path: '/api/user',
-})
-@ApiTags(USER_APIS)
-@UseGuards(RoleGuard)
+@UserController()
 export class UserStreamFileController {
   constructor(private readonly streamFileService: UserStreamFileService) {}
 
-  @Get('stream-file')
-  @ApiOperation({
+  @ApiEndpoint(Get, 'stream-file', HttpStatus.OK, {
     summary: 'Serves audio files',
     description: [
-      // eslint-disable-next-line max-len
-      `Downloads audio files from the music library to the client.  This is used to stream audio files for playback or to download for offline usage.  The audio files are streamed in their original format and the client is responsible for decoding and playing the audio.`,
-    ].join('\n\n'),
+      `Downloads audio files from the music library to the client.',
+      'This is used to stream audio files for playback or to download for offline usage.',
+      'The audio files are streamed in their original format and the client is responsible for decoding and playback.`,
+    ].join(' '),
+    isAuthenticated: true,
+    produces: [...AUDIO_MIME_TYPES],
+    responses: {
+      [HttpStatus.OK]: BINARY_RESPONSE,
+      [HttpStatus.NOT_FOUND]: UserStreamFileNotFoundResponseDto,
+    },
   })
-  @ApiHeader(COOKIE_TOKEN_HEADER)
-  @ApiOkResponse(BINARY_RESPONSE)
-  @ApiNotFoundResponse({
-    description: 'The requested file was not found',
-    type: UserStreamFileNotFoundResponseDto,
-  })
-  @ApiProduces(...AUDIO_MIME_TYPES)
   async get(
     @Query() query: UserStreamFileQueryDto,
     @Req() request: Request,
