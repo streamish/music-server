@@ -426,16 +426,8 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /**
-     * List all sources of music for the user's account
-     * @description Retrieves a list of all root paths associated with the user's account, eg `/home/<username>/music`.',
-     *           'These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
-     */
-    get: operations['ApiRootPathsController_listUserRootPaths'];
+    /** @description `GET` request to `/api/list-root-paths` */
+    get: operations['ApiRootPathsController_listRootPaths'];
     put?: never;
     post?: never;
     delete?: never;
@@ -519,8 +511,16 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-root-paths` */
-    get: operations['ApiRootPathsController_listRootPaths'];
+    /**
+     * List all root paths for all or specific users
+     * @description Retrieves a list of all root paths optionally associated with a user, eg `/home/<username>/music`.',
+     *           'These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    get: operations['ApiRootPathsController_listUserRootPaths'];
     put?: never;
     post?: never;
     delete?: never;
@@ -2569,6 +2569,44 @@ export type components = {
        * @default invalid-root-path-id-error
        */
       message: components['schemas']['ApiRootPathsDeleteUserRootPathNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsListUserRootPathsBadRequestErrors: ApiRootPathsListUserRootPathsBadRequestErrors;
+    ApiRootPathsListUserRootPathsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiRootPathsListUserRootPathsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRootPathsListUserRootPathsNotFoundErrors: ApiRootPathsListUserRootPathsNotFoundErrors;
+    ApiRootPathsListUserRootPathsNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiRootPathsListUserRootPathsNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -8636,7 +8674,7 @@ export interface operations {
       };
     };
   };
-  ApiRootPathsController_listUserRootPaths: {
+  ApiRootPathsController_listRootPaths: {
     parameters: {
       query?: never;
       header?: never;
@@ -8973,9 +9011,12 @@ export interface operations {
       };
     };
   };
-  ApiRootPathsController_listRootPaths: {
+  ApiRootPathsController_listUserRootPaths: {
     parameters: {
-      query?: never;
+      query?: {
+        /** @description The database ID of the resource */
+        id?: number;
+      };
       header?: never;
       path?: never;
       cookie?: never;
@@ -8995,7 +9036,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['ApiRootPathsListUserRootPathsBadRequestResponse'];
         };
       };
       403: {
@@ -9004,6 +9045,14 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsListUserRootPathsNotFoundResponse'];
         };
       };
       500: {
@@ -12126,6 +12175,13 @@ export enum ApiRootPathsDeleteRootPathNotFoundErrors {
 }
 export enum ApiRootPathsDeleteUserRootPathNotFoundErrors {
   invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
+export enum ApiRootPathsListUserRootPathsBadRequestErrors {
+  account_not_found_error = 'account-not-found-error',
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
+export enum ApiRootPathsListUserRootPathsNotFoundErrors {
+  account_not_found_error = 'account-not-found-error',
 }
 export enum ApiRootPathsPatchBadRequestErrors {
   root_path_does_not_exist_error = 'root-path-does-not-exist-error',

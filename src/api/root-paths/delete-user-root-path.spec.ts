@@ -8,15 +8,20 @@ import {
 } from '../../test-helper';
 import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { join } from 'node:path';
-import { mkdirSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 
 describe('/api/delete-user-root-path', () => {
   const deleteAccounts: number[] = [];
+  let accountId: number;
   let adminApi: AuthenticatedApiClient;
 
   beforeAll(async () => {
+    const newUsername = `delete-root-pathj-user-${Date.now()}`;
+    const account = await testApi.duplicateAccount(USER_USERNAME, newUsername);
+    accountId = account.data?.account.accountId || 0;
+    if (!accountId) {
+      throw new Error(`Failed to create test account`);
+    }
+    deleteAccounts.push(accountId);
     adminApi = await createAuthenticatedApi();
   });
 
@@ -24,31 +29,24 @@ describe('/api/delete-user-root-path', () => {
     await testApi.deleteAccounts(deleteAccounts);
   });
 
-  async function createRootPath(accountId: number, rootPath: string) {
-    return adminApi.POST('/api/create-user-root-path', {
-      body: {
-        rootPath,
-      },
-      params: {
-        query: {
-          id: accountId,
-        },
-      },
-    });
-  }
-
-  async function deleteRootPath(pathId: number) {
+  async function deleteRootPath(rootPathId: number) {
     return adminApi.DELETE('/api/delete-user-root-path', {
       params: {
         query: {
-          id: pathId,
+          id: rootPathId,
         },
       },
     });
   }
 
-  async function listRootPaths() {
-    return adminApi.GET('/api/list-root-paths', {});
+  async function listRootPaths(id: number) {
+    return adminApi.GET('/api/list-user-root-paths', {
+      params: {
+        query: {
+          id,
+        },
+      },
+    });
   }
 
   describe('authorized access', () => {
@@ -85,13 +83,8 @@ describe('/api/delete-user-root-path', () => {
 
   describe('success', () => {
     it('should delete a root path', async () => {
-      const originalRootPath = join(tmpdir(), `test-delete-user-root-path-${Date.now()}`);
-      mkdirSync(originalRootPath, { recursive: true });
-      const account = await testApi.createAccount();
-      const { error: error2 } = await createRootPath(account.id, originalRootPath);
-      expect(error2).toBeUndefined();
-      const rootPathList = await listRootPaths();
-      const rootPath = rootPathList.data?.rootPaths.find((path) => path.rootPath === originalRootPath);
+      const rootPathList = await listRootPaths(accountId);
+      const rootPath = rootPathList.data?.rootPaths[0];
       if (!rootPath) {
         throw new Error('Root path not found after creation');
       }
@@ -100,10 +93,9 @@ describe('/api/delete-user-root-path', () => {
       expect(error3).toBeUndefined();
       expect(data?.success).toBe(true);
       // verify it
-      const updatedRootPathList = await listRootPaths();
-      const deletedRootPath = updatedRootPathList.data?.rootPaths.find((path) => path.rootPath === originalRootPath);
+      const updatedRootPathList = await listRootPaths(accountId);
+      const deletedRootPath = updatedRootPathList.data?.rootPaths.find((path) => path.id === rootPath.id);
       expect(deletedRootPath).toBeUndefined();
-      deleteAccounts.push(account.id);
     });
   });
 });

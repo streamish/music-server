@@ -105,10 +105,18 @@ export class ApiRootPathsService {
   }
 
   /**
-   * Lists all root paths with associated user
-   * @returns {Promise<RootPathWithUserDto[]>} Array of root paths.
+   * Lists all root paths optionally filtered by any user
+   * @param {number} accountId The authenticated user ID
+   * @throws {NotFoundException} If the specified album is not found
+   * @returns {Promise<RootPathWithUserDto[]>} Array of root paths with accounts.
    */
-  async listRootPaths(): Promise<RootPathWithUserDto[]> {
+  async listUserRootPaths(accountId?: number): Promise<RootPathWithUserDto[]> {
+    if (accountId) {
+      const account = await this.accountEntity.findByPk(accountId, { attributes: ['id'] });
+      if (!account) {
+        throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
+      }
+    }
     const rootPaths = await this.rootPathEntity.findAll({
       attributes: [
         'id',
@@ -133,20 +141,28 @@ export class ApiRootPathsService {
           attributes: ['username'],
         },
       ],
+      where: {
+        ...(accountId ? { accountId } : {}),
+      },
     });
     return rootPaths.map((rootPath) => rootPathWithUserToRow(rootPath.get({ plain: true }) as PathWithCounts));
   }
 
   /**
    * Lists all root paths for the specified user.
+   * @param {number} accountId The authenticated user ID
+   * @throws {NotFoundException} If the specified album is not found
    * @returns {Promise<RootPathWithUserDto[]>} Array of root paths.
    */
-  async listUserRootPaths(accountId: number): Promise<RootPathDto[]> {
+  async listRootPaths(accountId: number): Promise<RootPathDto[]> {
+    const account = await this.accountEntity.findByPk(accountId, { attributes: ['id'] });
+    if (!account) {
+      throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
+    }
     const rootPaths = await this.rootPathEntity.findAll({
       attributes: [
         'id',
         'rootPath',
-        'accountId',
         'createdAt',
         'updatedAt',
         [

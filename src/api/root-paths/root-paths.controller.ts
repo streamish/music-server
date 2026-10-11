@@ -10,6 +10,7 @@ import {
   RootPathsWithUserResponseDto,
   UpdateRootPathBodyDto,
   UpdateRootPathQueryDto,
+  UserRootPathQueryDto,
 } from './dtos';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { SuccessResponseDto, getValidationMessages } from 'src/api/response.dto';
@@ -133,31 +134,11 @@ export class ApiRootPathsController {
    * `GET` request to `/api/list-root-paths`
    * @returns
    */
-  @ApiEndpoint(Get, 'list-user-root-paths', HttpStatus.OK, {
-    summary: 'List all sources of music for a or all users',
+  @ApiEndpoint(Get, 'list-root-paths', HttpStatus.OK, {
+    summary: 'List all root paths of the authenticated user',
     description: [
       'Retrieves a list of all root paths for all user accounts, eg `/home/<username>/music`.',
       'These paths are indexed periodically or when files are changed to build the music library.',
-      'The indexer works from a single queue so the more root paths the longer the delay between scanning.',
-    ].join(' '),
-    allowAdministrator: true,
-    responses: {
-      [HttpStatus.OK]: RootPathsWithUserResponseDto,
-    },
-  })
-  async listRootPaths(): Promise<RootPathsWithUserResponseDto> {
-    const rootPaths = await this.rootPathsService.listRootPaths();
-    return {
-      success: true,
-      rootPaths,
-    };
-  }
-
-  @ApiEndpoint(Get, 'list-root-paths', HttpStatus.OK, {
-    summary: `List all sources of music for the user's account`,
-    description: [
-      `Retrieves a list of all root paths associated with the user's account, eg \`/home/<username>/music\`.',
-      'These paths are indexed periodically or when files are changed to build the music library.`,
       'The indexer works from a single queue so the more root paths the longer the delay between scanning.',
     ].join(' '),
     allowAdministrator: true,
@@ -166,8 +147,30 @@ export class ApiRootPathsController {
       [HttpStatus.OK]: RootPathsResponseDto,
     },
   })
-  async listUserRootPaths(@User() user: AccountEntity): Promise<RootPathsResponseDto> {
-    const rootPaths = await this.rootPathsService.listUserRootPaths(user.id);
+  async listRootPaths(@User() user: AccountEntity): Promise<RootPathsResponseDto> {
+    const rootPaths = await this.rootPathsService.listRootPaths(user.id);
+    return {
+      success: true,
+      rootPaths,
+    };
+  }
+
+  @ApiEndpoint(Get, 'list-user-root-paths', HttpStatus.OK, {
+    summary: 'List all root paths for all or specific users',
+    description: [
+      `Retrieves a list of all root paths optionally associated with a user, eg \`/home/<username>/music\`.',
+      'These paths are indexed periodically or when files are changed to build the music library.`,
+      'The indexer works from a single queue so the more root paths the longer the delay between scanning.',
+    ].join(' '),
+    allowAdministrator: true,
+    responses: {
+      [HttpStatus.OK]: RootPathsWithUserResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR, ...getValidationMessages(UserRootPathQueryDto)],
+    },
+  })
+  async listUserRootPaths(@Query() query: UserRootPathQueryDto): Promise<RootPathsWithUserResponseDto> {
+    const rootPaths = await this.rootPathsService.listUserRootPaths(query.id);
     return {
       rootPaths,
       success: true,

@@ -1,7 +1,11 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ErrorCodes } from 'src/constants/error-codes';
+import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { SuccessResponseDto } from 'src/api/response.dto';
+
+export class UserRootPathQueryDto extends PartialType(IdQueryDtoFactory(ErrorCodes.INVALID_ROOT_PATH_ID_ERROR)) {}
 
 export class RootPathDto {
   /**
