@@ -1,19 +1,28 @@
-import { AdminModule } from './admin/admin.module';
-import { GuestModule } from './guest/guest.module';
+import { ApiAccountsModule } from './accounts/accounts.module';
+import { ApiAlbumsModule } from './media/albums/albums.module';
+import { ApiCompatibilityModule } from './compatibility/compatibility.module';
+import { ApiHealthcheckModule } from './healthcheck/healthcheck.module';
+import { ApiIndexerModule } from './indexer/indexer.module';
+import { ApiMediaModule } from './media/media.module';
+import { ApiRootPathsModule } from './root-paths/root-paths.module';
+import { ApiSessionsModule } from './sessions/sessions.module';
+import { ApiTestModule } from './test/test.module';
 import { Module } from '@nestjs/common';
-import { QnapModule } from './qnap-musicstation/qnap.module';
-import { SynologyModule } from './synology-audiostation/synology.module';
-import { TestModule } from './test/test.module';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    GuestModule,
-    UserModule,
-    AdminModule,
-    ...(process.env.QNAP_MUSICSTATION_ENABLED ? [QnapModule] : []),
-    ...(process.env.SYNOLOGY_AUDIOSTATION_ENABLED ? [SynologyModule] : []),
-    ...(process.env.NODE_ENV === 'test' ? [TestModule] : []),
+    ApiAccountsModule,
+    ApiCompatibilityModule,
+    ApiAlbumsModule,
+    ApiHealthcheckModule,
+    ApiIndexerModule,
+    ApiMediaModule,
+    ApiRootPathsModule,
+    ApiSessionsModule,
+    /**
+     * Helper endpoints for test suites
+     */
+    ...(process.env.NODE_ENV === 'test' ? [ApiTestModule] : []),
   ],
 })
 export class ApiModule {}

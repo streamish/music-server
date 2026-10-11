@@ -612,7 +612,6 @@ export class LibraryService {
    * @param {number} accountId The ID of the account
    * @param {number} albumId The ID of the album to set as favorite
    * @throws {NotFoundException} If the specified album is not found
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
    */
   async setAlbumFavorite(accountId: number, albumId: number): Promise<void> {
     const album = await this.albumEntity.findOne({
@@ -637,7 +636,6 @@ export class LibraryService {
    * @param {number} associationId The ID of the association to set as favorite
    * @param {AssociationTypeEnum} associationType The type of the association
    * @throws {NotFoundException} If the specified association is not found
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
    */
   async setAssociationFavorite(
     accountId: number,
@@ -666,7 +664,6 @@ export class LibraryService {
    * @param {number} accountId The ID of the account
    * @param {string} folderPath The full path of the folder relative to root dir, eg `/Elvis Presley`
    * @throws {NotFoundException} If the specified folder is not found
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
    */
   async setFolderFavorite(accountId: number, folderPath: string): Promise<void> {
     const folderStructure = await this.listFolders(accountId);
@@ -685,7 +682,6 @@ export class LibraryService {
    * @param {number} accountId The ID of the account
    * @param {number} trackId The ID of the track to set as favorite
    * @throws {NotFoundException} If the specified track is not found
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
    */
   async setTrackFavorite(accountId: number, trackId: number): Promise<void> {
     const track = await this.trackEntity.findOne({

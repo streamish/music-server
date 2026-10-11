@@ -101,7 +101,7 @@ export class RoleGuard implements CanActivate {
       return true;
     }
     // enforce the role requirement for protected route
-    if (request.url.startsWith('/api/admin/')) {
+    if (request.url.startsWith('/api')) {
       if (!requiredRoles.includes(UserRoleEnum.ADMIN)) {
         throw new ForbiddenException(ErrorCodes.FORBIDDEN_ERROR);
       }

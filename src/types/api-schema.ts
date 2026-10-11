@@ -4,7 +4,41 @@
  */
 
 export type paths = {
-  '/api/admin/create-account': {
+  '/api/album-cover-image': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/album-cover-image` */
+    get: operations['ApiCoverImageController_getAlbumCover'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/association-cover-image': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/association-cover-image` */
+    get: operations['ApiCoverImageController_getAssociationCover'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/create-account': {
     parameters: {
       query?: never;
       header?: never;
@@ -21,14 +55,31 @@ export type paths = {
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    post: operations['AdminCreateAccountController_post'];
+    post: operations['ApiAccountsController_createAccount'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  '/api/admin/create-root-path': {
+  '/api/create-root-path': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` request to `/api/create-root-path` */
+    post: operations['ApiRootPathsController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/create-session': {
     parameters: {
       query?: never;
       header?: never;
@@ -38,21 +89,34 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Add new root path to account
-     * @description Add a library root path to an account. This will add media in the path when the indexer reaches it.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     * Sign in
+     * @description Creates a user session and returns a JWT token used for authenticated API requests. The session can be lasting or temporary. Sessions are locked to the APIs that created them, these tokens cannot access QNAP or Synology APIs.
      */
-    post: operations['AdminCreateRootPathController_post'];
+    post: operations['ApiSessionsController_createSession'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  '/api/admin/delete-account': {
+  '/api/create-user-root-path': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` request to `/api/create-user-root-path` */
+    post: operations['ApiRootPathsController_createRootPath'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-account': {
     parameters: {
       query?: never;
       header?: never;
@@ -73,10 +137,78 @@ export type paths = {
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    patch: operations['AdminDeleteAccountController_delete'];
+    patch: operations['ApiAccountsController_deleteAccount'];
     trace?: never;
   };
-  '/api/admin/delete-root-path': {
+  '/api/delete-custom-data': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to `/api/delete-custom-data` */
+    delete: operations['ApiCustomDataController_deleteCustomData'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to `/api/delete-favorite` */
+    delete: operations['ApiFavoritesController_deleteFavorite'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-root-path': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to `/api/delete-root-path` */
+    delete: operations['ApiRootPathsController_deleteRootPath'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-user-root-path': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to `/api/delete-user-root-path` */
+    delete: operations['ApiRootPathsController_deleteUserRootPath'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/end-session': {
     parameters: {
       query?: never;
       header?: never;
@@ -87,20 +219,20 @@ export type paths = {
     put?: never;
     post?: never;
     /**
-     * Delete a root path
-     * @description Deletes the specified root path for a user and immediately deletes all associated information in the database.
+     * Terminate the session
+     * @description Ends a user session and invalidates the JWT token provided in the `Authorization` header.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    delete: operations['AdminDeleteRootPathController_delete'];
+    delete: operations['ApiSessionsController_delete'];
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  '/api/admin/indexer-configuration': {
+  '/api/folder-structure': {
     parameters: {
       query?: never;
       header?: never;
@@ -108,14 +240,14 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Get the indexer configuration
-     * @description Retrieves the current indexer configuration for the platform.  This is currently limited to "on" or "off".
+     * Retrieve library folder structure
+     * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents. This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    get: operations['AdminIndexerConfigurationController_get'];
+    get: operations['ApiFoldersController_getTreeStructure'];
     put?: never;
     post?: never;
     delete?: never;
@@ -124,7 +256,44 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/admin/list-accounts': {
+  '/api/healthcheck': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Healthcheck
+     * @description Checks the health status of the server.
+     */
+    get: operations['ApiHealthcheckController_healthcheck'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/indexer-configuration': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` requests to `/api/indexer-configuration` */
+    get: operations['ApiIndexerController_indexerConfiguration'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-accounts': {
     parameters: {
       query?: never;
       header?: never;
@@ -139,7 +308,7 @@ export type paths = {
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    get: operations['AdminListAccountsController_get'];
+    get: operations['ApiAccountsController_getAccounts'];
     put?: never;
     post?: never;
     delete?: never;
@@ -148,7 +317,194 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/admin/list-indexer-logs': {
+  '/api/list-album-associations': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-album-assocations` */
+    get: operations['ApiAssociationsController_listAssociations'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-album-associations-with-tracks': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-album-assocations-with-tracks` */
+    get: operations['ApiAssociationsController_listAssociationsWithTracks'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-albums': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to /api/list-albums */
+    get: operations['ApiAlbumsController_listAlbums'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-albums-with-tracks': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to /api/list-albums-with-tracks */
+    get: operations['ApiAlbumsController_listAlbumsWithTracks'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-favorites': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-favorites` */
+    get: operations['ApiFavoritesController_listFavorites'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-indexer-logs': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` requests to `/api/indexer-logs` */
+    get: operations['ApiIndexerController_listIndexerLogsByUser'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-root-paths': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-root-paths` */
+    get: operations['ApiRootPathsController_listRootPaths'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-track-associations': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-track-assocations` */
+    get: operations['ApiAssociationsController_listTrackAssociations'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-track-associations-with-tracks': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-track-assocations-with-tracks` */
+    get: operations['ApiAssociationsController_listTrackAssociationsWithTracks'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-tracks': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-tracks` */
+    get: operations['ApiTracksController_listTracks'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-user-indexer-logs': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` requests to `/api/list-user-indexer-logs` */
+    get: operations['ApiIndexerController_listIndexerLogs'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-user-root-paths': {
     parameters: {
       query?: never;
       header?: never;
@@ -156,14 +512,15 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Monitor what the indexer is doing for all libraries
-     * @description Retrieves the most recent indexer logs based on any provided query parameters. Logs are held in memory and will clear whenever the server restarts. The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
+     * List all root paths for all or specific users
+     * @description Retrieves a list of all root paths optionally associated with a user, eg `/home/<username>/music`.',
+     *           'These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    get: operations['AdminListIndexerLogsController_get'];
+    get: operations['ApiRootPathsController_listUserRootPaths'];
     put?: never;
     post?: never;
     delete?: never;
@@ -172,31 +529,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/admin/list-root-paths': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List all sources of music for all users
-     * @description Retrieves a list of all root paths for all user accounts, eg `/home/<username>/music`. These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
-     */
-    get: operations['AdminListRootPathsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/admin/regenerate-master-session-key': {
+  '/api/regenerate-master-session-key': {
     parameters: {
       query?: never;
       header?: never;
@@ -207,20 +540,20 @@ export type paths = {
     put?: never;
     /**
      * Invalidate all user sessions
-     * @description Regenerates the master session key for the entire platform, invalidating all sessions for all users.
+     * @description Regenerates the master session key for the entire platform, used to sign all session tokens. When a new master key is generated every single session immediately becomes invalid.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    post: operations['AdminRegenerateMasterSessionKeyController_post'];
+    post: operations['ApiSessionsController_regenerateMasterSessionKey'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  '/api/admin/regenerate-user-session-key': {
+  '/api/regenerate-session-key': {
     parameters: {
       query?: never;
       header?: never;
@@ -231,20 +564,44 @@ export type paths = {
     put?: never;
     /**
      * Invalidate a user's sessions
-     * @description Regenerates the master session key for a specific user, invalidating all sessions for that user.
+     * @description Regenerates the session key for the user, used to sign their session tokens. When a new key is generated all sessions of the user immediately invalidate, including their current session. The user will need to authenticate again to continue accessing protected APIs.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    post: operations['AdminRegenerateUserSessionKeyController_post'];
+    post: operations['ApiSessionsController_regenerateSessionKey'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  '/api/admin/reset-user-password': {
+  '/api/regenerate-user-session-key': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Invalidate a user's sessions
+     * @description Regenerates the session key for the specified user, used to sign their session tokens. When a new key is generated all sessions of the user immediately invalidate, including their current session. The user will need to authenticate again to continue accessing protected APIs.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    post: operations['ApiSessionsController_regenerateUserSessionKey'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/reset-user-password': {
     parameters: {
       query?: never;
       header?: never;
@@ -261,14 +618,48 @@ export type paths = {
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    post: operations['AdminResetUserPasswordController_post'];
+    post: operations['ApiAccountsController_resetUserPassword'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  '/api/admin/set-indexer-status': {
+  '/api/retrieve-album': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/retrieve-album` */
+    get: operations['ApiAlbumsController_retrieveAlbum'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/retrieve-association': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/retrieve-association` */
+    get: operations['ApiAssociationsController_retrieveAssociation'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/set-album-custom-data': {
     parameters: {
       query?: never;
       header?: never;
@@ -281,18 +672,69 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
+    /** @description `PATCH` request to /api/set-album-custom-data` */
+    patch: operations['ApiCustomDataController_setAlbumData'];
+    trace?: never;
+  };
+  '/api/set-album-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** @description `PUT` request to `/api/set-album-favorite` */
+    put: operations['ApiFavoritesController_setAlbumFavorite'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/set-album-rating': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
     /**
-     * Set the indexer status
-     * @description Enables or disables the indexer to allow moving root paths or to preserve system resources.
+     * Sets or unsets ratings for an album
+     * @description Sets or unsets a 1-5 star rating for the tracks within an album. If a value of 0 is specified the album rating is reset to `NULL`. Album ratings are applied to each track within the album, overriding any prior value.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    patch: operations['AdminSetIndexerStatusController_patch'];
+    put: operations['ApiRatingsController_setAlbumRating'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
-  '/api/admin/update-root-path': {
+  '/api/set-association-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** @description `PUT` request to `/api/set-association-favorite` */
+    put: operations['ApiFavoritesController_setAssociationFavorite'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/set-association-name': {
     parameters: {
       query?: never;
       header?: never;
@@ -305,18 +747,264 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
+    /** @description `PATCH` request to /api/set-association-name` */
+    patch: operations['ApiCustomDataController_setArtistName'];
+    trace?: never;
+  };
+  '/api/set-custom-data': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** @description `PATCH` reuquest to `/api/set-custom-data` */
+    put: operations['ApiCustomDataController_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/set-folder-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** @description `PUT` request to `/api/set-folder-favorite` */
+    put: operations['ApiFavoritesController_setFolderFavorite'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/set-indexer-status': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` requests to `/api/set-indexer-status` */
+    patch: operations['ApiIndexerController_setStatus'];
+    trace?: never;
+  };
+  '/api/set-track-custom-data': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` reuquest to `/api/set-track-custom-data` */
+    patch: operations['ApiCustomDataController_patch'];
+    trace?: never;
+  };
+  '/api/set-track-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** @description `PUT` request to `/api/set-track-favorite` */
+    put: operations['ApiFavoritesController_setTrackFavorite'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/set-track-rating': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
     /**
-     * Update a root path
-     * @description Updates the specified root path with a new path.
+     * Sets or unsets rating for a track
+     * @description Sets or unsets a 1-5 star rating for a single track. If a value of 0 is specified the track rating is reset to `NULL`.
      *
      *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    patch: operations['AdminUpdateRootPathController_patch'];
+    put: operations['ApiRatingsController_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
-  '/api/admin/update-user-roles': {
+  '/api/stream-track': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/stream-track` */
+    get: operations['ApiTracksController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/create-test-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` reuqest to `/api/test/create-test-account` */
+    post: operations['ApiTestController_createTestAccount'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/delete-test-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to /api/test/delete-test-account` */
+    delete: operations['ApiTestController_deleeteTestAccount'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/duplicate-test-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` request to `/api/test/duplicate-test-account` */
+    post: operations['ApiTestController_duplicateTestAccount'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/list-test-accounts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` requests to `/api/test/list-test-accounts` */
+    get: operations['ApiTestController_listTestAccounts'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/test/retrieve-test-account': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/test/retrieve-test-account` */
+    get: operations['ApiTestController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/update-password': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Reset password
+     * @description Resets the user's password to a new value and invalidates all previous sessions.
+     *     The user will need to authenticate again to continue accessing protected APIs.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    post: operations['ApiAccountsController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/update-root-path': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` request to `/api/update-root-path` */
+    patch: operations['ApiRootPathsController_patch'];
+    trace?: never;
+  };
+  '/api/update-user-roles': {
     parameters: {
       query?: never;
       header?: never;
@@ -337,985 +1025,7 @@ export type paths = {
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    patch: operations['AdminUpdateUserRolesController_patch'];
-    trace?: never;
-  };
-  '/api/guest/create-session': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Sign in
-     * @description Creates a user session and returns a JWT token used for authenticated API requests.
-     *     The session can be lasting or temporary.
-     *     Sessions are locked to the APIs that created them, these tokens cannot access QNAP or Synology APIs.
-     */
-    post: operations['GuestCreateSessionController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/guest/healthcheck': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Healthcheck
-     * @description Checks the health status of the server.
-     */
-    get: operations['GuestHealthcheckController_healthcheck'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/test/create-account': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Create account
-     * @description Creates a new account with no root paths or content
-     */
-    post: operations['TestCreateAccountController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/test/delete-account': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * Delete account
-     * @description Deletes an existing user account.
-     *     All files associated with the account will be removed.
-     *     The account will be permanently deleted.
-     */
-    delete: operations['TestDeleteAccountController_delete'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/test/duplicate-account': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Duplicate account
-     * @description Duplicates an existing user account with a new username.
-     *     All files associated with the original account will be copied to the new account.
-     *     The new account will be re-indexed after duplication.
-     */
-    post: operations['TestDuplicateAccountController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/test/list-accounts': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List accounts
-     * @description Retrieves a list of all user accounts.
-     */
-    get: operations['TestListAccountsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/test/retrieve-account': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Delete account
-     * @description Deletes an existing user account.
-     *     All files associated with the account will be removed.
-     *     The account will be permanently deleted.
-     */
-    get: operations['TestRetrieveAccountController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/album-cover-image': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images for albums
-     * @description This endpoint retrieves the cover image for a specified album. The image comes from the first track that contains a cover or a default blank cover. The response supports Etag caching to optimize browser performance.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserAlbumCoverImageController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/association-cover-image': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images for associated artists, composers and genres
-     * @description This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified. The image comes from the first track that contains a cover and credits them as an album artist. If no album cover is found, it falls back to the first track crediting them as a track artist. If the artist has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserAssociationCoverImageController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/create-root-path': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Add a new source of music to the user account
-     * @description Adds a new root path to the user's account. This folder must exist and be accessible, allowing any music it contains to be indexed.
-     */
-    post: operations['UserCreateRootPathController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/delete-custom-data': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * Remove custom data from a file in the user's account
-     * @description Deletes the specified custom data in the database immediately.
-     *     The file this data is for will revert to its embedded data on its next indexing.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    delete: operations['UserDeleteCustomDataController_delete'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/delete-favorite': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * Remove a favorite from the user's account
-     * @description Deletes the specified favorite immediately.
-     *     The album, association or track will no longer be a favorite but will still exist in the user's library.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    delete: operations['UserDeleteFavoriteController_delete'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/delete-root-path': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * Remove a music source from the user's account
-     * @description Deletes the specified root path and all associated information in the database immediately.
-     *     The songs and folders will no longer be present in your library but the files will remain on the file system.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    delete: operations['UserDeleteRootPathController_delete'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/end-session': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * Terminate the session
-     * @description Ends a user session and invalidates the JWT token provided in the `Authorization` header.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    delete: operations['UserEndSessionController_delete'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/folder-structure': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieve library folder structure
-     * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents.
-     *     This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserFolderStructureController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-album-associations': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List associations credited to albums
-     * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     */
-    get: operations['UserListAlbumAssociationsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-album-associations-with-tracks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List artists credited to albums and return album/track data
-     * @description Associations are artists attributed directly to an album and the composers and genres attributed to tracks.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     */
-    get: operations['UserListAlbumAssociationsWithTracksController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-albums': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List albums
-     * @description Albums can be filtered by an extensive set of criteria and search terms.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     */
-    get: operations['UserListAlbumsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-albums-with-tracks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List albums and include their track data
-     * @description Albums can be filtered by an extensive set of criteria and search terms.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     */
-    get: operations['UserListAlbumsWithTracksController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-favorites': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List favorites
-     * @description Favorites can be albums, tracks, folders, or an associated artist, composer or genre.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     */
-    get: operations['UserListFavoritesController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-indexer-logs': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Monitor what the indexer is doing for your library
-     * @description Retrieves the most recent indexer logs based on any provided query parameters.
-     *     Logs are held in memory and will clear whenever the server restarts.
-     *     The oldest logs will discard as they accumulate beyond the capacity in the `system_configurations` table.
-     *     If you have multiple users it may be common for this to be empty as the capacity is filled by other users.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListIndexerLogsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-root-paths': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List all sources of music for the user's account
-     * @description Retrieves a list of all root paths associated with the user's account, eg `/home/<username>/music`.',
-     *           'These paths are indexed periodically or when files are changed to build the music library.
-     *     The indexer works from a single queue so the more root paths the longer the delay between scanning.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListRootPathsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-track-associations': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List track-associated artists, composers and genres
-     * @description Track associations are artists, composers and genres attributed directly to individual tracks.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     */
-    get: operations['UserListTrackAssociationsController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-track-associations-with-tracks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List track-associated artists, composers and genres and return tracks.
-     * @description Track associations are artists, composers and genres attributed directly to individual tracks.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *
-     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
-     *
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     */
-    get: operations['UserListTrackAssociationsWithTracksController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/list-tracks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List tracks
-     * @description The data can be filtered based on various criteria and search terms allowing for more precise queries.
-     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserListTracksController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/regenerate-session-key': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Invalidate a user's sessions
-     * @description Regenerates the session key for the user.  This key is used to sign their session tokens.
-     *     When a new key is generated any previous sessions of the user become invalid including their current session.
-     *     The user will need to authenticate again to continue accessing protected APIs.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    post: operations['UserRegenerateSessionKeyController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/retrieve-album': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves single albums
-     * @description Retrieves an album and its complete track list with all information necessary for viewing and playback.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserRetrieveAlbumController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/retrieve-association': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves single association
-     * @description Retrieves an association and its complete track list with all information necessary for viewing and playback.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserRetrieveAssociationController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-album-custom-data': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Set custom data for an album in the user's account
-     * @description Assigns custom data to an album, overriding the embedded data within its tracks.
-     *     This affects all tracks within the album.
-     *     The next indexing pass of the album will reflect the newly set custom data.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    patch: operations['UserSetAlbumCustomDataController_patch'];
-    trace?: never;
-  };
-  '/api/user/set-album-favorite': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Mark an album as a favorite
-     * @description Favorites the specified album allowing easier access in the user's library.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetAlbumFavoriteController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-album-rating': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Sets or unsets ratings for an album
-     * @description Sets or unsets a 1-5 star rating for the tracks within an album.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetAlbumRatingController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-artist-name': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Set custom name for an artist, overriding the name embedded in albums.
-     * @description Assigns a custom name to an artist, overriding the name embedded in albums.
-     *     This affects all tracks and albums the artist is credited on under the previous name.
-     *     The next indexing pass of the albums will reflect the newly set custom name.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    patch: operations['UserSetArtistNameController_patch'];
-    trace?: never;
-  };
-  '/api/user/set-association-favorite': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Mark an association as a favorite
-     * @description Favorites an associated artist, composer or genre allowing easier access in the user's library.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetAssociationFavoriteController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-composer-name': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Set custom name for a composer, overriding the name embedded in tracks.
-     * @description Assigns a custom name to a composer, overriding the name embedded in tracks.
-     *     This affects all tracks the composer is credited on under the previous name.
-     *     The next indexing pass of the tracks will reflect the newly set custom name.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    patch: operations['UserSetComposerNameController_patch'];
-    trace?: never;
-  };
-  '/api/user/set-custom-data': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Set custom data for a track in the user's account
-     * @description Assigns custom data to a track, overriding the embedded data within it.
-     *     This data is all-inclusive, compared to similar endpoints that set individual field(s).
-     *     The next indexing pass of the track will reflect the newly set custom data.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetCustomDataController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-folder-favorite': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Mark a folder as a favorite
-     * @description Favorites the specified folder allowing easier access in the user's library.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetFolderFavoriteController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-genre-name': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Set custom name for a genre, overriding the name embedded in tracks.
-     * @description Assigns a custom name to a genre, overriding the name embedded in tracks.
-     *     This affects all tracks categorized under the previous genre name.
-     *     The next indexing pass of the tracks will reflect the newly set custom name.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    patch: operations['UserSetGenreNameController_patch'];
-    trace?: never;
-  };
-  '/api/user/set-track-custom-data': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Set custom data for a track in the user's account
-     * @description Assigns custom data to a track, overriding the embedded data within it.
-     *     The next indexing pass of the file will reflect the newly set custom data.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    patch: operations['UserSetTrackCustomDataController_patch'];
-    trace?: never;
-  };
-  '/api/user/set-track-favorite': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Mark a track as a favorite
-     * @description Favorites the specified track allowing easier access in the user's library.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetTrackFavoriteController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/set-track-rating': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Sets or unsets rating for a track
-     * @description Sets or unsets a 1-5 star rating for a single track.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    put: operations['UserSetTrackRatingController_put'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/stream-file': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Serves audio files
-     * @description Downloads audio files from the music library to the client.',
-     *           'This is used to stream audio files for playback or to download for offline usage.',
-     *           'The audio files are streamed in their original format and the client is responsible for decoding and playback.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    get: operations['UserStreamFileController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/user/update-password': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Reset password
-     * @description Resets the user's password to a new value and invalidates all previous sessions.
-     *     The user will need to authenticate again to continue accessing protected APIs.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     */
-    post: operations['UserUpdatePasswordController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
+    patch: operations['ApiAccountsController_updateUserRoles'];
     trace?: never;
   };
   '/cgi-bin/as_get_file_api.php': {
@@ -1329,7 +1039,7 @@ export type paths = {
      * Streams a music file to QMusic clients
      * @description Streams a music file for playback.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     get: operations['QnapAsGetFileController_get'];
     put?: never;
@@ -1417,7 +1127,7 @@ export type paths = {
      * Retrieves cover images
      * @description This endpoint retrieves the cover image for a specified album, artist, or folder. The image comes from the first song in the album that contains an embedded image. If the album has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance. The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     get: operations['QnapMediaCoverController_get'];
     put?: never;
@@ -1835,44 +1545,29 @@ export type paths = {
 export type webhooks = Record<string, never>;
 export type components = {
   schemas: {
-    AdminAccountDto: {
+    AccountDto: {
       id: number;
       roles: components['schemas']['UserRoleEnum'][];
       username: string;
     };
+    /** @enum {string} */
+    AlbumSortFieldEnum: AlbumSortFieldEnum;
     /**
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminCreateAccountBadRequestErrors: AdminCreateAccountBadRequestErrors;
-    AdminCreateAccountBadRequestResponse: {
+    ApiAccountsCreateAccountBadRequestErrors: ApiAccountsCreateAccountBadRequestErrors;
+    ApiAccountsCreateAccountBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
        * @default invalid-username-not-unique-error
        */
-      message: components['schemas']['AdminCreateAccountBadRequestErrors'][];
+      message: components['schemas']['ApiAccountsCreateAccountBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    AdminCreateAccountBodyDto: {
-      /** @description The administrator's password to authorize the change */
-      adminPassword: string;
-      /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
-      password: string;
-      roles: components['schemas']['UserRoleEnum'][];
-      /** @description The username for signing in */
-      username: string;
-    };
-    AdminCreateAccountResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -1880,15 +1575,15 @@ export type components = {
      * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminCreateAccountUnauthorizedErrors: AdminCreateAccountUnauthorizedErrors;
-    AdminCreateAccountUnauthorizedResponse: {
+    ApiAccountsCreateAccountUnauthorizedErrors: ApiAccountsCreateAccountUnauthorizedErrors;
+    ApiAccountsCreateAccountUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description Authentication failed or the user does not have the necessary permissions to access the resource.
        * @default invalid-admin-password-error
        */
-      message: components['schemas']['AdminCreateAccountUnauthorizedErrors'][];
+      message: components['schemas']['ApiAccountsCreateAccountUnauthorizedErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -1899,118 +1594,37 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminCreateRootPathBadRequestErrors: AdminCreateRootPathBadRequestErrors;
-    AdminCreateRootPathBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default root-path-does-not-exist-error
-       */
-      message: components['schemas']['AdminCreateRootPathBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    AdminCreateRootPathBodyDto: {
-      /** @description The fully-qualified path to set for the root path */
-      rootPath: string;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    AdminCreateRootPathNotFoundErrors: AdminCreateRootPathNotFoundErrors;
-    AdminCreateRootPathNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default root-path-not-found-error
-       */
-      message: components['schemas']['AdminCreateRootPathNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    AdminCreateRootPathResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
-     * @enum {string}
-     */
-    AdminCreateRootPathUnauthorizedErrors: AdminCreateRootPathUnauthorizedErrors;
-    AdminCreateRootPathUnauthorizedResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
-       * @default invalid-admin-password-error
-       */
-      message: components['schemas']['AdminCreateRootPathUnauthorizedErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    AdminDeleteAccountBadRequestErrors: AdminDeleteAccountBadRequestErrors;
-    AdminDeleteAccountBadRequestResponse: {
+    ApiAccountsDeleteAccountBadRequestErrors: ApiAccountsDeleteAccountBadRequestErrors;
+    ApiAccountsDeleteAccountBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
        * @default account-only-admin-error
        */
-      message: components['schemas']['AdminDeleteAccountBadRequestErrors'][];
+      message: components['schemas']['ApiAccountsDeleteAccountBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    AdminDeleteAccountBodyDto: {
-      /** @description The administrator's password to authorize the change */
-      adminPassword: string;
-    };
     /**
      * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminDeleteAccountNotFoundErrors: AdminDeleteAccountNotFoundErrors;
-    AdminDeleteAccountNotFoundResponse: {
+    ApiAccountsDeleteAccountNotFoundErrors: ApiAccountsDeleteAccountNotFoundErrors;
+    ApiAccountsDeleteAccountNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default account-not-found-error
        */
-      message: components['schemas']['AdminDeleteAccountNotFoundErrors'][];
+      message: components['schemas']['ApiAccountsDeleteAccountNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    AdminDeleteAccountResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -2018,71 +1632,18 @@ export type components = {
      * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminDeleteAccountUnauthorizedErrors: AdminDeleteAccountUnauthorizedErrors;
-    AdminDeleteAccountUnauthorizedResponse: {
+    ApiAccountsDeleteAccountUnauthorizedErrors: ApiAccountsDeleteAccountUnauthorizedErrors;
+    ApiAccountsDeleteAccountUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description Authentication failed or the user does not have the necessary permissions to access the resource.
        * @default invalid-admin-password-error
        */
-      message: components['schemas']['AdminDeleteAccountUnauthorizedErrors'][];
+      message: components['schemas']['ApiAccountsDeleteAccountUnauthorizedErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    AdminDeleteRootPathNotFoundErrors: AdminDeleteRootPathNotFoundErrors;
-    AdminDeleteRootPathNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default root-path-not-found-error
-       */
-      message: components['schemas']['AdminDeleteRootPathNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    AdminDeleteRootPathResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    AdminIndexerConfigurationDto: {
-      /** Format: date-time */
-      createdAt: string;
-      createdByAccountId: number;
-      createdByUsername: string;
-      id: number;
-      isEnabled: boolean;
-    };
-    AdminIndexerConfigurationResponseDto: {
-      configuration: components['schemas']['AdminIndexerConfigurationDto'];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    AdminListAccountsResponseDto: {
-      accounts: components['schemas']['AdminAccountDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -2090,81 +1651,18 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminListIndexerLogsBadRequestErrors: AdminListIndexerLogsBadRequestErrors;
-    AdminListIndexerLogsBadRequestResponse: {
+    ApiAccountsPostBadRequestErrors: ApiAccountsPostBadRequestErrors;
+    ApiAccountsPostBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-account-id-error
+       * @default invalid-password-error
        */
-      message: components['schemas']['AdminListIndexerLogsBadRequestErrors'][];
+      message: components['schemas']['ApiAccountsPostBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    AdminListIndexerLogsResponseDto: {
-      logs: components['schemas']['AdminLogEntryDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    AdminListRootPathsResponseDto: {
-      /** @description The list of root paths with associated account owner information */
-      rootPaths: components['schemas']['AdminRootPathDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    AdminLogEntryDto: {
-      accountId: number;
-      /** Format: date-time */
-      date: string;
-      message: string;
-      rootPath: string;
-      rootPathId: number;
-      username: string;
-    };
-    AdminRegenerateMasterSessionKeyResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    AdminRegenerateUserSessionKeyNotFoundErrors: AdminRegenerateUserSessionKeyNotFoundErrors;
-    AdminRegenerateUserSessionKeyNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default account-not-found-error
-       */
-      message: components['schemas']['AdminRegenerateUserSessionKeyNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    AdminRegenerateUserSessionKeyResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -2172,50 +1670,37 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminResetUserPasswordBadRequestErrors: AdminResetUserPasswordBadRequestErrors;
-    AdminResetUserPasswordBadRequestResponse: {
+    ApiAccountsResetUserPasswordBadRequestErrors: ApiAccountsResetUserPasswordBadRequestErrors;
+    ApiAccountsResetUserPasswordBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
        * @default invalid-account-id-error
        */
-      message: components['schemas']['AdminResetUserPasswordBadRequestErrors'][];
+      message: components['schemas']['ApiAccountsResetUserPasswordBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    AdminResetUserPasswordBodyDto: {
-      /** @description The administrator's password to authorize the change */
-      adminPassword: string;
-      newPassword: string;
-    };
     /**
      * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminResetUserPasswordNotFoundErrors: AdminResetUserPasswordNotFoundErrors;
-    AdminResetUserPasswordNotFoundResponse: {
+    ApiAccountsResetUserPasswordNotFoundErrors: ApiAccountsResetUserPasswordNotFoundErrors;
+    ApiAccountsResetUserPasswordNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
        * @default account-not-found-error
        */
-      message: components['schemas']['AdminResetUserPasswordNotFoundErrors'][];
+      message: components['schemas']['ApiAccountsResetUserPasswordNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    AdminResetUserPasswordResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -2223,58 +1708,18 @@ export type components = {
      * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminResetUserPasswordUnauthorizedErrors: AdminResetUserPasswordUnauthorizedErrors;
-    AdminResetUserPasswordUnauthorizedResponse: {
+    ApiAccountsResetUserPasswordUnauthorizedErrors: ApiAccountsResetUserPasswordUnauthorizedErrors;
+    ApiAccountsResetUserPasswordUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description Authentication failed or the user does not have the necessary permissions to access the resource.
        * @default invalid-admin-password-error
        */
-      message: components['schemas']['AdminResetUserPasswordUnauthorizedErrors'][];
+      message: components['schemas']['ApiAccountsResetUserPasswordUnauthorizedErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    AdminRootPathDto: {
-      /** @description The ID of the account that owns this root path */
-      accountId: number;
-      /**
-       * Format: date-time
-       * @description The date and time the row was created
-       */
-      createdAt: string;
-      /**
-       * @description The number of files or songs that have been found in this root path, this excludes
-       *     anything that is not a music track.
-       */
-      fileCount: number;
-      /** @description The ID of the root path row in the database */
-      id: number;
-      /** @description The fully-qualified path of the root path, this is the base path where music is stored for a user */
-      rootPath: string;
-      /** @description The total size of all the files in this root path contained in the `fileCount` field */
-      totalSize: number;
-      /**
-       * Format: date-time
-       * @description The date and time the row was last updated, this field is optional and may not be present
-       *     if the row has never been updated
-       */
-      updatedAt?: string;
-      /** @description The username of the account that owns this root path */
-      username: string;
-    };
-    AdminSetIndexerStatusBodyDto: {
-      /** @description Whether the scanner should be enabled or disabled */
-      enabled: boolean;
-    };
-    AdminSetIndexerStatusResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -2282,49 +1727,680 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminUpdateRootPathBadRequestErrors: AdminUpdateRootPathBadRequestErrors;
-    AdminUpdateRootPathBadRequestResponse: {
+    ApiAccountsUpdateUserRolesBadRequestErrors: ApiAccountsUpdateUserRolesBadRequestErrors;
+    ApiAccountsUpdateUserRolesBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-account-id-error
+       */
+      message: components['schemas']['ApiAccountsUpdateUserRolesBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiAccountsUpdateUserRolesNotFoundErrors: ApiAccountsUpdateUserRolesNotFoundErrors;
+    ApiAccountsUpdateUserRolesNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiAccountsUpdateUserRolesNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+     * @enum {string}
+     */
+    ApiAccountsUpdateUserRolesUnauthorizedErrors: ApiAccountsUpdateUserRolesUnauthorizedErrors;
+    ApiAccountsUpdateUserRolesUnauthorizedResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description Authentication failed or the user does not have the necessary permissions to access the resource.
+       * @default invalid-admin-password-error
+       */
+      message: components['schemas']['ApiAccountsUpdateUserRolesUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAlbumsListAlbumsBadRequestErrors: ApiAlbumsListAlbumsBadRequestErrors;
+    ApiAlbumsListAlbumsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiAlbumsListAlbumsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAlbumsListAlbumsWithTracksBadRequestErrors: ApiAlbumsListAlbumsWithTracksBadRequestErrors;
+    ApiAlbumsListAlbumsWithTracksBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiAlbumsListAlbumsWithTracksBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAlbumsRetrieveAlbumBadRequestErrors: ApiAlbumsRetrieveAlbumBadRequestErrors;
+    ApiAlbumsRetrieveAlbumBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default album-not-found-error
+       */
+      message: components['schemas']['ApiAlbumsRetrieveAlbumBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiAlbumsRetrieveAlbumNotFoundErrors: ApiAlbumsRetrieveAlbumNotFoundErrors;
+    ApiAlbumsRetrieveAlbumNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default album-not-found-error
+       */
+      message: components['schemas']['ApiAlbumsRetrieveAlbumNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAssociationsListAssociationsBadRequestErrors: ApiAssociationsListAssociationsBadRequestErrors;
+    ApiAssociationsListAssociationsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiAssociationsListAssociationsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAssociationsListAssociationsWithTracksBadRequestErrors: ApiAssociationsListAssociationsWithTracksBadRequestErrors;
+    ApiAssociationsListAssociationsWithTracksBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiAssociationsListAssociationsWithTracksBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAssociationsListTrackAssociationsBadRequestErrors: ApiAssociationsListTrackAssociationsBadRequestErrors;
+    ApiAssociationsListTrackAssociationsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiAssociationsListTrackAssociationsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAssociationsListTrackAssociationsWithTracksBadRequestErrors: ApiAssociationsListTrackAssociationsWithTracksBadRequestErrors;
+    ApiAssociationsListTrackAssociationsWithTracksBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiAssociationsListTrackAssociationsWithTracksBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAssociationsRetrieveAssociationBadRequestErrors: ApiAssociationsRetrieveAssociationBadRequestErrors;
+    ApiAssociationsRetrieveAssociationBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-association-id-error
+       */
+      message: components['schemas']['ApiAssociationsRetrieveAssociationBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiAssociationsRetrieveAssociationNotFoundErrors: ApiAssociationsRetrieveAssociationNotFoundErrors;
+    ApiAssociationsRetrieveAssociationNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default association-not-found-error
+       */
+      message: components['schemas']['ApiAssociationsRetrieveAssociationNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiCustomDataDeleteCustomDataBadRequestErrors: ApiCustomDataDeleteCustomDataBadRequestErrors;
+    ApiCustomDataDeleteCustomDataBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-track-id-error
+       */
+      message: components['schemas']['ApiCustomDataDeleteCustomDataBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiCustomDataDeleteCustomDataNotFoundErrors: ApiCustomDataDeleteCustomDataNotFoundErrors;
+    ApiCustomDataDeleteCustomDataNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default track-not-found-error
+       */
+      message: components['schemas']['ApiCustomDataDeleteCustomDataNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiCustomDataPatchBadRequestErrors: ApiCustomDataPatchBadRequestErrors;
+    ApiCustomDataPatchBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-track-id-error
+       */
+      message: components['schemas']['ApiCustomDataPatchBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiCustomDataPatchNotFoundErrors: ApiCustomDataPatchNotFoundErrors;
+    ApiCustomDataPatchNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default track-not-found-error
+       */
+      message: components['schemas']['ApiCustomDataPatchNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiCustomDataPutBadRequestErrors: ApiCustomDataPutBadRequestErrors;
+    ApiCustomDataPutBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-track-id-error
+       */
+      message: components['schemas']['ApiCustomDataPutBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiCustomDataPutNotFoundErrors: ApiCustomDataPutNotFoundErrors;
+    ApiCustomDataPutNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default track-not-found-error
+       */
+      message: components['schemas']['ApiCustomDataPutNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiCustomDataSetAlbumDataBadRequestErrors: ApiCustomDataSetAlbumDataBadRequestErrors;
+    ApiCustomDataSetAlbumDataBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-album-id-error
+       */
+      message: components['schemas']['ApiCustomDataSetAlbumDataBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiCustomDataSetAlbumDataNotFoundErrors: ApiCustomDataSetAlbumDataNotFoundErrors;
+    ApiCustomDataSetAlbumDataNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default album-not-found-error
+       */
+      message: components['schemas']['ApiCustomDataSetAlbumDataNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiCustomDataSetArtistNameBadRequestErrors: ApiCustomDataSetArtistNameBadRequestErrors;
+    ApiCustomDataSetArtistNameBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-artist-id-error
+       */
+      message: components['schemas']['ApiCustomDataSetArtistNameBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiCustomDataSetArtistNameNotFoundErrors: ApiCustomDataSetArtistNameNotFoundErrors;
+    ApiCustomDataSetArtistNameNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default artist-not-found-error
+       */
+      message: components['schemas']['ApiCustomDataSetArtistNameNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiFavoritesDeleteFavoriteBadRequestErrors: ApiFavoritesDeleteFavoriteBadRequestErrors;
+    ApiFavoritesDeleteFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-favorite-item-id-error
+       */
+      message: components['schemas']['ApiFavoritesDeleteFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiFavoritesDeleteFavoriteNotFoundErrors: ApiFavoritesDeleteFavoriteNotFoundErrors;
+    ApiFavoritesDeleteFavoriteNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default favorite-item-not-found-error
+       */
+      message: components['schemas']['ApiFavoritesDeleteFavoriteNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiFavoritesListFavoritesBadRequestErrors: ApiFavoritesListFavoritesBadRequestErrors;
+    ApiFavoritesListFavoritesBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-limit-error
+       */
+      message: components['schemas']['ApiFavoritesListFavoritesBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiFavoritesSetAlbumFavoriteBadRequestErrors: ApiFavoritesSetAlbumFavoriteBadRequestErrors;
+    ApiFavoritesSetAlbumFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-album-id-error
+       */
+      message: components['schemas']['ApiFavoritesSetAlbumFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiFavoritesSetAlbumFavoriteNotFoundErrors: ApiFavoritesSetAlbumFavoriteNotFoundErrors;
+    ApiFavoritesSetAlbumFavoriteNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default album-not-found-error
+       */
+      message: components['schemas']['ApiFavoritesSetAlbumFavoriteNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiFavoritesSetAssociationFavoriteBadRequestErrors: ApiFavoritesSetAssociationFavoriteBadRequestErrors;
+    ApiFavoritesSetAssociationFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-association-type-error
+       */
+      message: components['schemas']['ApiFavoritesSetAssociationFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiFavoritesSetAssociationFavoriteNotFoundErrors: ApiFavoritesSetAssociationFavoriteNotFoundErrors;
+    ApiFavoritesSetAssociationFavoriteNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default association-not-found-error
+       */
+      message: components['schemas']['ApiFavoritesSetAssociationFavoriteNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {number}
+     */
+    ApiFavoritesSetFolderFavoriteBadRequestErrors: ApiFavoritesSetFolderFavoriteBadRequestErrors;
+    ApiFavoritesSetFolderFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /** @description A validation or other error occurred during the processing of the request. */
+      message: components['schemas']['ApiFavoritesSetFolderFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiFavoritesSetFolderFavoriteNotFoundErrors: ApiFavoritesSetFolderFavoriteNotFoundErrors;
+    ApiFavoritesSetFolderFavoriteNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default folder-not-found-error
+       */
+      message: components['schemas']['ApiFavoritesSetFolderFavoriteNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiFavoritesSetTrackFavoriteBadRequestErrors: ApiFavoritesSetTrackFavoriteBadRequestErrors;
+    ApiFavoritesSetTrackFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-track-id-error
+       */
+      message: components['schemas']['ApiFavoritesSetTrackFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiFavoritesSetTrackFavoriteNotFoundErrors: ApiFavoritesSetTrackFavoriteNotFoundErrors;
+    ApiFavoritesSetTrackFavoriteNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default track-not-found-error
+       */
+      message: components['schemas']['ApiFavoritesSetTrackFavoriteNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiIndexerListIndexerLogsBadRequestErrors: ApiIndexerListIndexerLogsBadRequestErrors;
+    ApiIndexerListIndexerLogsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-account-id-error
+       */
+      message: components['schemas']['ApiIndexerListIndexerLogsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiIndexerListIndexerLogsByUserBadRequestErrors: ApiIndexerListIndexerLogsByUserBadRequestErrors;
+    ApiIndexerListIndexerLogsByUserBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
        * @default invalid-root-path-id-error
        */
-      message: components['schemas']['AdminUpdateRootPathBadRequestErrors'][];
+      message: components['schemas']['ApiIndexerListIndexerLogsByUserBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
-       */
-      success: boolean;
-    };
-    AdminUpdateRootPathBodyDto: {
-      /** @description The new path to set for the root path */
-      newPath: string;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    AdminUpdateRootPathNotFoundErrors: AdminUpdateRootPathNotFoundErrors;
-    AdminUpdateRootPathNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default root-path-not-found-error
-       */
-      message: components['schemas']['AdminUpdateRootPathNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    AdminUpdateRootPathResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
        */
       success: boolean;
     };
@@ -2332,50 +2408,113 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    AdminUpdateUserRolesBadRequestErrors: AdminUpdateUserRolesBadRequestErrors;
-    AdminUpdateUserRolesBadRequestResponse: {
+    ApiRatingsPutBadRequestErrors: ApiRatingsPutBadRequestErrors;
+    ApiRatingsPutBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-account-id-error
+       * @default invalid-track-id-error
        */
-      message: components['schemas']['AdminUpdateUserRolesBadRequestErrors'][];
+      message: components['schemas']['ApiRatingsPutBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
-    };
-    AdminUpdateUserRolesBodyDto: {
-      /** @description The administrator's password to authorize the change */
-      adminPassword: string;
-      roles: components['schemas']['UserRoleEnum'][];
     };
     /**
      * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
-    AdminUpdateUserRolesNotFoundErrors: AdminUpdateUserRolesNotFoundErrors;
-    AdminUpdateUserRolesNotFoundResponse: {
+    ApiRatingsPutNotFoundErrors: ApiRatingsPutNotFoundErrors;
+    ApiRatingsPutNotFoundResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default account-not-found-error
+       * @default track-not-found-error
        */
-      message: components['schemas']['AdminUpdateUserRolesNotFoundErrors'][];
+      message: components['schemas']['ApiRatingsPutNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    AdminUpdateUserRolesResponseDto: {
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRatingsSetAlbumRatingBadRequestErrors: ApiRatingsSetAlbumRatingBadRequestErrors;
+    ApiRatingsSetAlbumRatingBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
       /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-album-id-error
+       */
+      message: components['schemas']['ApiRatingsSetAlbumRatingBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRatingsSetAlbumRatingNotFoundErrors: ApiRatingsSetAlbumRatingNotFoundErrors;
+    ApiRatingsSetAlbumRatingNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default album-not-found-error
+       */
+      message: components['schemas']['ApiRatingsSetAlbumRatingNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsCreateRootPathBadRequestErrors: ApiRootPathsCreateRootPathBadRequestErrors;
+    ApiRootPathsCreateRootPathBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default root-path-does-not-exist-error
+       */
+      message: components['schemas']['ApiRootPathsCreateRootPathBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRootPathsCreateRootPathNotFoundErrors: ApiRootPathsCreateRootPathNotFoundErrors;
+    ApiRootPathsCreateRootPathNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default root-path-not-found-error
+       */
+      message: components['schemas']['ApiRootPathsCreateRootPathNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
        */
       success: boolean;
     };
@@ -2383,23 +2522,401 @@ export type components = {
      * @description Authentication failed or the user does not have the necessary permissions to access the resource.
      * @enum {string}
      */
-    AdminUpdateUserRolesUnauthorizedErrors: AdminUpdateUserRolesUnauthorizedErrors;
-    AdminUpdateUserRolesUnauthorizedResponse: {
+    ApiRootPathsCreateRootPathUnauthorizedErrors: ApiRootPathsCreateRootPathUnauthorizedErrors;
+    ApiRootPathsCreateRootPathUnauthorizedResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description Authentication failed or the user does not have the necessary permissions to access the resource.
        * @default invalid-admin-password-error
        */
-      message: components['schemas']['AdminUpdateUserRolesUnauthorizedErrors'][];
+      message: components['schemas']['ApiRootPathsCreateRootPathUnauthorizedErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
        */
       success: boolean;
     };
-    /** @enum {string} */
-    AlbumSortFieldEnum: AlbumSortFieldEnum;
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRootPathsDeleteRootPathNotFoundErrors: ApiRootPathsDeleteRootPathNotFoundErrors;
+    ApiRootPathsDeleteRootPathNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default invalid-root-path-id-error
+       */
+      message: components['schemas']['ApiRootPathsDeleteRootPathNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRootPathsDeleteUserRootPathNotFoundErrors: ApiRootPathsDeleteUserRootPathNotFoundErrors;
+    ApiRootPathsDeleteUserRootPathNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default invalid-root-path-id-error
+       */
+      message: components['schemas']['ApiRootPathsDeleteUserRootPathNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsListUserRootPathsBadRequestErrors: ApiRootPathsListUserRootPathsBadRequestErrors;
+    ApiRootPathsListUserRootPathsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiRootPathsListUserRootPathsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRootPathsListUserRootPathsNotFoundErrors: ApiRootPathsListUserRootPathsNotFoundErrors;
+    ApiRootPathsListUserRootPathsNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiRootPathsListUserRootPathsNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsPatchBadRequestErrors: ApiRootPathsPatchBadRequestErrors;
+    ApiRootPathsPatchBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default root-path-does-not-exist-error
+       */
+      message: components['schemas']['ApiRootPathsPatchBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiRootPathsPatchNotFoundErrors: ApiRootPathsPatchNotFoundErrors;
+    ApiRootPathsPatchNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default root-path-not-found-error
+       */
+      message: components['schemas']['ApiRootPathsPatchNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsPostBadRequestErrors: ApiRootPathsPostBadRequestErrors;
+    ApiRootPathsPostBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default root-path-does-not-exist-error
+       */
+      message: components['schemas']['ApiRootPathsPostBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiSessionsCreateSessionBadRequestErrors: ApiSessionsCreateSessionBadRequestErrors;
+    ApiSessionsCreateSessionBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-password-error
+       */
+      message: components['schemas']['ApiSessionsCreateSessionBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiSessionsCreateSessionNotFoundErrors: ApiSessionsCreateSessionNotFoundErrors;
+    ApiSessionsCreateSessionNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default invalid-username-error
+       */
+      message: components['schemas']['ApiSessionsCreateSessionNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiSessionsDeleteBadRequestErrors: ApiSessionsDeleteBadRequestErrors;
+    ApiSessionsDeleteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default session-not-found-error
+       */
+      message: components['schemas']['ApiSessionsDeleteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiSessionsRegenerateUserSessionKeyBadRequestErrors: ApiSessionsRegenerateUserSessionKeyBadRequestErrors;
+    ApiSessionsRegenerateUserSessionKeyBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-admin-password-error
+       */
+      message: components['schemas']['ApiSessionsRegenerateUserSessionKeyBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiSessionsRegenerateUserSessionKeyNotFoundErrors: ApiSessionsRegenerateUserSessionKeyNotFoundErrors;
+    ApiSessionsRegenerateUserSessionKeyNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default invalid-account-id-error
+       */
+      message: components['schemas']['ApiSessionsRegenerateUserSessionKeyNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiTestCreateTestAccountBadRequestErrors: ApiTestCreateTestAccountBadRequestErrors;
+    ApiTestCreateTestAccountBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-username-error
+       */
+      message: components['schemas']['ApiTestCreateTestAccountBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiTestDeleeteTestAccountBadRequestErrors: ApiTestDeleeteTestAccountBadRequestErrors;
+    ApiTestDeleeteTestAccountBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiTestDeleeteTestAccountBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiTestDuplicateTestAccountBadRequestErrors: ApiTestDuplicateTestAccountBadRequestErrors;
+    ApiTestDuplicateTestAccountBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiTestDuplicateTestAccountBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiTestDuplicateTestAccountNotFoundErrors: ApiTestDuplicateTestAccountNotFoundErrors;
+    ApiTestDuplicateTestAccountNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default not-found-error
+       */
+      message: components['schemas']['ApiTestDuplicateTestAccountNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiTestGetBadRequestErrors: ApiTestGetBadRequestErrors;
+    ApiTestGetBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-username-error
+       */
+      message: components['schemas']['ApiTestGetBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiTestGetNotFoundErrors: ApiTestGetNotFoundErrors;
+    ApiTestGetNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default account-not-found-error
+       */
+      message: components['schemas']['ApiTestGetNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiTracksGetNotFoundErrors: ApiTracksGetNotFoundErrors;
+    ApiTracksGetNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default file-not-found-error
+       */
+      message: components['schemas']['ApiTracksGetNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiTracksListTracksBadRequestErrors: ApiTracksListTracksBadRequestErrors;
+    ApiTracksListTracksBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-added-after-error
+       */
+      message: components['schemas']['ApiTracksListTracksBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
     /** @enum {string} */
     AssociationSortFieldEnum: AssociationSortFieldEnum;
     /** @enum {string} */
@@ -2443,11 +2960,81 @@ export type components = {
      * @enum {string}
      */
     ContentTypeEnum: ContentTypeEnum;
-    /**
-     * @description The type of the file for the track, such as MP3, FLAC, etc.
-     * @enum {string}
-     */
+    CreateAccountBodyDto: {
+      /** @description The administrator's password to authorize the operation. */
+      adminPassword: string;
+      /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
+      password: string;
+      roles: components['schemas']['UserRoleEnum'][];
+      /** @description The username for signing in */
+      username: string;
+    };
+    CreateRootPathBodyDto: {
+      /** @description The fully-qualified path to set for the root path */
+      rootPath: string;
+    };
+    CreateSessionBodyDto: {
+      /** @description The number of days until the session expires */
+      expiresDays?: number;
+      /** @description The password for the account */
+      password: string;
+      /** @description The username for the account */
+      username: string;
+    };
+    CreateSessionResponseDto: {
+      /** @description The JWT session token that can be attached to requests to authenticate against the API */
+      jwtToken: string;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    CreateTestAccountBodyDto: {
+      /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
+      password: string;
+      roles: components['schemas']['UserRoleEnum'][];
+      /** @description The username for signing in */
+      username: string;
+    };
+    CreateTestAccountResponseDto: {
+      account: components['schemas']['TestAccountDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    DeleteAccountBodyDto: {
+      /** @description The administrator's password to authorize the operation. */
+      adminPassword: string;
+    };
+    DuplicateTestAccountBodyDto: {
+      /** @description The new username for the duplicated account */
+      newUsername: string;
+    };
+    DuplicateTestAccountResponseDto: {
+      account: components['schemas']['TestAccountDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    /** @enum {string} */
     FileTypeEnum: FileTypeEnum;
+    FolderStructureResponseDto: {
+      items: components['schemas']['LibraryFolderDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
     /**
      * @description A forbidden error occurred due to the user not having the necessary permissions to access the resource.
      * @enum {string}
@@ -2467,38 +3054,17 @@ export type components = {
        */
       success: boolean;
     };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    GuestCreateSessionBadRequestErrorMessageEnum: GuestCreateSessionBadRequestErrorMessageEnum;
-    GuestCreateSessionBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default bad-request-error
-       */
-      message: components['schemas']['GuestCreateSessionBadRequestErrorMessageEnum'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
+    HealthcheckResponseDto: Record<string, never>;
+    IndexerConfigurationDto: {
+      /** Format: date-time */
+      createdAt: string;
+      createdByAccountId: number;
+      createdByUsername: string;
+      id: number;
+      isEnabled: boolean;
     };
-    GuestCreateSessionBodyDto: {
-      /** @description The number of days until the session expires */
-      expiresDays?: number;
-      /** @description The password for the account */
-      password: string;
-      /** @description The username for the account */
-      username: string;
-    };
-    GuestCreateSessionResponseDto: {
-      /** @description The JWT session token that can be attached to requests to authenticate against the API */
-      jwtToken: string;
+    IndexerConfigurationResponseDto: {
+      configuration: components['schemas']['IndexerConfigurationDto'];
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -2721,6 +3287,130 @@ export type components = {
        *     and compilations.
        */
       year: number;
+    };
+    ListAccountsResponseDto: {
+      accounts: components['schemas']['AccountDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListAlbumsResponseDto: {
+      albums: components['schemas']['LibraryAlbumDto'][];
+      limit: number;
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
+    ListAlbumsWithTracksResponseDto: {
+      albums: components['schemas']['LibraryAlbumWithTracksDto'][];
+      limit: number;
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
+    ListAssociationsResponseDto: {
+      associations: components['schemas']['LibraryAssociationDto'][];
+      limit: number;
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
+    ListAssociationsWithTracksResponseDto: {
+      associations: components['schemas']['LibraryAssociationWithTracksDto'][];
+      limit: number;
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
+    ListFavoritesResponseDto: {
+      favorites: components['schemas']['LibraryFavoriteDto'][];
+      limit: number;
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
+    ListIndexerLogsResponseDto: {
+      logs: components['schemas']['LogEntryDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListIndexerLogsWithUserResponseDto: {
+      logs: components['schemas']['LogWithUserEntryDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListTestAccountsResponseDto: {
+      accounts: components['schemas']['TestAccountDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListTracksResponseDto: {
+      limit: number;
+      offset: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+      tracks: components['schemas']['LibraryTrackDto'][];
+    };
+    LogEntryDto: {
+      /** Format: date-time */
+      date: string;
+      message: string;
+      rootPath: string;
+      rootPathId: number;
+    };
+    LogWithUserEntryDto: {
+      /** Format: date-time */
+      date: string;
+      message: string;
+      rootPath: string;
+      rootPathId: number;
+      /** @description The username the indexer action was for. */
+      username: string;
     };
     PlaylistPlaceholder: {
       id: number;
@@ -3420,6 +4110,271 @@ export type components = {
       usr_id: number;
       writable: string;
     };
+    RegenerateUserSessionBodyDto: {
+      /** @description The administrator's password to authorize the operation. */
+      adminPassword: string;
+    };
+    ResetUserPasswordBodyDto: {
+      /** @description The administrator's password to authorize the operation. */
+      adminPassword: string;
+      newPassword: string;
+    };
+    RetrieveAlbumResponseDto: {
+      album: components['schemas']['LibraryAlbumWithTracksDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    RetrieveAssociationResponseDto: {
+      association: components['schemas']['AssociationWithCreditsDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    RetrieveTestAccountResponseDto: {
+      account: components['schemas']['TestAccountDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    RootPathDto: {
+      /**
+       * Format: date-time
+       * @description The date and time the row was created
+       */
+      createdAt: string;
+      /**
+       * @description The number of files or songs that have been found in this root path, this excludes
+       *     anything that is not a music track.
+       */
+      fileCount: number;
+      /** @description The ID of the root path row in the database. */
+      id: number;
+      /** @description The fully-qualified path of the root path, this is the base path where music is stored for a user. */
+      rootPath: string;
+      /** @description The total size of all the files in this root path contained in the `fileCount` field. */
+      totalSize: number;
+      /**
+       * Format: date-time
+       * @description The date and time the row was last updated, this field is optional and may not be present
+       *     if the row has never been updated.
+       */
+      updatedAt?: string;
+    };
+    RootPathsResponseDto: {
+      rootPaths: components['schemas']['RootPathDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    RootPathsWithUserResponseDto: {
+      rootPaths: components['schemas']['RootPathWithUserDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    RootPathWithUserDto: {
+      /**
+       * Format: date-time
+       * @description The date and time the row was created
+       */
+      createdAt: string;
+      /**
+       * @description The number of files or songs that have been found in this root path, this excludes
+       *     anything that is not a music track.
+       */
+      fileCount: number;
+      /** @description The ID of the root path row in the database. */
+      id: number;
+      /** @description The fully-qualified path of the root path, this is the base path where music is stored for a user. */
+      rootPath: string;
+      /** @description The total size of all the files in this root path contained in the `fileCount` field. */
+      totalSize: number;
+      /**
+       * Format: date-time
+       * @description The date and time the row was last updated, this field is optional and may not be present
+       *     if the row has never been updated.
+       */
+      updatedAt?: string;
+      /** @description The username that owns the root path. */
+      username: string;
+    };
+    SetAlbumCustomDataBodyDto: {
+      /**
+       * @description Assigns a new value to the album artists if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      artists: string;
+      /**
+       * @description Assigns a custom value to the title of the album if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      title: string;
+      /**
+       * @description Assigns a custom value to the year if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      year: number;
+    };
+    SetAlbumRatingBodyDto: {
+      /**
+       * Format: int32
+       * @description The rating value to be set for the track.  If it is 0 the rating will be unset.
+       */
+      rating: number;
+    };
+    SetAssociationNameBodyDto: {
+      /**
+       * @description The new value to the artist name.  If an empty string is provided it will erase the
+       *     custom value.
+       */
+      name: string;
+    };
+    SetCustomDataBodyDto: {
+      /**
+       * @description Assigns a new value to the album artists if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      albumArtists?: string;
+      /**
+       * @description Assigns a new value to the album title if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      albumTitle?: string;
+      /**
+       * @description Assigns a new value to the track artists if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      artists?: string;
+      /**
+       * @description Assigns a new value to the comment if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      comment?: string;
+      /**
+       * @description Assigns a new value to the track composers if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      composers?: string;
+      /**
+       * @description Assigns a new value to the disc number if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      discNumber?: number;
+      /**
+       * @description Assigns a new value to the genres if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      genres?: string;
+      /**
+       * @description Assigns a new value to the title if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      title?: string;
+      /**
+       * @description Assigns a new value to the track number if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      trackNumber?: number;
+      /**
+       * @description Assigns a new value to the year if a value is provided.  If an empty
+       *     string is provided it will erase the existing value.  If the field is not
+       *     provided it will leave the existing value unchanged.
+       */
+      year?: number;
+    };
+    SetIndexerStatusBodyDto: {
+      /** @description Whether the scanner should be enabled or disabled */
+      enabled: boolean;
+    };
+    SetIndexerStatusResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    SetTrackCustomDataBodyDto: {
+      /**
+       * @description The new value to the track artists if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      artists: string;
+      /**
+       * @description The new value to the comment if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      comment?: string;
+      /**
+       * @description The new value to the track composers if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      composers?: string;
+      /**
+       * @description The new value to the disc number if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      discNumber?: number;
+      /**
+       * @description The new value to the genres if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      genres?: string;
+      /**
+       * @description The new value to the title if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      title: string;
+      /**
+       * @description The new value to the track number if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.  If the field is not
+       *     provided it will leave the custom value unchanged.
+       */
+      trackNumber?: number;
+      /**
+       * @description The new value to the year if a value is provided.  If an empty
+       *     string is provided it will erase the custom value.
+       */
+      year?: number;
+    };
+    SetTrackRatingBodyDto: {
+      /**
+       * Format: int32
+       * @description The rating value to be set for the track.  If it is 0 the rating will be unset.
+       */
+      rating: number;
+    };
     /**
      * @description The `type` value is expected to always be `container` for SHOUTcast genres, and
      *     `radio` for actual stations.  Possibly other values for favorites and custom-added
@@ -3429,7 +4384,10 @@ export type components = {
     ShoutcastItemTypeEnum: ShoutcastItemTypeEnum;
     /** @enum {string} */
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
-    /** @enum {string} */
+    /**
+     * @description The sort direction
+     * @enum {string}
+     */
     SortDirectionEnum: SortDirectionEnum;
     SuccessResponseDto: {
       /**
@@ -6376,1548 +7334,27 @@ export type components = {
        */
       success: boolean;
     };
-    TestCreateAccountBodyDto: {
-      /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
-      password: string;
-      roles: components['schemas']['UserRoleEnum'][];
-      /** @description The username for signing in */
-      username: string;
-    };
-    TestCreateAccountResponseDto: {
+    TestAccountDto: {
       accountId: number;
-      password: string;
       roles: components['schemas']['UserRoleEnum'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
       username: string;
-    };
-    TestDeleteAccountNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default internal-server-error
-       */
-      message: TestDeleteAccountNotFoundResponseDtoMessage[];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    TestDeleteAccountResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description The error message(s) that occurred during the validation of the request data or additional requirements
-     *     applied while serving the request
-     * @enum {string}
-     */
-    TestDuplicateAccountBadRequestErrorMessageEnum: TestDuplicateAccountBadRequestErrorMessageEnum;
-    TestDuplicateAccountBadRequestResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description The error message(s) that occurred during the validation of the request data or additional requirements
-       *     applied while serving the request
-       * @default bad-request-error
-       */
-      message: components['schemas']['TestDuplicateAccountBadRequestErrorMessageEnum'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    TestDuplicateAccountBodyDto: {
-      /** @description The new username for the duplicated account */
-      newUsername: string;
-    };
-    TestDuplicateAccountNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default internal-server-error
-       */
-      message: TestDuplicateAccountNotFoundResponseDtoMessage[];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    TestDuplicateAccountResponseDto: {
-      /** @description The ID of the newly created account */
-      accountId: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    TestListAccountDto: {
-      /** @description The ID of the table row is an integer that is assigned by the database when the row is created. */
-      id: number;
-      roles: components['schemas']['UserRoleEnum'][];
-      /** @description The username is the main point of authentication */
-      username: string;
-    };
-    TestListAccountsNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default internal-server-error
-       */
-      message: TestListAccountsNotFoundResponseDtoMessage[];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    TestListAccountsResponseDto: {
-      accounts: components['schemas']['TestListAccountDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    TestRetrieveAccountDto: {
-      /** @description The ID of the table row is an integer that is assigned by the database when the row is created. */
-      id: number;
-      roles: components['schemas']['UserRoleEnum'][];
-      /** @description The username is the main point of authentication */
-      username: string;
-    };
-    TestRetrieveAccountNotFoundResponseDto: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default account-not-found-error
-       */
-      message: TestRetrieveAccountNotFoundResponseDtoMessage[];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    TestRetrieveAccountResponseDto: {
-      account: components['schemas']['TestRetrieveAccountDto'];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
     };
     /** @enum {string} */
     TrackSortFieldEnum: TrackSortFieldEnum;
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserCreateRootPathBadRequestErrors: UserCreateRootPathBadRequestErrors;
-    UserCreateRootPathBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default root-path-does-not-exist-error
-       */
-      message: components['schemas']['UserCreateRootPathBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
+    UpdatePasswordBodyDto: {
+      newPassword: string;
     };
-    UserCreateRootPathBodyDto: {
-      /** @description The fully-qualified path to set for the root path */
-      rootPath: string;
+    UpdateRootPathBodyDto: {
+      /** @description The new path to set for the root path */
+      newPath: string;
     };
-    UserCreateRootPathResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserDeleteCustomDataBadRequestErrors: UserDeleteCustomDataBadRequestErrors;
-    UserDeleteCustomDataBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-track-id-error
-       */
-      message: components['schemas']['UserDeleteCustomDataBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserDeleteCustomDataNotFoundErrors: UserDeleteCustomDataNotFoundErrors;
-    UserDeleteCustomDataNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default track-not-found-error
-       */
-      message: components['schemas']['UserDeleteCustomDataNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserDeleteCustomDataResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserDeleteFavoriteBadRequestErrors: UserDeleteFavoriteBadRequestErrors;
-    UserDeleteFavoriteBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-favorite-item-id-error
-       */
-      message: components['schemas']['UserDeleteFavoriteBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserDeleteFavoriteNotFoundErrors: UserDeleteFavoriteNotFoundErrors;
-    UserDeleteFavoriteNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default favorite-item-not-found-error
-       */
-      message: components['schemas']['UserDeleteFavoriteNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserDeleteFavoriteResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserDeleteRootPathBadRequestErrors: UserDeleteRootPathBadRequestErrors;
-    UserDeleteRootPathBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-root-path-id-error
-       */
-      message: components['schemas']['UserDeleteRootPathBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserDeleteRootPathNotFoundErrors: UserDeleteRootPathNotFoundErrors;
-    UserDeleteRootPathNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default root-path-not-found-error
-       */
-      message: components['schemas']['UserDeleteRootPathNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserDeleteRootPathResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    UserFolderStructureResponseDto: {
-      items: components['schemas']['LibraryFolderDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListAlbumAssociationsBadRequestErrors: UserListAlbumAssociationsBadRequestErrors;
-    UserListAlbumAssociationsBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListAlbumAssociationsBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListAlbumAssociationsResponseDto: {
-      /** @description The list of artists that match the query parameters, which may be limited by pagination. */
-      associations: components['schemas']['LibraryAssociationDto'][];
-      /**
-       * @description The offset of the first artist in the artists array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of artists that match the query parameters, which may be greater
-       *     than the number of artists returned in the artists array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListAlbumAssociationsWithTracksBadRequestErrors: UserListAlbumAssociationsWithTracksBadRequestErrors;
-    UserListAlbumAssociationsWithTracksBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-limit-error
-       */
-      message: components['schemas']['UserListAlbumAssociationsWithTracksBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListAlbumAssociationsWithTracksResponseDto: {
-      /** @description The list of albums that match the query parameters, which may be limited by pagination. */
-      associations: components['schemas']['LibraryAssociationWithTracksDto'][];
-      /**
-       * @description The offset of the first association in the associations array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of associations that match the query parameters, which may be greater
-       *     than the number of associations returned in the associations array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListAlbumsBadRequestErrors: UserListAlbumsBadRequestErrors;
-    UserListAlbumsBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListAlbumsBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListAlbumsResponseDto: {
-      /** @description The list of albums that match the query parameters, which may be limited by pagination. */
-      albums: components['schemas']['LibraryAlbumDto'][];
-      /**
-       * @description The offset of the first album in the albums array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of albums that match the query parameters, which may be greater
-       *     than the number of albums returned in the albums array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListAlbumsWithTracksBadRequestErrors: UserListAlbumsWithTracksBadRequestErrors;
-    UserListAlbumsWithTracksBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListAlbumsWithTracksBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListAlbumsWithTracksResponseDto: {
-      /** @description The list of albums that match the query parameters, which may be limited by pagination. */
-      albums: components['schemas']['LibraryAlbumWithTracksDto'][];
-      /**
-       * @description The offset of the first album in the albums array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of albums that match the query parameters, which may be greater
-       *     than the number of albums returned in the albums array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListFavoritesBadRequestErrors: UserListFavoritesBadRequestErrors;
-    UserListFavoritesBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-limit-error
-       */
-      message: components['schemas']['UserListFavoritesBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListFavoritesResponseDto: {
-      /** @description The list of favorites that match the query parameters, which may be limited by pagination. */
-      favorites: components['schemas']['LibraryFavoriteDto'][];
-      /**
-       * @description The offset of the first favorite in the favorites array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of favorites that match the query parameters, which may be greater
-       *     than the number of favorites returned in the favorites array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListIndexerLogsBadRequestErrors: UserListIndexerLogsBadRequestErrors;
-    UserListIndexerLogsBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-root-path-id-error
-       */
-      message: components['schemas']['UserListIndexerLogsBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListIndexerLogsResponseDto: {
-      logs: components['schemas']['UserLogEntryDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    UserListRootPathsResponseDto: {
-      /** @description The list of root paths with associated account owner information */
-      rootPaths: components['schemas']['UserRootPathDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListTrackAssociationsBadRequestErrors: UserListTrackAssociationsBadRequestErrors;
-    UserListTrackAssociationsBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListTrackAssociationsBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTrackAssociationsResponseDto: {
-      /** @description The list of artists that match the query parameters, which may be limited by pagination. */
-      associations: components['schemas']['LibraryAssociationDto'][];
-      /**
-       * @description The offset of the first association in the associations array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of associations that match the query parameters, which may be greater
-       *     than the number of associations returned in the associations array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListTrackAssociationsWithTracksBadRequestErrors: UserListTrackAssociationsWithTracksBadRequestErrors;
-    UserListTrackAssociationsWithTracksBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-limit-error
-       */
-      message: components['schemas']['UserListTrackAssociationsWithTracksBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTrackAssociationsWithTracksResponseDto: {
-      /** @description The list of associations that match the query parameters, which may be limited by pagination. */
-      items: components['schemas']['LibraryAssociationWithTracksDto'][];
-      /**
-       * @description The offset of the first association in the items array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of associations that match the query parameters, which may be greater
-       *     than the number of associations returned in the items array if pagination is applied.
-       */
-      total: number;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserListTracksBadRequestErrors: UserListTracksBadRequestErrors;
-    UserListTracksBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-added-after-error
-       */
-      message: components['schemas']['UserListTracksBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserListTracksResponseDto: {
-      /**
-       * @description The offset of the first track in the tracks array, which may be greater than 0 if
-       *     pagination is applied.
-       */
-      offset: number;
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-      /**
-       * @description The total number of tracks that match the query parameters, which may be greater
-       *     than the number of tracks returned in the tracks array if pagination is applied.
-       */
-      total: number;
-      /** @description The list of tracks that match the query parameters, which may be limited by pagination. */
-      tracks: components['schemas']['LibraryTrackDto'][];
-    };
-    UserLogEntryDto: {
-      /** Format: date-time */
-      date: string;
-      message: string;
-      rootPath: string;
-      rootPathId: number;
-    };
-    UserRegenerateSessionKeyResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserRetrieveAlbumBadRequestErrors: UserRetrieveAlbumBadRequestErrors;
-    UserRetrieveAlbumBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-album-id-error
-       */
-      message: components['schemas']['UserRetrieveAlbumBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserRetrieveAlbumNotFoundErrors: UserRetrieveAlbumNotFoundErrors;
-    UserRetrieveAlbumNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default album-not-found-error
-       */
-      message: components['schemas']['UserRetrieveAlbumNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserRetrieveAlbumResponseDto: {
-      /** @description The list of albums that match the query parameters, which may be limited by pagination. */
-      album: components['schemas']['LibraryAlbumWithTracksDto'];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserRetrieveAssociationBadRequestErrors: UserRetrieveAssociationBadRequestErrors;
-    UserRetrieveAssociationBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-association-id-error
-       */
-      message: components['schemas']['UserRetrieveAssociationBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserRetrieveAssociationNotFoundErrors: UserRetrieveAssociationNotFoundErrors;
-    UserRetrieveAssociationNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default association-not-found-error
-       */
-      message: components['schemas']['UserRetrieveAssociationNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserRetrieveAssociationResponseDto: {
-      association: components['schemas']['AssociationWithCreditsDto'];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
+    UpdateUserRolesBodyDto: {
+      /** @description The administrator's password to authorize the operation. */
+      adminPassword: string;
+      roles: components['schemas']['UserRoleEnum'][];
     };
     /** @enum {string} */
     UserRoleEnum: UserRoleEnum;
-    UserRootPathDto: {
-      /**
-       * Format: date-time
-       * @description The date and time the row was created
-       */
-      createdAt: string;
-      /**
-       * @description The number of files or songs that have been found in this root path, this excludes
-       *     anything that is not a music track.
-       */
-      fileCount: number;
-      /** @description The ID of the root path row in the database */
-      id: number;
-      /** @description The fully-qualified path of the root path, this is the base path where music is stored for a user */
-      rootPath: string;
-      /** @description The total size of all the files in this root path contained in the `fileCount` field */
-      totalSize: number;
-      /**
-       * Format: date-time
-       * @description The date and time the row was last updated, this field is optional and may not be present
-       *     if the row has never been updated
-       */
-      updatedAt?: string;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetAlbumCustomDataBadRequestErrors: UserSetAlbumCustomDataBadRequestErrors;
-    UserSetAlbumCustomDataBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-album-id-error
-       */
-      message: components['schemas']['UserSetAlbumCustomDataBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetAlbumCustomDataBodyDto: {
-      /**
-       * @description Assigns a new value to the album artists if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.
-       */
-      artists: string;
-      /**
-       * @description Assigns a new value to the title of the album if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.
-       */
-      title: string;
-      /**
-       * @description Assigns a new value to the year if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.
-       */
-      year: number;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetAlbumCustomDataNotFoundErrors: UserSetAlbumCustomDataNotFoundErrors;
-    UserSetAlbumCustomDataNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default album-not-found-error
-       */
-      message: components['schemas']['UserSetAlbumCustomDataNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetAlbumCustomDataResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetAlbumFavoriteBadRequestErrors: UserSetAlbumFavoriteBadRequestErrors;
-    UserSetAlbumFavoriteBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-album-id-error
-       */
-      message: components['schemas']['UserSetAlbumFavoriteBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetAlbumFavoriteNotFoundErrors: UserSetAlbumFavoriteNotFoundErrors;
-    UserSetAlbumFavoriteNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default album-not-found-error
-       */
-      message: components['schemas']['UserSetAlbumFavoriteNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetAlbumFavoriteResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetAlbumRatingBadRequestErrors: UserSetAlbumRatingBadRequestErrors;
-    UserSetAlbumRatingBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-album-id-error
-       */
-      message: components['schemas']['UserSetAlbumRatingBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetAlbumRatingBodyDto: {
-      /**
-       * Format: int32
-       * @description The rating value to be set for the track.  If it is 0 the rating will be unset.
-       */
-      rating: number;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetAlbumRatingNotFoundErrors: UserSetAlbumRatingNotFoundErrors;
-    UserSetAlbumRatingNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default album-not-found-error
-       */
-      message: components['schemas']['UserSetAlbumRatingNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetAlbumRatingResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetArtistNameBadRequestErrors: UserSetArtistNameBadRequestErrors;
-    UserSetArtistNameBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-artist-id-error
-       */
-      message: components['schemas']['UserSetArtistNameBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetArtistNameBodyDto: {
-      /**
-       * @description Assigns a new value to the artist name.  If an empty string is provided it will erase the
-       *     custom value.
-       */
-      name: string;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetArtistNameNotFoundErrors: UserSetArtistNameNotFoundErrors;
-    UserSetArtistNameNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default artist-not-found-error
-       */
-      message: components['schemas']['UserSetArtistNameNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetArtistNameResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetAssociationFavoriteBadRequestErrors: UserSetAssociationFavoriteBadRequestErrors;
-    UserSetAssociationFavoriteBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-association-type-error
-       */
-      message: components['schemas']['UserSetAssociationFavoriteBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetAssociationFavoriteNotFoundErrors: UserSetAssociationFavoriteNotFoundErrors;
-    UserSetAssociationFavoriteNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default association-not-found-error
-       */
-      message: components['schemas']['UserSetAssociationFavoriteNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetAssociationFavoriteResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetComposerNameBadRequestErrors: UserSetComposerNameBadRequestErrors;
-    UserSetComposerNameBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-association-id-error
-       */
-      message: components['schemas']['UserSetComposerNameBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetComposerNameBodyDto: {
-      /**
-       * @description Assigns a new value to the composer name.  If an empty string is provided it will erase the
-       *     custom value.
-       */
-      name: string;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetComposerNameNotFoundErrors: UserSetComposerNameNotFoundErrors;
-    UserSetComposerNameNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default composer-not-found-error
-       */
-      message: components['schemas']['UserSetComposerNameNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetComposerNameResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetCustomDataBadRequestErrors: UserSetCustomDataBadRequestErrors;
-    UserSetCustomDataBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-track-id-error
-       */
-      message: components['schemas']['UserSetCustomDataBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetCustomDataBodyDto: {
-      /**
-       * @description Assigns a new value to the album artists if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      albumArtists?: string;
-      /**
-       * @description Assigns a new value to the album title if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      albumTitle?: string;
-      /**
-       * @description Assigns a new value to the track artists if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      artists?: string;
-      /**
-       * @description Assigns a new value to the comment if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      comment?: string;
-      /**
-       * @description Assigns a new value to the track composers if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      composers?: string;
-      /**
-       * @description Assigns a new value to the disc number if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      discNumber?: number;
-      /**
-       * @description Assigns a new value to the genres if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      genres?: string;
-      /**
-       * @description Assigns a new value to the title if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      title?: string;
-      /**
-       * @description Assigns a new value to the track number if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      trackNumber?: number;
-      /**
-       * @description Assigns a new value to the year if a value is provided.  If an empty
-       *     string is provided it will erase the existing value.  If the field is not
-       *     provided it will leave the existing value unchanged.
-       */
-      year?: number;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetCustomDataNotFoundErrors: UserSetCustomDataNotFoundErrors;
-    UserSetCustomDataNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default track-not-found-error
-       */
-      message: components['schemas']['UserSetCustomDataNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetCustomDataResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetFolderFavoriteNotFoundErrors: UserSetFolderFavoriteNotFoundErrors;
-    UserSetFolderFavoriteNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default folder-not-found-error
-       */
-      message: components['schemas']['UserSetFolderFavoriteNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetFolderFavoriteResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetGenreNameBadRequestErrors: UserSetGenreNameBadRequestErrors;
-    UserSetGenreNameBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-genre-id-error
-       */
-      message: components['schemas']['UserSetGenreNameBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetGenreNameBodyDto: {
-      /**
-       * @description Assigns a new value to the genre name.  If an empty string is provided it will erase the
-       *     custom value.
-       */
-      name: string;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetGenreNameNotFoundErrors: UserSetGenreNameNotFoundErrors;
-    UserSetGenreNameNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default genre-not-found-error
-       */
-      message: components['schemas']['UserSetGenreNameNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetGenreNameResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetTrackCustomDataBadRequestErrors: UserSetTrackCustomDataBadRequestErrors;
-    UserSetTrackCustomDataBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-track-id-error
-       */
-      message: components['schemas']['UserSetTrackCustomDataBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetTrackCustomDataBodyDto: {
-      /**
-       * @description Assigns a new value to the track artists if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      artists: string;
-      /**
-       * @description Assigns a new value to the comment if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      comment?: string;
-      /**
-       * @description Assigns a new value to the track composers if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      composers?: string;
-      /**
-       * @description Assigns a new value to the disc number if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      discNumber?: number;
-      /**
-       * @description Assigns a new value to the genres if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      genres?: string;
-      /**
-       * @description Assigns a new value to the title if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      title: string;
-      /**
-       * @description Assigns a new value to the track number if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.  If the field is not
-       *     provided it will leave the custom value unchanged.
-       */
-      trackNumber?: number;
-      /**
-       * @description Assigns a new value to the year if a value is provided.  If an empty
-       *     string is provided it will erase the custom value.
-       */
-      year?: number;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetTrackCustomDataNotFoundErrors: UserSetTrackCustomDataNotFoundErrors;
-    UserSetTrackCustomDataNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default track-not-found-error
-       */
-      message: components['schemas']['UserSetTrackCustomDataNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetTrackCustomDataResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetTrackFavoriteNotFoundErrors: UserSetTrackFavoriteNotFoundErrors;
-    UserSetTrackFavoriteNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default track-not-found-error
-       */
-      message: components['schemas']['UserSetTrackFavoriteNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetTrackFavoriteResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserSetTrackRatingBadRequestErrors: UserSetTrackRatingBadRequestErrors;
-    UserSetTrackRatingBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-track-id-error
-       */
-      message: components['schemas']['UserSetTrackRatingBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetTrackRatingBodyDto: {
-      /**
-       * Format: int32
-       * @description The rating value to be set for the track.  If it is 0 the rating will be unset.
-       */
-      rating: number;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserSetTrackRatingNotFoundErrors: UserSetTrackRatingNotFoundErrors;
-    UserSetTrackRatingNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default track-not-found-error
-       */
-      message: components['schemas']['UserSetTrackRatingNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserSetTrackRatingResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
-    /**
-     * @description A resource ID was specified that does not exist or does not belong to your account.
-     * @enum {string}
-     */
-    UserStreamFileNotFoundErrors: UserStreamFileNotFoundErrors;
-    UserStreamFileNotFoundResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default file-not-found-error
-       */
-      message: components['schemas']['UserStreamFileNotFoundErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
-    UserUpdatePasswordBadRequestErrors: UserUpdatePasswordBadRequestErrors;
-    UserUpdatePasswordBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-password-error
-       */
-      message: components['schemas']['UserUpdatePasswordBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    UserUpdatePasswordBodyDto: {
-      newPassword: string;
-    };
-    UserUpdatePasswordResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
   };
   responses: never;
   parameters: never;
@@ -7927,1066 +7364,7 @@ export type components = {
 };
 export type $defs = Record<string, never>;
 export interface operations {
-  AdminCreateAccountController_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminCreateAccountBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateAccountResponseDto'];
-        };
-      };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateAccountResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateAccountBadRequestResponse'];
-        };
-      };
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateAccountUnauthorizedResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminCreateRootPathController_post: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminCreateRootPathBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateRootPathResponseDto'];
-        };
-      };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateRootPathResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateRootPathBadRequestResponse'];
-        };
-      };
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateRootPathUnauthorizedResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminCreateRootPathNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminDeleteAccountController_delete: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminDeleteAccountBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminDeleteAccountResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminDeleteAccountBadRequestResponse'];
-        };
-      };
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminDeleteAccountUnauthorizedResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminDeleteAccountNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminDeleteRootPathController_delete: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminDeleteRootPathResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminDeleteRootPathNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminIndexerConfigurationController_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminIndexerConfigurationResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminListAccountsController_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminListAccountsResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminListIndexerLogsController_get: {
-    parameters: {
-      query?: {
-        accountId?: number;
-        rootPathId?: number;
-        search?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminListIndexerLogsResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminListIndexerLogsBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminListRootPathsController_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminListRootPathsResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminRegenerateMasterSessionKeyController_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminRegenerateMasterSessionKeyResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminRegenerateUserSessionKeyController_post: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminRegenerateUserSessionKeyResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminRegenerateUserSessionKeyNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminResetUserPasswordController_post: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminResetUserPasswordBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminResetUserPasswordResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminResetUserPasswordBadRequestResponse'];
-        };
-      };
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminResetUserPasswordUnauthorizedResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminResetUserPasswordNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminSetIndexerStatusController_patch: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminSetIndexerStatusBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminSetIndexerStatusResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminUpdateRootPathController_patch: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminUpdateRootPathBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateRootPathResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateRootPathBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateRootPathNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  AdminUpdateUserRolesController_patch: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AdminUpdateUserRolesBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateUserRolesResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateUserRolesBadRequestResponse'];
-        };
-      };
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateUserRolesUnauthorizedResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AdminUpdateUserRolesNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  GuestCreateSessionController_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['GuestCreateSessionBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['GuestCreateSessionResponseDto'];
-        };
-      };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['GuestCreateSessionResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['GuestCreateSessionBadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  GuestHealthcheckController_healthcheck: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  TestCreateAccountController_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TestCreateAccountBodyDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestCreateAccountResponseDto'];
-        };
-      };
-    };
-  };
-  TestDeleteAccountController_delete: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestDeleteAccountResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestDeleteAccountNotFoundResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  TestDuplicateAccountController_post: {
-    parameters: {
-      query: {
-        /** @description The username for the account to copy */
-        username: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TestDuplicateAccountBodyDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestDuplicateAccountResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestDuplicateAccountBadRequestResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestDuplicateAccountNotFoundResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  TestListAccountsController_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestListAccountsResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestListAccountsNotFoundResponseDto'];
-        };
-      };
-    };
-  };
-  TestRetrieveAccountController_get: {
-    parameters: {
-      query: {
-        /** @description The username of the account */
-        username: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestRetrieveAccountResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TestRetrieveAccountNotFoundResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  UserAlbumCoverImageController_get: {
+  ApiCoverImageController_getAlbumCover: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -9042,7 +7420,7 @@ export interface operations {
       };
     };
   };
-  UserAssociationCoverImageController_get: {
+  ApiCoverImageController_getAssociationCover: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -9100,7 +7478,7 @@ export interface operations {
       };
     };
   };
-  UserCreateRootPathController_post: {
+  ApiAccountsController_createAccount: {
     parameters: {
       query?: never;
       header?: never;
@@ -9109,7 +7487,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserCreateRootPathBodyDto'];
+        'application/json': components['schemas']['CreateAccountBodyDto'];
       };
     };
     responses: {
@@ -9118,7 +7496,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserCreateRootPathResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       201: {
@@ -9126,7 +7504,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserCreateRootPathResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -9134,7 +7512,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserCreateRootPathBadRequestResponse'];
+          'application/json': components['schemas']['ApiAccountsCreateAccountBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsCreateAccountUnauthorizedResponse'];
         };
       };
       403: {
@@ -9155,171 +7541,378 @@ export interface operations {
       };
     };
   };
-  UserDeleteCustomDataController_delete: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteCustomDataResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteCustomDataBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteCustomDataNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  UserDeleteFavoriteController_delete: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteFavoriteResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteFavoriteBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteFavoriteNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  UserDeleteRootPathController_delete: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteRootPathResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteRootPathBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserDeleteRootPathNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  UserEndSessionController_delete: {
+  ApiRootPathsController_post: {
     parameters: {
       query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateRootPathBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsPostBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiSessionsController_createSession: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateSessionBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreateSessionResponseDto'];
+        };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreateSessionResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiSessionsCreateSessionBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiSessionsCreateSessionNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiRootPathsController_createRootPath: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateRootPathBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsCreateRootPathBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsCreateRootPathUnauthorizedResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsCreateRootPathNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAccountsController_deleteAccount: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DeleteAccountBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsDeleteAccountBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsDeleteAccountUnauthorizedResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsDeleteAccountNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiCustomDataController_deleteCustomData: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiCustomDataDeleteCustomDataBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiCustomDataDeleteCustomDataNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiFavoritesController_deleteFavorite: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiFavoritesDeleteFavoriteBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiFavoritesDeleteFavoriteNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiRootPathsController_deleteRootPath: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
       header?: never;
       path?: never;
       cookie?: never;
@@ -9350,6 +7943,14 @@ export interface operations {
           'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsDeleteRootPathNotFoundResponse'];
+        };
+      };
       500: {
         headers: {
           [name: string]: unknown;
@@ -9360,7 +7961,61 @@ export interface operations {
       };
     };
   };
-  UserFolderStructureController_get: {
+  ApiRootPathsController_deleteUserRootPath: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsDeleteUserRootPathNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiSessionsController_delete: {
     parameters: {
       query?: never;
       header?: never;
@@ -9374,7 +8029,50 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserFolderStructureResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiSessionsDeleteBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiFoldersController_getTreeStructure: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FolderStructureResponseDto'];
         };
       };
       400: {
@@ -9403,7 +8101,136 @@ export interface operations {
       };
     };
   };
-  UserListAlbumAssociationsController_get: {
+  ApiHealthcheckController_healthcheck: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HealthcheckResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiIndexerController_indexerConfiguration: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['IndexerConfigurationResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAccountsController_getAccounts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListAccountsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAssociationsController_listAssociations: {
     parameters: {
       query: {
         /**
@@ -9445,7 +8272,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumAssociationsResponseDto'];
+          'application/json': components['schemas']['ListAssociationsResponseDto'];
         };
       };
       400: {
@@ -9453,7 +8280,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumAssociationsBadRequestResponse'];
+          'application/json': components['schemas']['ApiAssociationsListAssociationsBadRequestResponse'];
         };
       };
       403: {
@@ -9474,7 +8301,7 @@ export interface operations {
       };
     };
   };
-  UserListAlbumAssociationsWithTracksController_get: {
+  ApiAssociationsController_listAssociationsWithTracks: {
     parameters: {
       query: {
         /**
@@ -9516,7 +8343,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumAssociationsWithTracksResponseDto'];
+          'application/json': components['schemas']['ListAssociationsWithTracksResponseDto'];
         };
       };
       400: {
@@ -9524,7 +8351,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumAssociationsWithTracksBadRequestResponse'];
+          'application/json': components['schemas']['ApiAssociationsListAssociationsWithTracksBadRequestResponse'];
         };
       };
       403: {
@@ -9545,7 +8372,7 @@ export interface operations {
       };
     };
   };
-  UserListAlbumsController_get: {
+  ApiAlbumsController_listAlbums: {
     parameters: {
       query?: {
         /**
@@ -9621,7 +8448,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumsResponseDto'];
+          'application/json': components['schemas']['ListAlbumsResponseDto'];
         };
       };
       400: {
@@ -9629,7 +8456,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumsBadRequestResponse'];
+          'application/json': components['schemas']['ApiAlbumsListAlbumsBadRequestResponse'];
         };
       };
       403: {
@@ -9650,7 +8477,7 @@ export interface operations {
       };
     };
   };
-  UserListAlbumsWithTracksController_get: {
+  ApiAlbumsController_listAlbumsWithTracks: {
     parameters: {
       query?: {
         /**
@@ -9726,7 +8553,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumsWithTracksResponseDto'];
+          'application/json': components['schemas']['ListAlbumsWithTracksResponseDto'];
         };
       };
       400: {
@@ -9734,7 +8561,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListAlbumsWithTracksBadRequestResponse'];
+          'application/json': components['schemas']['ApiAlbumsListAlbumsWithTracksBadRequestResponse'];
         };
       };
       403: {
@@ -9755,7 +8582,7 @@ export interface operations {
       };
     };
   };
-  UserListFavoritesController_get: {
+  ApiFavoritesController_listFavorites: {
     parameters: {
       query?: {
         limit?: number;
@@ -9772,7 +8599,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListFavoritesResponseDto'];
+          'application/json': components['schemas']['ListFavoritesResponseDto'];
         };
       };
       400: {
@@ -9780,7 +8607,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListFavoritesBadRequestResponse'];
+          'application/json': components['schemas']['ApiFavoritesListFavoritesBadRequestResponse'];
         };
       };
       403: {
@@ -9801,7 +8628,7 @@ export interface operations {
       };
     };
   };
-  UserListIndexerLogsController_get: {
+  ApiIndexerController_listIndexerLogsByUser: {
     parameters: {
       query?: {
         rootPathId?: number;
@@ -9818,7 +8645,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListIndexerLogsResponseDto'];
+          'application/json': components['schemas']['ListIndexerLogsResponseDto'];
         };
       };
       400: {
@@ -9826,7 +8653,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListIndexerLogsBadRequestResponse'];
+          'application/json': components['schemas']['ApiIndexerListIndexerLogsByUserBadRequestResponse'];
         };
       };
       403: {
@@ -9847,7 +8674,7 @@ export interface operations {
       };
     };
   };
-  UserListRootPathsController_get: {
+  ApiRootPathsController_listRootPaths: {
     parameters: {
       query?: never;
       header?: never;
@@ -9861,7 +8688,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListRootPathsResponseDto'];
+          'application/json': components['schemas']['RootPathsResponseDto'];
         };
       };
       400: {
@@ -9890,7 +8717,7 @@ export interface operations {
       };
     };
   };
-  UserListTrackAssociationsController_get: {
+  ApiAssociationsController_listTrackAssociations: {
     parameters: {
       query: {
         /**
@@ -9932,7 +8759,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackAssociationsResponseDto'];
+          'application/json': components['schemas']['ListAssociationsResponseDto'];
         };
       };
       400: {
@@ -9940,7 +8767,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackAssociationsBadRequestResponse'];
+          'application/json': components['schemas']['ApiAssociationsListTrackAssociationsBadRequestResponse'];
         };
       };
       403: {
@@ -9961,7 +8788,7 @@ export interface operations {
       };
     };
   };
-  UserListTrackAssociationsWithTracksController_get: {
+  ApiAssociationsController_listTrackAssociationsWithTracks: {
     parameters: {
       query: {
         /**
@@ -10003,7 +8830,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackAssociationsWithTracksResponseDto'];
+          'application/json': components['schemas']['ListAssociationsWithTracksResponseDto'];
         };
       };
       400: {
@@ -10011,7 +8838,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTrackAssociationsWithTracksBadRequestResponse'];
+          'application/json': components['schemas']['ApiAssociationsListTrackAssociationsWithTracksBadRequestResponse'];
         };
       };
       403: {
@@ -10032,7 +8859,7 @@ export interface operations {
       };
     };
   };
-  UserListTracksController_get: {
+  ApiTracksController_listTracks: {
     parameters: {
       query?: {
         /**
@@ -10108,7 +8935,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTracksResponseDto'];
+          'application/json': components['schemas']['ListTracksResponseDto'];
         };
       };
       400: {
@@ -10116,7 +8943,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserListTracksBadRequestResponse'];
+          'application/json': components['schemas']['ApiTracksListTracksBadRequestResponse'];
         };
       };
       403: {
@@ -10137,7 +8964,108 @@ export interface operations {
       };
     };
   };
-  UserRegenerateSessionKeyController_post: {
+  ApiIndexerController_listIndexerLogs: {
+    parameters: {
+      query?: {
+        accountId?: number;
+        rootPathId?: number;
+        search?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListIndexerLogsWithUserResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiIndexerListIndexerLogsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiRootPathsController_listUserRootPaths: {
+    parameters: {
+      query?: {
+        /** @description The database ID of the resource */
+        id?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RootPathsWithUserResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsListUserRootPathsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsListUserRootPathsNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiSessionsController_regenerateMasterSessionKey: {
     parameters: {
       query?: never;
       header?: never;
@@ -10151,7 +9079,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRegenerateSessionKeyResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10180,7 +9108,174 @@ export interface operations {
       };
     };
   };
-  UserRetrieveAlbumController_get: {
+  ApiSessionsController_regenerateSessionKey: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiSessionsController_regenerateUserSessionKey: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegenerateUserSessionBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiSessionsRegenerateUserSessionKeyBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiSessionsRegenerateUserSessionKeyNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAccountsController_resetUserPassword: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ResetUserPasswordBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsResetUserPasswordBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsResetUserPasswordUnauthorizedResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsResetUserPasswordNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAlbumsController_retrieveAlbum: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10197,7 +9292,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAlbumResponseDto'];
+          'application/json': components['schemas']['RetrieveAlbumResponseDto'];
         };
       };
       400: {
@@ -10205,7 +9300,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAlbumBadRequestResponse'];
+          'application/json': components['schemas']['ApiAlbumsRetrieveAlbumBadRequestResponse'];
         };
       };
       403: {
@@ -10221,7 +9316,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAlbumNotFoundResponse'];
+          'application/json': components['schemas']['ApiAlbumsRetrieveAlbumNotFoundResponse'];
         };
       };
       500: {
@@ -10234,7 +9329,7 @@ export interface operations {
       };
     };
   };
-  UserRetrieveAssociationController_get: {
+  ApiAssociationsController_retrieveAssociation: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10251,7 +9346,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAssociationResponseDto'];
+          'application/json': components['schemas']['RetrieveAssociationResponseDto'];
         };
       };
       400: {
@@ -10259,7 +9354,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAssociationBadRequestResponse'];
+          'application/json': components['schemas']['ApiAssociationsRetrieveAssociationBadRequestResponse'];
         };
       };
       403: {
@@ -10275,7 +9370,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserRetrieveAssociationNotFoundResponse'];
+          'application/json': components['schemas']['ApiAssociationsRetrieveAssociationNotFoundResponse'];
         };
       };
       500: {
@@ -10288,7 +9383,7 @@ export interface operations {
       };
     };
   };
-  UserSetAlbumCustomDataController_patch: {
+  ApiCustomDataController_setAlbumData: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10300,7 +9395,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSetAlbumCustomDataBodyDto'];
+        'application/json': components['schemas']['SetAlbumCustomDataBodyDto'];
       };
     };
     responses: {
@@ -10309,7 +9404,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumCustomDataResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10317,7 +9412,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumCustomDataBadRequestResponse'];
+          'application/json': components['schemas']['ApiCustomDataSetAlbumDataBadRequestResponse'];
         };
       };
       403: {
@@ -10333,7 +9428,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumCustomDataNotFoundResponse'];
+          'application/json': components['schemas']['ApiCustomDataSetAlbumDataNotFoundResponse'];
         };
       };
       500: {
@@ -10346,7 +9441,7 @@ export interface operations {
       };
     };
   };
-  UserSetAlbumFavoriteController_put: {
+  ApiFavoritesController_setAlbumFavorite: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10363,7 +9458,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumFavoriteResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10371,7 +9466,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumFavoriteBadRequestResponse'];
+          'application/json': components['schemas']['ApiFavoritesSetAlbumFavoriteBadRequestResponse'];
         };
       };
       403: {
@@ -10387,7 +9482,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumFavoriteNotFoundResponse'];
+          'application/json': components['schemas']['ApiFavoritesSetAlbumFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10400,7 +9495,7 @@ export interface operations {
       };
     };
   };
-  UserSetAlbumRatingController_put: {
+  ApiRatingsController_setAlbumRating: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10412,7 +9507,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSetAlbumRatingBodyDto'];
+        'application/json': components['schemas']['SetAlbumRatingBodyDto'];
       };
     };
     responses: {
@@ -10421,7 +9516,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumRatingResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10429,7 +9524,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumRatingBadRequestResponse'];
+          'application/json': components['schemas']['ApiRatingsSetAlbumRatingBadRequestResponse'];
         };
       };
       403: {
@@ -10445,7 +9540,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAlbumRatingNotFoundResponse'];
+          'application/json': components['schemas']['ApiRatingsSetAlbumRatingNotFoundResponse'];
         };
       };
       500: {
@@ -10458,65 +9553,7 @@ export interface operations {
       };
     };
   };
-  UserSetArtistNameController_patch: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UserSetArtistNameBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetArtistNameResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetArtistNameBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetArtistNameNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  UserSetAssociationFavoriteController_put: {
+  ApiFavoritesController_setAssociationFavorite: {
     parameters: {
       query: {
         associationType: components['schemas']['AssociationTypeEnum'];
@@ -10534,7 +9571,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAssociationFavoriteResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10542,7 +9579,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAssociationFavoriteBadRequestResponse'];
+          'application/json': components['schemas']['ApiFavoritesSetAssociationFavoriteBadRequestResponse'];
         };
       };
       403: {
@@ -10558,7 +9595,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetAssociationFavoriteNotFoundResponse'];
+          'application/json': components['schemas']['ApiFavoritesSetAssociationFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10571,7 +9608,7 @@ export interface operations {
       };
     };
   };
-  UserSetComposerNameController_patch: {
+  ApiCustomDataController_setArtistName: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10583,7 +9620,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSetComposerNameBodyDto'];
+        'application/json': components['schemas']['SetAssociationNameBodyDto'];
       };
     };
     responses: {
@@ -10592,7 +9629,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetComposerNameResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10600,7 +9637,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetComposerNameBadRequestResponse'];
+          'application/json': components['schemas']['ApiCustomDataSetArtistNameBadRequestResponse'];
         };
       };
       403: {
@@ -10616,7 +9653,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetComposerNameNotFoundResponse'];
+          'application/json': components['schemas']['ApiCustomDataSetArtistNameNotFoundResponse'];
         };
       };
       500: {
@@ -10629,7 +9666,7 @@ export interface operations {
       };
     };
   };
-  UserSetCustomDataController_put: {
+  ApiCustomDataController_put: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10641,7 +9678,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSetCustomDataBodyDto'];
+        'application/json': components['schemas']['SetCustomDataBodyDto'];
       };
     };
     responses: {
@@ -10650,7 +9687,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetCustomDataResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10658,7 +9695,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetCustomDataBadRequestResponse'];
+          'application/json': components['schemas']['ApiCustomDataPutBadRequestResponse'];
         };
       };
       403: {
@@ -10674,7 +9711,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetCustomDataNotFoundResponse'];
+          'application/json': components['schemas']['ApiCustomDataPutNotFoundResponse'];
         };
       };
       500: {
@@ -10687,7 +9724,7 @@ export interface operations {
       };
     };
   };
-  UserSetFolderFavoriteController_put: {
+  ApiFavoritesController_setFolderFavorite: {
     parameters: {
       query: {
         folder: string;
@@ -10703,7 +9740,62 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetFolderFavoriteResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiFavoritesSetFolderFavoriteBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiFavoritesSetFolderFavoriteNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiIndexerController_setStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SetIndexerStatusBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SetIndexerStatusResponseDto'];
         };
       };
       400: {
@@ -10722,14 +9814,6 @@ export interface operations {
           'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetFolderFavoriteNotFoundResponse'];
-        };
-      };
       500: {
         headers: {
           [name: string]: unknown;
@@ -10740,7 +9824,7 @@ export interface operations {
       };
     };
   };
-  UserSetGenreNameController_patch: {
+  ApiCustomDataController_patch: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10752,7 +9836,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSetGenreNameBodyDto'];
+        'application/json': components['schemas']['SetTrackCustomDataBodyDto'];
       };
     };
     responses: {
@@ -10761,7 +9845,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetGenreNameResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10769,7 +9853,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetGenreNameBadRequestResponse'];
+          'application/json': components['schemas']['ApiCustomDataPatchBadRequestResponse'];
         };
       };
       403: {
@@ -10785,7 +9869,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetGenreNameNotFoundResponse'];
+          'application/json': components['schemas']['ApiCustomDataPatchNotFoundResponse'];
         };
       };
       500: {
@@ -10798,65 +9882,7 @@ export interface operations {
       };
     };
   };
-  UserSetTrackCustomDataController_patch: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UserSetTrackCustomDataBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetTrackCustomDataResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetTrackCustomDataBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UserSetTrackCustomDataNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  UserSetTrackFavoriteController_put: {
+  ApiFavoritesController_setTrackFavorite: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10873,7 +9899,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackFavoriteResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10881,7 +9907,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['ApiFavoritesSetTrackFavoriteBadRequestResponse'];
         };
       };
       403: {
@@ -10897,7 +9923,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackFavoriteNotFoundResponse'];
+          'application/json': components['schemas']['ApiFavoritesSetTrackFavoriteNotFoundResponse'];
         };
       };
       500: {
@@ -10910,7 +9936,7 @@ export interface operations {
       };
     };
   };
-  UserSetTrackRatingController_put: {
+  ApiRatingsController_put: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -10922,7 +9948,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSetTrackRatingBodyDto'];
+        'application/json': components['schemas']['SetTrackRatingBodyDto'];
       };
     };
     responses: {
@@ -10931,7 +9957,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackRatingResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10939,7 +9965,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackRatingBadRequestResponse'];
+          'application/json': components['schemas']['ApiRatingsPutBadRequestResponse'];
         };
       };
       403: {
@@ -10955,7 +9981,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserSetTrackRatingNotFoundResponse'];
+          'application/json': components['schemas']['ApiRatingsPutNotFoundResponse'];
         };
       };
       500: {
@@ -10968,7 +9994,7 @@ export interface operations {
       };
     };
   };
-  UserStreamFileController_get: {
+  ApiTracksController_get: {
     parameters: {
       query: {
         /** @description The database ID of the resource */
@@ -11018,10 +10044,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'audio/flac': components['schemas']['UserStreamFileNotFoundResponse'];
-          'audio/mpeg': components['schemas']['UserStreamFileNotFoundResponse'];
-          'audio/ogg': components['schemas']['UserStreamFileNotFoundResponse'];
-          'audio/wav': components['schemas']['UserStreamFileNotFoundResponse'];
+          'audio/flac': components['schemas']['ApiTracksGetNotFoundResponse'];
+          'audio/mpeg': components['schemas']['ApiTracksGetNotFoundResponse'];
+          'audio/ogg': components['schemas']['ApiTracksGetNotFoundResponse'];
+          'audio/wav': components['schemas']['ApiTracksGetNotFoundResponse'];
         };
       };
       500: {
@@ -11037,7 +10063,7 @@ export interface operations {
       };
     };
   };
-  UserUpdatePasswordController_post: {
+  ApiTestController_createTestAccount: {
     parameters: {
       query?: never;
       header?: never;
@@ -11046,7 +10072,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserUpdatePasswordBodyDto'];
+        'application/json': components['schemas']['CreateTestAccountBodyDto'];
       };
     };
     responses: {
@@ -11055,7 +10081,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserUpdatePasswordResponseDto'];
+          'application/json': components['schemas']['CreateTestAccountResponseDto'];
         };
       };
       400: {
@@ -11063,7 +10089,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['UserUpdatePasswordBadRequestResponse'];
+          'application/json': components['schemas']['ApiTestCreateTestAccountBadRequestResponse'];
         };
       };
       403: {
@@ -11072,6 +10098,384 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiTestController_deleeteTestAccount: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiTestDeleeteTestAccountBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiTestController_duplicateTestAccount: {
+    parameters: {
+      query: {
+        /** @description The username for the account to copy */
+        username: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DuplicateTestAccountBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['DuplicateTestAccountResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiTestDuplicateTestAccountBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiTestDuplicateTestAccountNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiTestController_listTestAccounts: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListTestAccountsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiTestController_get: {
+    parameters: {
+      query: {
+        /** @description The username of the account */
+        username: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RetrieveTestAccountResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiTestGetBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiTestGetNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAccountsController_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePasswordBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsPostBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiRootPathsController_patch: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateRootPathBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsPatchBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsPatchNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAccountsController_updateUserRoles: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateUserRolesBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsUpdateUserRolesBadRequestResponse'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsUpdateUserRolesUnauthorizedResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsUpdateUserRolesNotFoundResponse'];
         };
       };
       500: {
@@ -11364,9 +10768,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'image/jpeg': string;
-          'image/png': string;
-          'image/webp': string;
+          'application/json': string;
         };
       };
       400: {
@@ -11374,9 +10776,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'image/jpeg': components['schemas']['BadRequestResponseDto'];
-          'image/png': components['schemas']['BadRequestResponseDto'];
-          'image/webp': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -11384,9 +10784,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'image/jpeg': components['schemas']['ForbiddenErrorResponseDto'];
-          'image/png': components['schemas']['ForbiddenErrorResponseDto'];
-          'image/webp': components['schemas']['ForbiddenErrorResponseDto'];
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -11394,9 +10792,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'image/jpeg': components['schemas']['InternalServerErrorResponseDto'];
-          'image/png': components['schemas']['InternalServerErrorResponseDto'];
-          'image/webp': components['schemas']['InternalServerErrorResponseDto'];
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -12455,89 +11851,6 @@ export interface operations {
     };
   };
 }
-export enum AdminCreateAccountBadRequestErrors {
-  invalid_username_not_unique_error = 'invalid-username-not-unique-error',
-  invalid_admin_password_error = 'invalid-admin-password-error',
-  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_username_error = 'invalid-username-error',
-  invalid_username_length_error = 'invalid-username-length-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
-  invalid_user_role_error = 'invalid-user-role-error',
-  invalid_role_error = 'invalid-role-error',
-}
-export enum AdminCreateAccountUnauthorizedErrors {
-  invalid_admin_password_error = 'invalid-admin-password-error',
-}
-export enum AdminCreateRootPathBadRequestErrors {
-  root_path_does_not_exist_error = 'root-path-does-not-exist-error',
-  duplicate_root_path_error = 'duplicate-root-path-error',
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_root_path_error = 'invalid-root-path-error',
-}
-export enum AdminCreateRootPathNotFoundErrors {
-  root_path_not_found_error = 'root-path-not-found-error',
-  account_not_found_error = 'account-not-found-error',
-}
-export enum AdminCreateRootPathUnauthorizedErrors {
-  invalid_admin_password_error = 'invalid-admin-password-error',
-}
-export enum AdminDeleteAccountBadRequestErrors {
-  account_only_admin_error = 'account-only-admin-error',
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_admin_password_error = 'invalid-admin-password-error',
-  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-}
-export enum AdminDeleteAccountNotFoundErrors {
-  account_not_found_error = 'account-not-found-error',
-}
-export enum AdminDeleteAccountUnauthorizedErrors {
-  invalid_admin_password_error = 'invalid-admin-password-error',
-}
-export enum AdminDeleteRootPathNotFoundErrors {
-  root_path_not_found_error = 'root-path-not-found-error',
-}
-export enum AdminListIndexerLogsBadRequestErrors {
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
-  invalid_search_length_error = 'invalid-search-length-error',
-}
-export enum AdminRegenerateUserSessionKeyNotFoundErrors {
-  account_not_found_error = 'account-not-found-error',
-}
-export enum AdminResetUserPasswordBadRequestErrors {
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_admin_password_error = 'invalid-admin-password-error',
-  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_new_password_error = 'invalid-new-password-error',
-  invalid_new_password_length_error = 'invalid-new-password-length-error',
-}
-export enum AdminResetUserPasswordNotFoundErrors {
-  account_not_found_error = 'account-not-found-error',
-}
-export enum AdminResetUserPasswordUnauthorizedErrors {
-  invalid_admin_password_error = 'invalid-admin-password-error',
-}
-export enum AdminUpdateRootPathBadRequestErrors {
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
-  invalid_root_path_error = 'invalid-root-path-error',
-}
-export enum AdminUpdateRootPathNotFoundErrors {
-  root_path_not_found_error = 'root-path-not-found-error',
-}
-export enum AdminUpdateUserRolesBadRequestErrors {
-  invalid_account_id_error = 'invalid-account-id-error',
-  invalid_admin_password_error = 'invalid-admin-password-error',
-  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
-  invalid_user_role_error = 'invalid-user-role-error',
-  invalid_role_error = 'invalid-role-error',
-}
-export enum AdminUpdateUserRolesNotFoundErrors {
-  account_not_found_error = 'account-not-found-error',
-}
-export enum AdminUpdateUserRolesUnauthorizedErrors {
-  invalid_admin_password_error = 'invalid-admin-password-error',
-}
 export enum AlbumSortFieldEnum {
   album = 'album',
   album_artist = 'album_artist',
@@ -12549,6 +11862,414 @@ export enum AlbumSortFieldEnum {
   random = 'random',
   rating = 'rating',
   year = 'year',
+}
+export enum ApiAccountsCreateAccountBadRequestErrors {
+  invalid_username_not_unique_error = 'invalid-username-not-unique-error',
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+  invalid_user_role_error = 'invalid-user-role-error',
+  invalid_role_error = 'invalid-role-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+}
+export enum ApiAccountsCreateAccountUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum ApiAccountsDeleteAccountBadRequestErrors {
+  account_only_admin_error = 'account-only-admin-error',
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+}
+export enum ApiAccountsDeleteAccountNotFoundErrors {
+  account_not_found_error = 'account-not-found-error',
+}
+export enum ApiAccountsDeleteAccountUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum ApiAccountsPostBadRequestErrors {
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+}
+export enum ApiAccountsResetUserPasswordBadRequestErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_new_password_error = 'invalid-new-password-error',
+  invalid_new_password_length_error = 'invalid-new-password-length-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+}
+export enum ApiAccountsResetUserPasswordNotFoundErrors {
+  account_not_found_error = 'account-not-found-error',
+}
+export enum ApiAccountsResetUserPasswordUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum ApiAccountsUpdateUserRolesBadRequestErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_user_role_error = 'invalid-user-role-error',
+  invalid_role_error = 'invalid-role-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+}
+export enum ApiAccountsUpdateUserRolesNotFoundErrors {
+  account_not_found_error = 'account-not-found-error',
+}
+export enum ApiAccountsUpdateUserRolesUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum ApiAlbumsListAlbumsBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_artist_length_error = 'invalid-artist-length-error',
+  invalid_artist_error = 'invalid-artist-error',
+  invalid_composer_length_error = 'invalid-composer-length-error',
+  invalid_composer_error = 'invalid-composer-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_released_after_error = 'invalid-released-after-error',
+  invalid_released_before_error = 'invalid-released-before-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_year_error = 'invalid-year-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiAlbumsListAlbumsWithTracksBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_artist_length_error = 'invalid-artist-length-error',
+  invalid_artist_error = 'invalid-artist-error',
+  invalid_composer_length_error = 'invalid-composer-length-error',
+  invalid_composer_error = 'invalid-composer-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_released_after_error = 'invalid-released-after-error',
+  invalid_released_before_error = 'invalid-released-before-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_year_error = 'invalid-year-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiAlbumsRetrieveAlbumBadRequestErrors {
+  album_not_found_error = 'album-not-found-error',
+  invalid_album_id_error = 'invalid-album-id-error',
+}
+export enum ApiAlbumsRetrieveAlbumNotFoundErrors {
+  album_not_found_error = 'album-not-found-error',
+}
+export enum ApiAssociationsListAssociationsBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiAssociationsListAssociationsWithTracksBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiAssociationsListTrackAssociationsBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiAssociationsListTrackAssociationsWithTracksBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiAssociationsRetrieveAssociationBadRequestErrors {
+  invalid_association_id_error = 'invalid-association-id-error',
+}
+export enum ApiAssociationsRetrieveAssociationNotFoundErrors {
+  association_not_found_error = 'association-not-found-error',
+}
+export enum ApiCustomDataDeleteCustomDataBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+}
+export enum ApiCustomDataDeleteCustomDataNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum ApiCustomDataPatchBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+  invalid_artists_length_error = 'invalid-artists-length-error',
+  invalid_artists_error = 'invalid-artists-error',
+  invalid_comment_length_error = 'invalid-comment-length-error',
+  invalid_comment_error = 'invalid-comment-error',
+  invalid_composers_length_error = 'invalid-composers-length-error',
+  invalid_composers_error = 'invalid-composers-error',
+  invalid_disc_number_range_error = 'invalid-disc-number-range-error',
+  invalid_disc_number_error = 'invalid-disc-number-error',
+  invalid_genres_length_error = 'invalid-genres-length-error',
+  invalid_genres_error = 'invalid-genres-error',
+  invalid_title_length_error = 'invalid-title-length-error',
+  invalid_title_error = 'invalid-title-error',
+  invalid_track_number_range_error = 'invalid-track-number-range-error',
+  invalid_track_number_error = 'invalid-track-number-error',
+  invalid_year_range_error = 'invalid-year-range-error',
+  invalid_year_error = 'invalid-year-error',
+}
+export enum ApiCustomDataPatchNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum ApiCustomDataPutBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+  invalid_album_artists_length_error = 'invalid-album-artists-length-error',
+  invalid_album_artists_error = 'invalid-album-artists-error',
+  invalid_album_title_length_error = 'invalid-album-title-length-error',
+  invalid_album_title_error = 'invalid-album-title-error',
+  invalid_artists_length_error = 'invalid-artists-length-error',
+  invalid_artists_error = 'invalid-artists-error',
+  invalid_comment_length_error = 'invalid-comment-length-error',
+  invalid_comment_error = 'invalid-comment-error',
+  invalid_composers_length_error = 'invalid-composers-length-error',
+  invalid_composers_error = 'invalid-composers-error',
+  invalid_disc_number_range_error = 'invalid-disc-number-range-error',
+  invalid_disc_number_error = 'invalid-disc-number-error',
+  invalid_genres_length_error = 'invalid-genres-length-error',
+  invalid_genres_error = 'invalid-genres-error',
+  invalid_title_length_error = 'invalid-title-length-error',
+  invalid_title_error = 'invalid-title-error',
+  invalid_track_number_range_error = 'invalid-track-number-range-error',
+  invalid_track_number_error = 'invalid-track-number-error',
+  invalid_year_range_error = 'invalid-year-range-error',
+  invalid_year_error = 'invalid-year-error',
+}
+export enum ApiCustomDataPutNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum ApiCustomDataSetAlbumDataBadRequestErrors {
+  invalid_album_id_error = 'invalid-album-id-error',
+  invalid_artists_length_error = 'invalid-artists-length-error',
+  invalid_artists_error = 'invalid-artists-error',
+  invalid_title_length_error = 'invalid-title-length-error',
+  invalid_title_error = 'invalid-title-error',
+  invalid_year_range_error = 'invalid-year-range-error',
+  invalid_year_error = 'invalid-year-error',
+}
+export enum ApiCustomDataSetAlbumDataNotFoundErrors {
+  album_not_found_error = 'album-not-found-error',
+}
+export enum ApiCustomDataSetArtistNameBadRequestErrors {
+  invalid_artist_id_error = 'invalid-artist-id-error',
+  invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
+}
+export enum ApiCustomDataSetArtistNameNotFoundErrors {
+  artist_not_found_error = 'artist-not-found-error',
+}
+export enum ApiFavoritesDeleteFavoriteBadRequestErrors {
+  invalid_favorite_item_id_error = 'invalid-favorite-item-id-error',
+}
+export enum ApiFavoritesDeleteFavoriteNotFoundErrors {
+  favorite_item_not_found_error = 'favorite-item-not-found-error',
+}
+export enum ApiFavoritesListFavoritesBadRequestErrors {
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiFavoritesSetAlbumFavoriteBadRequestErrors {
+  invalid_album_id_error = 'invalid-album-id-error',
+}
+export enum ApiFavoritesSetAlbumFavoriteNotFoundErrors {
+  album_not_found_error = 'album-not-found-error',
+}
+export enum ApiFavoritesSetAssociationFavoriteBadRequestErrors {
+  invalid_association_type_error = 'invalid-association-type-error',
+  invalid_association_id_error = 'invalid-association-id-error',
+}
+export enum ApiFavoritesSetAssociationFavoriteNotFoundErrors {
+  association_not_found_error = 'association-not-found-error',
+}
+export enum ApiFavoritesSetFolderFavoriteBadRequestErrors {}
+export enum ApiFavoritesSetFolderFavoriteNotFoundErrors {
+  folder_not_found_error = 'folder-not-found-error',
+}
+export enum ApiFavoritesSetTrackFavoriteBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+}
+export enum ApiFavoritesSetTrackFavoriteNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+}
+export enum ApiIndexerListIndexerLogsBadRequestErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+  invalid_search_length_error = 'invalid-search-length-error',
+}
+export enum ApiIndexerListIndexerLogsByUserBadRequestErrors {
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+  invalid_search_length_error = 'invalid-search-length-error',
+}
+export enum ApiRatingsPutBadRequestErrors {
+  invalid_track_id_error = 'invalid-track-id-error',
+  invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_rating_error = 'invalid-rating-error',
+}
+export enum ApiRatingsPutNotFoundErrors {
+  track_not_found_error = 'track-not-found-error',
+  album_not_found_error = 'album-not-found-error',
+}
+export enum ApiRatingsSetAlbumRatingBadRequestErrors {
+  invalid_album_id_error = 'invalid-album-id-error',
+  invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_rating_error = 'invalid-rating-error',
+}
+export enum ApiRatingsSetAlbumRatingNotFoundErrors {
+  album_not_found_error = 'album-not-found-error',
+}
+export enum ApiRootPathsCreateRootPathBadRequestErrors {
+  root_path_does_not_exist_error = 'root-path-does-not-exist-error',
+  duplicate_root_path_error = 'duplicate-root-path-error',
+  invalid_account_id_error = 'invalid-account-id-error',
+  invalid_root_path_error = 'invalid-root-path-error',
+}
+export enum ApiRootPathsCreateRootPathNotFoundErrors {
+  root_path_not_found_error = 'root-path-not-found-error',
+  account_not_found_error = 'account-not-found-error',
+}
+export enum ApiRootPathsCreateRootPathUnauthorizedErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum ApiRootPathsDeleteRootPathNotFoundErrors {
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
+export enum ApiRootPathsDeleteUserRootPathNotFoundErrors {
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
+export enum ApiRootPathsListUserRootPathsBadRequestErrors {
+  account_not_found_error = 'account-not-found-error',
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
+export enum ApiRootPathsListUserRootPathsNotFoundErrors {
+  account_not_found_error = 'account-not-found-error',
+}
+export enum ApiRootPathsPatchBadRequestErrors {
+  root_path_does_not_exist_error = 'root-path-does-not-exist-error',
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+  invalid_root_path_error = 'invalid-root-path-error',
+}
+export enum ApiRootPathsPatchNotFoundErrors {
+  root_path_not_found_error = 'root-path-not-found-error',
+}
+export enum ApiRootPathsPostBadRequestErrors {
+  root_path_does_not_exist_error = 'root-path-does-not-exist-error',
+  duplicate_root_path_error = 'duplicate-root-path-error',
+  invalid_root_path_error = 'invalid-root-path-error',
+}
+export enum ApiSessionsCreateSessionBadRequestErrors {
+  invalid_password_error = 'invalid-password-error',
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+  invalid_expires_at_range_error = 'invalid-expires-at-range-error',
+  invalid_expires_at_error = 'invalid-expires-at-error',
+}
+export enum ApiSessionsCreateSessionNotFoundErrors {
+  invalid_username_error = 'invalid-username-error',
+}
+export enum ApiSessionsDeleteBadRequestErrors {
+  session_not_found_error = 'session-not-found-error',
+  invalid_session_error = 'invalid-session-error',
+}
+export enum ApiSessionsRegenerateUserSessionKeyBadRequestErrors {
+  invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+}
+export enum ApiSessionsRegenerateUserSessionKeyNotFoundErrors {
+  invalid_account_id_error = 'invalid-account-id-error',
+}
+export enum ApiTestCreateTestAccountBadRequestErrors {
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+  invalid_user_role_error = 'invalid-user-role-error',
+  invalid_role_error = 'invalid-role-error',
+}
+export enum ApiTestDeleeteTestAccountBadRequestErrors {
+  account_not_found_error = 'account-not-found-error',
+  invalid_account_id_error = 'invalid-account-id-error',
+}
+export enum ApiTestDuplicateTestAccountBadRequestErrors {
+  account_not_found_error = 'account-not-found-error',
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+  invalid_new_username_error = 'invalid-new-username-error',
+  invalid_new_username_length_error = 'invalid-new-username-length-error',
+}
+export enum ApiTestDuplicateTestAccountNotFoundErrors {
+  not_found_error = 'not-found-error',
+}
+export enum ApiTestGetBadRequestErrors {
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+}
+export enum ApiTestGetNotFoundErrors {
+  account_not_found_error = 'account-not-found-error',
+}
+export enum ApiTracksGetNotFoundErrors {
+  file_not_found_error = 'file-not-found-error',
+}
+export enum ApiTracksListTracksBadRequestErrors {
+  invalid_added_after_error = 'invalid-added-after-error',
+  invalid_added_before_error = 'invalid-added-before-error',
+  invalid_album_length_error = 'invalid-album-length-error',
+  invalid_album_error = 'invalid-album-error',
+  invalid_artist_length_error = 'invalid-artist-length-error',
+  invalid_artist_error = 'invalid-artist-error',
+  invalid_composer_length_error = 'invalid-composer-length-error',
+  invalid_composer_error = 'invalid-composer-error',
+  invalid_filter_length_error = 'invalid-filter-length-error',
+  invalid_filter_error = 'invalid-filter-error',
+  invalid_genre_length_error = 'invalid-genre-length-error',
+  invalid_genre_error = 'invalid-genre-error',
+  invalid_max_rating_error = 'invalid-max-rating-error',
+  invalid_min_rating_error = 'invalid-min-rating-error',
+  invalid_sort_order_error = 'invalid-sort-order-error',
+  invalid_sort_field_error = 'invalid-sort-field-error',
+  invalid_year_error = 'invalid-year-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
 }
 export enum AssociationSortFieldEnum {
   name = 'name',
@@ -12576,12 +12297,6 @@ export enum FileTypeEnum {
 }
 export enum ForbiddenErrorEnum {
   forbidden_error = 'forbidden-error',
-}
-export enum GuestCreateSessionBadRequestErrorMessageEnum {
-  invalid_username_error = 'invalid-username-error',
-  invalid_username_length_error = 'invalid-username-length-error',
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
 }
 export enum InternalServerErrorEnum {
   internal_server_error = 'internal-server-error',
@@ -12672,27 +12387,6 @@ export enum SynologyPlaylistDeleteBodyDtoType {
   normal = 'normal',
   smart = 'smart',
 }
-export enum TestDeleteAccountNotFoundResponseDtoMessage {
-  internal_server_error = 'internal-server-error',
-  not_found_error = 'not-found-error',
-}
-export enum TestDuplicateAccountBadRequestErrorMessageEnum {
-  invalid_username_error = 'invalid-username-error',
-  invalid_username_length_error = 'invalid-username-length-error',
-  invalid_new_username_error = 'invalid-new-username-error',
-  invalid_new_username_length_error = 'invalid-new-username-length-error',
-}
-export enum TestDuplicateAccountNotFoundResponseDtoMessage {
-  internal_server_error = 'internal-server-error',
-  not_found_error = 'not-found-error',
-}
-export enum TestListAccountsNotFoundResponseDtoMessage {
-  internal_server_error = 'internal-server-error',
-  not_found_error = 'not-found-error',
-}
-export enum TestRetrieveAccountNotFoundResponseDtoMessage {
-  account_not_found_error = 'account-not-found-error',
-}
 export enum TrackSortFieldEnum {
   date_added = 'date_added',
   artist = 'artist',
@@ -12703,290 +12397,7 @@ export enum TrackSortFieldEnum {
   title = 'title',
   year = 'year',
 }
-export enum UserCreateRootPathBadRequestErrors {
-  root_path_does_not_exist_error = 'root-path-does-not-exist-error',
-  duplicate_root_path_error = 'duplicate-root-path-error',
-  invalid_root_path_error = 'invalid-root-path-error',
-}
-export enum UserDeleteCustomDataBadRequestErrors {
-  invalid_track_id_error = 'invalid-track-id-error',
-}
-export enum UserDeleteCustomDataNotFoundErrors {
-  track_not_found_error = 'track-not-found-error',
-}
-export enum UserDeleteFavoriteBadRequestErrors {
-  invalid_favorite_item_id_error = 'invalid-favorite-item-id-error',
-}
-export enum UserDeleteFavoriteNotFoundErrors {
-  favorite_item_not_found_error = 'favorite-item-not-found-error',
-}
-export enum UserDeleteRootPathBadRequestErrors {
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
-}
-export enum UserDeleteRootPathNotFoundErrors {
-  root_path_not_found_error = 'root-path-not-found-error',
-}
-export enum UserListAlbumAssociationsBadRequestErrors {
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-}
-export enum UserListAlbumAssociationsWithTracksBadRequestErrors {
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-}
-export enum UserListAlbumsBadRequestErrors {
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_artist_length_error = 'invalid-artist-length-error',
-  invalid_artist_error = 'invalid-artist-error',
-  invalid_composer_length_error = 'invalid-composer-length-error',
-  invalid_composer_error = 'invalid-composer-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_max_rating_error = 'invalid-max-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_released_after_error = 'invalid-released-after-error',
-  invalid_released_before_error = 'invalid-released-before-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_year_error = 'invalid-year-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-}
-export enum UserListAlbumsWithTracksBadRequestErrors {
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_artist_length_error = 'invalid-artist-length-error',
-  invalid_artist_error = 'invalid-artist-error',
-  invalid_composer_length_error = 'invalid-composer-length-error',
-  invalid_composer_error = 'invalid-composer-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_max_rating_error = 'invalid-max-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_released_after_error = 'invalid-released-after-error',
-  invalid_released_before_error = 'invalid-released-before-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_year_error = 'invalid-year-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-}
-export enum UserListFavoritesBadRequestErrors {
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-}
-export enum UserListIndexerLogsBadRequestErrors {
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
-  invalid_search_length_error = 'invalid-search-length-error',
-}
-export enum UserListTrackAssociationsBadRequestErrors {
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-}
-export enum UserListTrackAssociationsWithTracksBadRequestErrors {
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-}
-export enum UserListTracksBadRequestErrors {
-  invalid_added_after_error = 'invalid-added-after-error',
-  invalid_added_before_error = 'invalid-added-before-error',
-  invalid_album_length_error = 'invalid-album-length-error',
-  invalid_album_error = 'invalid-album-error',
-  invalid_artist_length_error = 'invalid-artist-length-error',
-  invalid_artist_error = 'invalid-artist-error',
-  invalid_composer_length_error = 'invalid-composer-length-error',
-  invalid_composer_error = 'invalid-composer-error',
-  invalid_filter_length_error = 'invalid-filter-length-error',
-  invalid_filter_error = 'invalid-filter-error',
-  invalid_genre_length_error = 'invalid-genre-length-error',
-  invalid_genre_error = 'invalid-genre-error',
-  invalid_max_rating_error = 'invalid-max-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_sort_order_error = 'invalid-sort-order-error',
-  invalid_sort_field_error = 'invalid-sort-field-error',
-  invalid_year_error = 'invalid-year-error',
-  invalid_limit_error = 'invalid-limit-error',
-  invalid_offset_error = 'invalid-offset-error',
-}
-export enum UserRetrieveAlbumBadRequestErrors {
-  invalid_album_id_error = 'invalid-album-id-error',
-}
-export enum UserRetrieveAlbumNotFoundErrors {
-  album_not_found_error = 'album-not-found-error',
-}
-export enum UserRetrieveAssociationBadRequestErrors {
-  invalid_association_id_error = 'invalid-association-id-error',
-}
-export enum UserRetrieveAssociationNotFoundErrors {
-  association_not_found_error = 'association-not-found-error',
-}
 export enum UserRoleEnum {
-  user = 'user',
   admin = 'admin',
-}
-export enum UserSetAlbumCustomDataBadRequestErrors {
-  invalid_album_id_error = 'invalid-album-id-error',
-  invalid_artists_length_error = 'invalid-artists-length-error',
-  invalid_artists_error = 'invalid-artists-error',
-  invalid_title_length_error = 'invalid-title-length-error',
-  invalid_title_error = 'invalid-title-error',
-  invalid_year_range_error = 'invalid-year-range-error',
-  invalid_year_error = 'invalid-year-error',
-}
-export enum UserSetAlbumCustomDataNotFoundErrors {
-  album_not_found_error = 'album-not-found-error',
-}
-export enum UserSetAlbumFavoriteBadRequestErrors {
-  invalid_album_id_error = 'invalid-album-id-error',
-}
-export enum UserSetAlbumFavoriteNotFoundErrors {
-  album_not_found_error = 'album-not-found-error',
-}
-export enum UserSetAlbumRatingBadRequestErrors {
-  invalid_album_id_error = 'invalid-album-id-error',
-  invalid_max_rating_error = 'invalid-max-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_rating_error = 'invalid-rating-error',
-}
-export enum UserSetAlbumRatingNotFoundErrors {
-  album_not_found_error = 'album-not-found-error',
-}
-export enum UserSetArtistNameBadRequestErrors {
-  invalid_artist_id_error = 'invalid-artist-id-error',
-  invalid_name_length_error = 'invalid-name-length-error',
-  invalid_name_error = 'invalid-name-error',
-}
-export enum UserSetArtistNameNotFoundErrors {
-  artist_not_found_error = 'artist-not-found-error',
-}
-export enum UserSetAssociationFavoriteBadRequestErrors {
-  invalid_association_type_error = 'invalid-association-type-error',
-  invalid_association_id_error = 'invalid-association-id-error',
-}
-export enum UserSetAssociationFavoriteNotFoundErrors {
-  association_not_found_error = 'association-not-found-error',
-}
-export enum UserSetComposerNameBadRequestErrors {
-  invalid_association_id_error = 'invalid-association-id-error',
-  invalid_name_length_error = 'invalid-name-length-error',
-  invalid_name_error = 'invalid-name-error',
-}
-export enum UserSetComposerNameNotFoundErrors {
-  composer_not_found_error = 'composer-not-found-error',
-}
-export enum UserSetCustomDataBadRequestErrors {
-  invalid_track_id_error = 'invalid-track-id-error',
-  invalid_album_artists_length_error = 'invalid-album-artists-length-error',
-  invalid_album_artists_error = 'invalid-album-artists-error',
-  invalid_album_title_length_error = 'invalid-album-title-length-error',
-  invalid_album_title_error = 'invalid-album-title-error',
-  invalid_artists_length_error = 'invalid-artists-length-error',
-  invalid_artists_error = 'invalid-artists-error',
-  invalid_comment_length_error = 'invalid-comment-length-error',
-  invalid_comment_error = 'invalid-comment-error',
-  invalid_composers_length_error = 'invalid-composers-length-error',
-  invalid_composers_error = 'invalid-composers-error',
-  invalid_disc_number_range_error = 'invalid-disc-number-range-error',
-  invalid_disc_number_error = 'invalid-disc-number-error',
-  invalid_genres_length_error = 'invalid-genres-length-error',
-  invalid_genres_error = 'invalid-genres-error',
-  invalid_title_length_error = 'invalid-title-length-error',
-  invalid_title_error = 'invalid-title-error',
-  invalid_track_number_range_error = 'invalid-track-number-range-error',
-  invalid_track_number_error = 'invalid-track-number-error',
-  invalid_year_range_error = 'invalid-year-range-error',
-  invalid_year_error = 'invalid-year-error',
-}
-export enum UserSetCustomDataNotFoundErrors {
-  track_not_found_error = 'track-not-found-error',
-}
-export enum UserSetFolderFavoriteNotFoundErrors {
-  folder_not_found_error = 'folder-not-found-error',
-}
-export enum UserSetGenreNameBadRequestErrors {
-  invalid_genre_id_error = 'invalid-genre-id-error',
-  invalid_name_length_error = 'invalid-name-length-error',
-  invalid_name_error = 'invalid-name-error',
-}
-export enum UserSetGenreNameNotFoundErrors {
-  genre_not_found_error = 'genre-not-found-error',
-}
-export enum UserSetTrackCustomDataBadRequestErrors {
-  invalid_track_id_error = 'invalid-track-id-error',
-  invalid_artists_length_error = 'invalid-artists-length-error',
-  invalid_artists_error = 'invalid-artists-error',
-  invalid_comment_length_error = 'invalid-comment-length-error',
-  invalid_comment_error = 'invalid-comment-error',
-  invalid_composers_length_error = 'invalid-composers-length-error',
-  invalid_composers_error = 'invalid-composers-error',
-  invalid_disc_number_range_error = 'invalid-disc-number-range-error',
-  invalid_disc_number_error = 'invalid-disc-number-error',
-  invalid_genres_length_error = 'invalid-genres-length-error',
-  invalid_genres_error = 'invalid-genres-error',
-  invalid_title_length_error = 'invalid-title-length-error',
-  invalid_title_error = 'invalid-title-error',
-  invalid_track_number_range_error = 'invalid-track-number-range-error',
-  invalid_track_number_error = 'invalid-track-number-error',
-  invalid_year_range_error = 'invalid-year-range-error',
-  invalid_year_error = 'invalid-year-error',
-}
-export enum UserSetTrackCustomDataNotFoundErrors {
-  track_not_found_error = 'track-not-found-error',
-}
-export enum UserSetTrackFavoriteNotFoundErrors {
-  track_not_found_error = 'track-not-found-error',
-}
-export enum UserSetTrackRatingBadRequestErrors {
-  invalid_track_id_error = 'invalid-track-id-error',
-  invalid_max_rating_error = 'invalid-max-rating-error',
-  invalid_min_rating_error = 'invalid-min-rating-error',
-  invalid_rating_error = 'invalid-rating-error',
-}
-export enum UserSetTrackRatingNotFoundErrors {
-  track_not_found_error = 'track-not-found-error',
-  album_not_found_error = 'album-not-found-error',
-}
-export enum UserStreamFileNotFoundErrors {
-  file_not_found_error = 'file-not-found-error',
-}
-export enum UserUpdatePasswordBadRequestErrors {
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
+  user = 'user',
 }

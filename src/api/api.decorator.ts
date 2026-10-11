@@ -6,11 +6,12 @@ import {
   JWT_AUTHENTICATED_REQUEST_DESCRIPTION,
   JWT_BEARER_AUTH,
   PAGINATED_DATA_DESCRIPTION,
+  TEST_APIS,
   TRACK_INFORMATION_EXCLUDED,
   TRACK_INFORMATION_INCLUDED,
   USER_APIS,
 } from 'src/constants/swagger';
-import { AllowedRoles, RoleGuard } from './role.guard';
+import { AllowGuest, AllowedRoles, RoleGuard } from './role.guard';
 import {
   ApiBadRequestErrors,
   ApiNotFoundErrors,
@@ -29,8 +30,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ContentObject, SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { Controller, HttpCode, HttpStatus, Type, UseGuards, applyDecorators } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { HttpCode, HttpStatus, Type, UseGuards, applyDecorators } from '@nestjs/common';
 import { UserRoleEnum } from 'src/types/enums';
 
 export type ResponseDefinition =
@@ -58,99 +59,38 @@ export type ResponseTypes = Partial<
   >
 >;
 
-/**
- * Applies a common set of decorators to administrator endpoint controllers:
- * - set the path with \@Controller
- * - restrict access to administrators with \@UseGuards and \@AllowedRoles
- * - defines bearer authentication with \@ApiBearerAuth
- * - groups under the ADMIN_TAGS for Swagger with \@ApiTags
- *
- * This decorator consolidates common setup for admin controllers, ensuring
- * consistent security and documentation across the API.
- * @returns A decorator function that applies the common administrator controller setup.
- */
-export function AdminController() {
-  return applyDecorators(
-    Controller({
-      path: '/api/admin',
-    }),
-    ApiTags(ADMIN_APIS),
-    ApiBearerAuth(JWT_BEARER_AUTH),
-    UseGuards(RoleGuard),
-    AllowedRoles([UserRoleEnum.ADMIN]),
-  );
-}
-
-/**
- * Applies a common set of decorators to user endpoint controllers:
- * - set the path with \@Controller
- * - restrict access to users and administrators with \@UseGuards and \@AllowedRoles
- * - defines bearer authentication with \@ApiBearerAuth
- * - groups under the USER_APIS for Swagger with \@ApiTags
- *
- * This decorator consolidates common setup for user controllers, ensuring
- * consistent security and documentation across the API.
- * @returns A decorator function that applies the common user controller setup.
- */
-export function UserController() {
-  return applyDecorators(
-    Controller({
-      path: '/api/user',
-    }),
-    ApiTags(USER_APIS),
-    ApiBearerAuth(JWT_BEARER_AUTH),
-    UseGuards(RoleGuard),
-    AllowedRoles([UserRoleEnum.ADMIN, UserRoleEnum.USER]),
-  );
-}
-
-/**
- * Applies a common set of decorators to guest controllers:
- * - set the path with \@Controller
- * - allows access to all users (no role restrictions)
- * - groups under the GUEST_APIS for Swagger with \@ApiTags
- *
- * This decorator consolidates common setup for guest controllers, ensuring
- * consistent documentation across the API.
- * @returns A decorator function that applies the common guest controller setup.
- */
-export function GuestController() {
-  return applyDecorators(
-    Controller({
-      path: '/api/guest',
-    }),
-    ApiTags(GUEST_APIS),
-  );
-}
-
 export function ApiEndpoint(
   httpVerb: (str: string) => MethodDecorator,
   urlPath: string,
   httpCode: HttpStatus,
   {
-    summary,
+    allowAdministrator,
+    allowGuest,
+    allowUser,
     description,
-    isAuthenticated,
-    isAdministratorOnly,
-    isPaginated,
-    isFiltered,
-    includeTrackInformation,
     excludeTrackInformation,
     header,
-    responses,
+    includeTrackInformation,
+    isFiltered,
+    isPaginated,
+    isTest,
     produces,
+    responses,
+    summary,
   }: {
-    summary: string;
+    allowAdministrator?: boolean;
+    allowGuest?: boolean;
+    allowUser?: boolean;
     description: string;
-    isAuthenticated?: boolean;
-    isAdministratorOnly?: boolean;
-    isPaginated?: boolean;
-    isFiltered?: boolean;
-    includeTrackInformation?: boolean;
     excludeTrackInformation?: boolean;
-    responses?: ResponseTypes;
-    produces?: string[];
     header?: ApiHeaderOptions;
+    includeTrackInformation?: boolean;
+    isFiltered?: boolean;
+    isPaginated?: boolean;
+    isTest?: boolean;
+    produces?: string[];
+    responses?: ResponseTypes;
+    summary: string;
   },
 ) {
   const allResponses = {
@@ -159,21 +99,46 @@ export function ApiEndpoint(
     [HttpStatus.INTERNAL_SERVER_ERROR]: responses?.[HttpStatus.INTERNAL_SERVER_ERROR] || InternalServerErrorResponseDto,
     [HttpStatus.FORBIDDEN]: responses?.[HttpStatus.FORBIDDEN] || ForbiddenErrorResponseDto,
   };
+  const apiTags: string[] = [];
+  const allowedRoles: UserRoleEnum[] = [];
+  if (isTest) {
+    apiTags.push(TEST_APIS);
+  } else {
+    if (allowAdministrator) {
+      allowedRoles.push(UserRoleEnum.ADMIN);
+      apiTags.push(ADMIN_APIS);
+    }
+    if (allowUser) {
+      allowedRoles.push(UserRoleEnum.USER);
+      if (!allowAdministrator) {
+        apiTags.push(USER_APIS);
+      }
+    }
+    if (allowGuest) {
+      apiTags.push(GUEST_APIS);
+    }
+  }
+  const isAuthenticated = allowAdministrator || allowUser;
   return applyDecorators(
     // request information
     httpVerb(urlPath),
     HttpCode(httpCode),
+    // security
+    ...(allowGuest ? [AllowGuest] : []),
+    ...(isAuthenticated ? [ApiBearerAuth(JWT_BEARER_AUTH), UseGuards(RoleGuard), AllowedRoles(allowedRoles)] : []),
     // swagger information
+    ApiTags(...apiTags),
     ApiOperation({
       summary,
       description: [
         description,
         ...(isAuthenticated ? [JWT_AUTHENTICATED_REQUEST_DESCRIPTION] : []),
-        ...(isAdministratorOnly ? [ADMINISTRATOR_ONLY_ROUTE] : []),
+        ...(allowAdministrator ? [ADMINISTRATOR_ONLY_ROUTE] : []),
         ...(isFiltered ? [FILTERED_DATA_DESCRIPTION] : []),
         ...(includeTrackInformation ? [TRACK_INFORMATION_INCLUDED] : []),
         ...(excludeTrackInformation ? [TRACK_INFORMATION_EXCLUDED] : []),
         ...(isPaginated ? [PAGINATED_DATA_DESCRIPTION] : []),
+        ...(isTest ? ['This API endpoint only exists when `NODE_ENV` is set to `test`.'] : []),
       ]
         .map((line) => line.trim())
         .join('\n\n'),
