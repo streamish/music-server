@@ -221,8 +221,20 @@ export class AuthenticationService {
     return bcrypt.compareSync(token, deviceToken);
   }
 
+  /**
+   * Verifies a plain text password against the hashed password saved in the database
+   * @param {number} accountId The account id of the password
+   * @param {string} password The password in plain text
+   * @returns {Promise<boolean>} True if the passwords match
+   */
+
   async verifyPassword(accountId: number, password: string): Promise<boolean> {
-    const account = await this.getAccount(accountId);
+    const account = await this.accountEntity.findByPk(accountId, {
+      attributes: ['id', 'passwordHash'],
+    });
+    if (!account) {
+      throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
+    }
     return bcrypt.compareSync(password, account.passwordHash);
   }
 

@@ -1,6 +1,6 @@
 export enum UserRoleEnum {
-  USER = 'user',
   ADMIN = 'admin',
+  USER = 'user',
 }
 
 export enum SessionRestrictionEnum {

@@ -88,7 +88,6 @@ async function bootstrap() {
           // eslint-disable-next-line max-len
           'This API consists of "Standard API" with User, Admin and Guest APIs that allow you to manage your music library and user accounts.  These APIs return JSON except where serving image/audio files and each have their successful and erroneous responses defined.\n',
           'Each endpoint has a single input and response format and URL structure describing its functionality.',
-          'Endpoints map directly to source code, eg `/api/user/list-albums` is found in `/src/api/user/list-albums`.',
           '\nThe Synology and QNAP APIs are documented here to share learnings, you should not build on them.',
         ].join('\n '),
       )

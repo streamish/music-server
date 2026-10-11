@@ -31,7 +31,7 @@ export class SuccessResponseDto {
 /**
  * The response data of a paginated query
  */
-export class PaginatedResponseDataDto {
+export class PaginatedResponseDataDto extends SuccessResponseDto {
   /*
    * The number of results to return from the query.
    */
@@ -204,12 +204,18 @@ export function getValidationMessages(dto: Function): ErrorCodes[] {
   ];
 }
 
-export function ApiNotFoundErrors(messages: ErrorCodes[]): MethodDecorator {
+function getBaseName(constructorName: string, methodName: string) {
+  const baseName = constructorName.replace(/Controller$/, '');
+  const methodPascal = methodName.charAt(0).toUpperCase() + methodName.substring(1);
+  return `${baseName}${methodPascal}`;
+}
+
+export function ApiNotFoundErrors(errorCodes: ErrorCodes[]): MethodDecorator {
   return (target, propertyKey, descriptor) => {
-    const baseName = target.constructor.name.replace(/Controller$/, '');
+    const baseName = getBaseName(target.constructor.name, propertyKey.toString());
     const enumName = `${baseName}NotFoundErrors`;
     const schemaName = `${baseName}NotFoundResponse`;
-    const ResponseDto = NotFoundResponseDtoFactory(schemaName, enumName, messages);
+    const ResponseDto = NotFoundResponseDtoFactory(schemaName, enumName, [...new Set(errorCodes)]);
     applyDecorators(ApiExtraModels(ResponseDto), ApiNotFoundResponse({ type: ResponseDto }))(
       target,
       propertyKey,
@@ -218,12 +224,12 @@ export function ApiNotFoundErrors(messages: ErrorCodes[]): MethodDecorator {
   };
 }
 
-export function ApiBadRequestErrors(messages: ErrorCodes[]): MethodDecorator {
+export function ApiBadRequestErrors(errorCodes: ErrorCodes[]): MethodDecorator {
   return (target, propertyKey, descriptor) => {
-    const baseName = target.constructor.name.replace(/Controller$/, '');
+    const baseName = getBaseName(target.constructor.name, propertyKey.toString());
     const enumName = `${baseName}BadRequestErrors`;
     const schemaName = `${baseName}BadRequestResponse`;
-    const ResponseDto = BadRequestResponseDtoFactory(schemaName, enumName, messages);
+    const ResponseDto = BadRequestResponseDtoFactory(schemaName, enumName, [...new Set(errorCodes)]);
     applyDecorators(ApiExtraModels(ResponseDto), ApiBadRequestResponse({ type: ResponseDto }))(
       target,
       propertyKey,
@@ -232,12 +238,12 @@ export function ApiBadRequestErrors(messages: ErrorCodes[]): MethodDecorator {
   };
 }
 
-export function ApiUnauthorizedErrors(messages: ErrorCodes[]): MethodDecorator {
+export function ApiUnauthorizedErrors(errorCodes: ErrorCodes[]): MethodDecorator {
   return (target, propertyKey, descriptor) => {
-    const baseName = target.constructor.name.replace(/Controller$/, '');
+    const baseName = getBaseName(target.constructor.name, propertyKey.toString());
     const enumName = `${baseName}UnauthorizedErrors`;
     const schemaName = `${baseName}UnauthorizedResponse`;
-    const ResponseDto = UnauthorizedResponseDtoFactory(schemaName, enumName, messages);
+    const ResponseDto = UnauthorizedResponseDtoFactory(schemaName, enumName, [...new Set(errorCodes)]);
     applyDecorators(ApiExtraModels(ResponseDto), ApiUnauthorizedResponse({ type: ResponseDto }))(
       target,
       propertyKey,

@@ -19,7 +19,7 @@ export type SynologyApiClient = AuthenticatedApiClient;
 
 export const guestApi = {
   createSession: async (username: string, password: string) => {
-    return unauthenticatedApi.POST(`/api/guest/create-session`, {
+    return unauthenticatedApi.POST(`/api/create-session`, {
       body: {
         username,
         password,
@@ -32,7 +32,7 @@ export const testApi = {
   createAccount: async (username?: string, password?: string, roles?: UserRoleEnum[]) => {
     const newUsername = username || `new-user-${Date.now()}`;
     const newRoles = roles || [UserRoleEnum.user];
-    const { data } = await unauthenticatedApi.POST(`/api/test/create-account`, {
+    const { data } = await unauthenticatedApi.POST(`/api/test/create-test-account`, {
       body: {
         username: username || newUsername,
         password: password || USER_PASSWORD,
@@ -40,15 +40,15 @@ export const testApi = {
       },
     });
     return {
-      id: data?.accountId || 0,
-      username: data?.username || '',
+      id: data?.account.accountId || 0,
+      username: data?.account.username || '',
       password: password || USER_PASSWORD,
       roles: newRoles,
     };
   },
 
   deleteAccount: async (id: number) => {
-    return unauthenticatedApi.DELETE(`/api/test/delete-account`, {
+    return unauthenticatedApi.DELETE(`/api/test/delete-test-account`, {
       params: {
         query: {
           id,
@@ -66,7 +66,7 @@ export const testApi = {
     }
   },
   duplicateAccount: async (username: string, newUsername: string) => {
-    return unauthenticatedApi.POST(`/api/test/duplicate-account`, {
+    return unauthenticatedApi.POST(`/api/test/duplicate-test-account`, {
       params: {
         query: {
           username,
@@ -89,12 +89,12 @@ export const testApi = {
     return testApi.extraAdminsCleared();
   },
   listAccounts: async () => {
-    const { data } = await unauthenticatedApi.GET(`/api/test/list-accounts`);
+    const { data } = await unauthenticatedApi.GET(`/api/test/list-test-accounts`);
     const accounts = data?.accounts || [];
     return accounts;
   },
   retrieveAccount: async (username: string) => {
-    const { data } = await unauthenticatedApi.GET(`/api/test/retrieve-account`, {
+    const { data } = await unauthenticatedApi.GET(`/api/test/retrieve-test-account`, {
       params: {
         query: {
           username,
