@@ -2,8 +2,8 @@ import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint } from 'src/api/api.decorator';
 import { ApiFavoritesService } from './favorites.service';
 import { Controller, Delete, Get, HttpStatus, Put, Query } from '@nestjs/common';
-import { CreateFavoriteResponseDto } from './dtos/create-favorite.dto';
 import {
+  CreateFavoriteResponseDto,
   DeleteFavoriteQueryDto,
   ListFavoritesQueryDto,
   ListFavoritesResponseDto,
