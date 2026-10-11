@@ -25,7 +25,7 @@ describe('/api/delete-user-root-path', () => {
   });
 
   async function createRootPath(accountId: number, rootPath: string) {
-    return adminApi.POST('/api/create-root-path', {
+    return adminApi.POST('/api/create-user-root-path', {
       body: {
         rootPath,
       },
