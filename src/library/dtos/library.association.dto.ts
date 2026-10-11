@@ -15,6 +15,12 @@ export class LibraryAssociationDto {
   declare createdAt: Date;
 
   /**
+   * The favorite data for the album if it exists
+   */
+  @IsInt()
+  declare favoriteId?: number;
+
+  /**
    * The internally-generated unique ID of the artist
    */
   @IsInt()

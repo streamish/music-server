@@ -85,6 +85,7 @@ export class LibraryTransformerService {
       coverImageMuted: album.coverImageMuted || '#000000',
       coverImageVibrant: album.coverImageVibrant || '#FFFFFF',
       createdAt: album.createdAt,
+      favoriteId: album.favorite?.id,
       genres: albumGenres,
       id: album.id,
       rating: ((album.get({ plain: true }) as unknown as Record<string, number>).rating as RatingOrUnset) || 0,
@@ -96,9 +97,10 @@ export class LibraryTransformerService {
   // eslint-disable-next-line class-methods-use-this
   convertAssociationEntityToLibraryAssociation(association: AssociationEntity): LibraryAssociationDto {
     return {
-      id: association?.id || 0,
-      name: association?.name || '',
-      createdAt: association?.createdAt || new Date(),
+      id: association.id || 0,
+      name: association.name || '',
+      createdAt: association.createdAt || new Date(),
+      favoriteId: association.favorite?.id,
     };
   }
 
@@ -224,6 +226,7 @@ export class LibraryTransformerService {
         })) || [],
       discNumber: track.discNumber,
       duration: track.duration,
+      favoriteId: track.favorite?.id,
       fileBitRate: track.bitRate,
       fileChannels: track.channels,
       fileFrequency: track.frequency,

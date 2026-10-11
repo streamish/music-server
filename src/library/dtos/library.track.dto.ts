@@ -97,6 +97,12 @@ export class LibraryTrackDto {
   declare duration: number;
 
   /**
+   * The favorite data for the album if it exists
+   */
+  @IsInt()
+  declare favoriteId?: number;
+
+  /**
    * The bitrate of the audio file for the track, in Kb/s.
    */
   @IsInt()

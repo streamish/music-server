@@ -67,6 +67,12 @@ export class LibraryAlbumDto {
   declare createdAt: Date;
 
   /**
+   * The favorite data for the album if it exists
+   */
+  @IsInt()
+  declare favoriteId?: number;
+
+  /**
    * The album genres aggregated from the track genres.
    */
   @ApiProperty({

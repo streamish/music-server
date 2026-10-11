@@ -298,6 +298,22 @@ export class LibraryService {
    */
   async listFolders(accountId: number): Promise<LibraryFolderDto[]> {
     const tracks = await this.listTracks(accountId, {}, 0, 100_000);
+    const favorites = await this.favoriteItemEntity.findAll({
+      attributes: ['id', 'folderPath'],
+      where: {
+        accountId,
+        folderPath: {
+          [Op.not]: null,
+        },
+      },
+    });
+    const favoriteIndex: Record<string, number> = {};
+    for (let i = 0, len = favorites.length; i < len; i += 1) {
+      const favorite = favorites[i];
+      if (favorite?.folderPath) {
+        favoriteIndex[favorite.folderPath] = favorite.id;
+      }
+    }
     function sortChildren(node: LibraryFolderDto) {
       node.children?.sort((a, b) => (a.folder || a.file || '').localeCompare(b.folder || b.file || ''));
       node.children?.forEach(sortChildren);
@@ -329,6 +345,7 @@ export class LibraryService {
                 folderId += 1;
               }
               node = {
+                favoriteId: favoriteIndex[currentPath] || undefined,
                 folder: isFile ? '' : part,
                 fullPath: currentPath,
                 track: isFile ? track : undefined,
