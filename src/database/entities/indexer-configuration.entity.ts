@@ -65,6 +65,9 @@ export class IndexerConfigurationEntity extends Model<IndexerConfigurationEntity
    * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field
    * should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 }

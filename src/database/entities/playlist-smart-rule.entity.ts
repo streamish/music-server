@@ -45,7 +45,7 @@ export class PlaylistSmartRuleEntity extends Model<PlaylistSmartRuleEntity> {
     type: DataType.ENUM(...Object.values(SmartPlaylistIntervalTagEnum)),
     allowNull: true,
   })
-  declare interval: SmartPlaylistIntervalTagEnum;
+  declare interval: SmartPlaylistIntervalTagEnum | null;
 
   @Column({
     type: DataType.ENUM(...Object.values(SmartPlaylistOperationEnum)),
@@ -62,21 +62,23 @@ export class PlaylistSmartRuleEntity extends Model<PlaylistSmartRuleEntity> {
       model: PlaylistEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => PlaylistEntity)
   declare playlistId: number;
 
   @BelongsTo(() => PlaylistEntity)
-  declare playlist: PlaylistEntity;
+  declare playlist?: PlaylistEntity;
 
   /**
    * This field is managed by Sequelize and tracks the most recent date and time the row was last
    * updated.  This field should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 
   @Column(DataType.STRING(50))
   declare value: string;

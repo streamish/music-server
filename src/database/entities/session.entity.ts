@@ -52,8 +52,11 @@ export class SessionEntity extends Model<SessionEntity> {
   /**
    * The date and time the session was manually ended
    */
-  @Column(DataType.DATE)
-  declare endedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare endedAt?: Date | null;
 
   /**
    * The date and time the session ends.  A session may end before this time by changing the
@@ -80,8 +83,11 @@ export class SessionEntity extends Model<SessionEntity> {
    * for other apps.  This is a security measure to prevent a session from being used in an unintended
    * context.
    */
-  @Column(DataType.STRING(50))
-  declare restrictSession?: SessionRestrictionEnum;
+  @Column({
+    type: DataType.STRING(50),
+    allowNull: true,
+  })
+  declare restrictSession: SessionRestrictionEnum | null;
 
   /**
    * The session token is a random UUID used as part of a secret token that verifies session information.  A change in
@@ -100,8 +106,11 @@ export class SessionEntity extends Model<SessionEntity> {
    * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field
    * should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 
   /**
    * The session user agent is the user agent string of the device that created the session, for loosely ensuring that

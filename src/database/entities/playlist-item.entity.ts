@@ -37,7 +37,7 @@ export class PlaylistItemEntity extends Model<PlaylistItemEntity> {
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => TrackEntity)
-  declare trackId?: number;
+  declare trackId: number | null;
 
   @BelongsTo(() => TrackEntity)
   declare track?: TrackEntity;
@@ -78,18 +78,21 @@ export class PlaylistItemEntity extends Model<PlaylistItemEntity> {
     type: DataType.STRING(255),
     allowNull: true,
   })
-  declare radioStationTitle?: string;
+  declare radioStationTitle: string | null;
 
   @Column({
     type: DataType.STRING(255),
     allowNull: true,
   })
-  declare radioStationUrl?: string;
+  declare radioStationUrl: string | null;
 
   /**
    * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field
    * should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 }

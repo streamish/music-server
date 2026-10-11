@@ -25,7 +25,6 @@ export class PlaylistEntity extends Model<PlaylistEntity> {
       model: AccountEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AccountEntity)
@@ -68,7 +67,7 @@ export class PlaylistEntity extends Model<PlaylistEntity> {
     type: DataType.ENUM(...Object.values(SmartPlaylistConjugalEnum)),
     allowNull: true,
   })
-  declare rulesConjugal: SmartPlaylistConjugalEnum;
+  declare rulesConjugal: SmartPlaylistConjugalEnum | null;
 
   @Column({
     type: DataType.ENUM(...Object.values(PlaylistTypeEnum)),
@@ -80,6 +79,9 @@ export class PlaylistEntity extends Model<PlaylistEntity> {
    * This field is managed by Sequelize and tracks the most recent date and time the row was last
    * updated.  This field should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 }

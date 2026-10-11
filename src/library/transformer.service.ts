@@ -158,7 +158,7 @@ export class LibraryTransformerService {
       return {
         id: favorite.id || 0,
         createdAt: favorite.createdAt || new Date(),
-        associationType: favorite.associationType,
+        associationType: favorite.associationType || undefined,
         association: {
           ...this.convertAssociationEntityToLibraryAssociation(favorite.association),
           albums:
@@ -185,8 +185,8 @@ export class LibraryTransformerService {
     }
     return {
       id: favorite.id || 0,
-      createdAt: favorite.createdAt || new Date(),
       allSongs: favorite.allSongs,
+      createdAt: favorite.createdAt || new Date(),
       randomHundred: favorite.randomHundred,
       recentlyAdded: favorite.recentlyAdded,
     };

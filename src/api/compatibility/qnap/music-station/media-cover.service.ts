@@ -20,6 +20,7 @@ export class QnapMediaCoverService {
    * modified will be picked up by the indexer on its next run.
    * @param {number} userId The authenticated user ID
    * @param {number} associationId The association ID for the artist
+   * @throws If no cover image was found for the association
    * @returns {Promise<CoverImage | undefined>} The album cover image.
    */
   async getArtistCoverImage(userId: number, associationId: number): Promise<CoverImage | undefined> {

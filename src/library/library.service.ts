@@ -515,7 +515,9 @@ export class LibraryService {
       return 0;
     });
     const albumIds = Array.from(
-      new Set(associations.map((association) => association.associationLinks.map((link) => link.albumId || 0)).flat()),
+      new Set(
+        associations.map((association) => (association.associationLinks || []).map((link) => link.albumId || 0)).flat(),
+      ),
     );
     const albums = await this.retrieveAlbum(accountId, albumIds);
     return associations.map((association) => {
@@ -561,13 +563,13 @@ export class LibraryService {
       }
       return a.id === associationIds ? -1 : 1;
     });
-    const trackIds = associations.flatMap((a) => a.associationLinks.map((link) => link.trackId));
+    const trackIds = associations.flatMap((a) => (a.associationLinks || []).map((link) => link.trackId));
     const tracks = await this.retrieveTrack(accountId, trackIds);
     const albumIds = Array.from(new Set(tracks.map((track) => track.albumId)));
     const albums = await this.retrieveAlbum(accountId, albumIds);
     return associations.map((association) => {
       const builtAssociation = this.transformerService.convertAssociationEntityToLibraryAssociation(association);
-      const associationTrackIds = Array.from(new Set(association.associationLinks.map((link) => link.trackId)));
+      const associationTrackIds = Array.from(new Set((association.associationLinks || []).map((link) => link.trackId)));
       const associationTracks = tracks.filter((track) => associationTrackIds.includes(track.id));
       const associationAlbumIds = Array.from(new Set(associationTracks.map((track) => track.albumId)));
       return {
