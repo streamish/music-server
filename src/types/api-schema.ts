@@ -987,23 +987,6 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/update-root-path': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /** @description `PATCH` request to `/api/update-root-path` */
-    patch: operations['ApiRootPathsController_patch'];
-    trace?: never;
-  };
   '/api/update-user-roles': {
     parameters: {
       query?: never;
@@ -1026,6 +1009,23 @@ export type paths = {
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['ApiAccountsController_updateUserRoles'];
+    trace?: never;
+  };
+  '/api/update-user-root-path': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` request to `/api/update-root-path` */
+    patch: operations['ApiRootPathsController_patch'];
     trace?: never;
   };
   '/cgi-bin/as_get_file_api.php': {
@@ -1550,6 +1550,10 @@ export type components = {
       roles: components['schemas']['UserRoleEnum'][];
       username: string;
     };
+    AdminAuthorizationBodyDto: {
+      /** @description The administrator's password to authorize the operation. */
+      adminPassword: string;
+    };
     /** @enum {string} */
     AlbumSortFieldEnum: AlbumSortFieldEnum;
     /**
@@ -1733,7 +1737,7 @@ export type components = {
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-account-id-error
+       * @default account-only-admin-error
        */
       message: components['schemas']['ApiAccountsUpdateUserRolesBadRequestErrors'][];
       /**
@@ -2538,6 +2542,25 @@ export type components = {
       success: boolean;
     };
     /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsDeleteRootPathBadRequestErrors: ApiRootPathsDeleteRootPathBadRequestErrors;
+    ApiRootPathsDeleteRootPathBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-root-path-id-error
+       */
+      message: components['schemas']['ApiRootPathsDeleteRootPathBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
      * @description A resource ID was specified that does not exist or does not belong to your account.
      * @enum {string}
      */
@@ -2547,9 +2570,28 @@ export type components = {
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default invalid-root-path-id-error
+       * @default root-path-not-found-error
        */
       message: components['schemas']['ApiRootPathsDeleteRootPathNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiRootPathsDeleteUserRootPathBadRequestErrors: ApiRootPathsDeleteUserRootPathBadRequestErrors;
+    ApiRootPathsDeleteUserRootPathBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-root-path-id-error
+       */
+      message: components['schemas']['ApiRootPathsDeleteUserRootPathBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -2566,7 +2608,7 @@ export type components = {
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default invalid-root-path-id-error
+       * @default root-path-not-found-error
        */
       message: components['schemas']['ApiRootPathsDeleteUserRootPathNotFoundErrors'][];
       /**
@@ -2756,7 +2798,7 @@ export type components = {
       error: string;
       /**
        * @description A resource ID was specified that does not exist or does not belong to your account.
-       * @default invalid-account-id-error
+       * @default account-not-found-error
        */
       message: components['schemas']['ApiSessionsRegenerateUserSessionKeyNotFoundErrors'][];
       /**
@@ -2982,7 +3024,6 @@ export type components = {
       username: string;
     };
     CreateSessionResponseDto: {
-      /** @description The JWT session token that can be attached to requests to authenticate against the API */
       jwtToken: string;
       /**
        * Format: constant
@@ -3006,10 +3047,6 @@ export type components = {
        * @default true
        */
       success: boolean;
-    };
-    DeleteAccountBodyDto: {
-      /** @description The administrator's password to authorize the operation. */
-      adminPassword: string;
     };
     DuplicateTestAccountBodyDto: {
       /** @description The new username for the duplicated account */
@@ -4110,10 +4147,6 @@ export type components = {
       usr_id: number;
       writable: string;
     };
-    RegenerateUserSessionBodyDto: {
-      /** @description The administrator's password to authorize the operation. */
-      adminPassword: string;
-    };
     ResetUserPasswordBodyDto: {
       /** @description The administrator's password to authorize the operation. */
       adminPassword: string;
@@ -4310,14 +4343,6 @@ export type components = {
     SetIndexerStatusBodyDto: {
       /** @description Whether the scanner should be enabled or disabled */
       enabled: boolean;
-    };
-    SetIndexerStatusResponseDto: {
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
     };
     SetTrackCustomDataBodyDto: {
       /**
@@ -7491,14 +7516,6 @@ export interface operations {
       };
     };
     responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
-        };
-      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -7558,9 +7575,7 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
-        };
+        content?: never;
       };
       201: {
         headers: {
@@ -7609,14 +7624,6 @@ export interface operations {
       };
     };
     responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CreateSessionResponseDto'];
-        };
-      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -7675,14 +7682,6 @@ export interface operations {
       };
     };
     responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
-        };
-      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -7745,7 +7744,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['DeleteAccountBodyDto'];
+        'application/json': components['schemas']['AdminAuthorizationBodyDto'];
       };
     };
     responses: {
@@ -7932,7 +7931,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['ApiRootPathsDeleteRootPathBadRequestResponse'];
         };
       };
       403: {
@@ -7986,7 +7985,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'application/json': components['schemas']['ApiRootPathsDeleteUserRootPathBadRequestResponse'];
         };
       };
       403: {
@@ -9163,7 +9162,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['RegenerateUserSessionBodyDto'];
+        'application/json': components['schemas']['AdminAuthorizationBodyDto'];
       };
     };
     responses: {
@@ -9795,7 +9794,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SetIndexerStatusResponseDto'];
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10172,12 +10171,6 @@ export interface operations {
       };
     };
     responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
       201: {
         headers: {
           [name: string]: unknown;
@@ -10364,64 +10357,6 @@ export interface operations {
       };
     };
   };
-  ApiRootPathsController_patch: {
-    parameters: {
-      query: {
-        /** @description The database ID of the resource */
-        id: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateRootPathBodyDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ApiRootPathsPatchBadRequestResponse'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ApiRootPathsPatchNotFoundResponse'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
   ApiAccountsController_updateUserRoles: {
     parameters: {
       query: {
@@ -10476,6 +10411,64 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiAccountsUpdateUserRolesNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiRootPathsController_patch: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateRootPathBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsPatchBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiRootPathsPatchNotFoundResponse'];
         };
       };
       500: {
@@ -11879,8 +11872,8 @@ export enum ApiAccountsCreateAccountUnauthorizedErrors {
 }
 export enum ApiAccountsDeleteAccountBadRequestErrors {
   account_only_admin_error = 'account-only-admin-error',
-  invalid_account_id_error = 'invalid-account-id-error',
   invalid_admin_password_error = 'invalid-admin-password-error',
+  invalid_account_id_error = 'invalid-account-id-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
 }
 export enum ApiAccountsDeleteAccountNotFoundErrors {
@@ -11907,10 +11900,11 @@ export enum ApiAccountsResetUserPasswordUnauthorizedErrors {
   invalid_admin_password_error = 'invalid-admin-password-error',
 }
 export enum ApiAccountsUpdateUserRolesBadRequestErrors {
+  account_only_admin_error = 'account-only-admin-error',
+  invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_account_id_error = 'invalid-account-id-error',
   invalid_user_role_error = 'invalid-user-role-error',
   invalid_role_error = 'invalid-role-error',
-  invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
 }
 export enum ApiAccountsUpdateUserRolesNotFoundErrors {
@@ -12170,11 +12164,17 @@ export enum ApiRootPathsCreateRootPathNotFoundErrors {
 export enum ApiRootPathsCreateRootPathUnauthorizedErrors {
   invalid_admin_password_error = 'invalid-admin-password-error',
 }
+export enum ApiRootPathsDeleteRootPathBadRequestErrors {
+  invalid_root_path_id_error = 'invalid-root-path-id-error',
+}
 export enum ApiRootPathsDeleteRootPathNotFoundErrors {
+  root_path_not_found_error = 'root-path-not-found-error',
+}
+export enum ApiRootPathsDeleteUserRootPathBadRequestErrors {
   invalid_root_path_id_error = 'invalid-root-path-id-error',
 }
 export enum ApiRootPathsDeleteUserRootPathNotFoundErrors {
-  invalid_root_path_id_error = 'invalid-root-path-id-error',
+  root_path_not_found_error = 'root-path-not-found-error',
 }
 export enum ApiRootPathsListUserRootPathsBadRequestErrors {
   account_not_found_error = 'account-not-found-error',
@@ -12185,6 +12185,7 @@ export enum ApiRootPathsListUserRootPathsNotFoundErrors {
 }
 export enum ApiRootPathsPatchBadRequestErrors {
   root_path_does_not_exist_error = 'root-path-does-not-exist-error',
+  duplicate_root_path_error = 'duplicate-root-path-error',
   invalid_root_path_id_error = 'invalid-root-path-id-error',
   invalid_root_path_error = 'invalid-root-path-error',
 }
@@ -12214,9 +12215,10 @@ export enum ApiSessionsDeleteBadRequestErrors {
 export enum ApiSessionsRegenerateUserSessionKeyBadRequestErrors {
   invalid_admin_password_error = 'invalid-admin-password-error',
   invalid_admin_password_length_error = 'invalid-admin-password-length-error',
+  invalid_account_id_error = 'invalid-account-id-error',
 }
 export enum ApiSessionsRegenerateUserSessionKeyNotFoundErrors {
-  invalid_account_id_error = 'invalid-account-id-error',
+  account_not_found_error = 'account-not-found-error',
 }
 export enum ApiTestCreateTestAccountBadRequestErrors {
   invalid_username_error = 'invalid-username-error',

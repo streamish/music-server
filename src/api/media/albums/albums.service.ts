@@ -1,6 +1,5 @@
 import { ErrorCodes } from 'src/constants/error-codes';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { LibraryAlbumWithTracksDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { ListAlbumsQueryDto, ListAlbumsResponseDto, ListAlbumsWithTracksResponseDto } from './dtos';
 
@@ -10,13 +9,13 @@ export class ApiAlbumsService {
 
   /**
    * Returns paginated list of albums for the account, matching the specified filters.
-   * @param {number} accountId The authenticated user
-   * @param {ListAlbumsQueryDto} query Optional query filters
-   * @returns {ListAlbumsResponseDto} Paginated dataset of albums
+   * @param userId The authenticated user ID
+   * @param query Optional query filters
+   * @returns Paginated dataset of albums
    */
-  async listAlbums(accountId: number, query: ListAlbumsQueryDto): Promise<ListAlbumsResponseDto> {
+  async listAlbums(userId: number, query: ListAlbumsQueryDto) {
     const albums = await this.libraryService.listAlbums(
-      accountId,
+      userId,
       query,
       query.offset || 0,
       query.limit || 100_000,
@@ -28,18 +27,18 @@ export class ApiAlbumsService {
       limit: query.limit || 100_000,
       offset: query.offset || 0,
       total: albums.total,
-    } as ListAlbumsResponseDto;
+    } as unknown as ListAlbumsResponseDto;
   }
 
   /**
    * Returns paginated list of albums including their tracks for the account, matching the specified filters.
-   * @param {number} accountId The authenticated user
-   * @param {ListAlbumsQueryDto} query Optional query filters
-   * @returns {ListAlbumsWithTracksResponseDto} Paginated dataset of albums including track lists
+   * @param userId The authenticated user ID
+   * @param query Optional query filters
+   * @returns Paginated dataset of albums including track lists
    */
-  async listAlbumsWithTracks(accountId: number, query: ListAlbumsQueryDto): Promise<ListAlbumsWithTracksResponseDto> {
+  async listAlbumsWithTracks(userId: number, query: ListAlbumsQueryDto) {
     const data = await this.libraryService.listAlbums(
-      accountId,
+      userId,
       query,
       query.offset || 0,
       query.limit || 100_000,
@@ -47,7 +46,7 @@ export class ApiAlbumsService {
       query.sortDirection,
     );
     const albums = await this.libraryService.retrieveAlbum(
-      accountId,
+      userId,
       data.items.map((album) => album.id),
     );
     return {
@@ -55,17 +54,18 @@ export class ApiAlbumsService {
       limit: query.limit || 100_000,
       offset: query.offset || 0,
       total: data.total,
-    } as ListAlbumsWithTracksResponseDto;
+    } as unknown as ListAlbumsWithTracksResponseDto;
   }
 
   /**
    * Retrieves the specified album.
-   * @param {number} accountId The authenticated user
-   * @param {number} albumId The album to retrieve
-   * @returns {LibraryAlbumWithTracksDto} The album including tracklists
+   * @param userId The authenticated user ID
+   * @param albumId The album to retrieve
+   * @throws If the specified album is not found
+   * @returns The album including tracklists
    */
-  async retrieveAlbum(accountId: number, albumId: number): Promise<LibraryAlbumWithTracksDto> {
-    const albums = await this.libraryService.retrieveAlbum(accountId, albumId);
+  async retrieveAlbum(userId: number, albumId: number) {
+    const albums = await this.libraryService.retrieveAlbum(userId, albumId);
     const album = albums[0];
     if (!album) {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);

@@ -11,6 +11,8 @@ import { ErrorCodes } from 'src/constants/error-codes';
 import { IsBoolean, IsNumber, IsString, getMetadataStorage } from 'class-validator';
 import { applyDecorators } from '@nestjs/common/decorators/core/apply-decorators';
 
+type Constructor<T = object> = new (...args: unknown[]) => T;
+
 /**
  * The response data structure for requests that complete successfully unless they return
  * binary, files, etc.
@@ -49,6 +51,33 @@ export class PaginatedResponseDataDto extends SuccessResponseDto {
    */
   @IsNumber()
   declare total: number;
+}
+
+export function createItemResponseDto<TDto extends Constructor>(propertyName: string, itemDto: TDto) {
+  class ItemResponseDto extends SuccessResponseDto {}
+  ApiProperty({ type: itemDto })(ItemResponseDto.prototype, propertyName);
+  Object.defineProperty(ItemResponseDto, 'name', {
+    value: `${propertyName[0]?.toUpperCase()}${propertyName.slice(1)}ResponseDto`,
+  });
+  return ItemResponseDto as Constructor<SuccessResponseDto & Record<typeof propertyName, InstanceType<TDto>>>;
+}
+
+export function createArrayResponseDto<TDto extends Constructor>(propertyName: string, itemDto: TDto) {
+  class ArrayResponseDto extends SuccessResponseDto {}
+  ApiProperty({ type: itemDto, isArray: true })(ArrayResponseDto.prototype, propertyName);
+  Object.defineProperty(ArrayResponseDto, 'name', {
+    value: `${propertyName[0]?.toUpperCase()}${propertyName.slice(1)}ResponseDto`,
+  });
+  return ArrayResponseDto as Constructor<SuccessResponseDto & Record<typeof propertyName, InstanceType<TDto>[]>>;
+}
+
+export function createPaginatedArrayResponseDto<TDto extends Constructor>(propertyName: string, itemDto: TDto) {
+  class ArrayResponseDto extends PaginatedResponseDataDto {}
+  ApiProperty({ type: itemDto, isArray: true })(ArrayResponseDto.prototype, propertyName);
+  Object.defineProperty(ArrayResponseDto, 'name', {
+    value: `${propertyName[0]?.toUpperCase()}${propertyName.slice(1)}ResponseDto`,
+  });
+  return ArrayResponseDto as Constructor<PaginatedResponseDataDto & Record<typeof propertyName, InstanceType<TDto>[]>>;
 }
 
 /**

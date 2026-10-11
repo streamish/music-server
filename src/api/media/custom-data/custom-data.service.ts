@@ -25,12 +25,12 @@ export class ApiCustomDataService {
 
   /**
    * Deletse the custom data of a track.
-   * @param {number} accountId The authenticated account
-   * @param {number} trackId Thbe track ID to uppdate
-   * @throws {NotFoundException} If the specified album is not found
+   * @param userId The authenticated user ID
+   * @param trackId Thbe track ID to uppdate
+   * @throws If the specified track is not found
    */
-  async deleteCustomData(accountId: number, trackId: number): Promise<void> {
-    const file = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
+  async deleteCustomData(userId: number, trackId: number) {
+    const file = await this.trackEntity.findOne({ where: { id: trackId, accountId: userId } });
     if (!file) {
       throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
     }
@@ -40,16 +40,16 @@ export class ApiCustomDataService {
 
   /**
    * Assigns custom data to an album.
-   * @param {number} accountId The authenticated account
-   * @param {number} albumId Thbe album ID to uppdate
-   * @param {SetAlbumCustomDataBodyDto} customData The custom `title`, `artists`, `year` etc
-   * @throws {NotFoundException} If the specified album is not found
+   * @param userId The authenticated user ID
+   * @param albumId Thbe album ID to uppdate
+   * @param customData The custom `title`, `artists`, `year` etc
+   * @throws If the specified album is not found
    */
-  async setAlbumData(accountId: number, albumId: number, customData: SetAlbumCustomDataBodyDto) {
+  async setAlbumData(userId: number, albumId: number, customData: SetAlbumCustomDataBodyDto) {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'accountId', 'title'],
       where: {
-        accountId,
+        accountId: userId,
         id: albumId,
       },
     });
@@ -58,7 +58,7 @@ export class ApiCustomDataService {
     }
     // apply the custom data to all tracks
     const trackIds = await this.customDataService.setCustomAlbumData(
-      accountId,
+      userId,
       albumId,
       customData.title,
       customData.artists,
@@ -76,24 +76,24 @@ export class ApiCustomDataService {
 
   /**
    * Assigns custom name to an association.
-   * @param {number} accountId The authenticated account
-   * @param {number} associationId The association ID to uppdate
-   * @param {string} name The new name value
-   * @throws {NotFoundException} If the specified association is not found
+   * @param userId The authenticated user ID
+   * @param associationId The association ID to uppdate
+   * @param name The new name value
+   * @throws If the specified association is not found
    */
-  async setAssociationName(accountId: number, associationId: number, name: string) {
+  async setAssociationName(userId: number, associationId: number, name: string) {
     const association = await this.associationEntity.findOne({
       where: {
         id: associationId,
-        accountId,
+        accountId: userId,
       },
       attributes: ['id'],
     });
     if (!association?.id) {
       throw new NotFoundException(ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR);
     }
-    const trackIds1 = await this.customDataService.setCustomAlbumArtistName(accountId, associationId, name);
-    const trackIds2 = await this.customDataService.setCustomTrackArtistName(accountId, associationId, name);
+    const trackIds1 = await this.customDataService.setCustomAlbumArtistName(userId, associationId, name);
+    const trackIds2 = await this.customDataService.setCustomTrackArtistName(userId, associationId, name);
     const trackIds = [...trackIds1, ...trackIds2];
     for (let i = 0, len = trackIds.length; i < len; i += 1) {
       const trackId = trackIds[i];
@@ -106,13 +106,13 @@ export class ApiCustomDataService {
 
   /**
    * Assigns any of the full-set of possible custom data to a track.
-   * @param {number} accountId The authenticated account
-   * @param {number} trackId The track ID to uppdate
-   * @param {SetCustomDataBodyDto} customData The new `title`, `year`, `discNumber` etc
-   * @throws {NotFoundException} If the specified track is not found
+   * @param userId The authenticated user ID
+   * @param trackId The track ID to uppdate
+   * @param customData The new `title`, `year`, `discNumber` etc
+   * @throws If the specified track is not found
    */
-  async setCustomData(accountId: number, trackId: number, body: SetCustomDataBodyDto): Promise<void> {
-    const track = await this.trackEntity.findOne({ where: { id: trackId, accountId } });
+  async setCustomData(userId: number, trackId: number, body: SetCustomDataBodyDto) {
+    const track = await this.trackEntity.findOne({ where: { id: trackId, accountId: userId } });
     if (!track) {
       throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }
@@ -154,21 +154,21 @@ export class ApiCustomDataService {
 
   /**
    * Assigns custom data to a track.
-   * @param {number} accountId The authenticated account
-   * @param {number} trackId The track ID to uppdate
-   * @param {SetTrackCustomDataBodyDto} customData The new `title`, `year`, `discNumber` etc
-   * @throws {NotFoundException} If the specified track is not found
+   * @param userId The authenticated user ID
+   * @param trackId The track ID to uppdate
+   * @param customData The new `title`, `year`, `discNumber` etc
+   * @throws If the specified track is not found
    */
-  async setTrackData(accountId: number, trackId: number, customData: SetTrackCustomDataBodyDto) {
+  async setTrackData(userId: number, trackId: number, customData: SetTrackCustomDataBodyDto) {
     const track = await this.trackEntity.findOne({
       attributes: ['id', 'accountId', 'title'],
-      where: { id: trackId, accountId },
+      where: { id: trackId, accountId: userId },
     });
     if (!track) {
       throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }
     await this.customDataService.setCustomTrackData(
-      accountId,
+      userId,
       trackId,
       customData.title,
       customData.artists,

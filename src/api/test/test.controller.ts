@@ -1,6 +1,6 @@
 import { ApiEndpoint } from '../api.decorator';
 import { ApiTestService } from './test.service';
-import { Body, Controller, Delete, Get, HttpStatus, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
 import { CreateTestAccountBodyDto, CreateTestAccountResponseDto } from './dtos';
 import { DeleteAccountQueryDto } from '../accounts/dtos';
 import { DeleteTestAccountQueryDto } from './dtos/delete-test-account.dto';
@@ -33,7 +33,7 @@ export class ApiTestController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(CreateTestAccountBodyDto),
     },
   })
-  async createTestAccount(@Body() body: CreateTestAccountBodyDto): Promise<CreateTestAccountResponseDto> {
+  async createTestAccount(@Body() body: CreateTestAccountBodyDto) {
     const account = await this.testService.createTestAccount(body);
     return {
       success: true,
@@ -57,7 +57,7 @@ export class ApiTestController {
       [HttpStatus.BAD_REQUEST]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR, ...getValidationMessages(DeleteAccountQueryDto)],
     },
   })
-  async deleeteTestAccount(@Query() query: DeleteTestAccountQueryDto): Promise<SuccessResponseDto> {
+  async deleeteTestAccount(@Query() query: DeleteTestAccountQueryDto) {
     await this.testService.deleteTestAccount(query.id);
     return {
       success: true,
@@ -85,6 +85,7 @@ export class ApiTestController {
       ],
     },
   })
+  @HttpCode(HttpStatus.CREATED)
   async duplicateTestAccount(@Query() query: DuplicateTestAccountQueryDto, @Body() body: DuplicateTestAccountBodyDto) {
     const account = await this.testService.duplicateTestAccount(query.username, body.newUsername);
     return {
@@ -105,7 +106,7 @@ export class ApiTestController {
       [HttpStatus.OK]: ListTestAccountsResponseDto,
     },
   })
-  async listTestAccounts(): Promise<ListTestAccountsResponseDto> {
+  async listTestAccounts() {
     const accounts = await this.testService.listAccounts();
     return {
       success: true,

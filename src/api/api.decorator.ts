@@ -62,7 +62,7 @@ export type ResponseTypes = Partial<
 export function ApiEndpoint(
   httpVerb: (str: string) => MethodDecorator,
   urlPath: string,
-  httpCode: HttpStatus,
+  httpStatus: HttpStatus,
   {
     allowAdministrator,
     allowGuest,
@@ -99,6 +99,9 @@ export function ApiEndpoint(
     [HttpStatus.INTERNAL_SERVER_ERROR]: responses?.[HttpStatus.INTERNAL_SERVER_ERROR] || InternalServerErrorResponseDto,
     [HttpStatus.FORBIDDEN]: responses?.[HttpStatus.FORBIDDEN] || ForbiddenErrorResponseDto,
   };
+  if (httpStatus === HttpStatus.CREATED) {
+    delete allResponses[HttpStatus.OK];
+  }
   const apiTags: string[] = [];
   const allowedRoles: UserRoleEnum[] = [];
   if (isTest) {
@@ -120,9 +123,6 @@ export function ApiEndpoint(
   }
   const isAuthenticated = allowAdministrator || allowUser;
   return applyDecorators(
-    // request information
-    httpVerb(urlPath),
-    HttpCode(httpCode),
     // security
     ...(allowGuest ? [AllowGuest] : []),
     ...(isAuthenticated ? [ApiBearerAuth(JWT_BEARER_AUTH), UseGuards(RoleGuard), AllowedRoles(allowedRoles)] : []),
@@ -146,14 +146,15 @@ export function ApiEndpoint(
     // responses
     ...(produces ? [ApiProduces(...produces)] : []),
     ...(header ? [ApiHeader(header)] : []),
-    ...Object.entries(allResponses).map(([status, dto]) => {
-      if (status === '400' && Array.isArray(dto)) {
+    ...Object.entries(allResponses).map(([statusString, dto]) => {
+      const status = Number(statusString);
+      if (status === HttpStatus.BAD_REQUEST && Array.isArray(dto)) {
         return ApiBadRequestErrors(dto as ErrorCodes[]);
       }
-      if (status === '401' && Array.isArray(dto)) {
+      if (status === HttpStatus.UNAUTHORIZED && Array.isArray(dto)) {
         return ApiUnauthorizedErrors(dto as ErrorCodes[]);
       }
-      if (status === '404' && Array.isArray(dto)) {
+      if (status === HttpStatus.NOT_FOUND && Array.isArray(dto)) {
         return ApiNotFoundErrors(dto as ErrorCodes[]);
       }
       if ('schema' in dto) {
@@ -164,5 +165,8 @@ export function ApiEndpoint(
       }
       return ApiResponse({ status: Number(status), type: dto as Type<unknown> });
     }),
+    // request information
+    httpVerb(urlPath),
+    HttpCode(httpStatus),
   );
 }

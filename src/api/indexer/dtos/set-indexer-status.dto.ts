@@ -1,7 +1,5 @@
-/* eslint-disable max-classes-per-file */
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsBoolean } from 'class-validator';
-import { SuccessResponseDto } from 'src/api/response.dto';
 import { Type } from 'class-transformer';
 
 export class SetIndexerStatusBodyDto {
@@ -12,5 +10,3 @@ export class SetIndexerStatusBodyDto {
   @Type(() => Boolean)
   declare enabled: boolean;
 }
-
-export class SetIndexerStatusResponseDto extends SuccessResponseDto {}

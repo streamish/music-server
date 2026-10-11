@@ -34,10 +34,10 @@ export class ApiTestService {
 
   /**
    * Creates a test account with no root path or media that can be used for testing operations.
-   * @param {CreateTestAccountBodyDto} data The acocunt information
-   * @returns {Promise<TestAccountDto>} The test account details
+   * @param data The acocunt information
+   * @returns The test account details
    */
-  async createTestAccount(data: CreateTestAccountBodyDto): Promise<TestAccountDto> {
+  async createTestAccount(data: CreateTestAccountBodyDto) {
     const passwordHash = await this.authenticationService.generatePasswordHash(data.password);
     const account = await this.accountEntity.create({
       username: data.username,
@@ -50,11 +50,11 @@ export class ApiTestService {
 
   /**
    * Deletes the specified account
-   * @param {number} accountId The account to delete
-   * @throws {NotFoundException} If the specified account is not found
+   * @param userId The authenticated user ID
+   * @throws If the specified account is not found
    */
-  async deleteTestAccount(accountId: number): Promise<void> {
-    const account = await this.accountEntity.findByPk(accountId, { attributes: ['id'] });
+  async deleteTestAccount(userId: number) {
+    const account = await this.accountEntity.findByPk(userId, { attributes: ['id'] });
     if (!account) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
@@ -63,11 +63,11 @@ export class ApiTestService {
 
   /**
    * Duplicates the specified account including copying the root path and media data
-   * @param {string} username The account to copy
-   * @param {string} newUsername The new account username to create
-   * @returns {Promise<TestAccountDto>} The new account details
+   * @param username The account to copy
+   * @param newUsername The new account username to create
+   * @returns The new account details
    */
-  async duplicateTestAccount(username: string, newUsername: string): Promise<TestAccountDto> {
+  async duplicateTestAccount(username: string, newUsername: string) {
     const account = await this.accountEntity.findOne({ where: { username } });
     if (!account) {
       throw new Error(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
@@ -141,20 +141,20 @@ export class ApiTestService {
 
   /**
    * Lists all accounts
-   * @returns {Promise<TestAccountDto[]>} Array of all accounts
+   * @returns Array of all accounts
    */
-  async listAccounts(): Promise<TestAccountDto[]> {
+  async listAccounts() {
     const accounts = await this.accountEntity.findAll();
     return accounts.map(accountToRow);
   }
 
   /**
    * Retrieves an account by username
-   * @param {string} username The username to look up
-   * @throws {NotFoundException} If the specified account is not found
-   * @returns {Promise<TestAccountDto>} Returns the specified account
+   * @param username The username to look up
+   * @throws If the specified account is not found
+   * @returns Returns the specified account
    */
-  async retrieveTestAccount(username: string): Promise<TestAccountDto> {
+  async retrieveTestAccount(username: string) {
     const account = await this.accountEntity.findOne({
       attributes: ['id', 'username', 'roles'],
       where: {

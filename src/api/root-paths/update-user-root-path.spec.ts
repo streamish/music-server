@@ -12,7 +12,7 @@ import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 
-describe('/api/update-root-path', () => {
+describe('/api/update-user-root-path', () => {
   const deleteAccounts: number[] = [];
   let adminApi: AuthenticatedApiClient;
 
@@ -50,7 +50,7 @@ describe('/api/update-root-path', () => {
   }
 
   async function updateRootPath(rootPathId: number, newPath: string) {
-    return adminApi.PATCH('/api/update-root-path', {
+    return adminApi.PATCH('/api/update-user-root-path', {
       body: {
         newPath,
       },
@@ -64,7 +64,7 @@ describe('/api/update-root-path', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.PATCH(`/api/update-root-path`, {
+      const { error } = await unauthenticatedApi.PATCH(`/api/update-user-root-path`, {
         body: {
           newPath: tmpdir(),
         },
@@ -80,7 +80,7 @@ describe('/api/update-root-path', () => {
 
     it('should reject non-admin access', async () => {
       const nonAuthenticatedApiClient = await createAuthenticatedApi(USER_USERNAME, USER_PASSWORD);
-      const { error } = await nonAuthenticatedApiClient.PATCH('/api/update-root-path', {
+      const { error } = await nonAuthenticatedApiClient.PATCH('/api/update-user-root-path', {
         body: {
           newPath: tmpdir(),
         },
@@ -125,7 +125,7 @@ describe('/api/update-root-path', () => {
   describe('success', () => {
     it('should update root path', async () => {
       const account = await testApi.createAccount();
-      const originalRootPath = join(tmpdir(), `test-update-root-path-${Date.now()}`);
+      const originalRootPath = join(tmpdir(), `test-update-user-root-path-${Date.now()}`);
       mkdirSync(originalRootPath, { recursive: true });
       const { error: error2 } = await createRootPath(account.id, originalRootPath);
       expect(error2).toBeUndefined();

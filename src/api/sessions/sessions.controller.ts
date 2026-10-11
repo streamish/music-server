@@ -1,11 +1,12 @@
+import {} from './dtos/regenerate-user-session-key.dto';
 import { AccountEntity, SessionEntity } from 'src/database/entities';
+import { AdminAuthorizationBodyDto } from '../request.dto';
 import { ApiEndpoint } from 'src/api/api.decorator';
 import { ApiSessionsService } from './sessions.service';
-import { Body, Controller, Delete, HttpStatus, Post, Query, Req, Session } from '@nestjs/common';
-import { CreateSessionBodyDto, CreateSessionResponseDto } from './dtos';
+import { Body, Controller, Delete, HttpCode, HttpStatus, Post, Query, Req, Session } from '@nestjs/common';
+import { CreateSessionBodyDto, CreateSessionResponseDto, RegenerateUserSessionKeyQueryDto } from './dtos';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { RegenerateUserSessionBodyDto, RegenerateUserSessionKeyQueryDto } from './dtos/regenerate-user-session-key.dto';
-import { SuccessResponseDto, getValidationMessages } from 'src/api/response.dto';
+import { SuccessResponseDto, getValidationMessages } from '../response.dto';
 import { User } from '../user.decorator';
 import type { Request } from 'express';
 
@@ -27,7 +28,8 @@ export class ApiSessionsController {
       [HttpStatus.BAD_REQUEST]: [ErrorCodes.INVALID_PASSWORD_ERROR, ...getValidationMessages(CreateSessionBodyDto)],
     },
   })
-  async createSession(@Req() req: Request, @Body() body: CreateSessionBodyDto): Promise<CreateSessionResponseDto> {
+  @HttpCode(HttpStatus.CREATED)
+  async createSession(@Req() req: Request, @Body() body: CreateSessionBodyDto) {
     const userAgent = req.headers['user-agent'] || '';
     const jwtToken = await this.sessionsService.createSession(userAgent, body);
     return {
@@ -46,7 +48,7 @@ export class ApiSessionsController {
       [HttpStatus.BAD_REQUEST]: [ErrorCodes.SESSION_NOT_FOUND_ERROR, ErrorCodes.INVALID_SESSION_ERROR],
     },
   })
-  async delete(@Session() session: SessionEntity): Promise<SuccessResponseDto> {
+  async delete(@Session() session: SessionEntity) {
     await this.sessionsService.deleteSession(session.id);
     return {
       success: true,
@@ -64,7 +66,7 @@ export class ApiSessionsController {
       [HttpStatus.OK]: SuccessResponseDto,
     },
   })
-  async regenerateMasterSessionKey(@User() user: AccountEntity): Promise<SuccessResponseDto> {
+  async regenerateMasterSessionKey(@User() user: AccountEntity) {
     await this.sessionsService.regenerateMasterSessionKey(user.id);
     return {
       success: true,
@@ -81,15 +83,18 @@ export class ApiSessionsController {
     allowAdministrator: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
-      [HttpStatus.BAD_REQUEST]: getValidationMessages(RegenerateUserSessionBodyDto),
-      [HttpStatus.NOT_FOUND]: getValidationMessages(RegenerateUserSessionKeyQueryDto),
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ...getValidationMessages(AdminAuthorizationBodyDto),
+        ...getValidationMessages(RegenerateUserSessionKeyQueryDto),
+      ],
     },
   })
   async regenerateUserSessionKey(
     @User() user: AccountEntity,
     @Query() query: RegenerateUserSessionKeyQueryDto,
-    @Body() body: RegenerateUserSessionBodyDto,
-  ): Promise<SuccessResponseDto> {
+    @Body() body: AdminAuthorizationBodyDto,
+  ) {
     await this.sessionsService.regenerateUserSessionKey(user.id, body.adminPassword, query.id);
     return {
       success: true,
@@ -109,7 +114,7 @@ export class ApiSessionsController {
       [HttpStatus.OK]: SuccessResponseDto,
     },
   })
-  async regenerateSessionKey(@User() user: AccountEntity): Promise<SuccessResponseDto> {
+  async regenerateSessionKey(@User() user: AccountEntity) {
     await this.sessionsService.regenerateSessionKey(user.id);
     return {
       success: true,

@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsInt, IsNotEmpty, IsOptional, IsString, Length, Max, Min } from 'class-validator';
-import { SuccessResponseDto } from 'src/api/response.dto';
+import { createItemResponseDto } from 'src/api/response.dto';
 
 export class CreateSessionBodyDto {
   /**
@@ -30,10 +30,4 @@ export class CreateSessionBodyDto {
   declare expiresDays?: number;
 }
 
-export class CreateSessionResponseDto extends SuccessResponseDto {
-  /**
-   * The JWT session token that can be attached to requests to authenticate against the API
-   */
-  @IsString()
-  jwtToken!: string;
-}
+export class CreateSessionResponseDto extends createItemResponseDto('jwtToken', String) {}

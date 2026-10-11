@@ -26,7 +26,7 @@ export class ApiSessionsService {
    * @param body
    * @returns
    */
-  async createSession(userAgent: string, body: CreateSessionBodyDto): Promise<string> {
+  async createSession(userAgent: string, body: CreateSessionBodyDto) {
     const jwtToken = await this.authenticationService.createSession(
       body.username,
       body.password,
@@ -37,7 +37,7 @@ export class ApiSessionsService {
     return jwtToken;
   }
 
-  async deleteSession(sessionId: number): Promise<void> {
+  async deleteSession(sessionId: number) {
     const session = await this.sessionEntity.findByPk(sessionId);
     if (!session) {
       throw new NotFoundException(ErrorCodes.SESSION_NOT_FOUND_ERROR);
@@ -70,15 +70,11 @@ export class ApiSessionsService {
 
   /**
    * Regenerates the session key for the specified user, invalidating all their current sessions.
-   * @param {number} adminAccountId The administrator performing the update
-   * @param {string} adminPassword The administrator's password to authorize the update
-   * @param {number} updateAccountId The target account to update
+   * @param adminAccountId The administrator performing the update
+   * @param adminPassword The administrator's password to authorize the update
+   * @param updateAccountId The target account to update
    */
-  async regenerateUserSessionKey(
-    adminAccountId: number,
-    adminPassword: string,
-    updateAccountId: number,
-  ): Promise<void> {
+  async regenerateUserSessionKey(adminAccountId: number, adminPassword: string, updateAccountId: number) {
     // verify administrator password
     const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
     if (!isAdminPasswordValid) {
@@ -90,10 +86,11 @@ export class ApiSessionsService {
 
   /**
    * Regenerates the session key for a user, invalidating all their current sessions
-   * @param {number} accountId The user account ID to generate a new session key
+   * @param userId The authenticated user ID
+   * @throws If the specified account is not found
    */
-  async regenerateSessionKey(accountId: number): Promise<void> {
-    const account = await this.accountEntity.findByPk(accountId, { attributes: ['id'] });
+  async regenerateSessionKey(userId: number) {
+    const account = await this.accountEntity.findByPk(userId, { attributes: ['id'] });
     if (!account) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
@@ -101,7 +98,7 @@ export class ApiSessionsService {
       {
         sessionKey: Guid.create(),
       },
-      { where: { id: accountId } },
+      { where: { id: userId } },
     );
   }
 }

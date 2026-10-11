@@ -97,7 +97,6 @@ export class IndexerService {
    * Scans all root paths once an hour for any changes to the files and folders that
    * weren't detected by the file system watcher. This is a backup to ensure that any changes
    * that are missed by the file system watcher are still detected and processed.
-   * @param {number} accountId The ID of the account whose root paths should be scanned
    * @returns {Promise<void>}
    */
   @Cron(CronExpression.EVERY_HOUR)
@@ -521,7 +520,6 @@ export class IndexerService {
    * @param {string} relativePath The path to the file on disk
    * @param {number} fileSize The size of the file
    * @param {Date} fileMtime The last-modified date of the file
-   * @param {number} accountId The ID of the account owning the file
    * @returns {Promise<void>}
    */
   async synchronizeFile(
