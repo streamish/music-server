@@ -15,9 +15,9 @@ export class SynologyStreamService {
    * Returns a track by ID.  If an invalid ID is provided it throws a NotFoundException.  The file stream is
    * derived from the fully-qualified path of the file constructed from the root, artist, album and file paths,
    * and then piped to the response via the controller.
-   * @param {number} userId The authenticated user ID
-   * @param {number} trackId The ID of the track to retrieve.
-   * @returns {Promise<StreamDto>} The absolute file path, codec and size for streaming the file.
+   * @param userId The authenticated user ID
+   * @param trackId The ID of the track to retrieve.
+   * @returns The absolute file path, codec and size for streaming the file.
    */
   async getStream(userId: number, trackId: number): Promise<StreamDto> {
     const file = await this.trackEntity.findOne({

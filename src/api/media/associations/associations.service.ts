@@ -14,7 +14,6 @@ export class ApiAssociationsService {
    * @param userId The authenticated user ID
    * @param query Optional query filters
    * @returns Paginated dataset of associations
-   * @returns
    */
   async listAlbumAssociations(userId: number, query: ListAlbumAssociationsQueryDto) {
     const data = await this.libraryService.listAlbumAssociations(

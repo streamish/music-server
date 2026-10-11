@@ -5,8 +5,8 @@ const splitDelimiters: string[] = [',', ';', '/', ' & '];
 
 /**
  * Splits an array of strings that may be additionally delimited by common delimiters (comma, semicolon, and ampersand).
- * @param {string[]} items The array of strings to split
- * @returns {string[]} The array of split strings
+ * @param items The array of strings to split
+ * @returns The array of split strings
  */
 export function splitArray(items: string[]): string[] {
   const splitItems: string[] = [];
@@ -43,8 +43,8 @@ export function splitArray(items: string[]): string[] {
 /**
  * Cleans up a string by trimming whitespace, escaping single quotes, and removing unwanted characters
  * that can be problematic to insert into the database.
- * @param {string} value The string to sanitize
- * @returns {string} The sanitized string
+ * @param value The string to sanitize
+ * @returns The sanitized string
  */
 export function sanitizeString(value: string): string {
   return value
@@ -56,8 +56,8 @@ export function sanitizeString(value: string): string {
 
 /**
  * Normalizes a string by sanitizing it and converting it to lowercase.
- * @param {string} value The string to normalize
- * @returns {string} The normalized string
+ * @param value The string to normalize
+ * @returns The normalized string
  */
 export function normalizeString(value: string): string {
   return sanitizeString(value).toLocaleLowerCase();
@@ -65,8 +65,8 @@ export function normalizeString(value: string): string {
 
 /**
  * Replaces the double-quotes in a string required for SQLite insertion
- * @param {string} value The string in which to replace double quotes
- * @returns {string} The string with double quotes replaced
+ * @param value The string in which to replace double quotes
+ * @returns The string with double quotes replaced
  */
 export function replaceDoubleQuotes(value: string): string {
   // eslint-disable-next-line @typescript-eslint/quotes
@@ -75,8 +75,8 @@ export function replaceDoubleQuotes(value: string): string {
 
 /**
  * Returns the corresponding MIME type for a given audio codec.
- * @param {FileTypeEnum} codec The audio codec for which to get the conten t type
- * @returns {string} The corresponding MIME type for the audio codec
+ * @param codec The audio codec for which to get the conten t type
+ * @returns The corresponding MIME type for the audio codec
  */
 export function getAudioContentType(codec: FileTypeEnum): string {
   switch (codec) {

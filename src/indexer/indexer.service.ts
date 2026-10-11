@@ -249,7 +249,7 @@ export class IndexerService {
   /**
    * Performs a full scan of a root path and its nested contents and then examines
    * files for additions or modifications and synchronizes the database
-   * @param {RootPathEntity} rootPath The indexer root path being scanned
+   * @param rootPath The indexer root path being scanned
    * @returns {Promise<void>}
    */
   async scanRootPath(rootPath: RootPathEntity): Promise<void> {
@@ -293,7 +293,7 @@ export class IndexerService {
 
   /**
    * Manually rescan a single specific file after changes to its custom data
-   * @param {number} trackId The ID of the file
+   * @param trackId The ID of the file
    */
   async scanFile(trackId: number) {
     this.logger.log(`manually scanning file with ID ${trackId}`);
@@ -348,10 +348,10 @@ export class IndexerService {
 
   /**
    * Recursively scans the root path and any subfolders for audio files
-   * @param {RootPathEntity} rootPath The indexer root path being scanned
-   * @param {string[]} foldersToScan Array of folders identified during the scan
-   * @param {FileItem[]} filesToScan Array of files identified during the scan
-   * @param {string[]} uniqueFolderPaths Array of unique folder paths identified during the scan
+   * @param rootPath The indexer root path being scanned
+   * @param foldersToScan Array of folders identified during the scan
+   * @param filesToScan Array of files identified during the scan
+   * @param uniqueFolderPaths Array of unique folder paths identified during the scan
    * @returns {Promise<void>}
    */
   async scanFolderContents(
@@ -400,10 +400,10 @@ export class IndexerService {
 
   /**
    * Recursively checks files to determine if they need to be added or updated in the database
-   * @param {RootPathEntity} rootPath The indexer root path being scanned
-   * @param {FileItem[]} filesToScan Array of files to be scanned
-   * @param {FileUpdateItem[]} filesToUpdate Array of files that have been added or modified
-   * @param {boolean} [overrideScannerStatus] Optional flag to ensure a scan occurs on manual changes
+   * @param rootPath The indexer root path being scanned
+   * @param filesToScan Array of files to be scanned
+   * @param filesToUpdate Array of files that have been added or modified
+   * @param [overrideScannerStatus] Optional flag to ensure a scan occurs on manual changes
    * @returns {Promise<void>}
    */
   async checkFile(
@@ -485,8 +485,8 @@ export class IndexerService {
   /**
    * Recursively updates files until the queue is exhausted.  Each update will scan the file
    * for its IDv3 data and then synchronous the database with those values.
-   * @param {RootPathEntity} rootPath The indexer root path being scanned
-   * @param {FileUpdateItem[]} filesToUpdate Array of files that have been added or modified
+   * @param rootPath The indexer root path being scanned
+   * @param filesToUpdate Array of files that have been added or modified
    * @returns {Promise<void>}
    */
   async updateFile(rootPath: RootPathEntity, filesToUpdate: FileUpdateItem[]): Promise<void> {
@@ -514,12 +514,12 @@ export class IndexerService {
 
   /**
    * Copies the IDv3 data from the file to the database and updates the file's last-modified date
-   * @param {RootPathEntity} rootPath The indexer root path being scanned
-   * @param {IAudioMetadata} embeddedData The IDv3 data extracted from the file
-   * @param {number} trackId The ID of the file in the database
-   * @param {string} relativePath The path to the file on disk
-   * @param {number} fileSize The size of the file
-   * @param {Date} fileMtime The last-modified date of the file
+   * @param rootPath The indexer root path being scanned
+   * @param embeddedData The IDv3 data extracted from the file
+   * @param trackId The ID of the file in the database
+   * @param relativePath The path to the file on disk
+   * @param fileSize The size of the file
+   * @param fileMtime The last-modified date of the file
    * @returns {Promise<void>}
    */
   async synchronizeFile(

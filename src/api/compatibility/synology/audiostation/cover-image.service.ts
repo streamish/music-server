@@ -19,9 +19,9 @@ export class SynologyCoverImageService {
    * image is embedded in the first-returned album's first file's IDv3 tag data and stored into SQLite for
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
-   * @param {number} userId The authenticated user ID
-   * @param {string} albumArtist The name of the artist for which to retrieve the cover image.
-   * @returns {Promise<CoverImage | undefined>} The album cover image.
+   * @param userId The authenticated user ID
+   * @param albumArtist The name of the artist for which to retrieve the cover image.
+   * @returns The album cover image.
    */
   async getArtistCoverImage(userId: number, albumArtist: string): Promise<CoverImage | undefined> {
     const artist = await this.albumEntity.findOne({
@@ -63,10 +63,10 @@ export class SynologyCoverImageService {
    * image is embedded in the first-returned album's first file's IDv3 tag data and stored into SQLite for
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
-   * @param {number} userId The authenticated user ID
-   * @param {string} albumArtist The name of the artist for which to retrieve the cover image.
-   * @param {string} [albumTitle] The optional title of the album for which to retrieve the cover image.
-   * @returns {Promise<CoverImage | undefined>} The album cover image.
+   * @param userId The authenticated user ID
+   * @param albumArtist The name of the artist for which to retrieve the cover image.
+   * @param [albumTitle] The optional title of the album for which to retrieve the cover image.
+   * @returns The album cover image.
    */
   async getAlbumCoverImage(userId: number, albumArtist: string, albumTitle?: string): Promise<CoverImage | undefined> {
     const album = await this.albumEntity.findOne({
@@ -109,9 +109,9 @@ export class SynologyCoverImageService {
    * image is embedded in the first-returned album's first file's IDv3 tag data and stored into SQLite for
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
-   * @param {number} userId The authenticated user ID
-   * @param {string} composer The name of the composer for which to retrieve the cover image.
-   * @returns {Promise<CoverImage | undefined>} The album cover image.
+   * @param userId The authenticated user ID
+   * @param composer The name of the composer for which to retrieve the cover image.
+   * @returns The album cover image.
    */
   async getComposerCoverImage(userId: number, composerName: string): Promise<CoverImage | undefined> {
     const album = await this.albumEntity.findOne({
@@ -146,9 +146,9 @@ export class SynologyCoverImageService {
    * image is embedded in the file's IDv3 tag data and stored into SQLite for retrieval.  The image can be
    * updated by saving a new image into the IDv3 tag data and then the file being modified will be picked
    * up by the indexer on its next run.
-   * @param {number} userId The authenticated user ID
-   * @param {number} trackId The ID of the track for which to retrieve the cover image.
-   * @returns {Promise<CoverImage | undefined>} The track cover image.
+   * @param userId The authenticated user ID
+   * @param trackId The ID of the track for which to retrieve the cover image.
+   * @returns The track cover image.
    */
   async getTrackCoverImage(userId: number, trackId: number): Promise<CoverImage | undefined> {
     const track = await this.trackEntity.findOne({
