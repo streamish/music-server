@@ -42,10 +42,10 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AlbumEntity)
-  declare albumId?: number;
+  declare albumId: number | null;
 
   @BelongsTo(() => AlbumEntity)
-  declare album: AlbumEntity;
+  declare album?: AlbumEntity;
 
   @Column({
     type: DataType.BOOLEAN,
@@ -69,7 +69,7 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AssociationEntity)
-  declare associationId?: number;
+  declare associationId: number | null;
 
   @BelongsTo(() => AssociationEntity)
   declare association?: AssociationEntity;
@@ -78,7 +78,7 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     type: DataType.STRING(50),
     allowNull: true,
   })
-  declare associationType?: AssociationTypeEnum;
+  declare associationType: AssociationTypeEnum | null;
 
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This
@@ -97,7 +97,7 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     type: DataType.STRING,
     allowNull: true,
   })
-  declare folderPath: string;
+  declare folderPath: string | null;
 
   /**
    * The ID of the table row is an integer that is assigned by the database when the row is created.
@@ -123,10 +123,10 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => PlaylistEntity)
-  declare playlistId?: number;
+  declare playlistId: number | null;
 
   @BelongsTo(() => PlaylistEntity)
-  declare playlist: PlaylistEntity;
+  declare playlist?: PlaylistEntity;
 
   @Column({
     type: DataType.BOOLEAN,
@@ -159,15 +159,18 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => TrackEntity)
-  declare trackId?: number;
+  declare trackId: number | null;
 
   @BelongsTo(() => TrackEntity)
-  declare track: TrackEntity;
+  declare track?: TrackEntity;
 
   /**
    * This field is managed by Sequelize and tracks the most recent date and time the row was last
    * updated.  This field should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 }

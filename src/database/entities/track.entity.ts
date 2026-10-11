@@ -1,7 +1,18 @@
 import { AccountEntity } from './account.entity';
 import { AlbumEntity } from './album.entity';
 import { AssociationLinkEntity } from './association-link.entity';
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  HasMany,
+  HasOne,
+  Model,
+  Sequelize,
+  Table,
+} from 'sequelize-typescript';
+import { FavoriteItemEntity } from './favorite-item.entity';
 import { FileTypeEnum } from 'src/types/enums';
 import { PlaylistItemEntity } from './playlist-item.entity';
 import { RootPathEntity } from './root-path.entity';
@@ -26,11 +37,10 @@ export class TrackEntity extends Model<TrackEntity> {
       model: AccountEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AccountEntity)
-  declare accountId?: number;
+  declare accountId: number;
 
   /**
    * The album ID the file belongs to.
@@ -86,6 +96,9 @@ export class TrackEntity extends Model<TrackEntity> {
 
   @Column(DataType.FLOAT)
   declare duration: number;
+
+  @HasOne(() => FavoriteItemEntity)
+  favorite?: FavoriteItemEntity;
 
   /**
    * The absolute path to the file relative to the root path
@@ -167,8 +180,11 @@ export class TrackEntity extends Model<TrackEntity> {
    * This field is managed by Sequelize and tracks the most recent date and time the row was last
    * updated.  This field should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 
   @Column(DataType.INTEGER)
   declare year: number;

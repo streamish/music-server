@@ -21,11 +21,10 @@ export class ShoutcastItemEntity extends Model<ShoutcastItemEntity> {
       model: ShoutcastContainerEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => ShoutcastContainerEntity)
-  declare containerId?: number;
+  declare containerId: number;
 
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This field should not be
@@ -41,7 +40,7 @@ export class ShoutcastItemEntity extends Model<ShoutcastItemEntity> {
     type: DataType.STRING(255),
     allowNull: true,
   })
-  declare desc: string;
+  declare desc: string | null;
 
   /**
    * The ID of the table row is an integer that is assigned by the database when the row is created.
@@ -67,12 +66,15 @@ export class ShoutcastItemEntity extends Model<ShoutcastItemEntity> {
    * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field
    * should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 
   @Column({
     type: DataType.STRING(255),
     allowNull: true,
   })
-  declare url: string;
+  declare url: string | null;
 }

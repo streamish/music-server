@@ -394,7 +394,7 @@ class SynologyPlaylistAdditionalDto {
     example: SmartPlaylistConjugalEnum.AND,
   })
   @IsEnum(SmartPlaylistConjugalEnum)
-  rules_conjunction?: SmartPlaylistConjugalEnum;
+  rules_conjunction?: SmartPlaylistConjugalEnum | null;
 
   @ApiProperty({
     type: SynologyPlaylistRuleDto,

@@ -1,6 +1,7 @@
 import { AccountEntity } from './account.entity';
 import { AssociationLinkEntity } from './association-link.entity';
-import { Column, DataType, ForeignKey, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
+import { Column, DataType, ForeignKey, HasMany, HasOne, Model, Sequelize, Table } from 'sequelize-typescript';
+import { FavoriteItemEntity } from './favorite-item.entity';
 
 /**
  * The AssociationEntity holds all of the information required for an album or song association
@@ -20,11 +21,10 @@ export class AssociationEntity extends Model<AssociationEntity> {
       model: AccountEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AccountEntity)
-  declare accountId?: number;
+  declare accountId: number;
 
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This field should not be
@@ -48,7 +48,10 @@ export class AssociationEntity extends Model<AssociationEntity> {
   declare id: number;
 
   @HasMany(() => AssociationLinkEntity)
-  declare associationLinks: AssociationLinkEntity[];
+  declare associationLinks?: AssociationLinkEntity[];
+
+  @HasOne(() => FavoriteItemEntity)
+  favorite?: FavoriteItemEntity;
 
   /**
    * The name of the association
@@ -66,6 +69,9 @@ export class AssociationEntity extends Model<AssociationEntity> {
    * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field
    * should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 }

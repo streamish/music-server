@@ -1,6 +1,17 @@
 import { AccountEntity } from './account.entity';
 import { AssociationLinkEntity } from './association-link.entity';
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Sequelize, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  HasMany,
+  HasOne,
+  Model,
+  Sequelize,
+  Table,
+} from 'sequelize-typescript';
+import { FavoriteItemEntity } from './favorite-item.entity';
 import { RootPathEntity } from './root-path.entity';
 import { TrackEntity } from './track.entity';
 
@@ -22,11 +33,10 @@ export class AlbumEntity extends Model<AlbumEntity> {
       model: AccountEntity,
       key: 'id',
     },
-    allowNull: true,
     onDelete: 'CASCADE',
   })
   @ForeignKey(() => AccountEntity)
-  declare accountId?: number;
+  declare accountId: number;
 
   @HasMany(() => AssociationLinkEntity)
   declare associationLinks?: AssociationLinkEntity[];
@@ -91,6 +101,9 @@ export class AlbumEntity extends Model<AlbumEntity> {
   })
   declare createdAt: Date;
 
+  @HasOne(() => FavoriteItemEntity)
+  favorite?: FavoriteItemEntity;
+
   /**
    * The file path for the music file relative to the root path.
    */
@@ -141,6 +154,9 @@ export class AlbumEntity extends Model<AlbumEntity> {
    * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field
    * should not be specified if you are inserting and updating data.
    */
-  @Column(DataType.DATE)
-  declare updatedAt?: Date;
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare updatedAt: Date | null;
 }

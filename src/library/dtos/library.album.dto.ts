@@ -7,7 +7,7 @@ import type { RatingOrUnset } from 'src/types';
 
 export class LibraryAlbumDto {
   /**
-   * The artist for the album, which is all the album artists in a comma-delimited list
+   * The artist for the album, aggregated from the track album artists data.
    */
   @ApiProperty({
     type: LibraryAssociationDto,
@@ -15,6 +15,9 @@ export class LibraryAlbumDto {
   })
   declare artists: LibraryAssociationDto[];
 
+  /**
+   * The album composers aggregated from the track compilers data.
+   */
   @ApiProperty({
     type: LibraryAssociationDto,
     isArray: true,
@@ -63,6 +66,9 @@ export class LibraryAlbumDto {
   @IsDate()
   declare createdAt: Date;
 
+  /**
+   * The album genres aggregated from the track genres.
+   */
   @ApiProperty({
     type: LibraryAssociationDto,
     isArray: true,
