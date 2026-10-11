@@ -18,7 +18,7 @@ export class LibraryFolderDto {
   declare children?: LibraryFolderDto[];
 
   /**
-   * The favorite data for the album if it exists
+   * The favorite data for the folder if it exists
    */
   @IsInt()
   declare favoriteId?: number;

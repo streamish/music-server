@@ -40,7 +40,7 @@ export class ApiFavoritesService {
    * @throws If the specified album is not found
    */
   async setAlbumFavorite(userId: number, albumId: number) {
-    await this.libraryService.setAlbumFavorite(userId, albumId);
+    return this.libraryService.setAlbumFavorite(userId, albumId);
   }
 
   /**
@@ -50,7 +50,7 @@ export class ApiFavoritesService {
    * @throws If the specified album is not found
    */
   async setAssociationFavorite(userId: number, associationId: number, associationType: AssociationTypeEnum) {
-    await this.libraryService.setAssociationFavorite(userId, associationId, associationType);
+    return this.libraryService.setAssociationFavorite(userId, associationId, associationType);
   }
 
   /**
@@ -70,6 +70,6 @@ export class ApiFavoritesService {
    * @throws If the specified track is not found
    */
   async setTrackFavorite(userId: number, trackId: number) {
-    await this.libraryService.setTrackFavorite(userId, trackId);
+    return this.libraryService.setTrackFavorite(userId, trackId);
   }
 }

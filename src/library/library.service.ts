@@ -632,7 +632,7 @@ export class LibraryService {
    * @param {number} albumId The ID of the album to set as favorite
    * @throws {NotFoundException} If the specified album is not found
    */
-  async setAlbumFavorite(accountId: number, albumId: number): Promise<void> {
+  async setAlbumFavorite(accountId: number, albumId: number): Promise<FavoriteItemEntity> {
     const album = await this.albumEntity.findOne({
       attributes: ['id'],
       where: {
@@ -643,7 +643,7 @@ export class LibraryService {
     if (!album) {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }
-    await this.favoriteItemEntity.create({
+    return this.favoriteItemEntity.create({
       accountId,
       albumId,
     } as FavoriteItemEntity);
@@ -660,7 +660,7 @@ export class LibraryService {
     accountId: number,
     associationId: number,
     associationType: AssociationTypeEnum,
-  ): Promise<void> {
+  ): Promise<FavoriteItemEntity> {
     const association = await this.associationEntity.findOne({
       attributes: ['id'],
       where: {
@@ -671,7 +671,7 @@ export class LibraryService {
     if (!association) {
       throw new NotFoundException(ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR);
     }
-    await this.favoriteItemEntity.create({
+    return this.favoriteItemEntity.create({
       accountId,
       associationId,
       associationType,
@@ -684,13 +684,13 @@ export class LibraryService {
    * @param {string} folderPath The full path of the folder relative to root dir, eg `/Elvis Presley`
    * @throws {NotFoundException} If the specified folder is not found
    */
-  async setFolderFavorite(accountId: number, folderPath: string): Promise<void> {
+  async setFolderFavorite(accountId: number, folderPath: string): Promise<FavoriteItemEntity> {
     const folderStructure = await this.listFolders(accountId);
     const folderExists = folderStructure.some((item) => item.children?.some((child) => child.fullPath === folderPath));
     if (!folderExists) {
       throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
     }
-    await this.favoriteItemEntity.create({
+    return this.favoriteItemEntity.create({
       accountId,
       folderPath,
     } as FavoriteItemEntity);
@@ -702,7 +702,7 @@ export class LibraryService {
    * @param {number} trackId The ID of the track to set as favorite
    * @throws {NotFoundException} If the specified track is not found
    */
-  async setTrackFavorite(accountId: number, trackId: number): Promise<void> {
+  async setTrackFavorite(accountId: number, trackId: number): Promise<FavoriteItemEntity> {
     const track = await this.trackEntity.findOne({
       attributes: ['id'],
       where: {
@@ -713,7 +713,7 @@ export class LibraryService {
     if (!track) {
       throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }
-    await this.favoriteItemEntity.create({
+    return this.favoriteItemEntity.create({
       accountId,
       trackId,
     } as FavoriteItemEntity);
