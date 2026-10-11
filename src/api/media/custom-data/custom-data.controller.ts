@@ -38,10 +38,7 @@ export class ApiCustomDataController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(DeleteCustomDataQueryDto),
     },
   })
-  async deleteCustomData(
-    @User() user: AccountEntity,
-    @Query() query: DeleteCustomDataQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async deleteCustomData(@User() user: AccountEntity, @Query() query: DeleteCustomDataQueryDto) {
     await this.customDataService.deleteCustomData(user.id, query.id);
     return {
       success: true,
@@ -73,7 +70,7 @@ export class ApiCustomDataController {
     @User() user: AccountEntity,
     @Query() query: SetAlbumCustomDataQueryDto,
     @Body() body: SetAlbumCustomDataBodyDto,
-  ): Promise<SuccessResponseDto> {
+  ) {
     await this.customDataService.setAlbumData(user.id, query.id, body);
     return {
       success: true,
@@ -104,7 +101,7 @@ export class ApiCustomDataController {
     @User() user: AccountEntity,
     @Query() query: SetAssociationNameQueryDto,
     @Body() body: SetAssociationNameBodyDto,
-  ): Promise<SuccessResponseDto> {
+  ) {
     await this.customDataService.setAssociationName(user.id, query.id, body.name);
     return {
       success: true,
@@ -132,11 +129,7 @@ export class ApiCustomDataController {
       ],
     },
   })
-  async put(
-    @User() user: AccountEntity,
-    @Query() query: SetCustomDataQueryDto,
-    @Body() body: SetCustomDataBodyDto,
-  ): Promise<SuccessResponseDto> {
+  async put(@User() user: AccountEntity, @Query() query: SetCustomDataQueryDto, @Body() body: SetCustomDataBodyDto) {
     await this.customDataService.setCustomData(user.id, query.id, body);
     return {
       success: true,
@@ -167,7 +160,7 @@ export class ApiCustomDataController {
     @User() user: AccountEntity,
     @Query() query: SetTrackCustomDataQueryDto,
     @Body() body: SetTrackCustomDataBodyDto,
-  ): Promise<SuccessResponseDto> {
+  ) {
     await this.customDataService.setTrackData(user.id, query.id, body);
     return {
       success: true,

@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsDate, IsInt, IsString } from 'class-validator';
-import { SuccessResponseDto } from 'src/api/response.dto';
+import { createItemResponseDto } from 'src/api/response.dto';
 
 export class IndexerConfigurationDto {
   @IsInt()
@@ -20,9 +19,4 @@ export class IndexerConfigurationDto {
   declare createdByUsername: string;
 }
 
-export class IndexerConfigurationResponseDto extends SuccessResponseDto {
-  @ApiProperty({
-    type: IndexerConfigurationDto,
-  })
-  declare configuration: IndexerConfigurationDto;
-}
+export class IndexerConfigurationResponseDto extends createItemResponseDto('configuration', IndexerConfigurationDto) {}

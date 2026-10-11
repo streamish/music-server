@@ -19,15 +19,15 @@ export class SynologyCoverImageService {
    * image is embedded in the first-returned album's first file's IDv3 tag data and stored into SQLite for
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
-   * @param {number} accountId The account ID for the user requesting the cover image.
+   * @param {number} userId The authenticated user ID
    * @param {string} albumArtist The name of the artist for which to retrieve the cover image.
    * @returns {Promise<CoverImage | undefined>} The album cover image.
    */
-  async getArtistCoverImage(accountId: number, albumArtist: string): Promise<CoverImage | undefined> {
+  async getArtistCoverImage(userId: number, albumArtist: string): Promise<CoverImage | undefined> {
     const artist = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
-        accountId,
+        accountId: userId,
       },
       include: [
         {
@@ -63,21 +63,17 @@ export class SynologyCoverImageService {
    * image is embedded in the first-returned album's first file's IDv3 tag data and stored into SQLite for
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
-   * @param {number} accountId The account ID for the user requesting the cover image.
+   * @param {number} userId The authenticated user ID
    * @param {string} albumArtist The name of the artist for which to retrieve the cover image.
    * @param {string} [albumTitle] The optional title of the album for which to retrieve the cover image.
    * @returns {Promise<CoverImage | undefined>} The album cover image.
    */
-  async getAlbumCoverImage(
-    accountId: number,
-    albumArtist: string,
-    albumTitle?: string,
-  ): Promise<CoverImage | undefined> {
+  async getAlbumCoverImage(userId: number, albumArtist: string, albumTitle?: string): Promise<CoverImage | undefined> {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
         ...(albumTitle ? { titleNormalized: normalizeString(albumTitle) } : {}),
-        accountId,
+        accountId: userId,
       },
       include: [
         {
@@ -113,15 +109,15 @@ export class SynologyCoverImageService {
    * image is embedded in the first-returned album's first file's IDv3 tag data and stored into SQLite for
    * retrieval.  The image can be updated by saving a new image into the IDv3 tag data and then the file being
    * modified will be picked up by the indexer on its next run.
-   * @param {number} accountId The account ID for the user requesting the cover image.
+   * @param {number} userId The authenticated user ID
    * @param {string} composer The name of the composer for which to retrieve the cover image.
    * @returns {Promise<CoverImage | undefined>} The album cover image.
    */
-  async getComposerCoverImage(accountId: number, composerName: string): Promise<CoverImage | undefined> {
+  async getComposerCoverImage(userId: number, composerName: string): Promise<CoverImage | undefined> {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
-        accountId,
+        accountId: userId,
       },
       include: [
         {
@@ -150,16 +146,16 @@ export class SynologyCoverImageService {
    * image is embedded in the file's IDv3 tag data and stored into SQLite for retrieval.  The image can be
    * updated by saving a new image into the IDv3 tag data and then the file being modified will be picked
    * up by the indexer on its next run.
-   * @param {number} accountId The account ID for the user requesting the cover image.
+   * @param {number} userId The authenticated user ID
    * @param {number} trackId The ID of the track for which to retrieve the cover image.
    * @returns {Promise<CoverImage | undefined>} The track cover image.
    */
-  async getTrackCoverImage(accountId: number, trackId: number): Promise<CoverImage | undefined> {
+  async getTrackCoverImage(userId: number, trackId: number): Promise<CoverImage | undefined> {
     const track = await this.trackEntity.findOne({
       attributes: [],
       where: {
         id: trackId,
-        accountId,
+        accountId: userId,
       },
       include: [
         {

@@ -95,7 +95,7 @@ export class ApiCoverImageController {
     @Query() query: AlbumCoverImageQueryDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<StreamableFile> {
+  ) {
     const coverImage = await this.coverImageService.getAlbumCover(query.id, query.size);
     return ApiCoverImageController.serveImage(request, response, query, coverImage);
   }
@@ -124,7 +124,7 @@ export class ApiCoverImageController {
     @Query() query: AssociationCoverImageQueryDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<StreamableFile> {
+  ) {
     const coverImage = await this.coverImageService.getAssociationCover(user.id, query.id, query.size, query.type);
     return ApiCoverImageController.serveImage(request, response, query, coverImage);
   }

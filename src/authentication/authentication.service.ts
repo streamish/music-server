@@ -59,6 +59,8 @@ export class AuthenticationService {
    * @param {string} userAgent The user agent of the client creating the session
    * @param {string} [restrictSession] Optional string to restrict the session to a specific app or API.
    * @param {number} [expiresDays] Optional number of days until the session expires.  Defaults to 1 day.
+   * @throws {NotFoundException} If the specified username account is not found
+   * @throws {BadRequestException} If the specified password is invalid
    * @returns {Promise<string>} The JWT session token
    */
   async createSession(
@@ -223,13 +225,13 @@ export class AuthenticationService {
 
   /**
    * Verifies a plain text password against the hashed password saved in the database
-   * @param {number} accountId The account id of the password
+   * @param {number} userId The authenticated user ID
    * @param {string} password The password in plain text
+   * @throws {NotFoundException} If the specified account is not found
    * @returns {Promise<boolean>} True if the passwords match
    */
-
-  async verifyPassword(accountId: number, password: string): Promise<boolean> {
-    const account = await this.accountEntity.findByPk(accountId, {
+  async verifyPassword(userId: number, password: string): Promise<boolean> {
+    const account = await this.accountEntity.findByPk(userId, {
       attributes: ['id', 'passwordHash'],
     });
     if (!account) {

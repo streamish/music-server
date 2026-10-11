@@ -50,7 +50,7 @@ export class LibraryService {
    * Deletes the specified favorite item
    * @param accountId The ID of the account to delete the favorite item for
    * @param favoriteItemId The ID of the favorite item to delete
-   * @throws {NotFoundException} If the favorite item does not exist for the specified account
+   * @throws {NotFoundException} If the favorite item is not found
    */
   async deleteFavoriteItem(accountId: number, favoriteItemId: number | number[]): Promise<void> {
     const favoriteItems = await this.favoriteItemEntity.findAll({
@@ -74,7 +74,7 @@ export class LibraryService {
   /**
    * Returns lists of album-associated artists, composers or genres optionally paginated, filtered and sorted by the
    * specified parameters.
-   * @param {number} accountId The ID of the account to filter by
+   * @param {number} accountId The media owner account ID
    * @param {AssociationFilter} filter The filter criteria for the associations
    * @param {number} offset The offset for pagination
    * @param {number} limit The limit for pagination
@@ -113,7 +113,7 @@ export class LibraryService {
   /**
    * Returns lists of album-associations containing track-associations, for instance album artists filtered by genre
    * optionally paginated, filtered and sorted by the specified parameters.
-   * @param {number} accountId The ID of the account to filter by
+   * @param {number} accountId The media owner account ID
    * @param {AssociationFilter} filter The filter criteria for the associations
    * @param {number} offset The offset for pagination
    * @param {number} limit The limit for pagination
@@ -151,7 +151,7 @@ export class LibraryService {
   /**
    * Returns lists of track-associated artists, composers or genres, optionally paginated, filtered and sorted
    * by the specified parameters.
-   * @param {number} accountId
+   * @param {number} accountId The media owner account ID
    * @param {AssociationFilter} filter
    * @param {number} offset
    * @param {number} limit
@@ -179,7 +179,7 @@ export class LibraryService {
   /**
    * Returns a list of albums optionally paginated, filtered and sorted by the
    * specified parameters.
-   * @param {number} accountId The user performing the search
+   * @param {number} accountId The media owner account ID
    * @param {AlbumFilter} filter The search parameters for the albums
    * @param {number} offset Optional pagination offset
    * @param {number} limit Optional pagination limit
@@ -211,7 +211,7 @@ export class LibraryService {
 
   /**
    * Returns a list of favorites with related track, album, association, and playlist data, optionally paginated.
-   * @param {number} accountId The user performing the search
+   * @param {number} accountId The media owner account ID
    * @param {number} offset Optional pagination offset
    * @param {number} limit Optional pagination limit
    * @returns {Promise<ListResult<LibraryFavoriteDto>>} The favorite list and total record count.
@@ -293,7 +293,7 @@ export class LibraryService {
 
   /**
    * Lists all folders for a given account in a tree structure.
-   * @param {number} accountId The user performing the search
+   * @param {number} accountId The media owner account ID
    * @returns {Promise<LibraryFolderDto[]>} The tree structure of folders for the account
    */
   async listFolders(accountId: number): Promise<LibraryFolderDto[]> {
@@ -350,7 +350,7 @@ export class LibraryService {
 
   /**
    * Returns a list of tracks optionally paginated, filtered and sorted by the specified parameters
-   * @param {number} accountId The user performing the search
+   * @param {number} accountId The media owner account ID
    * @param {TrackFilter} filter The search parameters for the tracks
    * @param {number} offset The number of items to skip before starting to collect the result set
    * @param {number} limit The maximum number of items to return
@@ -385,10 +385,10 @@ export class LibraryService {
   /**
    * Rates the specified tracks for the given account.  If a rating value of `0` is specified then the
    * rating is reset to `NULL`.
-   * @param {number} accountId The ID of the account performing the rating
+   * @param {number} accountId The media owner account ID
    * @param {number[]} trackIds The IDs of the files (tracks) to be rated
    * @param {RatingOrUnset} rating The rating value `0` `1` `2` `3` `4` `5` to be applied to the specified tracks
-   * @throws {NotFoundException} If one or more of the specified tracks are not found
+   * @throws {NotFoundException} If any specified track is not found
    */
   async rateTracks(accountId: number, trackIds: number[], rating: RatingOrUnset): Promise<void> {
     const tracks = await this.trackEntity.findAll({
@@ -416,9 +416,9 @@ export class LibraryService {
 
   /**
    * Retrieves one or more albums along with their associated tracks.
-   * @param {number} accountId The ID of the account to filter by
+   * @param {number} accountId The media owner account ID
    * @param {number | number[]} albumIds The IDs of the albums to retrieve
-   * @throws {NotFoundException} If one or more of the specified albums are not found
+   * @throws {NotFoundException} If any specified album is not found
    * @returns {Promise<LibraryAlbumWithTracksDto[]>} An array of one or more albums
    */
   async retrieveAlbum(accountId: number, albumIds: number | number[]): Promise<LibraryAlbumWithTracksDto[]> {
@@ -430,7 +430,7 @@ export class LibraryService {
         id: albumIds,
       },
     });
-    if (!albums || albums.length === 0) {
+    if (!albums || albums.length === 0 || (Array.isArray(albumIds) && albums.length < albumIds.length)) {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
     }
     albums.sort((a, b) => {
@@ -468,10 +468,10 @@ export class LibraryService {
 
   /**
    * Retrieves one or more associations of the specified type with their albums.
-   * @param {number} accountId The ID of the account to filter by
+   * @param {number} accountId The media owner account ID
    * @param {number | number[]} associationIds The IDs of the associations to retrieve
    * @param {AssociationTypeEnum} associationType The type of association (artist, composer, or genre)
-   * @throws {NotFoundException} If one or more of the specified associations are not found
+   * @throws {NotFoundException} If any specified association is not found
    * @returns {Promise<LibraryAssociationWithTracksDto[]>} An array of associations with their associated albums
    */
   async retrieveAlbumAssociation(
@@ -529,10 +529,10 @@ export class LibraryService {
 
   /**
    * Retrieves one or more associations of the specified type with their tracks.
-   * @param {number} accountId The ID of the account to filter by
+   * @param {number} accountId The media owner account ID
    * @param {number | number[]} associationIds The IDs of the associations to retrieve
    * @param {AssociationTypeEnum} associationType The type of association (artist, composer, or genre)
-   * @throws {NotFoundException} If one or more of the specified associations are not found
+   * @throws {NotFoundException} If any specified association is not found
    * @returns {Promise<LibraryAssociationWithTracksDto[]>} An array of associations
    */
   async retrieveTrackAssociation(
@@ -587,9 +587,9 @@ export class LibraryService {
 
   /**
    * Retrieves one or more tracks.
-   * @param {number} accountId The ID of the account to filter by
+   * @param {number} accountId The media owner account ID
    * @param {number | number[]} trackIds The IDs of the tracks to retrieve
-   * @throws {NotFoundException} If one or more of the specified tracks are not found
+   * @throws {NotFoundException} If any specified track is not found
    * @returns {Promise<LibraryTrackDto[]>} An array of tracks
    */
   async retrieveTrack(accountId: number, trackIds: number | number[]): Promise<LibraryTrackDto[]> {
@@ -601,7 +601,7 @@ export class LibraryService {
         id: trackIds,
       },
     });
-    if (!tracks || tracks.length === 0) {
+    if (!tracks || tracks.length === 0 || (Array.isArray(trackIds) && tracks.length < trackIds.length)) {
       throw new NotFoundException(ErrorCodes.TRACKS_NOT_FOUND_ERROR);
     }
     return tracks.map(this.transformerService.convertTrackEntityToLibraryTrack);
@@ -609,7 +609,7 @@ export class LibraryService {
 
   /**
    * Sets an album as a favorite for the specified account.
-   * @param {number} accountId The ID of the account
+   * @param {number} accountId The media owner account ID
    * @param {number} albumId The ID of the album to set as favorite
    * @throws {NotFoundException} If the specified album is not found
    */
@@ -632,7 +632,7 @@ export class LibraryService {
 
   /**
    * Sets an association as a favorite for the specified account.
-   * @param {number} accountId The ID of the account
+   * @param {number} accountId The media owner account ID
    * @param {number} associationId The ID of the association to set as favorite
    * @param {AssociationTypeEnum} associationType The type of the association
    * @throws {NotFoundException} If the specified association is not found
@@ -661,7 +661,7 @@ export class LibraryService {
 
   /**
    * Sets a folder as a favorite for the specified account.
-   * @param {number} accountId The ID of the account
+   * @param {number} accountId The media owner account ID
    * @param {string} folderPath The full path of the folder relative to root dir, eg `/Elvis Presley`
    * @throws {NotFoundException} If the specified folder is not found
    */
@@ -679,7 +679,7 @@ export class LibraryService {
 
   /**
    * Sets a track as a favorite for the specified account.
-   * @param {number} accountId The ID of the account
+   * @param {number} accountId The media owner account ID
    * @param {number} trackId The ID of the track to set as favorite
    * @throws {NotFoundException} If the specified track is not found
    */

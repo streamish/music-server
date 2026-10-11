@@ -33,7 +33,7 @@ export class ApiRatingsController {
     @User() user: AccountEntity,
     @Query() query: SetAlbumRatingQueryDto,
     @Body() body: SetAlbumRatingBodyDto,
-  ): Promise<SuccessResponseDto> {
+  ) {
     await this.ratingsService.setAlbumRating(user.id, query.id, body.rating);
     return {
       success: true,
@@ -57,11 +57,7 @@ export class ApiRatingsController {
       ],
     },
   })
-  async put(
-    @User() user: AccountEntity,
-    @Query() query: SetTrackRatingQueryDto,
-    @Body() body: SetTrackRatingBodyDto,
-  ): Promise<SuccessResponseDto> {
+  async put(@User() user: AccountEntity, @Query() query: SetTrackRatingQueryDto, @Body() body: SetTrackRatingBodyDto) {
     await this.ratingsService.setTrackRating(user.id, query.id, body.rating);
     return {
       success: true,

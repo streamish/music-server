@@ -1,6 +1,6 @@
 import { AccountEntity, IndexerConfigurationEntity, RootPathEntity } from 'src/database/entities';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { IndexerConfigurationDto, LogEntryDto, LogWithUserEntryDto } from './dtos';
+import { IndexerConfigurationDto, LogWithUserEntryDto } from './dtos';
 import { IndexerService } from 'src/indexer/indexer.service';
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
@@ -60,7 +60,7 @@ export class ApiIndexerService {
     return rootPathMap;
   }
 
-  async getConfiguration(): Promise<IndexerConfigurationDto> {
+  async getConfiguration() {
     const configuration = await this.indexerConfigurationEntity.findOne({
       attributes: ['id', 'isEnabled', 'createdAt', 'createdByAccountId'],
       include: [
@@ -78,7 +78,7 @@ export class ApiIndexerService {
     return configurationToRow(configuration);
   }
 
-  async listIndexerLogs(accountId?: number, rootPathId?: number, search?: string): Promise<LogWithUserEntryDto[]> {
+  async listIndexerLogs(accountId?: number, rootPathId?: number, search?: string) {
     const usernameMap = await this.getUsernameMap();
     const rootPaths = await this.getRootPaths();
     const searchNormalized = search?.toLowerCase()?.trim() || '';
@@ -93,7 +93,7 @@ export class ApiIndexerService {
       .reverse();
   }
 
-  async listIndexerLogsByUser(accountId: number, rootPathId?: number, search?: string): Promise<LogEntryDto[]> {
+  async listIndexerLogsByUser(accountId: number, rootPathId?: number, search?: string) {
     const rootPaths = await this.getRootPaths(accountId);
     if (rootPathId && !rootPaths[rootPathId]) {
       throw new NotFoundException(ErrorCodes.INVALID_ROOT_PATH_ID_ERROR);

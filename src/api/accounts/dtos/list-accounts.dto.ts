@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString } from 'class-validator';
-import { SuccessResponseDto } from 'src/api/response.dto';
 import { UserRoleEnum } from 'src/types/enums';
+import { createArrayResponseDto } from 'src/api/response.dto';
 
 export class AccountDto {
   @IsInt()
@@ -19,7 +19,4 @@ export class AccountDto {
   declare roles: UserRoleEnum[];
 }
 
-export class ListAccountsResponseDto extends SuccessResponseDto {
-  @ApiProperty({ type: AccountDto, isArray: true })
-  declare accounts: AccountDto[];
-}
+export class ListAccountsResponseDto extends createArrayResponseDto('accounts', AccountDto) {}

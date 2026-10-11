@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IdQueryDtoFactory } from 'src/api/request.dto';
 import { LibraryAlbumWithTracksDto, LibraryAssociationDto } from 'src/library/dtos';
-import { SuccessResponseDto } from 'src/api/response.dto';
+import { createItemResponseDto } from 'src/api/response.dto';
 
 export class RetrieveAssociationQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_ASSOCIATION_ID_ERROR) {}
 
@@ -33,9 +33,4 @@ export class AssociationWithCreditsDto extends LibraryAssociationDto {
   declare genreCredits: LibraryAlbumWithTracksDto[];
 }
 
-export class RetrieveAssociationResponseDto extends SuccessResponseDto {
-  @ApiProperty({
-    type: AssociationWithCreditsDto,
-  })
-  declare association: AssociationWithCreditsDto;
-}
+export class RetrieveAssociationResponseDto extends createItemResponseDto('association', AssociationWithCreditsDto) {}

@@ -2,9 +2,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
-import { SuccessResponseDto } from 'src/api/response.dto';
 import { TestAccountDto } from './test-account.dto';
 import { UserRoleEnum } from 'src/types/enums';
+import { createItemResponseDto } from 'src/api/response.dto';
 
 export class CreateTestAccountBodyDto {
   /**
@@ -33,9 +33,4 @@ export class CreateTestAccountBodyDto {
   declare roles: UserRoleEnum[];
 }
 
-export class CreateTestAccountResponseDto extends SuccessResponseDto {
-  @ApiProperty({
-    type: TestAccountDto,
-  })
-  declare account: TestAccountDto;
-}
+export class CreateTestAccountResponseDto extends createItemResponseDto('account', TestAccountDto) {}

@@ -1,7 +1,6 @@
 import { AlbumEntity } from 'src/database/entities/album.entity';
 import { AssociationLinkEntity, TrackEntity } from 'src/database/entities';
 import { AssociationTypeEnum } from 'src/types/enums';
-import { CoverImage } from 'src/types/cover-image';
 import { InjectModel } from '@nestjs/sequelize/dist/common/sequelize.decorators';
 import { Injectable } from '@nestjs/common';
 import { LibraryAssociationWithTracksDto } from 'src/library/dtos';
@@ -21,23 +20,19 @@ export class ApiCoverImageService {
 
   /**
    * Retrieves an association and their tracks, prioritizing album associations and falling back to track.
-   * @param {number} accountId The authenticated account
-   * @param {number} associationId The ID of the association
-   * @param {ASsociationTypeEnum} associationType The type of association
+   * @param userId The authenticated user ID
+   * @param associationId The ID of the association
+   * @param associationType The type of association
    * @returns
    */
-  private async getAssociation(
-    accountId: number,
-    associationId: number,
-    associationType: AssociationTypeEnum,
-  ): Promise<LibraryAssociationWithTracksDto | undefined> {
+  private async getAssociation(userId: number, associationId: number, associationType: AssociationTypeEnum) {
     let associations: LibraryAssociationWithTracksDto[] | undefined;
     try {
-      associations = await this.libraryService.retrieveAlbumAssociation(accountId, associationId, associationType);
+      associations = await this.libraryService.retrieveAlbumAssociation(userId, associationId, associationType);
     } catch {
       if (!associations) {
         try {
-          associations = await this.libraryService.retrieveTrackAssociation(accountId, associationId, associationType);
+          associations = await this.libraryService.retrieveTrackAssociation(userId, associationId, associationType);
         } catch {
           return undefined;
         }
@@ -51,11 +46,11 @@ export class ApiCoverImageService {
 
   /**
    * Resizes an image to the specified size if required
-   * @param {AlbumEntity} album The album with the image attached
-   * @param {number} size The target size
-   * @returns {Promise<CoverImage | undefined} The image if it exists
+   * @param album The album with the image attached
+   * @param size The target size
+   * @returns The image if it exists
    */
-  private static async processImage(album: AlbumEntity, size: number): Promise<CoverImage | undefined> {
+  private static async processImage(album: AlbumEntity, size: number) {
     const sharpImage = sharp(album.coverImage);
     const metadata = await sharpImage.metadata();
     if (!metadata.width || !metadata.height) {
@@ -75,18 +70,13 @@ export class ApiCoverImageService {
 
   /**
    * Finds a cover image for an association based on the first album with a cover image.
-   * @param {albumIds} albumIds Array of relevant album IDs
-   * @param {number} associationId The ID of the associate
-   * @param {AssociationTypeEnum} associationType The type of association
-   * @param {size} size The dimension of the image
-   * @returns {Promise<CoverImage | undefined} The image if it exists
+   * @param albumIds Array of relevant album IDs
+   * @param associationId The ID of the associate
+   * @param associationType The type of association
+   * @param size The dimension of the image
+   * @returns The image if it exists
    */
-  async getAlbumCovers(
-    albumIds: number[],
-    associationId: number,
-    associationType: AssociationTypeEnum,
-    size: number,
-  ): Promise<CoverImage | undefined> {
+  async getAlbumCovers(albumIds: number[], associationId: number, associationType: AssociationTypeEnum, size: number) {
     const track = await this.trackEntity.findOne({
       attributes: ['albumId'],
       where: {
@@ -123,13 +113,11 @@ export class ApiCoverImageService {
 
   /**
    * Returns an album cover if it exists, or a blank placeholder.
-   * @param {number} accountId The ID of the authenticated account
-   * @param {number} associationId The ID of the associate
-   * @param {AssociationTypeEnum} associationType The type of association
-   * @param {size} size The dimension of the image
-   * @returns {Promise<CoverImage | undefined} The image if it exists
+   * @param albumIds Singular or array of relevant album IDs
+   * @param size The dimension of the image
+   * @returns The image if it exists
    */
-  async getAlbumCover(albumId: number | number[], size: number): Promise<CoverImage | undefined> {
+  async getAlbumCover(albumId: number | number[], size: number) {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
@@ -145,19 +133,14 @@ export class ApiCoverImageService {
 
   /**
    * Finds an album cover image amongst an assocation's album or track credits, prioritizing albums.
-   * @param {number} accountId The ID of the authenticated account
-   * @param {number} associationId The ID of the associate
-   * @param {AssociationTypeEnum} associationType The type of association
-   * @param {size} size The dimension of the image
-   * @returns {Promise<CoverImage | undefined} The image if it exists
+   * @param userId The authenticated user ID
+   * @param associationId The ID of the associate
+   * @param associationType The type of association
+   * @param size The dimension of the image
+   * @returns The image if it exists
    */
-  async getAssociationCover(
-    accountId: number,
-    associationId: number,
-    size: number,
-    type: AssociationTypeEnum,
-  ): Promise<CoverImage | undefined> {
-    const association = await this.getAssociation(accountId, associationId, type);
+  async getAssociationCover(userId: number, associationId: number, size: number, type: AssociationTypeEnum) {
+    const association = await this.getAssociation(userId, associationId, type);
     if (!association) {
       return undefined;
     }

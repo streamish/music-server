@@ -42,12 +42,14 @@ export class ApiRootPathsService {
 
   /**
    * Creates a root path for the specified user.
-   * @param {number} accountId The account to add to
-   * @param {number} rootPath The fully-qualified path to add
-   * @returns
+   * @param userId The authenticated user ID
+   * @param rootPath The fully-qualified path to add
+   * @throws If the specified account is not found
+   * @throws If the specified root path does not exist on the drive
+   * @throws If the specified root path has already been added to the account
    */
-  async createRootPath(accountId: number, rootPath: string) {
-    const account = await this.accountEntity.findByPk(accountId);
+  async createRootPath(userId: number, rootPath: string) {
+    const account = await this.accountEntity.findByPk(userId);
     if (!account) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
@@ -55,22 +57,23 @@ export class ApiRootPathsService {
       throw new BadRequestException(ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR);
     }
     const existingRootPath = await this.rootPathEntity.findOne({
-      where: { rootPath, accountId },
+      where: { rootPath, accountId: userId },
     });
     if (existingRootPath) {
       throw new BadRequestException(ErrorCodes.DUPLICATE_ROOT_PATH_ERROR);
     }
     await this.rootPathEntity.create({
       rootPath,
-      accountId,
+      accountId: userId,
     } as RootPathEntity);
   }
 
   /**
    * Deletes a root path for a user from the platform.
-   * @param {number} rootPathId The ID of the root path to delete
+   * @param rootPathId The ID of the root path to delete
+   * @throws If the specified root path is not found
    */
-  async deleteUserRootPath(rootPathId: number): Promise<void> {
+  async deleteUserRootPath(rootPathId: number) {
     const existingRootPath = await this.rootPathEntity.findOne({
       where: {
         id: rootPathId,
@@ -85,9 +88,10 @@ export class ApiRootPathsService {
 
   /**
    * Deletes a root path from the platform.
-   * @param {number} rootPathId The ID of the root path to delete
+   * @param rootPathId The ID of the root path to delete
+   * @throws If the specified root path is not found
    */
-  async deleteRootPath(accountId: number, rootPathId: number): Promise<void> {
+  async deleteRootPath(accountId: number, rootPathId: number) {
     const existingRootPath = await this.rootPathEntity.findOne({
       where: {
         id: rootPathId,
@@ -106,13 +110,14 @@ export class ApiRootPathsService {
 
   /**
    * Lists all root paths optionally filtered by any user
-   * @param {number} accountId The authenticated user ID
-   * @throws {NotFoundException} If the specified album is not found
-   * @returns {Promise<RootPathWithUserDto[]>} Array of root paths with accounts.
+   * @param userId The authenticated user ID
+   * @throws If the specified album is not found
+   * @throws If the specified account is not found
+   * @returns Array of root paths with accounts.
    */
-  async listUserRootPaths(accountId?: number): Promise<RootPathWithUserDto[]> {
-    if (accountId) {
-      const account = await this.accountEntity.findByPk(accountId, { attributes: ['id'] });
+  async listUserRootPaths(userId?: number) {
+    if (userId) {
+      const account = await this.accountEntity.findByPk(userId, { attributes: ['id'] });
       if (!account) {
         throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
       }
@@ -142,7 +147,7 @@ export class ApiRootPathsService {
         },
       ],
       where: {
-        ...(accountId ? { accountId } : {}),
+        ...(userId ? { accountId: userId } : {}),
       },
     });
     return rootPaths.map((rootPath) => rootPathWithUserToRow(rootPath.get({ plain: true }) as PathWithCounts));
@@ -150,12 +155,12 @@ export class ApiRootPathsService {
 
   /**
    * Lists all root paths for the specified user.
-   * @param {number} accountId The authenticated user ID
-   * @throws {NotFoundException} If the specified album is not found
-   * @returns {Promise<RootPathWithUserDto[]>} Array of root paths.
+   * @param userId The authenticated user ID
+   * @throws If the specified account is not found
+   * @returns Array of root paths.
    */
-  async listRootPaths(accountId: number): Promise<RootPathDto[]> {
-    const account = await this.accountEntity.findByPk(accountId, { attributes: ['id'] });
+  async listRootPaths(userId: number) {
+    const account = await this.accountEntity.findByPk(userId, { attributes: ['id'] });
     if (!account) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
@@ -177,7 +182,7 @@ export class ApiRootPathsService {
         ],
       ],
       where: {
-        accountId,
+        accountId: userId,
       },
     });
     return rootPaths.map((rootPath) => rootPathToRow(rootPath.get({ plain: true }) as PathWithCounts));
@@ -190,10 +195,13 @@ export class ApiRootPathsService {
    * 2) move files to new root path location
    * 3) update root path to new location
    * 4) enable indexing service
-   * @param {number} rootPathId The ID of the root path to update.
-   * @param {string} newPath The new path to set for the root path.
+   * @param rootPathId The ID of the root path to update.
+   * @param newPath The new path to set for the root path.
+   * @throws If the specified root path is not found
+   * @throws If the specified root path does not exist on the drive
+   * @throws If the specified root path has already been added to the account
    */
-  async updateRootPath(rootPathId: number, newPath: string): Promise<void> {
+  async updateRootPath(rootPathId: number, newPath: string) {
     const rootPath = await this.rootPathEntity.findByPk(rootPathId);
     if (!rootPath) {
       throw new NotFoundException(ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR);

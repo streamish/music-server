@@ -1,7 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint } from '../api.decorator';
 import { ApiRootPathsService } from './root-paths.service';
-import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Patch, Post, Query } from '@nestjs/common';
 import {
   CreateRootPathBodyDto,
   CreateRootPathQueryDto,
@@ -46,10 +46,8 @@ export class ApiRootPathsController {
       [HttpStatus.UNAUTHORIZED]: [ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR],
     },
   })
-  async createRootPath(
-    @Query() query: CreateRootPathQueryDto,
-    @Body() body: CreateRootPathBodyDto,
-  ): Promise<SuccessResponseDto> {
+  @HttpCode(HttpStatus.CREATED)
+  async createRootPath(@Query() query: CreateRootPathQueryDto, @Body() body: CreateRootPathBodyDto) {
     await this.rootPathsService.createRootPath(query.id, body.rootPath);
     return {
       success: true,
@@ -80,7 +78,7 @@ export class ApiRootPathsController {
       ],
     },
   })
-  async post(@User() user: AccountEntity, @Body() body: CreateRootPathBodyDto): Promise<SuccessResponseDto> {
+  async post(@User() user: AccountEntity, @Body() body: CreateRootPathBodyDto) {
     await this.rootPathsService.createRootPath(user.id, body.rootPath);
     return {
       success: true,
@@ -96,10 +94,11 @@ export class ApiRootPathsController {
     allowAdministrator: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
-      [HttpStatus.NOT_FOUND]: getValidationMessages(DeleteRootPathQueryDto),
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(DeleteRootPathQueryDto),
     },
   })
-  async deleteUserRootPath(@Query() query: DeleteRootPathQueryDto): Promise<SuccessResponseDto> {
+  async deleteUserRootPath(@Query() query: DeleteRootPathQueryDto) {
     await this.rootPathsService.deleteUserRootPath(query.id);
     return {
       success: true,
@@ -117,13 +116,11 @@ export class ApiRootPathsController {
     allowUser: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
-      [HttpStatus.NOT_FOUND]: getValidationMessages(DeleteRootPathQueryDto),
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(DeleteRootPathQueryDto),
     },
   })
-  async deleteRootPath(
-    @User() user: AccountEntity,
-    @Query() query: DeleteRootPathQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async deleteRootPath(@User() user: AccountEntity, @Query() query: DeleteRootPathQueryDto) {
     await this.rootPathsService.deleteRootPath(user.id, query.id);
     return {
       success: true,
@@ -147,7 +144,7 @@ export class ApiRootPathsController {
       [HttpStatus.OK]: RootPathsResponseDto,
     },
   })
-  async listRootPaths(@User() user: AccountEntity): Promise<RootPathsResponseDto> {
+  async listRootPaths(@User() user: AccountEntity) {
     const rootPaths = await this.rootPathsService.listRootPaths(user.id);
     return {
       success: true,
@@ -169,7 +166,7 @@ export class ApiRootPathsController {
       [HttpStatus.BAD_REQUEST]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR, ...getValidationMessages(UserRootPathQueryDto)],
     },
   })
-  async listUserRootPaths(@Query() query: UserRootPathQueryDto): Promise<RootPathsWithUserResponseDto> {
+  async listUserRootPaths(@Query() query: UserRootPathQueryDto) {
     const rootPaths = await this.rootPathsService.listUserRootPaths(query.id);
     return {
       rootPaths,
@@ -180,7 +177,7 @@ export class ApiRootPathsController {
   /**
    * `PATCH` request to `/api/update-root-path`
    */
-  @ApiEndpoint(Patch, 'update-root-path', HttpStatus.OK, {
+  @ApiEndpoint(Patch, 'update-user-root-path', HttpStatus.OK, {
     summary: 'Update a root path',
     description: 'Updates the specified root path with a new path.',
     allowAdministrator: true,
@@ -189,15 +186,13 @@ export class ApiRootPathsController {
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ROOT_PATH_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: [
         ErrorCodes.ROOT_PATH_DOES_NOT_EXIST_ERROR,
+        ErrorCodes.DUPLICATE_ROOT_PATH_ERROR,
         ...getValidationMessages(UpdateRootPathQueryDto),
         ...getValidationMessages(UpdateRootPathBodyDto),
       ],
     },
   })
-  async patch(
-    @Query() query: UpdateRootPathQueryDto,
-    @Body() body: UpdateRootPathBodyDto,
-  ): Promise<SuccessResponseDto> {
+  async patch(@Query() query: UpdateRootPathQueryDto, @Body() body: UpdateRootPathBodyDto) {
     await this.rootPathsService.updateRootPath(query.id, body.newPath);
     return {
       success: true,

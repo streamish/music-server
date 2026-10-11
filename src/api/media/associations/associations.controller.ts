@@ -34,14 +34,11 @@ export class ApiAssociationsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListAlbumAssociationsQueryDto),
     },
   })
-  async listAssociations(
-    @User() user: AccountEntity,
-    @Query() query: ListAlbumAssociationsQueryDto,
-  ): Promise<ListAssociationsResponseDto> {
+  async listAssociations(@User() user: AccountEntity, @Query() query: ListAlbumAssociationsQueryDto) {
     const data = await this.associationsService.listAlbumAssociations(user.id, query);
     return {
-      success: true,
       ...data,
+      success: true,
     };
   }
 
@@ -61,14 +58,11 @@ export class ApiAssociationsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListAlbumAssociationsQueryDto),
     },
   })
-  async listAssociationsWithTracks(
-    @User() user: AccountEntity,
-    @Query() query: ListAlbumAssociationsQueryDto,
-  ): Promise<ListAssociationsWithTracksResponseDto> {
+  async listAssociationsWithTracks(@User() user: AccountEntity, @Query() query: ListAlbumAssociationsQueryDto) {
     const data = await this.associationsService.listAlbumAssociationsWithTracks(user.id, query);
     return {
-      success: true,
       ...data,
+      success: true,
     };
   }
 
@@ -88,14 +82,11 @@ export class ApiAssociationsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListTrackAssociationsQueryDto),
     },
   })
-  async listTrackAssociations(
-    @User() user: AccountEntity,
-    @Query() query: ListTrackAssociationsQueryDto,
-  ): Promise<ListAssociationsResponseDto> {
+  async listTrackAssociations(@User() user: AccountEntity, @Query() query: ListTrackAssociationsQueryDto) {
     const data = await this.associationsService.listTrackAssociations(user.id, query);
     return {
-      success: true,
       ...data,
+      success: true,
     };
   }
 
@@ -115,14 +106,11 @@ export class ApiAssociationsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListTrackAssociationsQueryDto),
     },
   })
-  async listTrackAssociationsWithTracks(
-    @User() user: AccountEntity,
-    @Query() query: ListTrackAssociationsQueryDto,
-  ): Promise<ListAssociationsWithTracksResponseDto> {
+  async listTrackAssociationsWithTracks(@User() user: AccountEntity, @Query() query: ListTrackAssociationsQueryDto) {
     const data = await this.associationsService.listTrackAssociationsWithTracks(user.id, query);
     return {
-      success: true,
       ...data,
+      success: true,
     };
   }
 

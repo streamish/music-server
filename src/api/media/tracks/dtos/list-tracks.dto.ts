@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { LibraryTrackDto } from 'src/library/dtos/library.track.dto';
-import { PaginatedResponseDataDto } from 'src/api/response.dto';
 import { PaginationQueryDto } from 'src/api/request.dto';
 import { SortDirectionEnum, TrackSortFieldEnum } from 'src/types/enums';
 import { Transform } from 'class-transformer';
+import { createPaginatedArrayResponseDto } from 'src/api/response.dto';
 
 export class ListTracksQueryDto extends PaginationQueryDto {
   /**
@@ -186,10 +186,4 @@ export class ListTracksQueryDto extends PaginationQueryDto {
   year?: number;
 }
 
-export class ListTracksResponseDto extends PaginatedResponseDataDto {
-  @ApiProperty({
-    type: LibraryTrackDto,
-    isArray: true,
-  })
-  declare tracks: LibraryTrackDto[];
-}
+export class ListTracksResponseDto extends createPaginatedArrayResponseDto('tracks', LibraryTrackDto) {}

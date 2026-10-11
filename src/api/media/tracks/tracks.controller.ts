@@ -32,11 +32,11 @@ export class ApiTracksController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListTracksQueryDto),
     },
   })
-  async listTracks(@User() user: AccountEntity, @Query() query: ListTracksQueryDto): Promise<ListTracksResponseDto> {
+  async listTracks(@User() user: AccountEntity, @Query() query: ListTracksQueryDto) {
     const data = await this.tracksService.listTracks(user.id, query);
     return {
-      success: true,
       ...data,
+      success: true,
     };
   }
 

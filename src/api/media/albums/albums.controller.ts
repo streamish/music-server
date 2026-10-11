@@ -33,12 +33,12 @@ export class ApiAlbumsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListAlbumsQueryDto),
     },
   })
-  async listAlbums(@User() user: AccountEntity, @Query() query: ListAlbumsQueryDto): Promise<ListAlbumsResponseDto> {
+  async listAlbums(@User() user: AccountEntity, @Query() query: ListAlbumsQueryDto) {
     const data = await this.albumsService.listAlbums(user.id, query);
     return {
       ...data,
       success: true,
-    };
+    } as ListAlbumsResponseDto;
   }
 
   /**
@@ -57,10 +57,7 @@ export class ApiAlbumsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListAlbumsQueryDto),
     },
   })
-  async listAlbumsWithTracks(
-    @User() user: AccountEntity,
-    @Query() query: ListAlbumsQueryDto,
-  ): Promise<ListAlbumsWithTracksResponseDto> {
+  async listAlbumsWithTracks(@User() user: AccountEntity, @Query() query: ListAlbumsQueryDto) {
     const data = await this.albumsService.listAlbumsWithTracks(user.id, query);
     return {
       ...data,
@@ -83,10 +80,7 @@ export class ApiAlbumsController {
       [HttpStatus.BAD_REQUEST]: [ErrorCodes.ALBUM_NOT_FOUND_ERROR, ...getValidationMessages(RetrieveAlbumQueryDto)],
     },
   })
-  async retrieveAlbum(
-    @User() user: AccountEntity,
-    @Query() query: RetrieveAlbumQueryDto,
-  ): Promise<RetrieveAlbumResponseDto> {
+  async retrieveAlbum(@User() user: AccountEntity, @Query() query: RetrieveAlbumQueryDto) {
     const album = await this.albumsService.retrieveAlbum(user.id, query.id);
     return {
       album,

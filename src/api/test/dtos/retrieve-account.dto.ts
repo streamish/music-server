@@ -1,9 +1,8 @@
 /* eslint-disable max-classes-per-file */
-import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
-import { SuccessResponseDto } from 'src/api/response.dto';
 import { TestAccountDto } from './test-account.dto';
+import { createItemResponseDto } from 'src/api/response.dto';
 
 export class RetrieveTestAccountQueryDto {
   /**
@@ -15,7 +14,4 @@ export class RetrieveTestAccountQueryDto {
   declare username: string;
 }
 
-export class RetrieveTestAccountResponseDto extends SuccessResponseDto {
-  @ApiProperty({ type: TestAccountDto })
-  declare account: TestAccountDto;
-}
+export class RetrieveTestAccountResponseDto extends createItemResponseDto('account', TestAccountDto) {}

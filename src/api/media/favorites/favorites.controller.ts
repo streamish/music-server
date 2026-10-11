@@ -36,10 +36,7 @@ export class ApiFavoritesController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(DeleteFavoriteQueryDto),
     },
   })
-  async deleteFavorite(
-    @User() user: AccountEntity,
-    @Query() query: DeleteFavoriteQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async deleteFavorite(@User() user: AccountEntity, @Query() query: DeleteFavoriteQueryDto) {
     await this.favoritesService.deleteFavorite(user.id, query.id);
     return {
       success: true,
@@ -60,14 +57,11 @@ export class ApiFavoritesController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListFavoritesQueryDto),
     },
   })
-  async listFavorites(
-    @User() user: AccountEntity,
-    @Query() query: ListFavoritesQueryDto,
-  ): Promise<ListFavoritesResponseDto> {
+  async listFavorites(@User() user: AccountEntity, @Query() query: ListFavoritesQueryDto) {
     const data = await this.favoritesService.listFavorites(user.id, query);
     return {
-      success: true,
       ...data,
+      success: true,
     };
   }
 
@@ -85,10 +79,7 @@ export class ApiFavoritesController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetAlbumFavoriteQueryDto),
     },
   })
-  async setAlbumFavorite(
-    @User() user: AccountEntity,
-    @Query() query: SetAlbumFavoriteQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async setAlbumFavorite(@User() user: AccountEntity, @Query() query: SetAlbumFavoriteQueryDto) {
     await this.favoritesService.setAlbumFavorite(user.id, query.id);
     return {
       success: true,
@@ -97,9 +88,6 @@ export class ApiFavoritesController {
 
   /**
    * `PUT` request to `/api/set-association-favorite`
-   * @param user
-   * @param query
-   * @returns
    */
   @ApiEndpoint(Put, 'set-association-favorite', HttpStatus.OK, {
     summary: `Mark an association as a favorite`,
@@ -114,10 +102,7 @@ export class ApiFavoritesController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetAssociationFavoriteQueryDto),
     },
   })
-  async setAssociationFavorite(
-    @User() user: AccountEntity,
-    @Query() query: SetAssociationFavoriteQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async setAssociationFavorite(@User() user: AccountEntity, @Query() query: SetAssociationFavoriteQueryDto) {
     await this.favoritesService.setAssociationFavorite(user.id, query.id, query.associationType);
     return {
       success: true,
@@ -138,10 +123,7 @@ export class ApiFavoritesController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetFolderFavoriteQueryDto),
     },
   })
-  async setFolderFavorite(
-    @User() user: AccountEntity,
-    @Query() query: SetFolderFavoriteQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async setFolderFavorite(@User() user: AccountEntity, @Query() query: SetFolderFavoriteQueryDto) {
     await this.favoritesService.setFolderFavorite(user.id, query.folder);
     return {
       success: true,
@@ -162,10 +144,7 @@ export class ApiFavoritesController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetTrackFavoriteQueryDto),
     },
   })
-  async setTrackFavorite(
-    @User() user: AccountEntity,
-    @Query() query: SetTrackFavoriteQueryDto,
-  ): Promise<SuccessResponseDto> {
+  async setTrackFavorite(@User() user: AccountEntity, @Query() query: SetTrackFavoriteQueryDto) {
     await this.favoritesService.setTrackFavorite(user.id, query.id);
     return {
       success: true,

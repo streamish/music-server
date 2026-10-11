@@ -9,10 +9,9 @@ import {
   ListIndexerLogsWithUserQueryDto,
   ListIndexerLogsWithUserResponseDto,
   SetIndexerStatusBodyDto,
-  SetIndexerStatusResponseDto,
 } from './dtos';
+import { SuccessResponseDto, getValidationMessages } from '../response.dto';
 import { User } from '../user.decorator';
-import { getValidationMessages } from '../response.dto';
 
 @Controller('/api')
 export class ApiIndexerController {
@@ -31,7 +30,7 @@ export class ApiIndexerController {
       [HttpStatus.OK]: IndexerConfigurationResponseDto,
     },
   })
-  async indexerConfiguration(): Promise<IndexerConfigurationResponseDto> {
+  async indexerConfiguration() {
     const configuration = await this.indexerService.getConfiguration();
     return {
       configuration,
@@ -56,7 +55,7 @@ export class ApiIndexerController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListIndexerLogsWithUserQueryDto),
     },
   })
-  async listIndexerLogs(@Query() query: ListIndexerLogsWithUserQueryDto): Promise<ListIndexerLogsWithUserResponseDto> {
+  async listIndexerLogs(@Query() query: ListIndexerLogsWithUserQueryDto) {
     const logs = await this.indexerService.listIndexerLogs(query.accountId, query.rootPathId, query.search);
     return {
       logs,
@@ -82,10 +81,7 @@ export class ApiIndexerController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ListIndexerLogsQueryDto),
     },
   })
-  async listIndexerLogsByUser(
-    @User() user: AccountEntity,
-    @Query() query: ListIndexerLogsQueryDto,
-  ): Promise<ListIndexerLogsResponseDto> {
+  async listIndexerLogsByUser(@User() user: AccountEntity, @Query() query: ListIndexerLogsQueryDto) {
     const logs = await this.indexerService.listIndexerLogsByUser(user.id, query.rootPathId, query.search);
     return {
       logs,
@@ -102,13 +98,10 @@ export class ApiIndexerController {
     description: 'Enables or disables the indexer to allow moving root paths or to preserve system resources.',
     allowAdministrator: true,
     responses: {
-      [HttpStatus.OK]: SetIndexerStatusResponseDto,
+      [HttpStatus.OK]: SuccessResponseDto,
     },
   })
-  async setStatus(
-    @User() user: AccountEntity,
-    @Body() body: SetIndexerStatusBodyDto,
-  ): Promise<SetIndexerStatusResponseDto> {
+  async setStatus(@User() user: AccountEntity, @Body() body: SetIndexerStatusBodyDto) {
     const { enabled } = body;
     await this.indexerService.setStatus(user.id, enabled);
     return { success: true };

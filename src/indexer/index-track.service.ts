@@ -58,16 +58,16 @@ export class IndexTrackService {
 
   /**
    * Returns a file by path with the specified attributes, including any custom data overrides if available.
-   * @param {number} accountId The ID of the account owning the file
+   * @param {number} userId The authenticated user ID
    * @param {string} filePath The path to the file on disk
    * @param {Transaction} [transaction] Optional Sequelize transaction to use
    * @returns {Promise<TrackEntity | undefined>} The file entity with potential data overrides
    */
-  async retrieveLastModified(accountId: number, filePath: string, transaction?: Transaction) {
+  async retrieveLastModified(userId: number, filePath: string, transaction?: Transaction) {
     const track = await this.trackEntity.findOne({
       where: {
         filePath,
-        accountId,
+        accountId: userId,
       },
       attributes: ['id', 'fileMtime'],
       transaction,

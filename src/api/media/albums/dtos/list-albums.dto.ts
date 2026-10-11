@@ -4,9 +4,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from 'src/library/dtos/library.album.dto';
-import { PaginatedResponseDataDto } from 'src/api/response.dto';
 import { PaginationQueryDto } from 'src/api/request.dto';
 import { Transform } from 'class-transformer';
+import { createPaginatedArrayResponseDto } from 'src/api/response.dto';
 
 export class ListAlbumsQueryDto extends PaginationQueryDto {
   /**
@@ -197,18 +197,9 @@ export class ListAlbumsQueryDto extends PaginationQueryDto {
   year?: number;
 }
 
-export class ListAlbumsResponseDto extends PaginatedResponseDataDto {
-  @ApiProperty({
-    type: LibraryAlbumDto,
-    isArray: true,
-  })
-  declare albums: LibraryAlbumDto[];
-}
+export class ListAlbumsResponseDto extends createPaginatedArrayResponseDto('albums', LibraryAlbumDto) {}
 
-export class ListAlbumsWithTracksResponseDto extends PaginatedResponseDataDto {
-  @ApiProperty({
-    type: LibraryAlbumWithTracksDto,
-    isArray: true,
-  })
-  declare albums: LibraryAlbumWithTracksDto[];
-}
+export class ListAlbumsWithTracksResponseDto extends createPaginatedArrayResponseDto(
+  'albums',
+  LibraryAlbumWithTracksDto,
+) {}

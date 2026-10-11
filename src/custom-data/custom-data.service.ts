@@ -17,14 +17,14 @@ export class CustomDataService {
 
   /**
    * Sets custom name for the specified album artist.
-   * @param {number} accountId The ID of the account performing the update
+   * @param {number} userId The authenticated user ID
    * @param {number} associationId The ID of the album artist to update
    * @param {string} name The custom name value to set for the artist
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
-  async setCustomAlbumArtistName(accountId: number, associationId: number, name: string): Promise<number[]> {
+  async setCustomAlbumArtistName(userId: number, associationId: number, name: string): Promise<number[]> {
     const albumArtists = await this.libraryService.retrieveAlbumAssociation(
-      accountId,
+      userId,
       associationId,
       AssociationTypeEnum.ARTIST,
     );
@@ -80,14 +80,14 @@ export class CustomDataService {
 
   /**
    * Sets custom name for the specified track artist.
-   * @param {number} accountId The ID of the account performing the update
+   * @param {number} userId The authenticated user ID
    * @param {number} associationId The ID of the track artist to update
    * @param {string} name The custom name value to set for the artist
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
-  async setCustomTrackArtistName(accountId: number, associationId: number, name: string): Promise<number[]> {
+  async setCustomTrackArtistName(userId: number, associationId: number, name: string): Promise<number[]> {
     const trackArtists = await this.libraryService.retrieveTrackAssociation(
-      accountId,
+      userId,
       associationId,
       AssociationTypeEnum.ARTIST,
     );
@@ -138,14 +138,15 @@ export class CustomDataService {
 
   /**
    * Sets custom name for the specified track composer.
-   * @param {number} accountId The ID of the account performing the update
+   * @param {number} userId The authenticated user ID
    * @param {number} composerId The ID of the composer to update
    * @param {string} name The custom name value to set for the composer
+   * @throws {NotFoundException} If the specified composer is not found
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
-  async setCustomTrackComposerName(accountId: number, composerId: number, name: string): Promise<number[]> {
+  async setCustomTrackComposerName(userId: number, composerId: number, name: string): Promise<number[]> {
     const trackComposers = await this.libraryService.retrieveTrackAssociation(
-      accountId,
+      userId,
       composerId,
       AssociationTypeEnum.COMPOSER,
     );
@@ -196,17 +197,14 @@ export class CustomDataService {
 
   /**
    * Sets a custom genre name for all tracks associated with the specified genre.
-   * @param {number} accountId The ID of the account performing the update
+   * @param {number} userId The authenticated user ID
    * @param {number} genreId The ID of the genre to update
    * @param {string} name The custom genre name to set for the tracks
+   * @throws {NotFoundException} If the specified genre is not found
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
-  async setCustomTrackGenreName(accountId: number, genreId: number, name: string): Promise<number[]> {
-    const trackGenres = await this.libraryService.retrieveTrackAssociation(
-      accountId,
-      genreId,
-      AssociationTypeEnum.GENRE,
-    );
+  async setCustomTrackGenreName(userId: number, genreId: number, name: string): Promise<number[]> {
+    const trackGenres = await this.libraryService.retrieveTrackAssociation(userId, genreId, AssociationTypeEnum.GENRE);
     const trackGenre = trackGenres[0];
     if (!trackGenre) {
       throw new NotFoundException(ErrorCodes.GENRE_NOT_FOUND_ERROR);
@@ -254,21 +252,22 @@ export class CustomDataService {
 
   /**
    * Sets custom data for the specified album.
-   * @param {number} accountId The ID of the account performing the update
+   * @param {number} userId The authenticated user ID
    * @param {number} albumId The ID of the album to update
    * @param {string} albumTitle The custom title value to set for the album
    * @param {string} albumArtists The custom artists value to set for the album
    * @param {number} year The custom year value to set for the album
+   * @throws {NotFoundException} If the specified album is not found
    * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
    */
   async setCustomAlbumData(
-    accountId: number,
+    userId: number,
     albumId: number,
     albumTitle: string,
     albumArtists: string,
     year: number,
   ): Promise<number[]> {
-    const albums = await this.libraryService.retrieveAlbum(accountId, albumId);
+    const albums = await this.libraryService.retrieveAlbum(userId, albumId);
     const album = albums[0];
     if (!album) {
       throw new NotFoundException(ErrorCodes.ALBUM_NOT_FOUND_ERROR);
@@ -314,7 +313,7 @@ export class CustomDataService {
 
   /**
    * Sets custom data for the specified track.
-   * @param {number} accountId The ID of the account that owns the track.
+   * @param {number} userId The authenticated user ID
    * @param {number} trackId The ID of the track file.
    * @param {string} title The custom title for the track.
    * @param {string} artists The custom artists for the track.
@@ -324,10 +323,11 @@ export class CustomDataService {
    * @param {number} discNumber The custom disc number for the track.
    * @param {number} trackNumber The custom track number for the track.
    * @param {number} year The custom year for the track.
+   * @throws {NotFoundException} If the specified track is not found
    * @returns {Promise<number>} The file ID that was updated and need re-scanning
    */
   async setCustomTrackData(
-    accountId: number,
+    userId: number,
     trackId: number,
     title: string,
     artists: string,
@@ -338,11 +338,11 @@ export class CustomDataService {
     trackNumber: number,
     year: number,
   ): Promise<number> {
-    const file = await this.trackEntity.findByPk(trackId, {
+    const track = await this.trackEntity.findByPk(trackId, {
       attributes: ['accountId'],
     });
-    if (!file || file.accountId !== accountId) {
-      throw new NotFoundException(ErrorCodes.FILE_NOT_FOUND_ERROR);
+    if (!track || track.accountId !== userId) {
+      throw new NotFoundException(ErrorCodes.TRACK_NOT_FOUND_ERROR);
     }
     const existingData = await this.trackCustomDataEntity.findOne({
       where: {
