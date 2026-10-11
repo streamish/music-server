@@ -25,7 +25,6 @@ export class ApiCoverImageController {
    * @param response
    * @param query
    * @param coverImage
-   * @returns
    */
   private static serveImage(
     request: Request,

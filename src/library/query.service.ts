@@ -27,11 +27,11 @@ export class LibraryQueryService {
    * Finds associations matching one or more name case-insensitive names or search string
    * returning the IDs for use as a filter in subsequent queries.  If the association
    * type is a genre then the names will be exact-match, otherwise starting-with.
-   * @param {number} accountId The media owner account ID
-   * @param {AssociationTypeEnum} associationType The type of association to filter by
-   * @param {string[]} names An optional list of association names to filter by
-   * @param {string} search An optional search string to filter association names
-   * @returns {Promise<number[]>} Array of matching association IDs
+   * @param accountId The media owner account ID
+   * @param associationType The type of association to filter by
+   * @param names An optional list of association names to filter by
+   * @param search An optional search string to filter association names
+   * @returns Array of matching association IDs
    */
   private async getAssociationIds(
     accountId: number,
@@ -88,9 +88,9 @@ export class LibraryQueryService {
 
   /**
    * Creates a GTE, LTE or BETWEEN filter for the rating field based on the provided min and max values.
-   * @param {[number]} minRating
-   * @param {[number]} maxRating
-   * @returns {object} Sequelize filter object for the rating field
+   * @param minRating
+   * @param maxRating
+   * @returns Sequelize filter object for the rating field
    */
   // eslint-disable-next-line class-methods-use-this
   private createRatingFilter(minRating?: number, maxRating?: number): sequelize.WhereOptions {
@@ -120,9 +120,9 @@ export class LibraryQueryService {
 
   /**
    * Creates a GTE, LTE or BETWEEN filter for the date field based on the provided min and max values.
-   * @param {[Date]} minDate
-   * @param {[Date]} maxDate
-   * @returns {object} Sequelize filter object for the date field
+   * @param minDate
+   * @param maxDate
+   * @returns Sequelize filter object for the date field
    */
   // eslint-disable-next-line class-methods-use-this
   private createAddedDateFilter(minDate?: Date, maxDate?: Date): sequelize.WhereOptions {
@@ -152,10 +152,10 @@ export class LibraryQueryService {
 
   /**
    * Creates an `include` reference to an association that may be additionally filtered by search or name.
-   * @param {number} accountId The media owner account ID
-   * @param {AssociationTypeEnum} associationType The type of association (e.g., artist, composer, genre)
-   * @param {string} [filter] Search filter for the association names
-   * @param {string[]} [names] Array of association names to filter by
+   * @param accountId The media owner account ID
+   * @param associationType The type of association (e.g., artist, composer, genre)
+   * @param [filter] Search filter for the association names
+   * @param [names] Array of association names to filter by
    * @returns An array of Sequelize includeable objects representing the association join
    */
   private async createTrackAssociationJoin(
@@ -222,9 +222,9 @@ export class LibraryQueryService {
   /**
    * Creates a concatenated association string for the specified association type and album/track
    * context, joining all artists, composers or genres into a comma-delimited string.
-   * @param {'is_artist' | 'is_composer' | 'is_genre'} associationType The type of association to match
-   * @param {boolean} album Whether the association is for an album (true) or a track (false)
-   * @returns {object} Sequelize literal for the concatenated association
+   * @param associationType The type of association to match
+   * @param album Whether the association is for an album (true) or a track (false)
+   * @returns Sequelize literal for the concatenated association
    */
   // eslint-disable-next-line class-methods-use-this
   private createConcatenatedAssociation(
@@ -255,11 +255,11 @@ export class LibraryQueryService {
   /**
    * Builds an album query with sorting, pagination and filtering options that will return the
    * album data along with album artists, and the aggregated track composers and genres.
-   * @param {number} accountId The media owner account ID
-   * @param {AlbumFilter} filter The filter criteria for the album query
-   * @param {AlbumSortFieldEnum} sortField The field to sort the results by
-   * @param {SortDirectionEnum} sortDirection The direction to sort the results (ASC or DESC)
-   * @returns {Promise<FindOptions<AlbumEntity>>} The Sequelize find options for the album query
+   * @param accountId The media owner account ID
+   * @param filter The filter criteria for the album query
+   * @param sortField The field to sort the results by
+   * @param sortDirection The direction to sort the results (ASC or DESC)
+   * @returns The Sequelize find options for the album query
    */
   async buildAlbumQuery(
     accountId: number,
@@ -393,11 +393,11 @@ export class LibraryQueryService {
   /**
    * Builds an album association query with sorting, filtering, and pagination options that will
    * return the matching associations with their album data.
-   * @param {number} accountId The media owner account ID
-   * @param {AssociationFilter} filter The filter criteria for the album association query
-   * @param {AssociationSortFieldEnum} sortField The field to sort the results by
-   * @param {SortDirectionEnum} sortDirection The direction to sort the results (ASC or DESC)
-   * @returns {Promise<FindOptions<AssociationLinkEntity>>} The Sequelize find options for the query
+   * @param accountId The media owner account ID
+   * @param filter The filter criteria for the album association query
+   * @param sortField The field to sort the results by
+   * @param sortDirection The direction to sort the results (ASC or DESC)
+   * @returns The Sequelize find options for the query
    */
   async buildAlbumAssociationQuery(
     accountId: number,
@@ -480,11 +480,11 @@ export class LibraryQueryService {
   /**
    * Builds an album's track-associations query with sorting, filtering, and pagination options that will
    * return the matching associations.
-   * @param {number} accountId The media owner account ID
-   * @param {AssociationFilter} filter The filter criteria for the album association query
-   * @param {AssociationSortFieldEnum} sortField The field to sort the results by
-   * @param {SortDirectionEnum} sortDirection The direction to sort the results (ASC or DESC)
-   * @returns {Promise<FindOptions<AssociationEntity>>} The Sequelize find options for the query
+   * @param accountId The media owner account ID
+   * @param filter The filter criteria for the album association query
+   * @param sortField The field to sort the results by
+   * @param sortDirection The direction to sort the results (ASC or DESC)
+   * @returns The Sequelize find options for the query
    */
   async buildAlbumTrackAssociationQuery(
     accountId: number,
@@ -553,11 +553,11 @@ export class LibraryQueryService {
   /**
    * Builds a track association query with sorting, filtering, and pagination options that will
    * return the matching associations.
-   * @param {number} accountId The media owner account ID
-   * @param {AssociationFilter} filter The filter criteria for the album association query
-   * @param {AssociationSortFieldEnum} sortField The field to sort the results by
-   * @param {SortDirectionEnum} sortDirection The direction to sort the results (ASC or DESC)
-   * @returns {Promise<FindOptions<AssociationEntity>>} The Sequelize find options for the query
+   * @param accountId The media owner account ID
+   * @param filter The filter criteria for the album association query
+   * @param sortField The field to sort the results by
+   * @param sortDirection The direction to sort the results (ASC or DESC)
+   * @returns The Sequelize find options for the query
    */
   async buildTrackAssociationQuery(
     accountId: number,
@@ -633,11 +633,11 @@ export class LibraryQueryService {
   /**
    * Builds a track query with sorting, pagination and filtering options that will return the
    * album data along with album artists and track artists, composers and genres.
-   * @param {number} accountId The media owner account ID
-   * @param {TrackFilter} filter The filter criteria for the track query
-   * @param {TrackSortFieldEnum} sortField The field to sort the results by
-   * @param {SortDirectionEnum} sortDirection The direction to sort the results (ASC or DESC)
-   * @returns {Promise<FindOptions<TrackEntity>>} The Sequelize find options for the query
+   * @param accountId The media owner account ID
+   * @param filter The filter criteria for the track query
+   * @param sortField The field to sort the results by
+   * @param sortDirection The direction to sort the results (ASC or DESC)
+   * @returns The Sequelize find options for the query
    */
   async buildTrackQuery(
     accountId: number,

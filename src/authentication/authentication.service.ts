@@ -54,14 +54,14 @@ export class AuthenticationService {
 
   /**
    * Creates a user session used for access APIs requiring authentication
-   * @param {string} username The username of the account the session is being created for
-   * @param {string} password The password of the account the session is being created for
-   * @param {string} userAgent The user agent of the client creating the session
-   * @param {string} [restrictSession] Optional string to restrict the session to a specific app or API.
-   * @param {number} [expiresDays] Optional number of days until the session expires.  Defaults to 1 day.
-   * @throws {NotFoundException} If the specified username account is not found
-   * @throws {BadRequestException} If the specified password is invalid
-   * @returns {Promise<string>} The JWT session token
+   * @param username The username of the account the session is being created for
+   * @param password The password of the account the session is being created for
+   * @param userAgent The user agent of the client creating the session
+   * @param [restrictSession] Optional string to restrict the session to a specific app or API.
+   * @param [expiresDays] Optional number of days until the session expires.  Defaults to 1 day.
+   * @throws If the specified username account is not found
+   * @throws If the specified password is invalid
+   * @returns The JWT session token
    */
   async createSession(
     username: string,
@@ -114,10 +114,10 @@ export class AuthenticationService {
   /**
    * Generates a device token by hashing the session information with the account session key and a master
    * key.  This is used as part of session authentication to bind a session to a specific device user agent.
-   * @param {Guid} sessionMasterKey The master session key for the system
-   * @param {Guid} accountSessionKey The session key of the account
-   * @param {string} userAgent The user agent of the client creating the session
-   * @returns {string} The generated session token
+   * @param sessionMasterKey The master session key for the system
+   * @param accountSessionKey The session key of the account
+   * @param userAgent The user agent of the client creating the session
+   * @returns The generated session token
    */
   // eslint-disable-next-line class-methods-use-this
   private generateDeviceToken(sessionMasterKey: Guid, accountSessionKey: Guid, userAgent: string) {
@@ -128,10 +128,10 @@ export class AuthenticationService {
    * Generates a session token by hashing the session information with the account session key and a master
    * key and the user's current password hash.  This allows sessions to be terminated for a user by changing
    * their password, rotating their session key, or for all users by rotating the master key.
-   * @param {Guid} accountSessionKey The session key of the account
-   * @param {string} passwordHash The password hash of the account
-   * @param {SessionEntity} session The session entity
-   * @returns {string} The generated session token
+   * @param accountSessionKey The session key of the account
+   * @param passwordHash The password hash of the account
+   * @param session The session entity
+   * @returns The generated session token
    */
   // eslint-disable-next-line class-methods-use-this
   private generateSessionToken(
@@ -166,11 +166,11 @@ export class AuthenticationService {
    * Hashes a new session token from the session information and account session key and password hash.  This token
    * becomes part of the JWT session information and is used to verify that the session is valid and has not been
    * tampered with.
-   * @parma {Guid} sessionMasterKey The master session key for the system
-   * @param {Guid} accountSessionKey The session key of the account
-   * @param {string} passwordHash The password hash of the account
-   * @param {SessionEntity} session The session entity
-   * @returns {string} The hashed session token
+   * @parma sessionMasterKey The master session key for the system
+   * @param accountSessionKey The session key of the account
+   * @param passwordHash The password hash of the account
+   * @param session The session entity
+   * @returns The hashed session token
    */
   generateSessionTokenHash(
     sessionMasterKey: Guid,
@@ -185,9 +185,9 @@ export class AuthenticationService {
   /**
    * Generates a JWT session token from a user session by hashing the session information with the account session key
    * and a master key and signing it with a secret signing key
-   * @param {AccountEntity} account The account entity
-   * @param {SessionEntity} session The session entity
-   * @returns {Promise<string>} The JWT session token
+   * @param account The account entity
+   * @param session The session entity
+   * @returns The JWT session token
    */
   async generateSignedToken(account: AccountEntity, session: SessionEntity, expires: Date): Promise<string> {
     const sessionMasterKey = await this.getMasterSessionKey();
@@ -225,10 +225,10 @@ export class AuthenticationService {
 
   /**
    * Verifies a plain text password against the hashed password saved in the database
-   * @param {number} userId The authenticated user ID
-   * @param {string} password The password in plain text
-   * @throws {NotFoundException} If the specified account is not found
-   * @returns {Promise<boolean>} True if the passwords match
+   * @param userId The authenticated user ID
+   * @param password The password in plain text
+   * @throws If the specified account is not found
+   * @returns True if the passwords match
    */
   async verifyPassword(userId: number, password: string): Promise<boolean> {
     const account = await this.accountEntity.findByPk(userId, {
@@ -242,10 +242,10 @@ export class AuthenticationService {
 
   /**
    * Verifies a session token by comparing its hashed secret to the original secret string it was from
-   * @param {AccountEntity} account The account entity the session belongs to.
-   * @param {SessionEntity} session The session entity
-   * @param {string} tokenHash The hashed session token to compare against
-   * @returns {boolean} Whether the session token is valid
+   * @param account The account entity the session belongs to.
+   * @param session The session entity
+   * @param tokenHash The hashed session token to compare against
+   * @returns Whether the session token is valid
    */
   async verifySessionToken(account: AccountEntity, session: SessionEntity, tokenHash: string): Promise<boolean> {
     const sessionMasterKey = await this.getMasterSessionKey();

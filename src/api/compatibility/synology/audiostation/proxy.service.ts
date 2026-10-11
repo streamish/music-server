@@ -61,9 +61,9 @@ export class SynologyProxyService {
    * The station identifier can be provided in two distinct formats:
    * 1) `radio_<station title> <station url>`
    * 2) `<container>_<genre> <favorite title>`
-   * @param {string} stationIdentifier The station identifier string that contains the stream URL or favorite reference
-   * @returns {string} The extracted stream URL from the station identifier
-   * @throws {Error} If the station identifier is invalid or does not contain a valid stream URL
+   * @param stationIdentifier The station identifier string that contains the stream URL or favorite reference
+   * @returns The extracted stream URL from the station identifier
+   * @throws If the station identifier is invalid or does not contain a valid stream URL
    */
   private async getStreamUrl(stationIdentifier: string) {
     const streamUrl = stationIdentifier.split(' ').pop();

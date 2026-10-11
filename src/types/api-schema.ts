@@ -2972,6 +2972,8 @@ export type components = {
        * @description The date the artist was added to the library
        */
       createdAt: string;
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
       genreCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
       /** @description The internally-generated unique ID of the artist */
       id: number;
@@ -3131,8 +3133,9 @@ export type components = {
       success: boolean;
     };
     LibraryAlbumDto: {
-      /** @description The artist for the album, which is all the album artists in a comma-delimited list */
+      /** @description The artist for the album, aggregated from the track album artists data. */
       artists: components['schemas']['LibraryAssociationDto'][];
+      /** @description The album composers aggregated from the track compilers data. */
       composers: components['schemas']['LibraryAssociationDto'][];
       /** @description A color detected in the cover art image */
       coverImageDarkMuted?: string;
@@ -3151,6 +3154,9 @@ export type components = {
        * @description The date the album was added to the library
        */
       createdAt: string;
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
+      /** @description The album genres aggregated from the track genres. */
       genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the album */
       id: number;
@@ -3165,8 +3171,9 @@ export type components = {
       year: number;
     };
     LibraryAlbumWithTracksDto: {
-      /** @description The artist for the album, which is all the album artists in a comma-delimited list */
+      /** @description The artist for the album, aggregated from the track album artists data. */
       artists: components['schemas']['LibraryAssociationDto'][];
+      /** @description The album composers aggregated from the track compilers data. */
       composers: components['schemas']['LibraryAssociationDto'][];
       /** @description A color detected in the cover art image */
       coverImageDarkMuted?: string;
@@ -3185,6 +3192,9 @@ export type components = {
        * @description The date the album was added to the library
        */
       createdAt: string;
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
+      /** @description The album genres aggregated from the track genres. */
       genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the album */
       id: number;
@@ -3206,6 +3216,8 @@ export type components = {
        * @description The date the artist was added to the library
        */
       createdAt: string;
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
       /** @description The internally-generated unique ID of the artist */
       id: number;
       /** @description The name of the artist. */
@@ -3219,6 +3231,8 @@ export type components = {
        * @description The date the artist was added to the library
        */
       createdAt: string;
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
       /** @description The internally-generated unique ID of the artist */
       id: number;
       /** @description The name of the artist. */
@@ -3256,6 +3270,8 @@ export type components = {
        *     ]
        */
       children?: components['schemas']['LibraryFolderDto'][];
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
       file?: string;
       folder?: string;
       fullPath: string;
@@ -3294,6 +3310,8 @@ export type components = {
       discNumber: number;
       /** @description The duration of the track in seconds. */
       duration: number;
+      /** @description The favorite data for the album if it exists */
+      favoriteId?: number;
       /** @description The bitrate of the audio file for the track, in Kb/s. */
       fileBitRate: number;
       /** @description The number of audio channels in the file for the track, such as 2 for stereo or 1 for mono. */
@@ -5761,13 +5779,13 @@ export type components = {
     SynologyPlaylistAdditionalDto: {
       rules?: components['schemas']['SynologyPlaylistRuleDto'][];
       /** @example and */
-      rules_conjunction?: components['schemas']['SmartPlaylistConjugalEnum'];
+      rules_conjunction?: components['schemas']['SmartPlaylistConjugalEnum'] | null;
       sharing_info: components['schemas']['SynologyPlaylistSharingInfoDto'];
     };
     SynologyPlaylistAdditionalWithItemsDto: {
       rules?: components['schemas']['SynologyPlaylistRuleDto'][];
       /** @example and */
-      rules_conjunction?: components['schemas']['SmartPlaylistConjugalEnum'];
+      rules_conjunction?: components['schemas']['SmartPlaylistConjugalEnum'] | null;
       sharing_info: components['schemas']['SynologyPlaylistSharingInfoDto'];
       songs: components['schemas']['SynologyPlaylistSongDto'][];
       songs_offset: number;

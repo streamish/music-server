@@ -21,11 +21,11 @@ function xmlValue(value) {
 
 /**
  * Converts a JS object to XML wrapped in an open/closing tag
- * @param {Record<string | number, unknown> | Array<unknown>} obj An object
- * @param {string} openingTag The parent opening tag without <>, this may include attributes eg `QDocRoot version="1.0"
- * @param {string} closingTag The parent closing tag without <> eg `QDocRoot`
- * @param {number} indent The indentation level
- * @returns {string} The XML string
+ * @param obj An object
+ * @param openingTag The parent opening tag without <>, this may include attributes eg `QDocRoot version="1.0"
+ * @param closingTag The parent closing tag without <> eg `QDocRoot`
+ * @param indent The indentation level
+ * @returns The XML string
  */
 export function objectToXml(
   obj: Record<string | number, unknown> | Array<unknown>,

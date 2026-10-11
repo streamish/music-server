@@ -22,9 +22,6 @@ export class ApiRootPathsController {
 
   /**
    * `POST` request to `/api/create-user-root-path`
-   * @param query
-   * @param body
-   * @returns
    */
   @ApiEndpoint(Post, 'create-user-root-path', HttpStatus.CREATED, {
     summary: 'Add new root path to account',
@@ -56,9 +53,6 @@ export class ApiRootPathsController {
 
   /**
    * `POST` request to `/api/create-root-path`
-   * @param query
-   * @param body
-   * @returns
    */
   @ApiEndpoint(Post, 'create-root-path', HttpStatus.CREATED, {
     summary: 'Add a new source of music to the user account',
@@ -129,7 +123,6 @@ export class ApiRootPathsController {
 
   /**
    * `GET` request to `/api/list-root-paths`
-   * @returns
    */
   @ApiEndpoint(Get, 'list-root-paths', HttpStatus.OK, {
     summary: 'List all root paths of the authenticated user',

@@ -19,9 +19,9 @@ export class IndexTrackService {
   /**
    * Merges custom file data into the embedded metadata detected in a track, creating
    * a consolidated metadata object that combines both sources.
-   * @param {number} trackId The ID of the file in the database
-   * @param {IAudioMetadata} embeddedData The embedded metadata detected in the file
-   * @returns {IAudioMetadata} Consolidated metadata object prioritizing custom data
+   * @param trackId The ID of the file in the database
+   * @param embeddedData The embedded metadata detected in the file
+   * @returns Consolidated metadata object prioritizing custom data
    */
   async applyCustomTrackData(trackId: number, embeddedData: IAudioMetadata): Promise<IAudioMetadata> {
     const customData = await this.trackCustomDataEntity.findOne({
@@ -58,10 +58,10 @@ export class IndexTrackService {
 
   /**
    * Returns a file by path with the specified attributes, including any custom data overrides if available.
-   * @param {number} userId The authenticated user ID
-   * @param {string} filePath The path to the file on disk
-   * @param {Transaction} [transaction] Optional Sequelize transaction to use
-   * @returns {Promise<TrackEntity | undefined>} The file entity with potential data overrides
+   * @param userId The authenticated user ID
+   * @param filePath The path to the file on disk
+   * @param [transaction] Optional Sequelize transaction to use
+   * @returns The file entity with potential data overrides
    */
   async retrieveLastModified(userId: number, filePath: string, transaction?: Transaction) {
     const track = await this.trackEntity.findOne({
