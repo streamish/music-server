@@ -8,7 +8,6 @@ export class ApiFoldersService {
   /**
    * Returns the tree-structure of the folders and files from the collated root paths
    * @param userId The authenticated user ID
-   * @returns
    */
   async getTreeStructure(userId: number) {
     return this.libraryService.listFolders(userId);

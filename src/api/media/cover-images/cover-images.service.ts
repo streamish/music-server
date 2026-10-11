@@ -23,7 +23,6 @@ export class ApiCoverImageService {
    * @param userId The authenticated user ID
    * @param associationId The ID of the association
    * @param associationType The type of association
-   * @returns
    */
   private async getAssociation(userId: number, associationId: number, associationType: AssociationTypeEnum) {
     let associations: LibraryAssociationWithTracksDto[] | undefined;

@@ -19,7 +19,6 @@ export class ApiIndexerController {
 
   /**
    * `GET` requests to `/api/indexer-configuration`
-   * @returns
    */
   @ApiEndpoint(Get, 'indexer-configuration', HttpStatus.OK, {
     summary: 'Get the indexer configuration',
@@ -40,7 +39,6 @@ export class ApiIndexerController {
 
   /**
    * `GET` requests to `/api/list-user-indexer-logs`
-   * @returns
    */
   @ApiEndpoint(Get, 'list-user-indexer-logs', HttpStatus.OK, {
     summary: 'Indexer logs for all or specified users',
@@ -65,7 +63,6 @@ export class ApiIndexerController {
 
   /**
    * `GET` requests to `/api/indexer-logs`
-   * @returns
    */
   @ApiEndpoint(Get, 'list-indexer-logs', HttpStatus.OK, {
     summary: 'Indexer logs for the authenticated user',
@@ -91,7 +88,6 @@ export class ApiIndexerController {
 
   /**
    * `PATCH` requests to `/api/set-indexer-status`
-   * @returns
    */
   @ApiEndpoint(Patch, 'set-indexer-status', HttpStatus.OK, {
     summary: 'Set the indexer status',

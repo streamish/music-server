@@ -17,10 +17,10 @@ export class CustomDataService {
 
   /**
    * Sets custom name for the specified album artist.
-   * @param {number} userId The authenticated user ID
-   * @param {number} associationId The ID of the album artist to update
-   * @param {string} name The custom name value to set for the artist
-   * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
+   * @param userId The authenticated user ID
+   * @param associationId The ID of the album artist to update
+   * @param name The custom name value to set for the artist
+   * @returns The file IDs that were updated and need re-scanning
    */
   async setCustomAlbumArtistName(userId: number, associationId: number, name: string): Promise<number[]> {
     const albumArtists = await this.libraryService.retrieveAlbumAssociation(
@@ -80,10 +80,10 @@ export class CustomDataService {
 
   /**
    * Sets custom name for the specified track artist.
-   * @param {number} userId The authenticated user ID
-   * @param {number} associationId The ID of the track artist to update
-   * @param {string} name The custom name value to set for the artist
-   * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
+   * @param userId The authenticated user ID
+   * @param associationId The ID of the track artist to update
+   * @param name The custom name value to set for the artist
+   * @returns The file IDs that were updated and need re-scanning
    */
   async setCustomTrackArtistName(userId: number, associationId: number, name: string): Promise<number[]> {
     const trackArtists = await this.libraryService.retrieveTrackAssociation(
@@ -138,11 +138,11 @@ export class CustomDataService {
 
   /**
    * Sets custom name for the specified track composer.
-   * @param {number} userId The authenticated user ID
-   * @param {number} composerId The ID of the composer to update
-   * @param {string} name The custom name value to set for the composer
-   * @throws {NotFoundException} If the specified composer is not found
-   * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
+   * @param userId The authenticated user ID
+   * @param composerId The ID of the composer to update
+   * @param name The custom name value to set for the composer
+   * @throws If the specified composer is not found
+   * @returns The file IDs that were updated and need re-scanning
    */
   async setCustomTrackComposerName(userId: number, composerId: number, name: string): Promise<number[]> {
     const trackComposers = await this.libraryService.retrieveTrackAssociation(
@@ -197,11 +197,11 @@ export class CustomDataService {
 
   /**
    * Sets a custom genre name for all tracks associated with the specified genre.
-   * @param {number} userId The authenticated user ID
-   * @param {number} genreId The ID of the genre to update
-   * @param {string} name The custom genre name to set for the tracks
-   * @throws {NotFoundException} If the specified genre is not found
-   * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
+   * @param userId The authenticated user ID
+   * @param genreId The ID of the genre to update
+   * @param name The custom genre name to set for the tracks
+   * @throws If the specified genre is not found
+   * @returns The file IDs that were updated and need re-scanning
    */
   async setCustomTrackGenreName(userId: number, genreId: number, name: string): Promise<number[]> {
     const trackGenres = await this.libraryService.retrieveTrackAssociation(userId, genreId, AssociationTypeEnum.GENRE);
@@ -252,13 +252,13 @@ export class CustomDataService {
 
   /**
    * Sets custom data for the specified album.
-   * @param {number} userId The authenticated user ID
-   * @param {number} albumId The ID of the album to update
-   * @param {string} albumTitle The custom title value to set for the album
-   * @param {string} albumArtists The custom artists value to set for the album
-   * @param {number} year The custom year value to set for the album
-   * @throws {NotFoundException} If the specified album is not found
-   * @returns {Promise<number[]>} The file IDs that were updated and need re-scanning
+   * @param userId The authenticated user ID
+   * @param albumId The ID of the album to update
+   * @param albumTitle The custom title value to set for the album
+   * @param albumArtists The custom artists value to set for the album
+   * @param year The custom year value to set for the album
+   * @throws If the specified album is not found
+   * @returns The file IDs that were updated and need re-scanning
    */
   async setCustomAlbumData(
     userId: number,
@@ -313,18 +313,18 @@ export class CustomDataService {
 
   /**
    * Sets custom data for the specified track.
-   * @param {number} userId The authenticated user ID
-   * @param {number} trackId The ID of the track file.
-   * @param {string} title The custom title for the track.
-   * @param {string} artists The custom artists for the track.
-   * @param {string} composers The custom composers for the track.
-   * @param {string} genres The custom genres for the track.
-   * @param {string} comment The custom comment for the track.
-   * @param {number} discNumber The custom disc number for the track.
-   * @param {number} trackNumber The custom track number for the track.
-   * @param {number} year The custom year for the track.
-   * @throws {NotFoundException} If the specified track is not found
-   * @returns {Promise<number>} The file ID that was updated and need re-scanning
+   * @param userId The authenticated user ID
+   * @param trackId The ID of the track file.
+   * @param title The custom title for the track.
+   * @param artists The custom artists for the track.
+   * @param composers The custom composers for the track.
+   * @param genres The custom genres for the track.
+   * @param comment The custom comment for the track.
+   * @param discNumber The custom disc number for the track.
+   * @param trackNumber The custom track number for the track.
+   * @param year The custom year for the track.
+   * @throws If the specified track is not found
+   * @returns The file ID that was updated and need re-scanning
    */
   async setCustomTrackData(
     userId: number,

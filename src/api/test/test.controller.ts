@@ -96,7 +96,6 @@ export class ApiTestController {
 
   /**
    * `GET` requests to `/api/test/list-test-accounts`
-   * @returns
    */
   @ApiEndpoint(Get, 'list-test-accounts', HttpStatus.OK, {
     summary: 'List accounts',

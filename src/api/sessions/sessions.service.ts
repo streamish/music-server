@@ -23,8 +23,6 @@ export class ApiSessionsService {
 
   /**
    * Creates a user session used for access APIs requiring authentication
-   * @param body
-   * @returns
    */
   async createSession(userAgent: string, body: CreateSessionBodyDto) {
     const jwtToken = await this.authenticationService.createSession(

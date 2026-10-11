@@ -136,10 +136,10 @@ export async function createAuthenticatedApi(
 /**
  * Synology login credentials may be sent over HTTP across your network so they
  * implement an encryption mechanism to protect the credentials.
- * @param {string} username The Synology account username.
- * @param {string} password The Synology account password.
- * @param {string} publicKeyPem The Synology public key in PEM format.
- * @returns {string} The encrypted credentials as a base64-encoded string.
+ * @param username The Synology account username.
+ * @param password The Synology account password.
+ * @param publicKeyPem The Synology public key in PEM format.
+ * @returns The encrypted credentials as a base64-encoded string.
  */
 export function encryptSynologyCredentials(username: string, password: string, publicKeyPem: string): string {
   const plaintext = `account=${username}&passwd=${password}`;
@@ -161,9 +161,9 @@ export function encryptSynologyCredentials(username: string, password: string, p
 
 /**
  * Creates a Synology session cookie.
- * @param {string} username The Synology account username.
- * @param {string} password The Synology account password.
- * @returns {Promise<String>} The Synology session cookie as a string.
+ * @param username The Synology account username.
+ * @param password The Synology account password.
+ * @returns The Synology session cookie as a string.
  */
 export async function createSynologyCookie(username?: string, password?: string): Promise<string> {
   const encryptionKeyResponse = await unauthenticatedApi.POST(`/webapi/entry.cgi`, {
@@ -198,9 +198,9 @@ export async function createSynologyCookie(username?: string, password?: string)
 
 /**
  * Creates an authenticated Synology API
- * @param {string} username The Synology account username.
- * @param {string} password The Synology account password.
- * @returns {Promise<SynologyApiClient>} The API client instance built on the OpenAPI specification
+ * @param username The Synology account username.
+ * @param password The Synology account password.
+ * @returns The API client instance built on the OpenAPI specification
  */
 export async function createSynologyApi(username?: string, password?: string): Promise<SynologyApiClient> {
   const cookie = await createSynologyCookie(username, password);
@@ -216,9 +216,9 @@ export async function createSynologyApi(username?: string, password?: string): P
 /**
  * Creates an unauthenticated QNAP API.  This API returns XML by default so the API has
  * middleware configured to parse responses to JSON.
- * @param {string} username The QNAP account username.
- * @param {string} password The QNAP account password.
- * @returns {Promise<QnapApiClient>} The API client instance built on the OpenAPI specification
+ * @param username The QNAP account username.
+ * @param password The QNAP account password.
+ * @returns The API client instance built on the OpenAPI specification
  */
 export function createQnapApiWithXmlResponse(): QnapApiClient {
   const client = createClient<paths>({
@@ -267,9 +267,9 @@ export function createQnapApiWithXmlResponse(): QnapApiClient {
 /**
  * Creates an authenticated QNAP API.  This API returns XML by default so the API has
  * middleware configured to parse responses to JSON.
- * @param {string} username The QNAP account username.
- * @param {string} password The QNAP account password.
- * @returns {Promise<QnapApiClient>} The API client instance built on the OpenAPI specification
+ * @param username The QNAP account username.
+ * @param password The QNAP account password.
+ * @returns The API client instance built on the OpenAPI specification
  */
 export async function createQnapApi(username?: string, password?: string): Promise<QnapApiClient> {
   let sid: string = '';
