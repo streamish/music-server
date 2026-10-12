@@ -93,9 +93,24 @@ describe('/api/set-association-favorite', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
-      const { error: listFavoritesError, data: listFavoritesData } = await listFavorites();
-      expect(listFavoritesError).toBeUndefined();
-      expect(listFavoritesData?.favorites.some((f) => f.association?.id === associationId)).toBe(true);
+      const { data: listFavoritesData } = await listFavorites();
+      const favoriteItem = listFavoritesData?.favorites.find((item) => item.id === data?.favoriteId);
+      if (!favoriteItem) {
+        throw new Error('Favorite item not found');
+      }
+      expect(favoriteItem.association?.id).toBe(associationId);
+      // verify the item is favorited
+      const { data: associations2 } = await userApi.GET('/api/list-track-associations', {
+        params: {
+          query: {
+            associationType: AssociationTypeEnum.artist,
+            offset: 0,
+            limit: 1,
+          },
+        },
+      });
+      const associationNow = associations2?.associations[0];
+      expect(associationNow?.favoriteId).toBe(favoriteItem.id);
     });
   });
 });

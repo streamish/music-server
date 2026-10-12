@@ -102,7 +102,7 @@ export class AlbumEntity extends Model<AlbumEntity> {
   declare createdAt: Date;
 
   @HasOne(() => FavoriteItemEntity)
-  favorite?: FavoriteItemEntity;
+  declare favorite?: FavoriteItemEntity;
 
   /**
    * The file path for the music file relative to the root path.

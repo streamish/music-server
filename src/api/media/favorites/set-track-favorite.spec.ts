@@ -96,9 +96,23 @@ describe('/api/set-track-favorite', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
-      const { error: listFavoritesError, data: listFavoritesData } = await listFavorites();
-      expect(listFavoritesError).toBeUndefined();
-      expect(listFavoritesData?.favorites.some((f) => f.track?.id === track.id)).toBe(true);
+      const { data: listFavoritesData } = await listFavorites();
+      const favoriteItem = listFavoritesData?.favorites.find((item) => item.id === data?.favoriteId);
+      if (!favoriteItem) {
+        throw new Error('Favorite item not found');
+      }
+      expect(favoriteItem.track?.id).toBe(track.id);
+      // verify the item is favorited
+      const { data: tracks2 } = await userApi.GET('/api/list-tracks', {
+        params: {
+          query: {
+            offset: 0,
+            limit: 1,
+          },
+        },
+      });
+      const trackNow = tracks2?.tracks.find((item) => item.id === track.id);
+      expect(trackNow?.favoriteId).toBe(favoriteItem.id);
     });
   });
 });

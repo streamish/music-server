@@ -8,6 +8,7 @@ import {
 } from '../../../test-helper';
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { paths } from 'src/types/api-schema';
 
 describe('/api/set-folder-favorite', () => {
   let accountId: number;
@@ -75,9 +76,35 @@ describe('/api/set-folder-favorite', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
-      const { error: listFavoritesError, data: listFavoritesData } = await listFavorites();
-      expect(listFavoritesError).toBeUndefined();
-      expect(listFavoritesData?.favorites.some((f) => f.folder?.fullPath === '/Artist 1/Album 1')).toBe(true);
+      const { data: listFavoritesData } = await listFavorites();
+      const favoriteItem = listFavoritesData?.favorites.find((item) => item.id === data?.favoriteId);
+      if (!favoriteItem) {
+        throw new Error('Favorite item not found');
+      }
+      expect(favoriteItem.folder?.fullPath).toBe('/Artist 1/Album 1');
+      // verify the item is favorited
+      type FolderDto =
+        paths['/api/folder-structure']['get']['responses']['200']['content']['application/json']['items'][number];
+      const { data: folderStructure2 } = await userApi.GET('/api/folder-structure');
+      function findFolderStruture(items: FolderDto[]) {
+        for (let i = 0, len = items.length; i < len; i += 1) {
+          const child = items[i];
+          if (child) {
+            if (child.fullPath === '/Artist 1/Album 1') {
+              return child;
+            }
+            if (child.children) {
+              const result = findFolderStruture(child.children);
+              if (result) {
+                return result;
+              }
+            }
+          }
+        }
+        return undefined;
+      }
+      const folderNow = findFolderStruture(folderStructure2?.items || []);
+      expect(folderNow?.favoriteId).toBe(favoriteItem.id);
     });
   });
 });

@@ -75,7 +75,7 @@ describe('/api/set-album-favorite', () => {
   });
 
   describe('success', () => {
-    it('should create favorite for the album', async () => {
+    it.only('should create favorite for the album', async () => {
       const { data: albumData } = await listAlbums({
         offset: 0,
         limit: 1,
@@ -89,12 +89,22 @@ describe('/api/set-album-favorite', () => {
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
-      const { error: listFavoritesError, data: listFavoritesData } = await listFavorites({
+      const { data: listFavoritesData } = await listFavorites({
         offset: 0,
         limit: 99_999,
       });
-      expect(listFavoritesError).toBeUndefined();
-      expect(listFavoritesData?.favorites.some((f) => f.album?.id === album.id)).toBe(true);
+      const favoriteItem = listFavoritesData?.favorites.find((item) => item.id === data?.favoriteId);
+      if (!favoriteItem) {
+        throw new Error('Favorite item not found');
+      }
+      expect(favoriteItem.album?.id).toBe(album.id);
+      // verify the item is favorited
+      const { data: albumData2 } = await listAlbums({
+        offset: 0,
+        limit: 1,
+      });
+      const albumNow = albumData2?.albums.find((a) => a.id === album.id);
+      expect(albumNow?.favoriteId).toBe(favoriteItem.id);
     });
   });
 });

@@ -97,7 +97,7 @@ export class LibraryTrackDto {
   declare duration: number;
 
   /**
-   * The favorite data for the album if it exists
+   * The favorite data for the track if it exists
    */
   @IsInt()
   declare favoriteId?: number;

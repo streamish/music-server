@@ -359,6 +359,11 @@ export class LibraryQueryService {
         ],
       ],
       include: [
+        {
+          attributes: ['id'],
+          model: FavoriteItemEntity,
+          required: false,
+        },
         ...(await this.createTrackAssociationJoin(
           accountId,
           AssociationTypeEnum.ARTIST,
