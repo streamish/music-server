@@ -51,7 +51,7 @@ export class AssociationEntity extends Model<AssociationEntity> {
   declare associationLinks?: AssociationLinkEntity[];
 
   @HasOne(() => FavoriteItemEntity)
-  favorite?: FavoriteItemEntity;
+  declare favorite?: FavoriteItemEntity;
 
   /**
    * The name of the association

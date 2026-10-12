@@ -3013,6 +3013,15 @@ export type components = {
       /** @description The username for signing in */
       username: string;
     };
+    CreateFavoriteResponseDto: {
+      favoriteId: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
     CreateRootPathBodyDto: {
       /** @description The fully-qualified path to set for the root path */
       rootPath: string;
@@ -3270,7 +3279,7 @@ export type components = {
        *     ]
        */
       children?: components['schemas']['LibraryFolderDto'][];
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite data for the folder if it exists */
       favoriteId?: number;
       file?: string;
       folder?: string;
@@ -3310,7 +3319,7 @@ export type components = {
       discNumber: number;
       /** @description The duration of the track in seconds. */
       duration: number;
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite data for the track if it exists */
       favoriteId?: number;
       /** @description The bitrate of the audio file for the track, in Kb/s. */
       fileBitRate: number;
@@ -9475,7 +9484,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['CreateFavoriteResponseDto'];
         };
       };
       400: {
@@ -9588,7 +9597,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['CreateFavoriteResponseDto'];
         };
       };
       400: {
@@ -9757,7 +9766,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['CreateFavoriteResponseDto'];
         };
       };
       400: {
@@ -9916,7 +9925,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['CreateFavoriteResponseDto'];
         };
       };
       400: {
