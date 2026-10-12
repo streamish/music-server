@@ -98,7 +98,7 @@ export class TrackEntity extends Model<TrackEntity> {
   declare duration: number;
 
   @HasOne(() => FavoriteItemEntity)
-  favorite?: FavoriteItemEntity;
+  declare favorite?: FavoriteItemEntity | null;
 
   /**
    * The absolute path to the file relative to the root path
