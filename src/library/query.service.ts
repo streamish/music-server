@@ -1,4 +1,10 @@
-import { AlbumEntity, AssociationEntity, AssociationLinkEntity, TrackEntity } from 'src/database/entities';
+import {
+  AlbumEntity,
+  AssociationEntity,
+  AssociationLinkEntity,
+  FavoriteItemEntity,
+  TrackEntity,
+} from 'src/database/entities';
 import {
   AlbumSortFieldEnum,
   AssociationSortFieldEnum,
@@ -452,6 +458,13 @@ export class LibraryQueryService {
               nameNormalized: { [Op.like]: `%${normalizeString(filter.filter)}%` },
             }),
           },
+          include: [
+            {
+              attributes: ['id'],
+              model: FavoriteItemEntity,
+              required: false,
+            },
+          ],
         },
         {
           attributes: ['id', 'title'],
@@ -545,6 +558,11 @@ export class LibraryQueryService {
             ...this.createAddedDateFilter(filter?.addedAfter, filter?.addedBefore),
           },
         },
+        {
+          attributes: ['id'],
+          model: FavoriteItemEntity,
+          required: false,
+        },
       ],
       order,
     };
@@ -624,6 +642,11 @@ export class LibraryQueryService {
             }),
           },
           required: true,
+        },
+        {
+          attributes: ['id'],
+          model: FavoriteItemEntity,
+          required: false,
         },
       ],
       order,
@@ -746,6 +769,11 @@ export class LibraryQueryService {
             }),
           },
           include: [...(await this.createTrackAssociationJoin(accountId, AssociationTypeEnum.ARTIST, 'album'))],
+        },
+        {
+          attributes: ['id'],
+          model: FavoriteItemEntity,
+          required: false,
         },
         ...(await this.createTrackAssociationJoin(
           accountId,

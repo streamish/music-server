@@ -3,6 +3,7 @@ import { ApiEndpoint } from 'src/api/api.decorator';
 import { ApiFavoritesService } from './favorites.service';
 import { Controller, Delete, Get, HttpStatus, Put, Query } from '@nestjs/common';
 import {
+  CreateFavoriteResponseDto,
   DeleteFavoriteQueryDto,
   ListFavoritesQueryDto,
   ListFavoritesResponseDto,
@@ -74,14 +75,15 @@ export class ApiFavoritesController {
     allowAdministrator: true,
     allowUser: true,
     responses: {
-      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.OK]: CreateFavoriteResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ALBUM_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetAlbumFavoriteQueryDto),
     },
   })
   async setAlbumFavorite(@User() user: AccountEntity, @Query() query: SetAlbumFavoriteQueryDto) {
-    await this.favoritesService.setAlbumFavorite(user.id, query.id);
+    const favorite = await this.favoritesService.setAlbumFavorite(user.id, query.id);
     return {
+      favoriteId: favorite.id,
       success: true,
     };
   }
@@ -97,14 +99,15 @@ export class ApiFavoritesController {
     allowAdministrator: true,
     allowUser: true,
     responses: {
-      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.OK]: CreateFavoriteResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ASSOCIATION_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetAssociationFavoriteQueryDto),
     },
   })
   async setAssociationFavorite(@User() user: AccountEntity, @Query() query: SetAssociationFavoriteQueryDto) {
-    await this.favoritesService.setAssociationFavorite(user.id, query.id, query.associationType);
+    const favorite = await this.favoritesService.setAssociationFavorite(user.id, query.id, query.associationType);
     return {
+      favoriteId: favorite.id,
       success: true,
     };
   }
@@ -118,14 +121,15 @@ export class ApiFavoritesController {
     allowAdministrator: true,
     allowUser: true,
     responses: {
-      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.OK]: CreateFavoriteResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.FOLDER_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetFolderFavoriteQueryDto),
     },
   })
   async setFolderFavorite(@User() user: AccountEntity, @Query() query: SetFolderFavoriteQueryDto) {
-    await this.favoritesService.setFolderFavorite(user.id, query.folder);
+    const favorite = await this.favoritesService.setFolderFavorite(user.id, query.folder);
     return {
+      favoriteId: favorite.id,
       success: true,
     };
   }
@@ -139,14 +143,15 @@ export class ApiFavoritesController {
     allowAdministrator: true,
     allowUser: true,
     responses: {
-      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.OK]: CreateFavoriteResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.TRACK_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: getValidationMessages(SetTrackFavoriteQueryDto),
     },
   })
   async setTrackFavorite(@User() user: AccountEntity, @Query() query: SetTrackFavoriteQueryDto) {
-    await this.favoritesService.setTrackFavorite(user.id, query.id);
+    const favorite = await this.favoritesService.setTrackFavorite(user.id, query.id);
     return {
+      favoriteId: favorite.id,
       success: true,
     };
   }

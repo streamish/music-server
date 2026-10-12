@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { LibraryTrackDto } from 'src/library/dtos';
+import { LibraryTrackDto } from './library.track.dto';
 
 export class LibraryFolderDto {
   @ApiProperty({
@@ -16,6 +16,12 @@ export class LibraryFolderDto {
     ],
   })
   declare children?: LibraryFolderDto[];
+
+  /**
+   * The favorite data for the folder if it exists
+   */
+  @IsInt()
+  declare favoriteId?: number;
 
   @IsString()
   @IsOptional()

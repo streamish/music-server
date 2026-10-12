@@ -1,3 +1,4 @@
+export * from './create-favorite.dto';
 export * from './delete-favorite.dto';
 export * from './list-favorites.dto';
 export * from './set-album-favorite.dto';
