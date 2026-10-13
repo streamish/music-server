@@ -68,7 +68,7 @@ export class SynologyProxyController {
     description: 'Pipes the SHOUTcast radio stream to the client.',
   })
   @AllowGuest()
-  async getProxyCgi(@Query() query: SynologyProxyStreamQueryDto, @Res() response: Response): Promise<void> {
+  async getProxyCgi(@Query() query: SynologyProxyStreamQueryDto, @Res() response: Response) {
     this.proxyService.proxyStream(query.stream_id, response);
   }
 }

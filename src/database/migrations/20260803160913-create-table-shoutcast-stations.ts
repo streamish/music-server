@@ -1,7 +1,7 @@
 import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
 
 export async function up(queryInterface: QueryInterface) {
-  await queryInterface.createTable('shoutcast_items', {
+  await queryInterface.createTable('shoutcast_stations', {
     container_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -16,7 +16,7 @@ export async function up(queryInterface: QueryInterface) {
       allowNull: false,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
-    desc: {
+    description: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
@@ -40,5 +40,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-  await queryInterface.dropTable('shoutcast_items');
+  await queryInterface.dropTable('shoutcast_stations');
 }

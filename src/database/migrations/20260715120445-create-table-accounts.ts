@@ -1,7 +1,7 @@
 import { DataType, Sequelize } from 'sequelize-typescript';
 import { QueryInterface } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface): Promise<void> {
+export async function up(queryInterface: QueryInterface) {
   await queryInterface.createTable('accounts', {
     created_at: {
       type: DataType.DATE,
@@ -24,8 +24,12 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataType.DATE,
     },
   });
+
+  await queryInterface.addIndex('accounts', ['username'], {
+    unique: true,
+  });
 }
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
+export async function down(queryInterface: QueryInterface) {
   await queryInterface.dropTable('accounts');
 }

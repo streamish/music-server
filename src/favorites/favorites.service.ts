@@ -13,7 +13,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumWithTracksDto, LibraryFavoriteDto, LibraryFolderDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { LibraryTransformerService } from 'src/library/transformer.service';
-import { ListResult } from 'src/library/types/list-result';
+import { ListResult } from 'src/types/list-result';
 
 @Injectable()
 export class FavoritesService {
@@ -36,7 +36,7 @@ export class FavoritesService {
    * @param favoriteItemId The ID of the favorite item to delete
    * @throws If the favorite item is not found
    */
-  async deleteFavoriteItem(accountId: number, favoriteItemId: number | number[]): Promise<void> {
+  async deleteFavoriteItem(accountId: number, favoriteItemId: number | number[]) {
     const favoriteItems = await this.favoriteItemEntity.findAll({
       where: {
         id: favoriteItemId,

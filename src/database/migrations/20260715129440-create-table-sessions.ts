@@ -1,7 +1,7 @@
 import { DataType, Sequelize } from 'sequelize-typescript';
 import { QueryInterface } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface): Promise<void> {
+export async function up(queryInterface: QueryInterface) {
   await queryInterface.createTable('sessions', {
     account_id: {
       type: DataType.INTEGER,
@@ -41,6 +41,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   });
 }
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
+export async function down(queryInterface: QueryInterface) {
   await queryInterface.dropTable('sessions');
 }

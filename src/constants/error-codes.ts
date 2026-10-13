@@ -98,6 +98,9 @@ export enum ErrorCodes {
   PLAYLIST_NOT_FOUND_ERROR = 'playlist-not-found-error',
   ROOT_PATH_NOT_FOUND_ERROR = 'root-path-not-found-error',
   SESSION_NOT_FOUND_ERROR = 'session-not-found-error',
+  SHOUTCAST_CONTAINER_NOT_FOUND_ERROR = 'shoutcast-container-not-found-error',
+  SHOUTCAST_GENRE_NOT_FOUND_ERROR = 'shoutcast-genre-not-found-error',
+  SHOUTCAST_STATION_NOT_FOUND_ERROR = 'shoutcast-station-not-found-error',
   TRACK_NOT_FOUND_ERROR = 'track-not-found-error',
   TRACKS_NOT_FOUND_ERROR = 'tracks-not-found-error',
   // misc

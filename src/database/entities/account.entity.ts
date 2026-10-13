@@ -1,8 +1,8 @@
 import { AfterCreate, Column, DataType, Model, Sequelize, Table } from 'sequelize-typescript';
 import { Guid } from 'typescript-guid';
 import { ShoutcastContainerEntity } from './shoutcast-container.entity';
-import { ShoutcastItemEntity } from './shoutcast-item.entity';
-import { ShoutcastItemTypeEnum, UserRoleEnum } from 'src/types/enums';
+import { ShoutcastGenreEntity } from './shoutcast-genre.entity';
+import { UserRoleEnum } from 'src/types/enums';
 import type { CreateOptions } from 'sequelize';
 
 /**
@@ -99,56 +99,47 @@ export class AccountEntity extends Model<AccountEntity> {
   declare username: string;
 
   @AfterCreate
-  static async createRequiredData(account: AccountEntity, options: CreateOptions<AccountEntity>): Promise<void> {
-    // insert shoutcast containers
-    const containers = ['SHOUTcast', 'User defined', 'My favorite'].map((title) => {
-      return {
-        accountId: account.id,
-        title,
-      } as ShoutcastContainerEntity;
-    });
-    const inserted = await ShoutcastContainerEntity.bulkCreate(containers, {
+  static async createRequiredData(account: AccountEntity, options: CreateOptions<AccountEntity>) {
+    //
+    const rootAccount = await AccountEntity.findOne({
+      where: {
+        username: 'root',
+      },
       transaction: options.transaction,
     });
-    const firstContainerId = inserted[0]?.id;
-    if (!firstContainerId) {
-      throw new Error('Failed to create initial shoutcast container');
+    if (!rootAccount) {
+      throw new Error('Root account not found');
     }
-    // insert shoutcast items
-    const genres = [
-      'Alternative',
-      'Blues',
-      'Classical',
-      'Country',
-      'Easy Listening',
-      'Electronic',
-      'Folk',
-      'Themes',
-      'Rap',
-      'Inspirational',
-      'International',
-      'Jazz',
-      'Latin',
-      'Metal',
-      'New Age',
-      'Decades',
-      'Pop',
-      'R&B and Urban',
-      'Reggae',
-      'Rock',
-      'Seasonal and Holiday',
-      'Soundtracks',
-      'Talk',
-      'Misc',
-      'Public Radio',
-    ].map((title) => {
-      return {
-        containerId: firstContainerId,
-        title,
-        type: ShoutcastItemTypeEnum.CONTAINER,
-      } as ShoutcastItemEntity;
+    // insert shoutcast containers
+    const containers = await ShoutcastContainerEntity.findAll({
+      where: {
+        accountId: rootAccount.id,
+      },
+      transaction: options.transaction,
     });
-    await ShoutcastItemEntity.bulkCreate(genres, {
+    const mappedContainers = containers.map((container) => {
+      return {
+        accountId: account.id,
+        title: container.title,
+      } as ShoutcastContainerEntity;
+    });
+    await ShoutcastContainerEntity.bulkCreate(mappedContainers, {
+      transaction: options.transaction,
+    });
+    // insert shoutcast genres
+    const genres = await ShoutcastGenreEntity.findAll({
+      where: {
+        accountId: rootAccount.id,
+      },
+      transaction: options.transaction,
+    });
+    const mappedGenres = genres.map((genre) => {
+      return {
+        accountId: account.id,
+        name: genre.name,
+      } as ShoutcastGenreEntity;
+    });
+    await ShoutcastGenreEntity.bulkCreate(mappedGenres, {
       transaction: options.transaction,
     });
   }

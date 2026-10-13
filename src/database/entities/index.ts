@@ -10,7 +10,8 @@ import { PlaylistSmartRuleEntity } from './playlist-smart-rule.entity';
 import { RootPathEntity } from './root-path.entity';
 import { SessionEntity } from './session.entity';
 import { ShoutcastContainerEntity } from './shoutcast-container.entity';
-import { ShoutcastItemEntity } from './shoutcast-item.entity';
+import { ShoutcastGenreEntity } from './shoutcast-genre.entity';
+import { ShoutcastStationEntity } from './shoutcast-station.entity';
 import { SystemConfigurationEntity } from './system-configurations.entity';
 import { TrackCustomDataEntity } from './track-custom-data.entity';
 import { TrackEntity } from './track.entity';
@@ -30,7 +31,8 @@ export {
   RootPathEntity,
   SessionEntity,
   ShoutcastContainerEntity,
-  ShoutcastItemEntity,
+  ShoutcastGenreEntity,
+  ShoutcastStationEntity,
   SystemConfigurationEntity,
 };
 
@@ -50,5 +52,6 @@ export const entitiesList = [
   FavoriteItemEntity,
   AssociationLinkEntity,
   ShoutcastContainerEntity,
-  ShoutcastItemEntity,
+  ShoutcastGenreEntity,
+  ShoutcastStationEntity,
 ];
