@@ -24,6 +24,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
     ]),
   ],
   providers: [LibraryService, LibraryQueryService, LibraryTransformerService],
-  exports: [LibraryService],
+  exports: [LibraryService, LibraryTransformerService],
 })
 export class LibraryModule {}

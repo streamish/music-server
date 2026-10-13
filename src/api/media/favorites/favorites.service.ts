@@ -1,11 +1,11 @@
 import { AssociationTypeEnum } from 'src/types/enums';
+import { FavoritesService } from 'src/favorites/favorites.service';
 import { Injectable } from '@nestjs/common';
-import { LibraryService } from 'src/library/library.service';
 import { ListFavoritesQueryDto, ListFavoritesResponseDto } from './dtos';
 
 @Injectable()
 export class ApiFavoritesService {
-  constructor(private readonly libraryService: LibraryService) {}
+  constructor(private readonly favoritesService: FavoritesService) {}
 
   /**
    * Deletes the specified favorite.
@@ -14,7 +14,7 @@ export class ApiFavoritesService {
    * @throws If the specified favorite is not found
    */
   async deleteFavorite(userId: number, favoriteItemId: number) {
-    return this.libraryService.deleteFavoriteItem(userId, favoriteItemId);
+    return this.favoritesService.deleteFavoriteItem(userId, favoriteItemId);
   }
 
   /**
@@ -24,7 +24,7 @@ export class ApiFavoritesService {
    * @returns Paginated dataset of albums
    */
   async listFavorites(userId: number, query: ListFavoritesQueryDto) {
-    const favorites = await this.libraryService.listFavorites(userId, query.offset || 0, query.limit || 100_000);
+    const favorites = await this.favoritesService.listFavorites(userId, query.offset || 0, query.limit || 100_000);
     return {
       favorites: favorites.items,
       limit: query.limit || 100_000,
@@ -40,7 +40,7 @@ export class ApiFavoritesService {
    * @throws If the specified album is not found
    */
   async setAlbumFavorite(userId: number, albumId: number) {
-    return this.libraryService.setAlbumFavorite(userId, albumId);
+    return this.favoritesService.setAlbumFavorite(userId, albumId);
   }
 
   /**
@@ -50,7 +50,7 @@ export class ApiFavoritesService {
    * @throws If the specified album is not found
    */
   async setAssociationFavorite(userId: number, associationId: number, associationType: AssociationTypeEnum) {
-    return this.libraryService.setAssociationFavorite(userId, associationId, associationType);
+    return this.favoritesService.setAssociationFavorite(userId, associationId, associationType);
   }
 
   /**
@@ -60,7 +60,7 @@ export class ApiFavoritesService {
    * @throws If the specified folder is not found
    */
   async setFolderFavorite(userId: number, folder: string) {
-    return this.libraryService.setFolderFavorite(userId, folder);
+    return this.favoritesService.setFolderFavorite(userId, folder);
   }
 
   /**
@@ -70,6 +70,6 @@ export class ApiFavoritesService {
    * @throws If the specified track is not found
    */
   async setTrackFavorite(userId: number, trackId: number) {
-    return this.libraryService.setTrackFavorite(userId, trackId);
+    return this.favoritesService.setTrackFavorite(userId, trackId);
   }
 }

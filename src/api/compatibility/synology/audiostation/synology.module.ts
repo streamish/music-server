@@ -1,3 +1,4 @@
+import { FavoritesModule } from 'src/favorites/favorites.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -36,7 +37,7 @@ import { SynologyStreamService } from './stream.service';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
-  imports: [LibraryModule, SequelizeModule.forFeature(entitiesList)],
+  imports: [FavoritesModule, LibraryModule, SequelizeModule.forFeature(entitiesList)],
   controllers: [
     SynologyAlbumController,
     SynologyArtistController,

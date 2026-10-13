@@ -12,6 +12,7 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from 'src/config/config.service';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { FavoritesService } from 'src/favorites/favorites.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { LibraryFavoriteDto, LibraryFolderDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
@@ -76,18 +77,19 @@ export class SynologyEntryService {
     private readonly authenticationService: AuthenticationService,
     @InjectModel(AssociationEntity)
     private readonly associationEntity: typeof AssociationEntity,
-    @InjectModel(TrackEntity)
-    private readonly trackEntity: typeof TrackEntity,
     @Inject(ConfigService) private readonly configService: ConfigService,
     private readonly libraryService: LibraryService,
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
+    private readonly favoritesService: FavoritesService,
     @InjectModel(PlaylistEntity)
     private readonly playlistEntity: typeof PlaylistEntity,
     @InjectModel(PlaylistItemEntity)
     private readonly playlistItemEntity: typeof PlaylistItemEntity,
     @InjectModel(SessionEntity)
     private readonly sessionEntity: typeof SessionEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {
     const publicKey = readFileSync(this.configService.get('SYNOLOGY_PUBLIC_KEY_PATH')).toString('utf8');
     this.publicKey = publicKey
@@ -189,7 +191,7 @@ export class SynologyEntryService {
   }
 
   async listPinnedItems(accountId: number, offset: number, limit: number): Promise<SynologyEntryPinsDataDto> {
-    const data = await this.libraryService.listFavorites(accountId, offset, limit);
+    const data = await this.favoritesService.listFavorites(accountId, offset, limit);
     return {
       items: data.items.map(favoriteToRow),
       offset: offset || 0,
@@ -244,7 +246,7 @@ export class SynologyEntryService {
             });
           }
           // eslint-disable-next-line no-await-in-loop
-          await this.libraryService.setAlbumFavorite(accountId, albumId);
+          await this.favoritesService.setAlbumFavorite(accountId, albumId);
         } else if (
           item.criteria.album_artist ||
           item.criteria.artist ||
@@ -267,7 +269,7 @@ export class SynologyEntryService {
             associationType = AssociationTypeEnum.GENRE;
           }
           // eslint-disable-next-line no-await-in-loop
-          await this.libraryService.setAssociationFavorite(accountId, associationId, associationType);
+          await this.favoritesService.setAssociationFavorite(accountId, associationId, associationType);
         } else if (item.type === 'folder') {
           if (!tree) {
             // eslint-disable-next-line no-await-in-loop
@@ -283,7 +285,7 @@ export class SynologyEntryService {
             });
           }
           // eslint-disable-next-line no-await-in-loop
-          await this.libraryService.setFolderFavorite(accountId, treeItem.fullPath);
+          await this.favoritesService.setFolderFavorite(accountId, treeItem.fullPath);
         } else if (item.type === 'playlist') {
           // eslint-disable-next-line no-await-in-loop
           const playlist = await this.playlistEntity.findOne({
@@ -322,7 +324,7 @@ export class SynologyEntryService {
   }
 
   async deletePinnedItem(accountId: number, itemIds: number[]): Promise<SynologyEntryPinsDataDto> {
-    await this.libraryService.deleteFavoriteItem(accountId, itemIds);
+    await this.favoritesService.deleteFavoriteItem(accountId, itemIds);
     return this.listPinnedItems(accountId, 0, 100000);
   }
 
