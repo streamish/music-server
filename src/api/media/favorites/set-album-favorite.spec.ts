@@ -75,7 +75,7 @@ describe('/api/set-album-favorite', () => {
   });
 
   describe('success', () => {
-    it.only('should create favorite for the album', async () => {
+    it('should create favorite for the album', async () => {
       const { data: albumData } = await listAlbums({
         offset: 0,
         limit: 1,
