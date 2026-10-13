@@ -10,5 +10,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
     SequelizeModule.forFeature([AlbumEntity, AssociationEntity, FavoriteItemEntity, TrackEntity]),
   ],
   providers: [FavoritesService],
+  exports: [FavoritesService],
 })
 export class FavoritesModule {}
