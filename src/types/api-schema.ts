@@ -99,6 +99,22 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/create-station': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ApiShoutcastController_createStation'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/create-user-root-path': {
     parameters: {
       query?: never;
@@ -186,6 +202,22 @@ export type paths = {
     post?: never;
     /** @description `DELETE` request to `/api/delete-root-path` */
     delete: operations['ApiRootPathsController_deleteRootPath'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-station': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations['ApiShoutcastController_deleteStation'];
     options?: never;
     head?: never;
     patch?: never;
@@ -419,6 +451,22 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/list-online-stations': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ApiShoutcastController_listOnlineStations'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/list-root-paths': {
     parameters: {
       query?: never;
@@ -428,6 +476,22 @@ export type paths = {
     };
     /** @description `GET` request to `/api/list-root-paths` */
     get: operations['ApiRootPathsController_listRootPaths'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-stations': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ApiShoutcastController_listStations'];
     put?: never;
     post?: never;
     delete?: never;
@@ -985,6 +1049,22 @@ export type paths = {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/api/update-station': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['ApiShoutcastController_updateStation'];
     trace?: never;
   };
   '/api/update-user-roles': {
@@ -2811,6 +2891,139 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
+    ApiShoutcastCreateStationBadRequestErrors: ApiShoutcastCreateStationBadRequestErrors;
+    ApiShoutcastCreateStationBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-shoutcast-station-url-error
+       */
+      message: components['schemas']['ApiShoutcastCreateStationBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiShoutcastDeleteStationBadRequestErrors: ApiShoutcastDeleteStationBadRequestErrors;
+    ApiShoutcastDeleteStationBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default shoutcast-station-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastDeleteStationBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiShoutcastDeleteStationNotFoundErrors: ApiShoutcastDeleteStationNotFoundErrors;
+    ApiShoutcastDeleteStationNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default shoutcast-station-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastDeleteStationNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiShoutcastListOnlineStationsBadRequestErrors: ApiShoutcastListOnlineStationsBadRequestErrors;
+    ApiShoutcastListOnlineStationsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default shoutcast-genre-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastListOnlineStationsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiShoutcastListOnlineStationsNotFoundErrors: ApiShoutcastListOnlineStationsNotFoundErrors;
+    ApiShoutcastListOnlineStationsNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default shoutcast-genre-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastListOnlineStationsNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiShoutcastUpdateStationBadRequestErrors: ApiShoutcastUpdateStationBadRequestErrors;
+    ApiShoutcastUpdateStationBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default shoutcast-station-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastUpdateStationBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiShoutcastUpdateStationNotFoundErrors: ApiShoutcastUpdateStationNotFoundErrors;
+    ApiShoutcastUpdateStationNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default shoutcast-station-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastUpdateStationNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
     ApiTestCreateTestAccountBadRequestErrors: ApiTestCreateTestAccountBadRequestErrors;
     ApiTestCreateTestAccountBadRequestResponse: {
       /** @description General description of the error class */
@@ -3043,6 +3256,11 @@ export type components = {
        */
       success: boolean;
     };
+    CreateStationBodyDto: {
+      title: string;
+      /** Format: uri */
+      url: string;
+    };
     CreateTestAccountBodyDto: {
       /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
       password: string;
@@ -3266,6 +3484,7 @@ export type components = {
       randomHundred?: boolean;
       /** @description Flag used by Synology for recently added items */
       recentlyAdded?: boolean;
+      shoutcastStation?: components['schemas']['LibraryShoutcastStationDto'];
       track?: components['schemas']['LibraryTrackDto'];
     };
     LibraryFolderDto: {
@@ -3286,6 +3505,20 @@ export type components = {
       fullPath: string;
       id: number;
       track?: components['schemas']['LibraryTrackDto'];
+    };
+    LibraryShoutcastStationDto: {
+      id: number;
+      title: string;
+      /**
+       * @description The `type` value is `container` for SHOUTcast genres, and
+       *     `radio` for actual stations.
+       */
+      type: components['schemas']['ShoutcastItemTypeEnum'];
+      /**
+       * Format: uri
+       * @description The `url` value is expected to always be an empty string for SHOUTcast genres.
+       */
+      url: string;
     };
     LibraryTrackDto: {
       /** @description The list of artists for the track. */
@@ -4427,6 +4660,11 @@ export type components = {
        */
       rating: number;
     };
+    /**
+     * @description The name of the container the favorite is in.
+     * @enum {string}
+     */
+    ShoutcastContainerNamesEnum: ShoutcastContainerNamesEnum;
     /**
      * @description The `type` value is expected to always be `container` for SHOUTcast genres, and
      *     `radio` for actual stations.  Possibly other values for favorites and custom-added
@@ -6476,7 +6714,7 @@ export type components = {
        */
       api: components['schemas']['SynologyApiEnum'];
       /** @description The name of the container the favorite is in. */
-      container: string;
+      container: components['schemas']['ShoutcastContainerNamesEnum'];
       /**
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
        *     endpoints have limited functionality, all music-related endpoints `list` except cover
@@ -6513,7 +6751,7 @@ export type components = {
        */
       api: components['schemas']['SynologyApiEnum'];
       /** @description The name of the container the user-defined station is in. */
-      container: string;
+      container: components['schemas']['ShoutcastContainerNamesEnum'];
       desc: string;
       /**
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
@@ -6622,7 +6860,7 @@ export type components = {
        * @example SYNO.AudioStation.Radio
        */
       api: components['schemas']['SynologyApiEnum'];
-      /** @description The name of the container */
+      /** @description The name of the container which bundles the genre eg `SHOUTcast_genre_Rock` */
       container: string;
       /**
        * @description Synology's API uses this value to route requests appropriately but for AudioStation the
@@ -7400,6 +7638,11 @@ export type components = {
       /** @description The new path to set for the root path */
       newPath: string;
     };
+    UpdateStationBodyDto: {
+      title: string;
+      /** Format: uri */
+      url: string;
+    };
     UpdateUserRolesBodyDto: {
       /** @description The administrator's password to authorize the operation. */
       adminPassword: string;
@@ -7681,6 +7924,53 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiSessionsCreateSessionNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_createStation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateStationBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastCreateStationBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -7975,6 +8265,60 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiRootPathsDeleteRootPathNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_deleteStation: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastDeleteStationBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastDeleteStationNotFoundResponse'];
         };
       };
       500: {
@@ -8700,6 +9044,60 @@ export interface operations {
       };
     };
   };
+  ApiShoutcastController_listOnlineStations: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastListOnlineStationsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastListOnlineStationsNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiRootPathsController_listRootPaths: {
     parameters: {
       query?: never;
@@ -8715,6 +9113,49 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['RootPathsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_listStations: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
         };
       };
       400: {
@@ -10372,6 +10813,64 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_updateStation: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateStationBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastUpdateStationBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastUpdateStationNotFoundResponse'];
         };
       };
       500: {
@@ -12247,6 +12746,33 @@ export enum ApiSessionsRegenerateUserSessionKeyBadRequestErrors {
 export enum ApiSessionsRegenerateUserSessionKeyNotFoundErrors {
   account_not_found_error = 'account-not-found-error',
 }
+export enum ApiShoutcastCreateStationBadRequestErrors {
+  invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
+  invalid_shoutcast_station_title_error = 'invalid-shoutcast-station-title-error',
+}
+export enum ApiShoutcastDeleteStationBadRequestErrors {
+  shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
+  invalid_shoutcast_station_id_error = 'invalid-shoutcast-station-id-error',
+}
+export enum ApiShoutcastDeleteStationNotFoundErrors {
+  shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
+}
+export enum ApiShoutcastListOnlineStationsBadRequestErrors {
+  shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
+  invalid_shoutcast_genre_id_error = 'invalid-shoutcast-genre-id-error',
+}
+export enum ApiShoutcastListOnlineStationsNotFoundErrors {
+  shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
+}
+export enum ApiShoutcastUpdateStationBadRequestErrors {
+  shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
+  invalid_shoutcast_station_id_error = 'invalid-shoutcast-station-id-error',
+  invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
+  invalid_shoutcast_station_title_error = 'invalid-shoutcast-station-title-error',
+}
+export enum ApiShoutcastUpdateStationNotFoundErrors {
+  shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
+}
 export enum ApiTestCreateTestAccountBadRequestErrors {
   invalid_username_error = 'invalid-username-error',
   invalid_username_length_error = 'invalid-username-length-error',
@@ -12333,6 +12859,11 @@ export enum InternalServerErrorEnum {
 export enum PlaylistTypeEnum {
   normal = 'normal',
   smart = 'smart',
+}
+export enum ShoutcastContainerNamesEnum {
+  SHOUTcast = 'SHOUTcast',
+  User_defined = 'User defined',
+  My_favorite = 'My favorite',
 }
 export enum ShoutcastItemTypeEnum {
   container = 'container',

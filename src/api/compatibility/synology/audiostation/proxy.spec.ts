@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/webapi/AudioStation/proxy.cgi', () => {
   let api: Awaited<SynologyApiClient>;
-  let station: components['schemas']['SynologyRadioItemDto'];
+  let station: components['schemas']['SynologyRadioItemResponseDto']['data']['radios'][number];
 
   beforeAll(async () => {
     api = await createSynologyApi();
@@ -23,7 +23,10 @@ describe('/webapi/AudioStation/proxy.cgi', () => {
       },
     });
     const typedData = data as components['schemas']['SynologyRadioItemResponseDto'];
-    station = typedData.data.radios[0]!;
+    if (!typedData.data.radios?.[0]) {
+      throw new Error('No station found in the response');
+    }
+    [station] = typedData.data.radios;
   });
 
   async function getStreamId(stationId: string) {

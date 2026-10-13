@@ -4,6 +4,7 @@ import { AssociationEntity } from './association.entity';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
 import { PlaylistEntity } from './playlist.entity';
+import { ShoutcastStationEntity } from './shoutcast-station.entity';
 import { TrackEntity } from './track.entity';
 
 /**
@@ -145,6 +146,24 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
     },
   })
   declare recentlyAdded: boolean;
+
+  /**
+   * The SHOUTcast radio station ID if it is pinned
+   */
+  @Column({
+    type: DataType.INTEGER,
+    references: {
+      model: ShoutcastStationEntity,
+      key: 'id',
+    },
+    allowNull: true,
+    onDelete: 'CASCADE',
+  })
+  @ForeignKey(() => ShoutcastStationEntity)
+  declare shoutcastStationId: number | null;
+
+  @BelongsTo(() => ShoutcastStationEntity)
+  declare shoutcastStation?: ShoutcastStationEntity;
 
   /**
    * The track ID if a track is pinned

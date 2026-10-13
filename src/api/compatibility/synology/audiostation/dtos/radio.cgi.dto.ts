@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
-import { ShoutcastItemTypeEnum } from 'src/types/enums';
+import { ShoutcastContainerNamesEnum, ShoutcastItemTypeEnum } from 'src/types/enums';
 import { SynologyApiEnum, SynologyMethodEnum } from '../synology.enums';
 import { SynologyBody } from '../synology.request.dto';
 import { SynologyPaginationResponseDto, SynologySuccessResponseDto } from '../synology.response.dto';
@@ -16,7 +16,7 @@ export class SynologyRadioContainerListBodyDto extends OmitType(
 ) {
   /**
    * Refers to the position in the existing data, a value of `-1` indicates a new item.  This
-   * is not the pagination offset.
+is not the pagination offset.
    */
   @IsInt()
   declare offset: number;
@@ -24,7 +24,7 @@ export class SynologyRadioContainerListBodyDto extends OmitType(
 
 export class SynologyRadioItemListBodyDto extends SynologyRadioContainerListBodyDto {
   /**
-   * The name of the container
+   * The name of the container which bundles the genre eg `SHOUTcast_genre_Rock`
    */
   @IsString()
   declare container: string;
@@ -52,8 +52,12 @@ export class SynologyRadioAddOrUpdateItemBodyDto extends OmitType(
   /**
    * The name of the container the favorite is in.
    */
-  @IsString()
-  declare container: string;
+  @ApiProperty({
+    enum: ShoutcastContainerNamesEnum,
+    enumName: 'ShoutcastContainerNamesEnum',
+  })
+  @IsEnum(ShoutcastContainerNamesEnum)
+  declare container: ShoutcastContainerNamesEnum;
 
   /**
    * Refers to the position in the existing data, a value of `-1` indicates a new item.  This
@@ -82,8 +86,12 @@ export class SynologyRadioAddUserStationBodyDto extends OmitType(
   /**
    * The name of the container the user-defined station is in.
    */
-  @IsString()
-  declare container: string;
+  @ApiProperty({
+    enum: ShoutcastContainerNamesEnum,
+    enumName: 'ShoutcastContainerNamesEnum',
+  })
+  @IsEnum(ShoutcastContainerNamesEnum)
+  declare container: ShoutcastContainerNamesEnum;
 
   /**
    * Refers to the position in the existing data, a value of `-1` indicates a new item.  This

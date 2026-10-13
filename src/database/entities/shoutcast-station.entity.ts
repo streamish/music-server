@@ -1,5 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
-import { ShoutcastContainerEntity } from './shoutcast-container.entity';
+import { AccountEntity } from './account.entity';
+import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Sequelize, Table } from 'sequelize-typescript';
+import { FavoriteItemEntity } from './favorite-item.entity';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
 
 /**
@@ -13,24 +14,21 @@ import { ShoutcastItemTypeEnum } from 'src/types/enums';
 })
 export class ShoutcastStationEntity extends Model<ShoutcastStationEntity> {
   /**
-   * The container ID the shoutcast item belongs in.
+   * The account ID the root path belongs to.
    */
   @Column({
     type: DataType.INTEGER,
     references: {
-      model: ShoutcastContainerEntity,
+      model: AccountEntity,
       key: 'id',
     },
     onDelete: 'CASCADE',
   })
-  @ForeignKey(() => ShoutcastContainerEntity)
-  declare containerId: number;
+  @ForeignKey(() => AccountEntity)
+  declare accountId: number;
 
-  /**
-   * The account that owns the session
-   */
-  @BelongsTo(() => ShoutcastContainerEntity)
-  container?: ShoutcastContainerEntity;
+  @BelongsTo(() => AccountEntity)
+  declare account?: AccountEntity;
 
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This field should not be
@@ -42,11 +40,8 @@ export class ShoutcastStationEntity extends Model<ShoutcastStationEntity> {
   })
   declare createdAt: Date;
 
-  @Column({
-    type: DataType.STRING(255),
-    allowNull: true,
-  })
-  declare description: string | null;
+  @HasOne(() => FavoriteItemEntity)
+  declare favorite?: FavoriteItemEntity | null;
 
   /**
    * The ID of the table row is an integer that is assigned by the database when the row is created.

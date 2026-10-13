@@ -33,6 +33,12 @@ export enum ShoutcastItemTypeEnum {
   STATION = 'station',
 }
 
+export enum ShoutcastContainerNamesEnum {
+  SHOUTCAST = 'SHOUTcast',
+  USER_DEFINED = 'User defined',
+  MY_FAVORITE = 'My favorite',
+}
+
 export enum PlaylistTypeEnum {
   NORMAL = 'normal',
   SMART = 'smart',

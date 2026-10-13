@@ -1,11 +1,18 @@
-import { AlbumEntity, AssociationEntity, FavoriteItemEntity, TrackEntity } from 'src/database/entities';
+import {
+  AlbumEntity,
+  AssociationEntity,
+  FavoriteItemEntity,
+  ShoutcastStationEntity,
+  TrackEntity,
+} from 'src/database/entities';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
 import { LibraryAssociationDto } from './dtos/library.association.dto';
-import { LibraryFavoriteDto, LibraryFolderDto, LibraryTrackDto } from './dtos';
+import { LibraryFavoriteDto, LibraryFolderDto, LibraryShoutcastStationDto, LibraryTrackDto } from './dtos';
+import { type RatingOrUnset } from 'src/types/rating';
+import { ShoutcastItemTypeEnum } from 'src/types/enums';
 import { replaceDoubleQuotes } from 'src/utils/strings';
-import type { RatingOrUnset } from 'src/types';
 
 @Injectable()
 export class LibraryTransformerService {
@@ -185,12 +192,30 @@ export class LibraryTransformerService {
         playlist: favorite.playlist, // TODO: this.convertPlaylistEntityToLibraryPlaylist(playlist),
       };
     }
+    // Build a favorite SHOUTcast station
+    if (favorite.shoutcastStation?.id) {
+      return {
+        id: favorite.id || 0,
+        createdAt: favorite.createdAt || new Date(),
+        shoutcastStation: this.convertShoutcastStationEntityToLibraryShoutcastStation(favorite.shoutcastStation),
+      };
+    }
     return {
       id: favorite.id || 0,
       allSongs: favorite.allSongs,
       createdAt: favorite.createdAt || new Date(),
       randomHundred: favorite.randomHundred,
       recentlyAdded: favorite.recentlyAdded,
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  convertShoutcastStationEntityToLibraryShoutcastStation(station: ShoutcastStationEntity): LibraryShoutcastStationDto {
+    return {
+      id: station.id || 0,
+      title: station.title || '',
+      type: station.type || ShoutcastItemTypeEnum.STATION,
+      url: station.url || '',
     };
   }
 

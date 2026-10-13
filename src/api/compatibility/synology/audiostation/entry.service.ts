@@ -78,10 +78,10 @@ export class SynologyEntryService {
     @InjectModel(AssociationEntity)
     private readonly associationEntity: typeof AssociationEntity,
     @Inject(ConfigService) private readonly configService: ConfigService,
-    private readonly libraryService: LibraryService,
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
     private readonly favoritesService: FavoritesService,
+    private readonly libraryService: LibraryService,
     @InjectModel(PlaylistEntity)
     private readonly playlistEntity: typeof PlaylistEntity,
     @InjectModel(PlaylistItemEntity)
@@ -191,7 +191,7 @@ export class SynologyEntryService {
   }
 
   async listPinnedItems(accountId: number, offset: number, limit: number): Promise<SynologyEntryPinsDataDto> {
-    const data = await this.favoritesService.listFavorites(accountId, offset, limit);
+    const data = await this.libraryService.listFavorites(accountId, offset, limit);
     return {
       items: data.items.map(favoriteToRow),
       offset: offset || 0,

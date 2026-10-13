@@ -1,7 +1,7 @@
-/* eslint-disable max-len */
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { ShoutcastContainerDto, ShoutcastGenreDto, ShoutcastStationDto } from 'src/shoutcast/dtos';
-import { ShoutcastItemTypeEnum } from 'src/types/enums';
+import { FavoritesService } from 'src/favorites/favorites.service';
+import { ShoutcastContainerNamesEnum, ShoutcastItemTypeEnum } from 'src/types/enums';
+import { ShoutcastGenreDto, ShoutcastStationDto } from 'src/shoutcast/dtos';
 import { ShoutcastService } from 'src/shoutcast/shoutcast.service';
 import {
   SynologyRadioAddOrUpdateItemBodyDto,
@@ -10,11 +10,17 @@ import {
   SynologyRadioItemListBodyDto,
 } from './dtos';
 
-function containerToRow(container: ShoutcastContainerDto): SynologyRadioItemDto {
+const containers = [
+  ShoutcastContainerNamesEnum.SHOUTCAST,
+  ShoutcastContainerNamesEnum.USER_DEFINED,
+  ShoutcastContainerNamesEnum.MY_FAVORITE,
+];
+
+function containerToRow(container: string): SynologyRadioItemDto {
   return {
     desc: '',
-    id: container.id.toString(),
-    title: container.title,
+    id: container,
+    title: container,
     type: ShoutcastItemTypeEnum.CONTAINER,
     url: '',
   };
@@ -32,7 +38,7 @@ function genreToRow(item: ShoutcastGenreDto): SynologyRadioItemDto {
 
 function stationToRow(item: ShoutcastStationDto): SynologyRadioItemDto {
   return {
-    desc: item.description || '',
+    desc: '',
     // TODO: Investigate if this `id` value is a mistake for hardcoding genre but it may be disregarded
     id: `SHOUTcast_genre_${item.title}`,
     title: item.title,
@@ -43,28 +49,28 @@ function stationToRow(item: ShoutcastStationDto): SynologyRadioItemDto {
 
 @Injectable()
 export class SynologyRadioService {
-  constructor(private readonly shoutcastService: ShoutcastService) {}
+  constructor(
+    private readonly favoritesService: FavoritesService,
+    private readonly shoutcastService: ShoutcastService,
+  ) {}
 
-  async listContainers(accountId: number) {
-    const containers = await this.shoutcastService.listContainers(accountId);
+  // eslint-disable-next-line class-methods-use-this
+  async listContainers() {
     return {
-      radios: containers.items.map(containerToRow),
+      radios: containers.map(containerToRow),
       offset: 0,
-      total: containers.total,
+      total: containers.length,
     };
   }
 
   async listItems(accountId: number, body: SynologyRadioItemListBodyDto): Promise<SynologyRadioItemDataDto> {
-    const containers = await this.shoutcastService.listContainers(accountId);
-    const container = containers.items.find((c) => {
-      return (
-        c.id.toString() === body.container || c.title === body.container || c.title === body.container.split('_')[0]
-      );
+    const container = containers.find((c) => {
+      return c === body.container || c === body.container.split('_')[0];
     });
     if (!container) {
       throw new Error(`Container not found for account ${accountId} and title ${body.container}`);
     }
-    if (container.title === 'SHOUTcast') {
+    if (container === 'SHOUTcast') {
       const genres = await this.shoutcastService.listGenres(accountId);
       return {
         radios: genres.items.map((genre) => genreToRow(genre)),
@@ -72,7 +78,7 @@ export class SynologyRadioService {
         total: genres.total,
       };
     }
-    const stations = await this.shoutcastService.listStations(accountId, container.id);
+    const stations = await this.shoutcastService.listStations(accountId, 0, 100_000);
     return {
       radios: stations.items.map((item) => stationToRow(item)),
       offset: 0,
@@ -85,13 +91,8 @@ export class SynologyRadioService {
     if (!genreName) {
       throw new Error(`Invalid genre name in container field: ${body.container}`);
     }
-    const containers = await this.shoutcastService.listContainers(accountId);
-    const container = containers.items.find((c) => c.title === body.container.split('_')[0]);
-    if (!container) {
-      throw new Error(`Container not found for account ${accountId} and title ${body.container}`);
-    }
     // return SHOUTcast stations for the given genre
-    if (container.title === 'SHOUTcast') {
+    if (body.container.startsWith(ShoutcastContainerNamesEnum.SHOUTCAST)) {
       const postBody = `genrename=${genreName}`;
       const request = await fetch(`https://directory.shoutcast.com/Home/BrowseByGenre`, {
         method: 'POST',
@@ -116,8 +117,8 @@ export class SynologyRadioService {
         total: response.length,
       };
     }
-    // return favorites or user-defined stations for the given container
-    const stations = await this.shoutcastService.listStations(accountId, container.id);
+    // return user-defined stations for the given container
+    const stations = await this.shoutcastService.listStations(accountId, 0, 100_000);
     return {
       radios: stations.items.map((item) => stationToRow(item)),
       offset: 0,
@@ -125,42 +126,58 @@ export class SynologyRadioService {
     };
   }
 
+  /**
+   * Adds or updates a bespoke SHOUTcast radio station.  If being added to favorites, a favorite entry will also be
+   * created.  An entry is created if the `offset` value is -1 otherwise the value represents the position of the
+   * entry to update in the list of stations.
+   * @param accountId The authenticated user ID
+   * @param body The request body containing the container, offset and radios_json information for the item
+   * @returns The newly added or updated SHOUTcast station.
+   */
   async addOrUpdateItem(accountId: number, body: SynologyRadioAddOrUpdateItemBodyDto) {
     const data = body.radios_json[0];
     if (!data?.title || !data?.url) {
       throw new BadRequestException(`Missing required fields for adding a new item: title and url are required`);
     }
-    const containers = await this.shoutcastService.listContainers(accountId);
-    const container = containers.items.find(
-      (c) => c.title === body.container || c.title === body.container.split('_')[0],
-    );
+    const container = containers.find((c) => c === body.container || c === body.container.split('_')[0]);
     if (!container) {
       throw new NotFoundException(`Container not found for account ${accountId} and title ${body.container}`);
     }
     // add item
     if (body.offset === -1) {
-      await this.shoutcastService.createStation(accountId, container.id, data.url, data.title, data.desc);
+      const station = await this.shoutcastService.createStation(accountId, data.url, data.title);
+      if (body.container === ShoutcastContainerNamesEnum.MY_FAVORITE) {
+        await this.favoritesService.setShoutcastStationFavorite(accountId, station.id);
+        return;
+      }
       return;
     }
     // update item
-    const stations = await this.shoutcastService.listStations(accountId, container.id);
-    const itemToUpdate = stations.items[body.offset];
+    const stations = await this.shoutcastService.listStations(accountId, body.offset, 1);
+    const itemToUpdate = stations.items[0];
     if (!itemToUpdate) {
       throw new NotFoundException(`Item not found for account ${accountId} at offset ${body.offset}`);
     }
-    await this.shoutcastService.updateStation(accountId, itemToUpdate.id, data.url, data.title, data.desc);
+    await this.shoutcastService.updateStation(accountId, itemToUpdate.id, data.url, data.title);
   }
 
+  /**
+   * Deletes a SHOUTcast station that has been added by the user, or added as a favorite.  If the station
+   * were added as a favorite then both the favorite entry and the SHOUTcast station will be deleted
+   * automatically as part of a cascading delete.
+   * @param accountId The authenticated user ID
+   * @param body The request body containing the container and offset information for the item to delete.
+   * @returns Updated list of SHOUTcast stations
+   */
   async deleteItem(accountId: number, body: SynologyRadioAddOrUpdateItemBodyDto): Promise<SynologyRadioItemDataDto> {
-    const containers = await this.shoutcastService.listContainers(accountId);
-    const container = containers.items.find(
-      (c) => c.title === body.container || c.title === body.container.split('_')[0],
-    );
-    if (!container) {
+    if (
+      body.container !== ShoutcastContainerNamesEnum.USER_DEFINED &&
+      body.container !== ShoutcastContainerNamesEnum.MY_FAVORITE
+    ) {
       throw new NotFoundException(`Container not found for account ${accountId} and title ${body.container}`);
     }
-    const stations = await this.shoutcastService.listStations(accountId, container.id);
-    const itemToDelete = stations.items[body.offset];
+    const stations = await this.shoutcastService.listStations(accountId, body.offset, 1);
+    const itemToDelete = stations.items[0];
     if (!itemToDelete) {
       throw new NotFoundException(`Item not found for account ${accountId} at offset ${body.offset}`);
     }
