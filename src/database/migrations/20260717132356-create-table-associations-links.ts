@@ -1,7 +1,7 @@
 import { DataType, Sequelize } from 'sequelize-typescript';
 import { QueryInterface } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface): Promise<void> {
+export async function up(queryInterface: QueryInterface) {
   await queryInterface.createTable('association_links', {
     association_id: {
       type: DataType.INTEGER,
@@ -110,7 +110,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   });
 }
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
+export async function down(queryInterface: QueryInterface) {
   await queryInterface.removeIndex('association_links', 'idx_association_links_association_id');
   await queryInterface.removeIndex('association_links', 'idx_association_links_track_id');
   await queryInterface.removeIndex('association_links', 'idx_association_links_association_id_track_id');

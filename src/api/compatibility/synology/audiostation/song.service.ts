@@ -220,7 +220,7 @@ export class SynologySongService {
     };
   }
 
-  async rateTracks(accountId: number, fileIds: number[], rating: RatingOrUnset): Promise<void> {
+  async rateTracks(accountId: number, fileIds: number[], rating: RatingOrUnset) {
     await this.libraryService.rateTracks(accountId, fileIds, rating);
   }
 }

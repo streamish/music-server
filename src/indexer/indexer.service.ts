@@ -100,7 +100,7 @@ export class IndexerService {
    * @returns {Promise<void>}
    */
   @Cron(CronExpression.EVERY_HOUR)
-  async periodicRefresh(): Promise<void> {
+  async periodicRefresh() {
     this.addLogEntry(0, 0, 'Queueing root paths (periodicRefresh)');
     // load the root paths to scan
     const rootPaths = await this.rootPathEntity.findAll({
@@ -252,7 +252,7 @@ export class IndexerService {
    * @param rootPath The indexer root path being scanned
    * @returns {Promise<void>}
    */
-  async scanRootPath(rootPath: RootPathEntity): Promise<void> {
+  async scanRootPath(rootPath: RootPathEntity) {
     if (await this.isDisabled()) {
       await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
@@ -359,7 +359,7 @@ export class IndexerService {
     foldersToScan: string[],
     filesToScan: FileItem[],
     uniqueFolderPaths: string[],
-  ): Promise<void> {
+  ) {
     if (await this.isDisabled()) {
       await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
@@ -411,7 +411,7 @@ export class IndexerService {
     filesToScan: FileItem[],
     filesToUpdate: FileUpdateItem[],
     overrideScannerStatus?: boolean,
-  ): Promise<void> {
+  ) {
     if (overrideScannerStatus !== true && (await this.isDisabled())) {
       await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
@@ -489,7 +489,7 @@ export class IndexerService {
    * @param filesToUpdate Array of files that have been added or modified
    * @returns {Promise<void>}
    */
-  async updateFile(rootPath: RootPathEntity, filesToUpdate: FileUpdateItem[]): Promise<void> {
+  async updateFile(rootPath: RootPathEntity, filesToUpdate: FileUpdateItem[]) {
     if (await this.isDisabled()) {
       await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;

@@ -25,7 +25,7 @@ import { Op } from 'sequelize';
 import { TrackFilter } from './types/track-filter';
 import { sep } from 'node:path';
 import type { AlbumFilter } from './types/album-filter';
-import type { ListResult } from './types/list-result';
+import type { ListResult } from '../types/list-result';
 import type { Rating, RatingOrUnset } from 'src/types';
 
 @Injectable()
@@ -299,7 +299,7 @@ export class LibraryService {
    * @param rating The rating value `0` `1` `2` `3` `4` `5` to be applied to the specified tracks
    * @throws If any specified track is not found
    */
-  async rateTracks(accountId: number, trackIds: number[], rating: RatingOrUnset): Promise<void> {
+  async rateTracks(accountId: number, trackIds: number[], rating: RatingOrUnset) {
     const tracks = await this.trackEntity.findAll({
       where: {
         accountId,

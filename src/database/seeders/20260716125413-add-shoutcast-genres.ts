@@ -35,22 +35,19 @@ const genres = [
 ];
 
 export async function up(queryInterface: QueryInterface) {
-  const containers = await queryInterface.sequelize.query(
-    `SELECT id FROM shoutcast_containers WHERE title='SHOUTcast';`,
-  );
-  const containerIds = containers[0].map((container) => (container as { id: number }).id) || [1];
+  const rootAccount = await queryInterface.sequelize.query(`SELECT id FROM accounts WHERE username = 'root' LIMIT 1`);
+  const rootAccountId = (rootAccount[0][0] as Record<string, number>)?.id || 0;
   await queryInterface.bulkInsert(
-    'shoutcast_items',
-    genres.map((title) => ({
-      title,
-      container_id: containerIds[0],
-      type: 'container',
+    'shoutcast_genres',
+    genres.map((name) => ({
+      account_id: rootAccountId,
+      name,
     })),
   );
 }
 
 export async function down(queryInterface: QueryInterface) {
-  await queryInterface.bulkDelete('shoutcast_items', {
-    title: genres,
+  await queryInterface.bulkDelete('shoutcast_genres', {
+    name: genres,
   });
 }

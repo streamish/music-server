@@ -2,6 +2,7 @@ import { FavoritesModule } from 'src/favorites/favorites.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ShoutcastModule } from 'src/shoutcast/shoutcast.module';
 import { SynologyAlbumController } from './album.controller';
 import { SynologyAlbumService } from './album.service';
 import { SynologyArtistController } from './artist.controller';
@@ -37,7 +38,7 @@ import { SynologyStreamService } from './stream.service';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
-  imports: [FavoritesModule, LibraryModule, SequelizeModule.forFeature(entitiesList)],
+  imports: [FavoritesModule, LibraryModule, SequelizeModule.forFeature(entitiesList), ShoutcastModule],
   controllers: [
     SynologyAlbumController,
     SynologyArtistController,

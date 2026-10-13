@@ -4,7 +4,7 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Response } from 'express';
-import { ShoutcastContainerEntity, ShoutcastItemEntity } from 'src/database/entities';
+import { ShoutcastContainerEntity, ShoutcastStationEntity } from 'src/database/entities';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
 import { promisify } from 'util';
 
@@ -53,8 +53,8 @@ export class SynologyProxyService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectModel(ShoutcastContainerEntity)
     private readonly shoutcastContainerEntity: typeof ShoutcastContainerEntity,
-    @InjectModel(ShoutcastItemEntity)
-    private readonly shoutcastItemEntity: typeof ShoutcastItemEntity,
+    @InjectModel(ShoutcastStationEntity)
+    private readonly shoutcastStationEntity: typeof ShoutcastStationEntity,
   ) {}
 
   /**
@@ -74,7 +74,7 @@ export class SynologyProxyService {
       return streamUrl;
     }
     const favoriteTitle = stationIdentifier.split('_genre_').pop();
-    const favorite = await this.shoutcastItemEntity.findOne({
+    const favorite = await this.shoutcastStationEntity.findOne({
       where: {
         title: favoriteTitle,
         type: ShoutcastItemTypeEnum.STATION,

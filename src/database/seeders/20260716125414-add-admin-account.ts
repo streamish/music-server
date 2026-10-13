@@ -1,19 +1,13 @@
-import { Guid } from 'typescript-guid';
 import { QueryInterface } from 'sequelize';
-import bcrypt from 'bcryptjs';
+import { createSeedAccount, deleteSeedAccount } from '../seed-account';
 
 const username = process.env.DEFAULT_ADMIN_USERNAME || 'admin';
 const password = process.env.DEFAULT_ADMIN_PASSWORD || 'admin';
 
 export async function up(queryInterface: QueryInterface) {
-  const passwordHash = await bcrypt.hash(password, 10);
-  const sessionKey = Guid.create().toString();
-  await queryInterface.sequelize.query(
-    `INSERT INTO accounts(username, password_hash, roles, session_key) 
-    VALUES ('${username}', '${passwordHash}', 'admin,user', '${sessionKey}');`,
-  );
+  await createSeedAccount(queryInterface, username, password, 'admin');
 }
 
 export async function down(queryInterface: QueryInterface) {
-  await queryInterface.sequelize.query(`DELETE FROM accounts WHERE username = '${username}';`);
+  await deleteSeedAccount(queryInterface, username);
 }

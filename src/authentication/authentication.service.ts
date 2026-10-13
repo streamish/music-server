@@ -96,7 +96,7 @@ export class AuthenticationService {
     return this.generateSignedToken(account, session, expiresAt);
   }
 
-  async endSession(accountId: number, sessionId: number): Promise<void> {
+  async endSession(accountId: number, sessionId: number) {
     const updatedSession = await this.sessionEntity.update(
       { expiresAt: new Date() },
       {
