@@ -89,7 +89,7 @@ export class Environment {
    */
   @IsBoolean()
   @Transform(({ value }) => value === 'true' || value === true)
-  declare QNAP_MUSICSTATION_ENABLED?: boolean;
+  declare QNAP_MUSIC_STATION_ENABLED?: boolean;
 
   /**
    * A server-wide and persistent unique identifier that poses as a secret passed
