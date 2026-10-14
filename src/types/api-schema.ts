@@ -99,6 +99,30 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/create-shoutcast-genre': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Add a SHOUTcast genre
+     * @description Add another SHOUTcast genre.  The genre must be a real genre as-recognized by SHOUTcast.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    post: operations['ApiShoutcastController_createGenre'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/create-shoutcast-station': {
     parameters: {
       query?: never;
@@ -210,6 +234,30 @@ export type paths = {
     post?: never;
     /** @description `DELETE` request to `/api/delete-root-path` */
     delete: operations['ApiRootPathsController_deleteRootPath'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-shoutcast-genre': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete a SHOUTcast genre
+     * @description Delete a SHOUTcast genre by its ID
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    delete: operations['ApiShoutcastController_deleteGenre'];
     options?: never;
     head?: never;
     patch?: never;
@@ -1105,6 +1153,30 @@ export type paths = {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/api/update-shoutcast-genre': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Update a custom genre
+     * @description Update the details of a custom SHOUTcast genre by its ID.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    patch: operations['ApiShoutcastController_updateGenre'];
     trace?: never;
   };
   '/api/update-shoutcast-station': {
@@ -2955,15 +3027,72 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
+    ApiShoutcastCreateGenreBadRequestErrors: ApiShoutcastCreateGenreBadRequestErrors;
+    ApiShoutcastCreateGenreBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default shoutcast-genre-already-exists-error
+       */
+      message: components['schemas']['ApiShoutcastCreateGenreBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
     ApiShoutcastCreateStationBadRequestErrors: ApiShoutcastCreateStationBadRequestErrors;
     ApiShoutcastCreateStationBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
       /**
        * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-shoutcast-station-url-error
+       * @default invalid-shoutcast-station-url-length-error
        */
       message: components['schemas']['ApiShoutcastCreateStationBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiShoutcastDeleteGenreBadRequestErrors: ApiShoutcastDeleteGenreBadRequestErrors;
+    ApiShoutcastDeleteGenreBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default shoutcast-genre-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastDeleteGenreBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiShoutcastDeleteGenreNotFoundErrors: ApiShoutcastDeleteGenreNotFoundErrors;
+    ApiShoutcastDeleteGenreNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default shoutcast-genre-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastDeleteGenreNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -3040,6 +3169,44 @@ export type components = {
        * @default shoutcast-genre-not-found-error
        */
       message: components['schemas']['ApiShoutcastListOnlineStationsNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiShoutcastUpdateGenreBadRequestErrors: ApiShoutcastUpdateGenreBadRequestErrors;
+    ApiShoutcastUpdateGenreBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default shoutcast-genre-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastUpdateGenreBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiShoutcastUpdateGenreNotFoundErrors: ApiShoutcastUpdateGenreNotFoundErrors;
+    ApiShoutcastUpdateGenreNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default shoutcast-genre-not-found-error
+       */
+      message: components['schemas']['ApiShoutcastUpdateGenreNotFoundErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -3313,6 +3480,18 @@ export type components = {
     };
     CreateSessionResponseDto: {
       jwtToken: string;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    CreateShoutcastGenreBodyDto: {
+      name: string;
+    };
+    CreateShoutcastGenreResponseDto: {
+      genre: components['schemas']['ShoutcastGenreDto'];
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -7757,6 +7936,9 @@ export type components = {
       /** @description The new path to set for the root path */
       newPath: string;
     };
+    UpdateShoutcastGenreBodyDto: {
+      name: string;
+    };
     UpdateShoutcastStationBodyDto: {
       title: string;
       /** Format: uri */
@@ -8043,6 +8225,53 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiSessionsCreateSessionNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_createGenre: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateShoutcastGenreBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreateShoutcastGenreResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastCreateGenreBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -8384,6 +8613,60 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiRootPathsDeleteRootPathNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_deleteGenre: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastDeleteGenreBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastDeleteGenreNotFoundResponse'];
         };
       };
       500: {
@@ -10987,6 +11270,64 @@ export interface operations {
       };
     };
   };
+  ApiShoutcastController_updateGenre: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateShoutcastGenreBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastUpdateGenreBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastUpdateGenreNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiShoutcastController_updateStation: {
     parameters: {
       query: {
@@ -12908,10 +13249,24 @@ export enum ApiSessionsRegenerateUserSessionKeyBadRequestErrors {
 export enum ApiSessionsRegenerateUserSessionKeyNotFoundErrors {
   account_not_found_error = 'account-not-found-error',
 }
+export enum ApiShoutcastCreateGenreBadRequestErrors {
+  shoutcast_genre_already_exists_error = 'shoutcast-genre-already-exists-error',
+  invalid_shoutcast_genre_length_error = 'invalid-shoutcast-genre-length-error',
+  invalid_shoutcast_genre_name_error = 'invalid-shoutcast-genre-name-error',
+}
 export enum ApiShoutcastCreateStationBadRequestErrors {
+  invalid_shoutcast_station_url_length_error = 'invalid-shoutcast-station-url-length-error',
   invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
+  invalid_shoutcast_station_title_length_error = 'invalid-shoutcast-station-title-length-error',
   invalid_shoutcast_station_title_error = 'invalid-shoutcast-station-title-error',
   invalid_shoutcast_station_favorite_error = 'invalid-shoutcast-station-favorite-error',
+}
+export enum ApiShoutcastDeleteGenreBadRequestErrors {
+  shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
+  invalid_shoutcast_genre_id_error = 'invalid-shoutcast-genre-id-error',
+}
+export enum ApiShoutcastDeleteGenreNotFoundErrors {
+  shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
 }
 export enum ApiShoutcastDeleteStationBadRequestErrors {
   shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
@@ -12925,6 +13280,15 @@ export enum ApiShoutcastListOnlineStationsBadRequestErrors {
   invalid_shoutcast_genre_id_error = 'invalid-shoutcast-genre-id-error',
 }
 export enum ApiShoutcastListOnlineStationsNotFoundErrors {
+  shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
+}
+export enum ApiShoutcastUpdateGenreBadRequestErrors {
+  shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
+  invalid_shoutcast_genre_id_error = 'invalid-shoutcast-genre-id-error',
+  invalid_shoutcast_genre_length_error = 'invalid-shoutcast-genre-length-error',
+  invalid_shoutcast_genre_name_error = 'invalid-shoutcast-genre-name-error',
+}
+export enum ApiShoutcastUpdateGenreNotFoundErrors {
   shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
 }
 export enum ApiShoutcastUpdateStationBadRequestErrors {
