@@ -1,11 +1,15 @@
 import { AssociationTypeEnum } from 'src/types/enums';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { Injectable } from '@nestjs/common';
+import { LibraryService } from 'src/library/library.service';
 import { ListFavoritesQueryDto, ListFavoritesResponseDto } from './dtos';
 
 @Injectable()
 export class ApiFavoritesService {
-  constructor(private readonly favoritesService: FavoritesService) {}
+  constructor(
+    private readonly favoritesService: FavoritesService,
+    private readonly libraryService: LibraryService,
+  ) {}
 
   /**
    * Deletes the specified favorite.
@@ -24,7 +28,7 @@ export class ApiFavoritesService {
    * @returns Paginated dataset of albums
    */
   async listFavorites(userId: number, query: ListFavoritesQueryDto) {
-    const favorites = await this.favoritesService.listFavorites(userId, query.offset || 0, query.limit || 100_000);
+    const favorites = await this.libraryService.listFavorites(userId, query.offset || 0, query.limit || 100_000);
     return {
       favorites: favorites.items,
       limit: query.limit || 100_000,

@@ -1,17 +1,10 @@
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ShoutcastContainerDto, ShoutcastGenreDto, ShoutcastStationDto } from './dtos';
-import { ShoutcastContainerEntity, ShoutcastGenreEntity, ShoutcastStationEntity } from 'src/database/entities';
+import { ShoutcastGenreDto, ShoutcastStationDto } from './dtos';
+import { ShoutcastGenreEntity, ShoutcastStationEntity } from 'src/database/entities';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
-import type { ListResult } from 'src/types';
-
-function containerToRow(container: ShoutcastContainerEntity): ShoutcastContainerDto {
-  return {
-    id: container.id,
-    title: container.title,
-  };
-}
+import type { ListResult } from 'src/types/list-result';
 
 function genreToRow(container: ShoutcastGenreEntity): ShoutcastGenreDto {
   return {
@@ -22,7 +15,6 @@ function genreToRow(container: ShoutcastGenreEntity): ShoutcastGenreDto {
 
 function stationToRow(item: ShoutcastStationEntity): ShoutcastStationDto {
   return {
-    description: item.description || '',
     id: item.id,
     title: item.title,
     type: item.type,
@@ -32,22 +24,15 @@ function stationToRow(item: ShoutcastStationEntity): ShoutcastStationDto {
 @Injectable()
 export class ShoutcastService {
   constructor(
-    @InjectModel(ShoutcastContainerEntity)
-    private readonly shoutcastContainerEntity: typeof ShoutcastContainerEntity,
     @InjectModel(ShoutcastGenreEntity)
     private readonly shoutcastGenreEntity: typeof ShoutcastGenreEntity,
     @InjectModel(ShoutcastStationEntity)
     private readonly shoutcastStationEntity: typeof ShoutcastStationEntity,
   ) {}
 
-  async createStation(accountId: number, containerId: number, url: string, title: string, description: string) {
-    const container = await this.shoutcastContainerEntity.findByPk(containerId);
-    if (!container || container.accountId !== accountId) {
-      throw new NotFoundException(ErrorCodes.SHOUTCAST_CONTAINER_NOT_FOUND_ERROR);
-    }
+  async createStation(accountId: number, url: string, title: string) {
     const newItem = await this.shoutcastStationEntity.create({
-      containerId: container.id,
-      description,
+      accountId,
       title,
       type: ShoutcastItemTypeEnum.STATION,
       url,
@@ -62,19 +47,6 @@ export class ShoutcastService {
         id: item.id,
       },
     });
-  }
-
-  async listContainers(accountId: number): Promise<ListResult<ShoutcastContainerDto>> {
-    const containers = await this.shoutcastContainerEntity.findAll({
-      attributes: ['id', 'title'],
-      where: {
-        accountId,
-      },
-    });
-    return {
-      items: containers.map(containerToRow),
-      total: containers.length,
-    };
   }
 
   async listGenres(accountId: number): Promise<ListResult<ShoutcastGenreDto>> {
@@ -116,24 +88,17 @@ export class ShoutcastService {
     };
   }
 
-  async listStations(accountId: number, containerId: number): Promise<ListResult<ShoutcastStationDto>> {
-    const container = await this.shoutcastContainerEntity.findOne({
+  async listStations(accountId: number, offset: number, limit: number): Promise<ListResult<ShoutcastStationDto>> {
+    const data = await this.shoutcastStationEntity.findAndCountAll({
       where: {
         accountId,
-        id: containerId,
       },
-    });
-    if (!container) {
-      throw new Error(ErrorCodes.SHOUTCAST_CONTAINER_NOT_FOUND_ERROR);
-    }
-    const items = await this.shoutcastStationEntity.findAll({
-      where: {
-        containerId: container.id,
-      },
+      offset: offset || 0,
+      limit: limit || 100_000,
     });
     return {
-      items: items.map((item) => stationToRow(item)),
-      total: items.length,
+      items: data.rows.map((item) => stationToRow(item)),
+      total: data.count,
     };
   }
 
@@ -154,17 +119,8 @@ export class ShoutcastService {
     const station = await this.shoutcastStationEntity.findOne({
       where: {
         id: stationId,
+        accountId,
       },
-      include: [
-        {
-          model: ShoutcastContainerEntity,
-          attributes: ['id', 'accountId'],
-          where: {
-            accountId,
-          },
-          required: true,
-        },
-      ],
     });
     if (!station) {
       throw new NotFoundException(ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR);
@@ -172,13 +128,12 @@ export class ShoutcastService {
     return stationToRow(station);
   }
 
-  async updateStation(accountId: number, stationId: number, url: string, title: string, description: string) {
+  async updateStation(accountId: number, stationId: number, url: string, title: string) {
     const station = await this.retrieveStation(accountId, stationId);
     await this.shoutcastStationEntity.update(
       {
         title,
         url,
-        description,
       },
       {
         where: {

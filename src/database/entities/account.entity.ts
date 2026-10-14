@@ -1,6 +1,5 @@
 import { AfterCreate, Column, DataType, Model, Sequelize, Table } from 'sequelize-typescript';
 import { Guid } from 'typescript-guid';
-import { ShoutcastContainerEntity } from './shoutcast-container.entity';
 import { ShoutcastGenreEntity } from './shoutcast-genre.entity';
 import { UserRoleEnum } from 'src/types/enums';
 import type { CreateOptions } from 'sequelize';
@@ -100,7 +99,7 @@ export class AccountEntity extends Model<AccountEntity> {
 
   @AfterCreate
   static async createRequiredData(account: AccountEntity, options: CreateOptions<AccountEntity>) {
-    //
+    // copy the SHOUTcast genres from the 'root' account to the new account
     const rootAccount = await AccountEntity.findOne({
       where: {
         username: 'root',
@@ -110,22 +109,6 @@ export class AccountEntity extends Model<AccountEntity> {
     if (!rootAccount) {
       throw new Error('Root account not found');
     }
-    // insert shoutcast containers
-    const containers = await ShoutcastContainerEntity.findAll({
-      where: {
-        accountId: rootAccount.id,
-      },
-      transaction: options.transaction,
-    });
-    const mappedContainers = containers.map((container) => {
-      return {
-        accountId: account.id,
-        title: container.title,
-      } as ShoutcastContainerEntity;
-    });
-    await ShoutcastContainerEntity.bulkCreate(mappedContainers, {
-      transaction: options.transaction,
-    });
     // insert shoutcast genres
     const genres = await ShoutcastGenreEntity.findAll({
       where: {

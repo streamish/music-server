@@ -4,6 +4,7 @@ import {
   AssociationLinkEntity,
   FavoriteItemEntity,
   PlaylistEntity,
+  ShoutcastStationEntity,
   TrackEntity,
 } from '../database/entities';
 import { LibraryQueryService } from './query.service';
@@ -20,6 +21,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       AssociationLinkEntity,
       FavoriteItemEntity,
       PlaylistEntity,
+      ShoutcastStationEntity,
       TrackEntity,
     ]),
   ],

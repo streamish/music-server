@@ -1,3 +1,5 @@
+src/api/shoutcast/**/*
+
 # compiled output
 /dist
 /dist-test

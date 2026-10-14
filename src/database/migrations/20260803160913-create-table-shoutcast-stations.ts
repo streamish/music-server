@@ -2,11 +2,11 @@ import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
 
 export async function up(queryInterface: QueryInterface) {
   await queryInterface.createTable('shoutcast_stations', {
-    container_id: {
+    account_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'shoutcast_containers',
+        model: 'accounts',
         key: 'id',
       },
       onDelete: 'CASCADE',

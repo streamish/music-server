@@ -20,17 +20,6 @@ export async function createSeedAccount(
   if (!rootAccountId) {
     throw new Error('Root account not found');
   }
-  // insert shoutcast containers
-  const containers = await queryInterface.sequelize.query(
-    `SELECT * FROM shoutcast_containers WHERE account_id = ${rootAccountId};`,
-  );
-  const mappedContainers = (containers[0] as { title: string }[]).map((container) => {
-    return {
-      account_id: newAccountId,
-      title: container.title,
-    };
-  });
-  await queryInterface.bulkInsert('shoutcast_containers', mappedContainers);
   // insert shoutcast genres
   const genres = await queryInterface.sequelize.query(
     `SELECT * FROM shoutcast_genres WHERE account_id = ${rootAccountId};`,

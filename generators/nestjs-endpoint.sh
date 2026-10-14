@@ -1,18 +1,15 @@
 #!/bin/bash
-# eg: ./nestjs-endpoint.sh AdminCreateAccount create-account api/admin Post
+# eg: ./nestjs-endpoint.sh ApiAccounts accounts api 
 SERVICE_CLASS=$1
 SERVICE_FILE=$2
 API_PATH=$3
-METHOD=$4
-OVERWRITE=$5
+OVERWRITE=$4
 FILE_PATH=./src/${API_PATH}/${SERVICE_FILE}
 SERVICE_REFERENCE=$SERVICE_CLASS
-SERVICE_REFERENCE=${SERVICE_REFERENCE/Admin/}
-SERVICE_REFERENCE=${SERVICE_REFERENCE/Guest/}
-SERVICE_REFERENCE=${SERVICE_REFERENCE/User/}
+SERVICE_REFERENCE=${SERVICE_REFERENCE/Api/}
 
 if [ -z $SERVICE_CLASS ]; then
-  echo npm run generate:endpoint AdminCreateAccount create-account api/admin Post
+  echo npm run generate:endpoint ApiAccounts accounts api 
   exit 0
 fi
 
@@ -25,6 +22,7 @@ fi
 echo "Generating endpoint for $SERVICE_CLASS at $FILE_PATH"
 
 mkdir -p $FILE_PATH
+mkdir -p $FILE_PATH/dtos
 
 # The module file
 cat <<EOF > $FILE_PATH/${SERVICE_FILE}.module.ts
@@ -40,24 +38,7 @@ export class ${SERVICE_CLASS}Module {}
 EOF
 
 # The DTO file
-cat <<EOF > $FILE_PATH/${SERVICE_FILE}.dto.ts
-/* eslint-disable max-classes-per-file */
-import { SuccessResponseDto } from 'src/api/response.dto';
-import { ApiProperty } from '@nestjs/swagger';
-import { ErrorCodes } from 'src/constants/error-codes';
-
-export class ${SERVICE_CLASS}QueryDto {
-  // Define your DTO properties here
-}
-
-export class ${SERVICE_CLASS}BodyDto {
-  // Define your DTO properties here
-}
-
-import { SuccessResponseDto } from 'src/api/response.dto';
-
-export class ${SERVICE_CLASS}ResponseDto extends SuccessResponseDto {}
-EOF
+echo "" > $FILE_PATH/dtos/index.ts
 
 # The Service file
 cat <<EOF > $FILE_PATH/${SERVICE_FILE}.service.ts
@@ -70,48 +51,28 @@ export class ${SERVICE_CLASS}Service {
 EOF
 
 # The Controller file
-DECORATORS=""
-if [ "$API_PATH" == "api/admin" ]; then
-  DECORATORS="@AllowedRoles([UserRoleEnum.ADMIN])
-@ApiBearerAuth(JWT_BEARER_AUTH)
-@ApiHeader({
-  name: 'Authorization',
-  description: 'Bearer token for authentication',
-  required: true,
-})"
-fi
-
-API_TAGS=""
-if [ "$API_PATH" == "api/admin" ]; then
-  API_TAGS="ADMIN_APIS"
-elif [ "$API_PATH" == "api/user" ]; then
-  API_TAGS="USER_APIS"
-fi
-
-CONTROLLER=""
-if [ "$API_PATH" == "api/admin" ]; then
-  CONTROLLER="@AdminController()"
-elif [ "$API_PATH" == "api/user" ]; then
-  CONTROLLER="@UserController()"
-fi
-
 cat <<EOF > $FILE_PATH/${SERVICE_FILE}.controller.ts
-import { ${METHOD}, Controller } from '@nestjs/common';
+import { ApiEndpoint } from '../api.decorator';
+import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ${SERVICE_CLASS}Service } from './${SERVICE_FILE}.service';
-import { AllowedRoles } from 'src/api/role.guard';
-import { UserRoleEnum } from 'src/constants/enums';
+import { SuccessResponseDto, BadRequestResponseDto, NotFoundResponseDto, InternalServerErrorResponseDto } from 'src/api/response.dto';
 
-${CONTROLLER}
+@Controller('api')
 export class ${SERVICE_CLASS}Controller {
-  constructor(private readonly ${SERVICE_REFERENCE,}Service: ${SERVICE_CLASS}Service) { }
+  constructor(private readonly ${SERVICE_REFERENCE,,}Service: ${SERVICE_CLASS}Service) { }
 
   // eslint-disable-next-line class-methods-use-this
-  @ApiEndpoint(${METHOD}, '/${SERVICE_FILE}', HttpStatus.OK, {
-  responses: {
-    [HttpStatus.OK]:${SERVICE_CLASS}ResponseDto,
-  }})
-  async ${METHOD,,}() {
-    // Implement your endpoint logic here
+  @ApiEndpoint(Get, 'url-path', HttpStatus.OK, {
+    summary: '',
+    description: '',
+    responses: {
+      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.BAD_REQUEST]: BadRequestResponseDto,
+      [HttpStatus.NOT_FOUND]: NotFoundResponseDto,
+      [HttpStatus.INTERNAL_SERVER_ERROR]: InternalServerErrorResponseDto,
+    },
+  })
+  async get() {
   }
 }
 EOF

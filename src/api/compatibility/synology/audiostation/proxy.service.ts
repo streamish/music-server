@@ -4,8 +4,8 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Response } from 'express';
-import { ShoutcastContainerEntity, ShoutcastStationEntity } from 'src/database/entities';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
+import { ShoutcastStationEntity } from 'src/database/entities';
 import { promisify } from 'util';
 
 type StreamEntry = {
@@ -22,6 +22,7 @@ const startStream = promisify((url: string, callback: (error: Error | null, stre
     });
     response.on('data', (data) => {
       const playlist = data.toString().split('\n');
+      console.log('response data', playlist);
       const newUrlLine = playlist.find((line) => line.startsWith('File'));
       if (!newUrlLine) {
         return callback(new Error('No stream URL found in playlist'));
@@ -51,8 +52,6 @@ export class SynologyProxyService {
 
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    @InjectModel(ShoutcastContainerEntity)
-    private readonly shoutcastContainerEntity: typeof ShoutcastContainerEntity,
     @InjectModel(ShoutcastStationEntity)
     private readonly shoutcastStationEntity: typeof ShoutcastStationEntity,
   ) {}

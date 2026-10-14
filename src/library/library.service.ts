@@ -3,6 +3,8 @@ import {
   AssociationEntity,
   AssociationLinkEntity,
   FavoriteItemEntity,
+  PlaylistEntity,
+  ShoutcastStationEntity,
   TrackEntity,
 } from 'src/database/entities';
 import {
@@ -18,7 +20,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
 import { LibraryAssociationDto, LibraryAssociationWithTracksDto } from './dtos/library.association.dto';
-import { LibraryFolderDto, LibraryTrackDto } from './dtos';
+import { LibraryFavoriteDto, LibraryFolderDto, LibraryTrackDto } from './dtos';
 import { LibraryQueryService } from './query.service';
 import { LibraryTransformerService } from './transformer.service';
 import { Op } from 'sequelize';
@@ -85,6 +87,39 @@ export class LibraryService {
   }
 
   /**
+   * Returns a list of albums optionally paginated, filtered and sorted by the
+   * specified parameters.
+   * @param accountId The media owner account ID
+   * @param filter The search parameters for the albums
+   * @param offset Optional pagination offset
+   * @param limit Optional pagination limit
+   * @param sortField Optional field to sort the results by
+   * @param sortDirection Optional sort order specification
+   * @returns The album list and total record count.
+   */
+  async listAlbums(
+    accountId: number,
+    filter: AlbumFilter,
+    offset: number,
+    limit: number,
+    sortField?: AlbumSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<ListResult<LibraryAlbumDto>> {
+    const query = await this.queryService.buildAlbumQuery(accountId, filter, sortField, sortDirection);
+    const albums = await this.albumEntity.findAndCountAll({
+      ...query,
+      limit,
+      offset,
+      group: ['AlbumEntity.id'],
+      subQuery: false,
+    });
+    return {
+      total: albums.count.length,
+      items: albums.rows.map(this.transformerService.convertAlbumEntityToLibraryAlbum),
+    };
+  }
+
+  /**
    * Returns lists of album-associations containing track-associations, for instance album artists filtered by genre
    * optionally paginated, filtered and sorted by the specified parameters.
    * @param accountId The media owner account ID
@@ -123,63 +158,88 @@ export class LibraryService {
   }
 
   /**
-   * Returns lists of track-associated artists, composers or genres, optionally paginated, filtered and sorted
-   * by the specified parameters.
+   * Returns a list of favorites with related track, album, association, and playlist data, optionally paginated.
    * @param accountId The media owner account ID
-   * @param filter
-   * @param offset
-   * @param limit
-   * @param sortField
-   * @param sortDirection
-   * @returns {Promise<ListResult<LibraryAssociationDto>>}
+   * @param [offset] Optional pagination offset
+   * @param [limit] Optional pagination limit
+   * @returns The favorite list and total record count.
    */
-  async listTrackAssociations(
-    accountId: number,
-    filter: AssociationFilter,
-    offset: number,
-    limit: number,
-    sortField?: AssociationSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryAssociationDto>> {
-    const query = await this.queryService.buildTrackAssociationQuery(accountId, filter, sortField, sortDirection);
-    const associations = await this.associationEntity.findAll({ ...query, offset, limit, group: ['name'] });
-    const totals = await this.associationEntity.count({ ...query, group: ['name'] });
-    return {
-      total: totals.length,
-      items: associations.map(this.transformerService.convertAssociationEntityToLibraryAssociation),
-    };
-  }
-
-  /**
-   * Returns a list of albums optionally paginated, filtered and sorted by the
-   * specified parameters.
-   * @param accountId The media owner account ID
-   * @param filter The search parameters for the albums
-   * @param offset Optional pagination offset
-   * @param limit Optional pagination limit
-   * @param sortField Optional field to sort the results by
-   * @param sortDirection Optional sort order specification
-   * @returns The album list and total record count.
-   */
-  async listAlbums(
-    accountId: number,
-    filter: AlbumFilter,
-    offset: number,
-    limit: number,
-    sortField?: AlbumSortFieldEnum,
-    sortDirection?: SortDirectionEnum,
-  ): Promise<ListResult<LibraryAlbumDto>> {
-    const query = await this.queryService.buildAlbumQuery(accountId, filter, sortField, sortDirection);
-    const albums = await this.albumEntity.findAndCountAll({
-      ...query,
-      limit,
-      offset,
-      group: ['AlbumEntity.id'],
-      subQuery: false,
+  async listFavorites(accountId: number, offset?: number, limit?: number): Promise<ListResult<LibraryFavoriteDto>> {
+    const favorites = await this.favoriteItemEntity.findAll({
+      where: {
+        accountId,
+      },
+      include: [
+        {
+          model: TrackEntity,
+          required: false,
+        },
+        {
+          model: AlbumEntity,
+          required: false,
+        },
+        {
+          model: AssociationEntity,
+          required: false,
+          include: [
+            {
+              model: AssociationLinkEntity,
+              separate: true,
+            },
+          ],
+        },
+        {
+          model: PlaylistEntity,
+          required: false,
+        },
+        {
+          model: ShoutcastStationEntity,
+          required: false,
+        },
+      ],
+      offset: offset || 0,
+      limit: limit || 100_000,
     });
+    const total = await this.favoriteItemEntity.count({
+      where: {
+        accountId,
+      },
+    });
+    // optionally load the folders if any favorite has a folder path
+    let folders: LibraryFolderDto[];
+    if (favorites.find((f) => f.folderPath)) {
+      folders = await this.listFolders(accountId);
+    }
     return {
-      total: albums.count.length,
-      items: albums.rows.map(this.transformerService.convertAlbumEntityToLibraryAlbum),
+      total,
+      items: await Promise.all(
+        favorites.map(async (favorite) => {
+          const albums: LibraryAlbumWithTracksDto[] = [];
+          if (favorite.associationId && favorite.associationType) {
+            const albumArtist =
+              favorite.associationType === AssociationTypeEnum.ARTIST
+                ? await this.retrieveAlbumAssociation(
+                    favorite.accountId,
+                    favorite.associationId,
+                    AssociationTypeEnum.ARTIST,
+                  )
+                : [];
+            const trackAssociations = await this.retrieveTrackAssociation(
+              favorite.accountId,
+              favorite.associationId,
+              favorite.associationType,
+            );
+            const allAlbums: LibraryAlbumWithTracksDto[] = [
+              ...(albumArtist[0]?.albums || []),
+              ...(trackAssociations[0]?.albums || []),
+            ]
+              .flat()
+              .filter(Boolean);
+            albums.push(...allAlbums);
+          }
+          return this.transformerService.convertFavoriteItemEntityToLibraryFavorite(favorite, folders, albums);
+        }),
+      ),
     };
   }
 
@@ -288,6 +348,34 @@ export class LibraryService {
     return {
       items: data.map(this.transformerService.convertTrackEntityToLibraryTrack),
       total: count,
+    };
+  }
+
+  /**
+   * Returns lists of track-associated artists, composers or genres, optionally paginated, filtered and sorted
+   * by the specified parameters.
+   * @param accountId The media owner account ID
+   * @param filter
+   * @param offset
+   * @param limit
+   * @param sortField
+   * @param sortDirection
+   * @returns {Promise<ListResult<LibraryAssociationDto>>}
+   */
+  async listTrackAssociations(
+    accountId: number,
+    filter: AssociationFilter,
+    offset: number,
+    limit: number,
+    sortField?: AssociationSortFieldEnum,
+    sortDirection?: SortDirectionEnum,
+  ): Promise<ListResult<LibraryAssociationDto>> {
+    const query = await this.queryService.buildTrackAssociationQuery(accountId, filter, sortField, sortDirection);
+    const associations = await this.associationEntity.findAll({ ...query, offset, limit, group: ['name'] });
+    const totals = await this.associationEntity.count({ ...query, group: ['name'] });
+    return {
+      total: totals.length,
+      items: associations.map(this.transformerService.convertAssociationEntityToLibraryAssociation),
     };
   }
 

@@ -5,6 +5,7 @@ import { IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from 'class-va
 import { LibraryAlbumDto } from './library.album.dto';
 import { LibraryAssociationWithTracksDto } from './library.association.dto';
 import { LibraryFolderDto } from './library.folder.dto';
+import { LibraryShoutcastStationDto } from './library.shoutcast-station.dto';
 import { LibraryTrackDto } from './library.track.dto';
 
 /**
@@ -87,6 +88,13 @@ export class LibraryFavoriteDto {
     required: false,
   })
   playlist?: PlaylistPlaceholder;
+
+  @ApiProperty({
+    type: LibraryShoutcastStationDto,
+    required: false,
+  })
+  @IsOptional()
+  shoutcastStation?: LibraryShoutcastStationDto;
 
   @ApiProperty({
     type: LibraryTrackDto,

@@ -1,19 +1,15 @@
 import {
   AlbumEntity,
   AssociationEntity,
-  AssociationLinkEntity,
   FavoriteItemEntity,
-  PlaylistEntity,
+  ShoutcastStationEntity,
   TrackEntity,
 } from 'src/database/entities';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { LibraryAlbumWithTracksDto, LibraryFavoriteDto, LibraryFolderDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
-import { LibraryTransformerService } from 'src/library/transformer.service';
-import { ListResult } from 'src/types/list-result';
 
 @Injectable()
 export class FavoritesService {
@@ -25,9 +21,10 @@ export class FavoritesService {
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
     private readonly libraryService: LibraryService,
+    @InjectModel(ShoutcastStationEntity)
+    private readonly shoutcastStationEntity: typeof ShoutcastStationEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
-    private readonly transformerService: LibraryTransformerService,
   ) {}
 
   /**
@@ -53,88 +50,6 @@ export class FavoritesService {
         accountId,
       },
     });
-  }
-
-  /**
-   * Returns a list of favorites with related track, album, association, and playlist data, optionally paginated.
-   * @param accountId The media owner account ID
-   * @param offset Optional pagination offset
-   * @param limit Optional pagination limit
-   * @returns The favorite list and total record count.
-   */
-  async listFavorites(accountId: number, offset: number, limit: number): Promise<ListResult<LibraryFavoriteDto>> {
-    const favorites = await this.favoriteItemEntity.findAll({
-      where: {
-        accountId,
-      },
-      include: [
-        {
-          model: TrackEntity,
-          required: false,
-        },
-        {
-          model: AlbumEntity,
-          required: false,
-        },
-        {
-          model: AssociationEntity,
-          required: false,
-          include: [
-            {
-              model: AssociationLinkEntity,
-              separate: true,
-            },
-          ],
-        },
-        {
-          model: PlaylistEntity,
-          required: false,
-        },
-      ],
-      offset: offset || 0,
-      limit: limit || 100_000,
-    });
-    const total = await this.favoriteItemEntity.count({
-      where: {
-        accountId,
-      },
-    });
-    // optionally load the folders if any favorite has a folder path
-    let folders: LibraryFolderDto[];
-    if (favorites.find((f) => f.folderPath)) {
-      folders = await this.libraryService.listFolders(accountId);
-    }
-    return {
-      total,
-      items: await Promise.all(
-        favorites.map(async (favorite) => {
-          const albums: LibraryAlbumWithTracksDto[] = [];
-          if (favorite.associationId && favorite.associationType) {
-            const albumArtist =
-              favorite.associationType === AssociationTypeEnum.ARTIST
-                ? await this.libraryService.retrieveAlbumAssociation(
-                    favorite.accountId,
-                    favorite.associationId,
-                    AssociationTypeEnum.ARTIST,
-                  )
-                : [];
-            const trackAssociations = await this.libraryService.retrieveTrackAssociation(
-              favorite.accountId,
-              favorite.associationId,
-              favorite.associationType,
-            );
-            const allAlbums: LibraryAlbumWithTracksDto[] = [
-              ...(albumArtist[0]?.albums || []),
-              ...(trackAssociations[0]?.albums || []),
-            ]
-              .flat()
-              .filter(Boolean);
-            albums.push(...allAlbums);
-          }
-          return this.transformerService.convertFavoriteItemEntityToLibraryFavorite(favorite, folders, albums);
-        }),
-      ),
-    };
   }
 
   /**
@@ -204,6 +119,29 @@ export class FavoritesService {
     return this.favoriteItemEntity.create({
       accountId,
       folderPath,
+    } as FavoriteItemEntity);
+  }
+
+  /**
+   * Sets a SHOUTcast station as a favorite for the specified account.
+   * @param accountId The media owner account ID
+   * @param shoutcastStationId The ID of the SHOUTcast station to set as favorite
+   * @throws If the specified SHOUTcast station is not found
+   */
+  async setShoutcastStationFavorite(accountId: number, shoutcastStationId: number): Promise<FavoriteItemEntity> {
+    const station = await this.shoutcastStationEntity.findOne({
+      attributes: ['id'],
+      where: {
+        id: shoutcastStationId,
+        accountId,
+      },
+    });
+    if (!station) {
+      throw new NotFoundException(ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR);
+    }
+    return this.favoriteItemEntity.create({
+      accountId,
+      shoutcastStationId,
     } as FavoriteItemEntity);
   }
 

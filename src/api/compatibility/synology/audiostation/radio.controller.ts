@@ -87,11 +87,11 @@ export class SynologyRadioController {
       });
     }
     // Route #7:  Requesting the container list
-    return this.listContainers(user);
+    return this.listContainers();
   }
 
-  async listContainers(user: AccountEntity): Promise<SynologyRadioItemResponseDto> {
-    const data = await this.radioService.listContainers(user.id);
+  async listContainers(): Promise<SynologyRadioItemResponseDto> {
+    const data = await this.radioService.listContainers();
     return {
       data,
       success: true,

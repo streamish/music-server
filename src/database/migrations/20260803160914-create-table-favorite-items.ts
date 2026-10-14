@@ -68,6 +68,15 @@ export async function up(queryInterface: QueryInterface) {
       type: DataType.BOOLEAN,
       allowNull: true,
     },
+    shoutcast_station_id: {
+      type: DataType.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'shoutcast_stations',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
     track_id: {
       type: DataType.INTEGER,
       allowNull: true,
