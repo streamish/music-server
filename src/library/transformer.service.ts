@@ -242,7 +242,7 @@ export class LibraryTransformerService {
           name: associationLink.association?.name || '',
           createdAt: associationLink.association?.createdAt || new Date(),
         })) || [],
-      comment: replaceDoubleQuotes(track.comment),
+      comment: replaceDoubleQuotes(track.comment || ''),
       composers:
         track.composers?.map((associationLink) => ({
           id: associationLink.association?.id || 0,
