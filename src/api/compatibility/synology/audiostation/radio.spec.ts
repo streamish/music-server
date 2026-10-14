@@ -6,8 +6,8 @@ import {
   type components,
 } from '../../../../types/api-schema';
 import { type SynologyApiClient, createSynologyApi } from '../../../../test-helper';
-import { USER_USERNAME, testApi } from '../../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { testApi } from '../../../../test-helper';
 
 describe('/webapi/AudioStation/radio.cgi', () => {
   let api: Awaited<SynologyApiClient>;
@@ -15,8 +15,8 @@ describe('/webapi/AudioStation/radio.cgi', () => {
 
   beforeAll(async () => {
     const username = `favorites-user-${Date.now()}`;
-    const account = await testApi.duplicateAccount(USER_USERNAME, username);
-    accountId = account.data?.account.accountId || 0;
+    const account = await testApi.createAccount(username);
+    accountId = account.id;
     if (!accountId) {
       throw new Error(`Failed to create test account`);
     }

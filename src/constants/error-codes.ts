@@ -40,6 +40,7 @@ export enum ErrorCodes {
   INVALID_SORT_FIELD_ERROR = 'invalid-sort-field-error',
   INVALID_SORT_ORDER_ERROR = 'invalid-sort-order-error',
   INVALID_SHOUTCAST_STATION_URL_ERROR = 'invalid-shoutcast-station-url-error',
+  INVALID_SHOUTCAST_STATION_FAVORITE_ERROR = 'invalid-shoutcast-station-favorite-error',
   INVALID_SHOUTCAST_STATION_ID_ERROR = 'invalid-shoutcast-station-id-error',
   INVALID_SHOUTCAST_STATION_TITLE_ERROR = 'invalid-shoutcast-station-title-error',
   INVALID_SHOUTCAST_GENRE_ID_ERROR = 'invalid-shoutcast-genre-id-error',
