@@ -99,7 +99,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/create-station': {
+  '/api/create-shoutcast-station': {
     parameters: {
       query?: never;
       header?: never;
@@ -108,6 +108,14 @@ export type paths = {
     };
     get?: never;
     put?: never;
+    /**
+     * Add a SHOUTcast station
+     * @description Add a custom station by its name and URL/IP address, optionally setting it as a favorite.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     post: operations['ApiShoutcastController_createStation'];
     delete?: never;
     options?: never;
@@ -207,7 +215,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/delete-station': {
+  '/api/delete-shoutcast-station': {
     parameters: {
       query?: never;
       header?: never;
@@ -217,6 +225,14 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
+    /**
+     * Delete a custom station
+     * @description Delete a custom SHOUTcast station by its ID
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiShoutcastController_deleteStation'];
     options?: never;
     head?: never;
@@ -451,13 +467,21 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/list-online-stations': {
+  '/api/list-online-shoutcast-stations': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
+    /**
+     * List online SHOUTcast stations
+     * @description Lists all online SHOUTcast stations for the specified genre. This is a short list fetched from `shoutcast.com` so it is not paginated or filtered.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiShoutcastController_listOnlineStations'];
     put?: never;
     post?: never;
@@ -484,13 +508,45 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/list-stations': {
+  '/api/list-shoutcast-genres': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
+    /**
+     * List SHOUTcast genres
+     * @description Lists all SHOUTcast genres for the authenticated user. This is a hard-coded list of genres in the database.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    get: operations['ApiShoutcastController_listGenres'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-shoutcast-stations': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List SHOUTcast stations
+     * @description Lists all custom SHOUTcast stations for the authenticated user. This is likely a short list so it is not paginated or filtered.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiShoutcastController_listStations'];
     put?: never;
     post?: never;
@@ -1051,7 +1107,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/update-station': {
+  '/api/update-shoutcast-station': {
     parameters: {
       query?: never;
       header?: never;
@@ -1064,6 +1120,14 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
+    /**
+     * Update a custom station
+     * @description Update the details of a custom SHOUTcast station by its ID.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     patch: operations['ApiShoutcastController_updateStation'];
     trace?: never;
   };
@@ -3256,10 +3320,20 @@ export type components = {
        */
       success: boolean;
     };
-    CreateStationBodyDto: {
+    CreateShoutcastStationBodyDto: {
+      favorite: boolean;
       title: string;
       /** Format: uri */
       url: string;
+    };
+    CreateShoutcastStationResponseDto: {
+      station: components['schemas']['ShoutcastStationDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
     };
     CreateTestAccountBodyDto: {
       /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
@@ -3665,6 +3739,33 @@ export type components = {
     };
     ListIndexerLogsWithUserResponseDto: {
       logs: components['schemas']['LogWithUserEntryDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListOnlineShoutcastStationsResponseDto: {
+      stations: components['schemas']['ShoutcastStationDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListShoutcastGenresResponseDto: {
+      genres: components['schemas']['ShoutcastGenreDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
+    ListShoutcastStationsResponseDto: {
+      stations: components['schemas']['ShoutcastStationDto'][];
       /**
        * Format: constant
        * @description The success being "true" indicates that the request completed.
@@ -4665,6 +4766,10 @@ export type components = {
      * @enum {string}
      */
     ShoutcastContainerNamesEnum: ShoutcastContainerNamesEnum;
+    ShoutcastGenreDto: {
+      id: number;
+      name: string;
+    };
     /**
      * @description The `type` value is expected to always be `container` for SHOUTcast genres, and
      *     `radio` for actual stations.  Possibly other values for favorites and custom-added
@@ -4672,6 +4777,20 @@ export type components = {
      * @enum {string}
      */
     ShoutcastItemTypeEnum: ShoutcastItemTypeEnum;
+    ShoutcastStationDto: {
+      id: number;
+      title: string;
+      /**
+       * @description The `type` value is `container` for SHOUTcast genres, and
+       *     `radio` for actual stations.
+       */
+      type: components['schemas']['ShoutcastItemTypeEnum'];
+      /**
+       * Format: uri
+       * @description The `url` value is expected to always be an empty string for SHOUTcast genres.
+       */
+      url: string;
+    };
     /** @enum {string} */
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
     /**
@@ -7638,7 +7757,7 @@ export type components = {
       /** @description The new path to set for the root path */
       newPath: string;
     };
-    UpdateStationBodyDto: {
+    UpdateShoutcastStationBodyDto: {
       title: string;
       /** Format: uri */
       url: string;
@@ -7945,7 +8064,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateStationBodyDto'];
+        'application/json': components['schemas']['CreateShoutcastStationBodyDto'];
       };
     };
     responses: {
@@ -7954,7 +8073,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['CreateShoutcastStationResponseDto'];
         };
       };
       400: {
@@ -9061,7 +9180,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['ListOnlineShoutcastStationsResponseDto'];
         };
       };
       400: {
@@ -9141,6 +9260,49 @@ export interface operations {
       };
     };
   };
+  ApiShoutcastController_listGenres: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListShoutcastGenresResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiShoutcastController_listStations: {
     parameters: {
       query?: never;
@@ -9155,7 +9317,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SuccessResponseDto'];
+          'application/json': components['schemas']['ListShoutcastStationsResponseDto'];
         };
       };
       400: {
@@ -10837,7 +10999,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateStationBodyDto'];
+        'application/json': components['schemas']['UpdateShoutcastStationBodyDto'];
       };
     };
     responses: {
@@ -12749,6 +12911,7 @@ export enum ApiSessionsRegenerateUserSessionKeyNotFoundErrors {
 export enum ApiShoutcastCreateStationBadRequestErrors {
   invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
   invalid_shoutcast_station_title_error = 'invalid-shoutcast-station-title-error',
+  invalid_shoutcast_station_favorite_error = 'invalid-shoutcast-station-favorite-error',
 }
 export enum ApiShoutcastDeleteStationBadRequestErrors {
   shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',

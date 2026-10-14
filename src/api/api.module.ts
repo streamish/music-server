@@ -6,6 +6,7 @@ import { ApiIndexerModule } from './indexer/indexer.module';
 import { ApiMediaModule } from './media/media.module';
 import { ApiRootPathsModule } from './root-paths/root-paths.module';
 import { ApiSessionsModule } from './sessions/sessions.module';
+import { ApiShoutcastModule } from './shoutcast/shoutcast.module';
 import { ApiTestModule } from './test/test.module';
 import { Module } from '@nestjs/common';
 
@@ -19,6 +20,7 @@ import { Module } from '@nestjs/common';
     ApiMediaModule,
     ApiRootPathsModule,
     ApiSessionsModule,
+    ApiShoutcastModule,
     /**
      * Helper endpoints for test suites
      */

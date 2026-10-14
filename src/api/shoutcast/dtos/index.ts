@@ -1,0 +1,6 @@
+export * from './create-shoutcast-station.dto';
+export * from './delete-shoutcast-station.dto';
+export * from './list-online-shoutcast-stations.dto';
+export * from './list-shoutcast-genres.dto';
+export * from './list-shoutcast-stations.dto';
+export * from './update-shoutcast-station.dto';
