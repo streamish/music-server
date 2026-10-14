@@ -72,7 +72,7 @@ export class TrackEntity extends Model<TrackEntity> {
   declare channels: number;
 
   @Column(DataType.STRING(255))
-  declare comment: string;
+  declare comment: string | null;
 
   @HasMany(() => AssociationLinkEntity)
   declare composers?: AssociationLinkEntity[];
