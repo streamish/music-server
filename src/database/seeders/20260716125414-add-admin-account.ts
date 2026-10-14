@@ -5,7 +5,7 @@ const username = process.env.DEFAULT_ADMIN_USERNAME || 'admin';
 const password = process.env.DEFAULT_ADMIN_PASSWORD || 'admin';
 
 export async function up(queryInterface: QueryInterface) {
-  await createSeedAccount(queryInterface, username, password, 'admin');
+  await createSeedAccount(queryInterface, username, password, 'admin,user');
 }
 
 export async function down(queryInterface: QueryInterface) {
