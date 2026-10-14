@@ -49,7 +49,7 @@ export class ApiSessionsController {
     },
   })
   async delete(@Session() session: SessionEntity) {
-    await this.sessionsService.deleteSession(session.id);
+    await this.sessionsService.terminateSession(session.id);
     return {
       success: true,
     };

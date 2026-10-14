@@ -35,7 +35,11 @@ export class ApiSessionsService {
     return jwtToken;
   }
 
-  async deleteSession(sessionId: number) {
+  /**
+   * Terminates a session by its ID, after which any device using it will need to authenticate again.
+   * @param sessionId The ID of the session to terminate
+   */
+  async terminateSession(sessionId: number) {
     const session = await this.sessionEntity.findByPk(sessionId);
     if (!session) {
       throw new NotFoundException(ErrorCodes.SESSION_NOT_FOUND_ERROR);
@@ -55,6 +59,14 @@ export class ApiSessionsService {
     );
   }
 
+  /**
+   * Regenerates the master session key used to sign every session, immediately invalidating all current
+   * sessions for all users.  Every user will need to authenticate again including the administrator
+   * performing the regeneration.
+   * @param adminAccountId The administrator performing the update
+   * @param adminPassword The administrator's password to authorize the update
+   * @param updateAccountId The target account to update
+   */
   async regenerateMasterSessionKey(accountId: number) {
     const currentConfiguration = await this.systemConfigurationEntity.findOne({
       order: [['id', 'DESC']],
@@ -67,7 +79,8 @@ export class ApiSessionsService {
   }
 
   /**
-   * Regenerates the session key for the specified user, invalidating all their current sessions.
+   * Regenerates the session key used to sign sessions for the specified user, immediately invalidating all
+   * their current sessions.  The user will need to authenticate again afterwards.
    * @param adminAccountId The administrator performing the update
    * @param adminPassword The administrator's password to authorize the update
    * @param updateAccountId The target account to update
