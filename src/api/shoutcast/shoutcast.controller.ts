@@ -3,13 +3,18 @@ import { ApiEndpoint } from '../api.decorator';
 import { ApiShoutcastService } from './shoutcast.service';
 import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query } from '@nestjs/common';
 import {
+  CreateShoutcastGenreBodyDto,
+  CreateShoutcastGenreResponseDto,
   CreateShoutcastStationBodyDto,
   CreateShoutcastStationResponseDto,
+  DeleteShoutcastGenreQueryDto,
   DeleteShoutcastStationQueryDto,
   ListOnlineShoutcastStationsQueryDto,
   ListOnlineShoutcastStationsResponseDto,
   ListShoutcastGenresResponseDto,
   ListShoutcastStationsResponseDto,
+  UpdateShoutcastGenreBodyDto,
+  UpdateShoutcastGenreQueryDto,
   UpdateShoutcastStationBodyDto,
   UpdateShoutcastStationQueryDto,
 } from './dtos';
@@ -20,6 +25,27 @@ import { User } from 'src/api/user.decorator';
 @Controller('api')
 export class ApiShoutcastController {
   constructor(private readonly shoutcastService: ApiShoutcastService) {}
+
+  @ApiEndpoint(Post, 'create-shoutcast-genre', HttpStatus.OK, {
+    summary: 'Add a SHOUTcast genre',
+    description: 'Add another SHOUTcast genre.  The genre must be a real genre as-recognized by SHOUTcast.',
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: CreateShoutcastGenreResponseDto,
+      [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.SHOUTCAST_GENRE_ALREADY_EXISTS_ERROR,
+        ...getValidationMessages(CreateShoutcastGenreBodyDto),
+      ],
+    },
+  })
+  async createGenre(@User() user: AccountEntity, @Body() body: CreateShoutcastGenreBodyDto) {
+    const genre = await this.shoutcastService.createGenre(user.id, body.name);
+    return {
+      genre,
+      success: true,
+    };
+  }
 
   @ApiEndpoint(Post, 'create-shoutcast-station', HttpStatus.OK, {
     summary: 'Add a SHOUTcast station',
@@ -32,9 +58,30 @@ export class ApiShoutcastController {
     },
   })
   async createStation(@User() user: AccountEntity, @Body() body: CreateShoutcastStationBodyDto) {
-    const station = await this.shoutcastService.createStation(user.id, body.url, body.title);
+    const station = await this.shoutcastService.createStation(user.id, body.url, body.title, body.favorite);
     return {
       station,
+      success: true,
+    };
+  }
+
+  @ApiEndpoint(Delete, 'delete-shoutcast-genre', HttpStatus.OK, {
+    summary: 'Delete a SHOUTcast genre',
+    description: 'Delete a SHOUTcast genre by its ID',
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.SHOUTCAST_GENRE_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.SHOUTCAST_GENRE_NOT_FOUND_ERROR,
+        ...getValidationMessages(DeleteShoutcastGenreQueryDto),
+      ],
+    },
+  })
+  async deleteGenre(@User() user: AccountEntity, @Query() query: DeleteShoutcastGenreQueryDto) {
+    await this.shoutcastService.deleteGenre(user.id, query.id);
+    return {
       success: true,
     };
   }
@@ -121,6 +168,32 @@ export class ApiShoutcastController {
     const data = await this.shoutcastService.listOnlineStations(user.id, query.id);
     return {
       ...data,
+      success: true,
+    };
+  }
+
+  @ApiEndpoint(Patch, 'update-shoutcast-genre', HttpStatus.OK, {
+    summary: 'Update a custom genre',
+    description: 'Update the details of a custom SHOUTcast genre by its ID.',
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.SHOUTCAST_GENRE_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: [
+        ErrorCodes.SHOUTCAST_GENRE_NOT_FOUND_ERROR,
+        ...getValidationMessages(UpdateShoutcastGenreQueryDto),
+        ...getValidationMessages(UpdateShoutcastGenreBodyDto),
+      ],
+    },
+  })
+  async updateGenre(
+    @User() user: AccountEntity,
+    @Query() query: UpdateShoutcastGenreQueryDto,
+    @Body() body: UpdateShoutcastGenreBodyDto,
+  ) {
+    await this.shoutcastService.updateGenre(user.id, query.id, body.name);
+    return {
       success: true,
     };
   }
