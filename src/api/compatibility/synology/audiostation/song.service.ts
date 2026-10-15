@@ -1,6 +1,7 @@
 import { ContentTypeEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
+import { RatingsService } from 'src/ratings/ratings.service';
 import { SynologySongDataDto, SynologySongDto } from './dtos';
 import { replaceDoubleQuotes } from 'src/utils/strings';
 import type { LibraryTrackDto } from 'src/library/dtos';
@@ -42,7 +43,10 @@ function songToRow(track: LibraryTrackDto): SynologySongDto {
 
 @Injectable()
 export class SynologySongService {
-  constructor(private readonly libraryService: LibraryService) {}
+  constructor(
+    private readonly libraryService: LibraryService,
+    private readonly ratingsService: RatingsService,
+  ) {}
 
   async listArtistTracks(
     accountId: number,
@@ -221,6 +225,6 @@ export class SynologySongService {
   }
 
   async rateTracks(accountId: number, fileIds: number[], rating: RatingOrUnset) {
-    await this.libraryService.rateTracks(accountId, fileIds, rating);
+    await this.ratingsService.rateTracks(accountId, fileIds, rating);
   }
 }

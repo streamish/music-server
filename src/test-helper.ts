@@ -2,6 +2,13 @@ import { SynologyApiEnum, SynologyMethodEnum, UserRoleEnum, components, paths } 
 import createClient from 'openapi-fetch';
 import crypto from 'node:crypto';
 import xml2js from 'xml2js';
+import type { PathsWithMethod } from 'openapi-typescript-helpers';
+
+export type GetPaths = PathsWithMethod<paths, 'get'>;
+export type PatchPaths = PathsWithMethod<paths, 'patch'>;
+export type PostPaths = PathsWithMethod<paths, 'post'>;
+export type PutPaths = PathsWithMethod<paths, 'put'>;
+export type DeletePaths = PathsWithMethod<paths, 'delete'>;
 
 export const ADMIN_USERNAME = process.env.DEFAULT_ADMIN_USERNAME || 'admin';
 export const ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD || 'admin';

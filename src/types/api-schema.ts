@@ -970,6 +970,23 @@ export type paths = {
     patch: operations['ApiIndexerController_setStatus'];
     trace?: never;
   };
+  '/api/set-shoutcast-station-favorite': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** @description `PUT` request to `/api/set-shoutcast-station-favorite` */
+    put: operations['ApiFavoritesController_setShoutcastStationFavorite'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/set-track-custom-data': {
     parameters: {
       query?: never;
@@ -2552,6 +2569,44 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
+    ApiFavoritesSetShoutcastStationFavoriteBadRequestErrors: ApiFavoritesSetShoutcastStationFavoriteBadRequestErrors;
+    ApiFavoritesSetShoutcastStationFavoriteBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-shoutcast-station-id-error
+       */
+      message: components['schemas']['ApiFavoritesSetShoutcastStationFavoriteBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiFavoritesSetShoutcastStationFavoriteNotFoundErrors: ApiFavoritesSetShoutcastStationFavoriteNotFoundErrors;
+    ApiFavoritesSetShoutcastStationFavoriteNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default shoutcast-station-not-found-error
+       */
+      message: components['schemas']['ApiFavoritesSetShoutcastStationFavoriteNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
     ApiFavoritesSetTrackFavoriteBadRequestErrors: ApiFavoritesSetTrackFavoriteBadRequestErrors;
     ApiFavoritesSetTrackFavoriteBadRequestResponse: {
       /** @description General description of the error class */
@@ -3543,7 +3598,10 @@ export type components = {
        */
       success: boolean;
     };
-    /** @enum {string} */
+    /**
+     * @description The type of the file for the track, such as MP3, FLAC, etc.
+     * @enum {string}
+     */
     FileTypeEnum: FileTypeEnum;
     FolderStructureResponseDto: {
       items: components['schemas']['LibraryFolderDto'][];
@@ -4950,13 +5008,14 @@ export type components = {
       name: string;
     };
     /**
-     * @description The `type` value is expected to always be `container` for SHOUTcast genres, and
-     *     `radio` for actual stations.  Possibly other values for favorites and custom-added
-     *     stations.
+     * @description The `type` value is `container` for SHOUTcast genres, and
+     *     `radio` for actual stations.
      * @enum {string}
      */
     ShoutcastItemTypeEnum: ShoutcastItemTypeEnum;
     ShoutcastStationDto: {
+      /** @description The favorite data for the station if it exists */
+      favoriteId?: number;
       id: number;
       title: string;
       /**
@@ -4972,10 +5031,7 @@ export type components = {
     };
     /** @enum {string} */
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
-    /**
-     * @description The sort direction
-     * @enum {string}
-     */
+    /** @enum {string} */
     SortDirectionEnum: SortDirectionEnum;
     SuccessResponseDto: {
       /**
@@ -10736,6 +10792,68 @@ export interface operations {
       };
     };
   };
+  ApiFavoritesController_setShoutcastStationFavorite: {
+    parameters: {
+      query?: {
+        /**
+         * @description The ID of a previously-added custom station.  This will take precedence
+         *     if a URL has also been supplied.
+         */
+        shoutcastStationId?: number;
+        /**
+         * @description The URL of the Shoutcast station if it is an online station that has not
+         *     previously been added as a custom station.
+         */
+        shoutcastStationUrl?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreateFavoriteResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiFavoritesSetShoutcastStationFavoriteBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiFavoritesSetShoutcastStationFavoriteNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiCustomDataController_patch: {
     parameters: {
       query: {
@@ -13146,6 +13264,14 @@ export enum ApiFavoritesSetFolderFavoriteBadRequestErrors {}
 export enum ApiFavoritesSetFolderFavoriteNotFoundErrors {
   folder_not_found_error = 'folder-not-found-error',
 }
+export enum ApiFavoritesSetShoutcastStationFavoriteBadRequestErrors {
+  invalid_shoutcast_station_id_error = 'invalid-shoutcast-station-id-error',
+  invalid_shoutcast_station_url_length_error = 'invalid-shoutcast-station-url-length-error',
+  invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
+}
+export enum ApiFavoritesSetShoutcastStationFavoriteNotFoundErrors {
+  shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
+}
 export enum ApiFavoritesSetTrackFavoriteBadRequestErrors {
   invalid_track_id_error = 'invalid-track-id-error',
 }
@@ -13294,7 +13420,9 @@ export enum ApiShoutcastUpdateGenreNotFoundErrors {
 export enum ApiShoutcastUpdateStationBadRequestErrors {
   shoutcast_station_not_found_error = 'shoutcast-station-not-found-error',
   invalid_shoutcast_station_id_error = 'invalid-shoutcast-station-id-error',
+  invalid_shoutcast_station_url_length_error = 'invalid-shoutcast-station-url-length-error',
   invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
+  invalid_shoutcast_station_title_length_error = 'invalid-shoutcast-station-title-length-error',
   invalid_shoutcast_station_title_error = 'invalid-shoutcast-station-title-error',
 }
 export enum ApiShoutcastUpdateStationNotFoundErrors {

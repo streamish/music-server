@@ -1,3 +1,4 @@
+import { AssociationTypeEnum } from '../../types/api-schema';
 import {
   AuthenticatedApiClient,
   USER_PASSWORD,
@@ -5,13 +6,14 @@ import {
   createAuthenticatedApi,
   testApi,
   unauthenticatedApi,
-} from '../../../test-helper';
-import { ErrorCodes } from '../../../constants/error-codes';
+} from '../../test-helper';
+import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-describe('/api/set-track-favorite', () => {
+describe('/api/set-association-favorite', () => {
   let accountId: number;
   let userApi: AuthenticatedApiClient;
+  let associationId: number;
 
   beforeAll(async () => {
     const newUsername = `user-${Date.now()}`;
@@ -21,6 +23,20 @@ describe('/api/set-track-favorite', () => {
     }
     accountId = newAccount.data.account.accountId;
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
+    const { data } = await userApi.GET('/api/list-track-associations', {
+      params: {
+        query: {
+          associationType: AssociationTypeEnum.artist,
+          offset: 0,
+          limit: 1,
+        },
+      },
+    });
+    const association = data?.associations?.[0];
+    if (!association) {
+      throw new Error('Association not found');
+    }
+    associationId = association.id;
   });
 
   afterAll(async () => {
@@ -38,22 +54,12 @@ describe('/api/set-track-favorite', () => {
     });
   }
 
-  async function listTracks() {
-    return userApi.GET('/api/list-tracks', {
-      params: {
-        query: {
-          offset: 0,
-          limit: 100_000,
-        },
-      },
-    });
-  }
-
-  async function setTrackFavorite(id: number) {
-    return userApi.PUT('/api/set-track-favorite', {
+  async function setAssociationFavorite(id: number, associationType: AssociationTypeEnum) {
+    return userApi.PUT('/api/set-association-favorite', {
       params: {
         query: {
           id,
+          associationType,
         },
       },
     });
@@ -61,10 +67,11 @@ describe('/api/set-track-favorite', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.PUT(`/api/set-track-favorite`, {
+      const { error } = await unauthenticatedApi.PUT(`/api/set-association-favorite`, {
         params: {
           query: {
-            id: 1,
+            id: associationId,
+            associationType: AssociationTypeEnum.artist,
           },
         },
       });
@@ -73,26 +80,16 @@ describe('/api/set-track-favorite', () => {
   });
 
   describe('errors', () => {
-    it('should reject invalid track id', async () => {
-      const { error } = await setTrackFavorite(-1);
-      expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
-    });
-
-    it('should reject nonexistent track id', async () => {
-      const { error } = await setTrackFavorite(999999);
-      expect(error?.message[0]).toBe(ErrorCodes.TRACK_NOT_FOUND_ERROR);
+    it('should reject invalid association id', async () => {
+      const { error } = await setAssociationFavorite(-1, AssociationTypeEnum.artist);
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ASSOCIATION_ID_ERROR);
     });
   });
 
   describe('success', () => {
-    it('should create favorite for the track', async () => {
-      const { data: trackData } = await listTracks();
-      const track = trackData?.tracks[0];
-      if (!track) {
-        throw new Error('Track not found');
-      }
+    it('should create favorite for the association', async () => {
       // create the favorite
-      const { error, data } = await setTrackFavorite(track.id);
+      const { error, data } = await setAssociationFavorite(associationId, AssociationTypeEnum.artist);
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
@@ -101,18 +98,19 @@ describe('/api/set-track-favorite', () => {
       if (!favoriteItem) {
         throw new Error('Favorite item not found');
       }
-      expect(favoriteItem.track?.id).toBe(track.id);
+      expect(favoriteItem.association?.id).toBe(associationId);
       // verify the item is favorited
-      const { data: tracks2 } = await userApi.GET('/api/list-tracks', {
+      const { data: associations2 } = await userApi.GET('/api/list-track-associations', {
         params: {
           query: {
+            associationType: AssociationTypeEnum.artist,
             offset: 0,
             limit: 1,
           },
         },
       });
-      const trackNow = tracks2?.tracks.find((item) => item.id === track.id);
-      expect(trackNow?.favoriteId).toBe(favoriteItem.id);
+      const associationNow = associations2?.associations[0];
+      expect(associationNow?.favoriteId).toBe(favoriteItem.id);
     });
   });
 });
