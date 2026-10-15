@@ -5,10 +5,10 @@ import {
   createAuthenticatedApi,
   testApi,
   unauthenticatedApi,
-} from '../../../test-helper';
-import { ErrorCodes } from '../../../constants/error-codes';
+} from '../../test-helper';
+import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { paths } from '../../../types/api-schema';
+import { paths } from '../../types/api-schema';
 
 describe('/api/set-album-custom-data', () => {
   let accountId: number;

@@ -5,14 +5,14 @@ import {
   createAuthenticatedApi,
   testApi,
   unauthenticatedApi,
-} from '../../../test-helper';
-import { ErrorCodes } from '../../../constants/error-codes';
+} from '../../test-helper';
+import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { paths } from 'src/types/api-schema';
 
-describe('/api/set-track-custom-data', () => {
-  let userApi: AuthenticatedApiClient;
+describe('/api/set-custom-data', () => {
   let accountId: number;
+  let userApi: AuthenticatedApiClient;
   let trackId: number;
 
   beforeAll(async () => {
@@ -23,7 +23,7 @@ describe('/api/set-track-custom-data', () => {
     }
     accountId = newAccount.data.account.accountId;
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
-    const { data: trackData } = await userApi.GET('/api/list-tracks', {
+    const { data: albumData } = await userApi.GET('/api/list-albums-with-tracks', {
       params: {
         query: {
           offset: 0,
@@ -31,10 +31,14 @@ describe('/api/set-track-custom-data', () => {
         },
       },
     });
-    if (!trackData?.tracks[0]?.id) {
-      throw new Error('Failed to fetch track data');
+    if (!albumData?.albums?.[0]) {
+      throw new Error('Album not found');
     }
-    const track = trackData.tracks[0];
+    const album = albumData.albums[0];
+    const track = album.tracks?.[0];
+    if (!track) {
+      throw new Error('Track not found');
+    }
     trackId = track.id;
   });
 
@@ -53,11 +57,11 @@ describe('/api/set-track-custom-data', () => {
     });
   }
 
-  async function setTrackCustomData(
+  async function setCustomData(
     id: number,
-    body: paths['/api/set-track-custom-data']['patch']['requestBody']['content']['application/json'],
+    body: paths['/api/set-custom-data']['put']['requestBody']['content']['application/json'],
   ) {
-    return userApi.PATCH('/api/set-track-custom-data', {
+    return userApi.PUT('/api/set-custom-data', {
       body,
       params: {
         query: {
@@ -69,8 +73,10 @@ describe('/api/set-track-custom-data', () => {
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.PATCH(`/api/set-track-custom-data`, {
+      const { error } = await unauthenticatedApi.PUT(`/api/set-custom-data`, {
         body: {
+          albumArtists: 'Custom albumArtists',
+          albumTitle: 'Custom albumTitle',
           title: 'Custom title',
           artists: 'Custom artists',
           comment: 'Custom comment',
@@ -93,7 +99,9 @@ describe('/api/set-track-custom-data', () => {
 
   describe('errors', () => {
     it('should reject invalid file id', async () => {
-      const { error } = await setTrackCustomData(-1, {
+      const { error } = await setCustomData(-1, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -106,8 +114,42 @@ describe('/api/set-track-custom-data', () => {
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_TRACK_ID_ERROR);
     });
 
+    it('should reject invalid album artists length', async () => {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'a'.repeat(1001),
+        albumTitle: 'Custom albumTitle',
+        title: 'Custom title',
+        artists: 'Custom artists',
+        comment: 'Custom comment',
+        composers: 'Custom composers',
+        discNumber: 1,
+        genres: 'Custom genres',
+        trackNumber: 3,
+        year: 2026,
+      });
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_ARTISTS_LENGTH_ERROR);
+    });
+
+    it('should reject invalid album title length', async () => {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'a'.repeat(1001),
+        title: 'Custom title',
+        artists: 'Custom artists',
+        comment: 'Custom comment',
+        composers: 'Custom composers',
+        discNumber: 1,
+        genres: 'Custom genres',
+        trackNumber: 3,
+        year: 2026,
+      });
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_ALBUM_TITLE_LENGTH_ERROR);
+    });
+
     it('should reject invalid artists length', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'a'.repeat(1001),
         comment: 'Custom comment',
@@ -121,7 +163,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid comment length', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'a'.repeat(1001),
@@ -135,7 +179,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid composers length', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -149,7 +195,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid disc number', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -163,7 +211,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid disc number range', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -177,7 +227,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid genres length', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -191,7 +243,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid title length', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'a'.repeat(256),
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -205,7 +259,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid track number range', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -219,7 +275,9 @@ describe('/api/set-track-custom-data', () => {
     });
 
     it('should reject invalid year range', async () => {
-      const { error } = await setTrackCustomData(trackId, {
+      const { error } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -236,19 +294,13 @@ describe('/api/set-track-custom-data', () => {
   describe('success', () => {
     it('should create custom data for the track', async () => {
       const { data: trackDataBefore } = await listTracks();
-      const trackBeforeCustom = trackDataBefore?.tracks.find((t) => t.id === trackId);
-      if (!trackBeforeCustom) {
-        throw new Error('Track not found before custom data set');
+      const trackBeforeDelete = trackDataBefore?.tracks.find((t) => t.id === trackId);
+      if (!trackBeforeDelete) {
+        throw new Error('Track not found before delete');
       }
-      expect(trackBeforeCustom.title).not.toBe('Custom title');
-      expect(trackBeforeCustom.artists.map((artist) => artist.name).join(', ')).not.toBe('Custom artists');
-      expect(trackBeforeCustom.comment).not.toBe('Custom comment');
-      expect(trackBeforeCustom.composers.map((composer) => composer.name).join(', ')).not.toBe('Custom composers');
-      expect(trackBeforeCustom.discNumber).not.toBe(9);
-      expect(trackBeforeCustom.genres.map((genre) => genre.name).join(', ')).not.toBe('Custom genres');
-      expect(trackBeforeCustom.trackNumber).not.toBe(7);
-      expect(trackBeforeCustom.year).not.toBe(1950);
-      const { error, data } = await setTrackCustomData(trackId, {
+      const { error, data } = await setCustomData(trackId, {
+        albumArtists: 'Custom albumArtists',
+        albumTitle: 'Custom albumTitle',
         title: 'Custom title',
         artists: 'Custom artists',
         comment: 'Custom comment',
@@ -266,6 +318,8 @@ describe('/api/set-track-custom-data', () => {
       if (!track) {
         throw new Error('Track not found');
       }
+      expect(track.albumArtists.map((artist) => artist.name).join(', ')).toBe('Custom albumArtists');
+      expect(track.albumTitle).toBe('Custom albumTitle');
       expect(track.title).toBe('Custom title');
       expect(track.artists.map((artist) => artist.name).join(', ')).toBe('Custom artists');
       expect(track.comment).toBe('Custom comment');

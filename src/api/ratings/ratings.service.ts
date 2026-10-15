@@ -2,10 +2,14 @@ import { ErrorCodes } from 'src/constants/error-codes';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
 import { RatingOrUnset } from 'src/types';
+import { RatingsService } from 'src/ratings/ratings.service';
 
 @Injectable()
 export class ApiRatingsService {
-  constructor(private readonly libraryService: LibraryService) {}
+  constructor(
+    private readonly libraryService: LibraryService,
+    private readonly ratingsService: RatingsService,
+  ) {}
 
   /**
    * Assigns or clears a rating on an album.  If a value of 0 is set the rating is
@@ -29,7 +33,7 @@ export class ApiRatingsService {
     if (!trackIds.length) {
       throw new NotFoundException(ErrorCodes.TRACKS_NOT_FOUND_ERROR);
     }
-    await this.libraryService.rateTracks(userId, trackIds, rating);
+    await this.ratingsService.rateTracks(userId, trackIds, rating);
   }
 
   /**
@@ -41,6 +45,6 @@ export class ApiRatingsService {
    * @throws If the specified track is not found
    */
   async setTrackRating(userId: number, trackId: number, rating: RatingOrUnset) {
-    await this.libraryService.rateTracks(userId, [trackId], rating);
+    await this.ratingsService.rateTracks(userId, [trackId], rating);
   }
 }

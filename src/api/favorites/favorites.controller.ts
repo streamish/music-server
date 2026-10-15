@@ -13,6 +13,7 @@ import {
   SetTrackFavoriteQueryDto,
 } from './dtos';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { SetShoutcastStationFavoriteQueryDto } from './dtos/set-station-favorite.dto';
 import { SuccessResponseDto, getValidationMessages } from 'src/api/response.dto';
 import { User } from 'src/api/user.decorator';
 
@@ -128,6 +129,32 @@ export class ApiFavoritesController {
   })
   async setFolderFavorite(@User() user: AccountEntity, @Query() query: SetFolderFavoriteQueryDto) {
     const favorite = await this.favoritesService.setFolderFavorite(user.id, query.folder);
+    return {
+      favoriteId: favorite.id,
+      success: true,
+    };
+  }
+
+  /**
+   * `PUT` request to `/api/set-shoutcast-station-favorite`
+   */
+  @ApiEndpoint(Put, 'set-shoutcast-station-favorite', HttpStatus.OK, {
+    summary: `Mark a shoutcast station as a favorite `,
+    description: [`Favorites the specified shoutcast station allowing easier access in the user's library.`].join('\n'),
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: CreateFavoriteResponseDto,
+      [HttpStatus.NOT_FOUND]: [ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR],
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(SetShoutcastStationFavoriteQueryDto),
+    },
+  })
+  async setShoutcastStationFavorite(@User() user: AccountEntity, @Query() query: SetShoutcastStationFavoriteQueryDto) {
+    const favorite = await this.favoritesService.setShoutcastStationFavorite(
+      user.id,
+      query.shoutcastStationId,
+      query.shoutcastStationUrl,
+    );
     return {
       favoriteId: favorite.id,
       success: true,

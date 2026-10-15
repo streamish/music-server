@@ -123,26 +123,48 @@ export class FavoritesService {
   }
 
   /**
-   * Sets a SHOUTcast station as a favorite for the specified account.
+   * Sets a SHOUTcast station as a favorite for the specified account.  The station
+   * can either be a previously-defined custom station the user has added, or a
+   * URL to an online station they have not added.  If neither is provided, an error
+   * will be thrown.
    * @param accountId The media owner account ID
-   * @param shoutcastStationId The ID of the SHOUTcast station to set as favorite
+   * @param [shoutcastStationId] The ID of the SHOUTcast station to set as favorite
+   * @param [shoutcastStationUrl] The URL of the SHOUTcast station to set as favorite
    * @throws If the specified SHOUTcast station is not found
    */
-  async setShoutcastStationFavorite(accountId: number, shoutcastStationId: number): Promise<FavoriteItemEntity> {
-    const station = await this.shoutcastStationEntity.findOne({
-      attributes: ['id'],
-      where: {
-        id: shoutcastStationId,
+  async setShoutcastStationFavorite(
+    accountId: number,
+    shoutcastStationId?: number,
+    shoutcastStationUrl?: string,
+  ): Promise<FavoriteItemEntity> {
+    if (shoutcastStationId) {
+      const station = await this.shoutcastStationEntity.findOne({
+        attributes: ['id'],
+        where: {
+          id: shoutcastStationId,
+          accountId,
+        },
+      });
+      if (!station) {
+        throw new NotFoundException(ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR);
+      }
+      return this.favoriteItemEntity.create({
         accountId,
-      },
-    });
-    if (!station) {
-      throw new NotFoundException(ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR);
+        shoutcastStationId,
+      } as FavoriteItemEntity);
     }
-    return this.favoriteItemEntity.create({
-      accountId,
-      shoutcastStationId,
-    } as FavoriteItemEntity);
+    if (shoutcastStationUrl) {
+      const newStation = await this.shoutcastStationEntity.create({
+        accountId,
+        url: shoutcastStationUrl,
+        title: shoutcastStationUrl,
+      } as ShoutcastStationEntity);
+      return this.favoriteItemEntity.create({
+        accountId,
+        shoutcastStationId: newStation.id,
+      } as FavoriteItemEntity);
+    }
+    throw new NotFoundException(ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR);
   }
 
   /**

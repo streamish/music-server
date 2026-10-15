@@ -25,9 +25,9 @@ export class ApiCustomDataController {
    * `DELETE` request to `/api/delete-custom-data`
    */
   @ApiEndpoint(Delete, 'delete-custom-data', HttpStatus.OK, {
-    summary: `Remove custom data from a file in the user's account`,
+    summary: `Remove custom data from a track in the user's account`,
     description: [
-      `Deletes the specified custom data in the database immediately.`,
+      `Deletes the specified custom data for the track in the database immediately.`,
       `The indexer will immediately recan the track to revert its changes in your library.`,
     ].join(' '),
     allowAdministrator: true,

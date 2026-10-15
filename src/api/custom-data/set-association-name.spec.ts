@@ -1,4 +1,4 @@
-import { AssociationTypeEnum } from '../../../types/api-schema';
+import { AssociationTypeEnum } from '../../types/api-schema';
 import {
   AuthenticatedApiClient,
   USER_PASSWORD,
@@ -6,8 +6,8 @@ import {
   createAuthenticatedApi,
   testApi,
   unauthenticatedApi,
-} from '../../../test-helper';
-import { ErrorCodes } from '../../../constants/error-codes';
+} from '../../test-helper';
+import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 describe('/api/set-association-name', () => {
