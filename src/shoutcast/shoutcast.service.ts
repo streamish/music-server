@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
+import { FavoriteItemEntity, ShoutcastGenreEntity, ShoutcastStationEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
 import { ShoutcastGenreDto, ShoutcastStationDto } from './dtos';
-import { ShoutcastGenreEntity, ShoutcastStationEntity } from 'src/database/entities';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
 import type { ListResult } from 'src/types/list-result';
 
@@ -15,6 +15,7 @@ function genreToRow(container: ShoutcastGenreEntity): ShoutcastGenreDto {
 
 function stationToRow(item: ShoutcastStationEntity): ShoutcastStationDto {
   return {
+    favoriteId: item.favorite?.id,
     id: item.id,
     title: item.title,
     type: item.type,
@@ -170,6 +171,12 @@ export class ShoutcastService {
       where: {
         accountId,
       },
+      include: [
+        {
+          model: FavoriteItemEntity,
+          required: false,
+        },
+      ],
       offset: offset || 0,
       limit: limit || 100_000,
     });

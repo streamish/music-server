@@ -3,6 +3,12 @@ import { IsEnum, IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
 
 export class ShoutcastStationDto {
+  /**
+   * The favorite data for the station if it exists
+   */
+  @IsInt()
+  declare favoriteId?: number;
+
   @IsInt()
   declare id: number;
 
