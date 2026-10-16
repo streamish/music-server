@@ -1,10 +1,10 @@
 import * as http from 'http';
 import * as https from 'https';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Response } from 'express';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
+import { ShoutcastService } from 'src/shoutcast/shoutcast.service';
 import { ShoutcastStationEntity } from 'src/database/entities';
 import { promisify } from 'util';
 
@@ -50,9 +50,9 @@ export class SynologyProxyService {
   private streams: StreamEntry[] = [];
 
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectModel(ShoutcastStationEntity)
     private readonly shoutcastStationEntity: typeof ShoutcastStationEntity,
+    private readonly shoutcastService: ShoutcastService,
   ) {}
 
   /**
@@ -84,7 +84,6 @@ export class SynologyProxyService {
     return favorite.url;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async createStream(stationIdentifier: string) {
     const streamUrl = await this.getStreamUrl(stationIdentifier);
     const existingStream = this.streams.find((s) => s.streamUrl === streamUrl);
@@ -112,34 +111,7 @@ export class SynologyProxyService {
       throw new Error('Invalid stream ID');
     }
     const { streamUrl } = streamEntry;
-    const url = new URL(streamUrl);
-    const stationId = url.searchParams.get('id');
-    if (!stationId) {
-      throw new Error('Invalid stream URL');
-    }
-    // retrieve the current song information
-    const currentTrackKey = `currentTrack-${stationId}`;
-    const cachedCurrentTrack = await this.cacheManager.get<string>(currentTrackKey);
-    if (cachedCurrentTrack) {
-      return {
-        title: cachedCurrentTrack,
-      };
-    }
-    const body = `stationID=${stationId}`;
-    const request = await fetch('https://directory.shoutcast.com/Player/GetCurrentTrack', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Content-Length': body.length.toString(),
-        Referer: 'https://directory.shoutcast.com/',
-      },
-      body,
-    });
-    const response = await request.json();
-    this.cacheManager.set(currentTrackKey, response.CurrentTrack, 30);
-    return {
-      title: response.Station.CurrentTrack,
-    };
+    return this.shoutcastService.retrieveStationCurrentPlaying(streamUrl);
   }
 
   async proxyStream(streamId: number, clientResponse: Response) {
@@ -148,19 +120,6 @@ export class SynologyProxyService {
       throw new Error('Invalid stream ID');
     }
     streamEntry.stream.pipe(clientResponse);
-  }
-
-  async deleteSongInfo(streamId: number) {
-    const streamEntry = this.streams.find((s) => s.streamId === streamId);
-    if (!streamEntry) {
-      throw new Error('Invalid stream ID');
-    }
-    const url = new URL(streamEntry.streamUrl);
-    const stationId = url.searchParams.get('id');
-    if (stationId) {
-      const currentTrackKey = `currentTrack-${stationId}`;
-      await this.cacheManager.del(currentTrackKey);
-    }
   }
 
   async deleteStream(streamId: number) {

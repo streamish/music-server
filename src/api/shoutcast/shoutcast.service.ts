@@ -1,6 +1,40 @@
+import * as http from 'http';
+import * as https from 'https';
+import { ErrorCodes } from 'src/constants/error-codes';
 import { FavoritesService } from 'src/favorites/favorites.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Response } from 'express';
 import { ShoutcastService } from 'src/shoutcast/shoutcast.service';
+import { promisify } from 'util';
+
+const startStream = promisify((url: string, callback: (error: Error | null, stream?: http.IncomingMessage) => void) => {
+  const protocol = url.startsWith('https') ? https : http;
+  return protocol.get(url, (response) => {
+    response.on('error', (error) => {
+      return callback(error);
+    });
+    response.on('data', (data) => {
+      const playlist = data.toString().split('\n');
+      const newUrlLine = playlist.find((line) => line.startsWith('File'));
+      if (!newUrlLine) {
+        return callback(new Error('No stream URL found in playlist'));
+      }
+      const newUrl = newUrlLine.substring(newUrlLine.indexOf('=') + 1).trim();
+      if (!newUrl) {
+        return callback(new Error('No stream URL found in playlist'));
+      }
+      const newProtocol = newUrl.startsWith('https') ? https : http;
+      return newProtocol
+        .get(newUrl, (stream) => {
+          return callback(null, stream);
+        })
+        .on('error', (error) => {
+          return callback(error);
+        })
+        .end();
+    });
+  });
+});
 
 @Injectable()
 export class ApiShoutcastService {
@@ -103,6 +137,29 @@ export class ApiShoutcastService {
       offset: 0,
       total: stations.total,
     };
+  }
+
+  /**
+   * Proxies a SHOUTcast stream for the given station URL to the client response.
+   * @param stationUrl The URL of the SHOUTcast station to create a stream for
+   * @param response The HTTP response object to pipe the stream to
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async proxyStream(stationUrl: string, response: Response) {
+    const stream = await startStream(stationUrl);
+    if (!stream) {
+      throw new InternalServerErrorException(ErrorCodes.INVALID_SHOUTCAST_STATION_URL_ERROR);
+    }
+    stream.pipe(response);
+  }
+
+  /**
+   * Fetches the current-playing song title from the SHOUTcast stream if it is provided.
+   * @param stationUrl The URL of the SHOUTcast station to create a stream for
+   * @returns The current-playing song info for the specified stream
+   */
+  async retrieveCurrentPlaying(stationUrl: string) {
+    return this.shoutcastService.retrieveStationCurrentPlaying(stationUrl);
   }
 
   /**

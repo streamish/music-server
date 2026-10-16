@@ -48,6 +48,7 @@ export enum ErrorCodes {
   INVALID_SHOUTCAST_GENRE_ID_ERROR = 'invalid-shoutcast-genre-id-error',
   INVALID_SHOUTCAST_GENRE_NAME_ERROR = 'invalid-shoutcast-genre-name-error',
   INVALID_SHOUTCAST_GENRE_NAME_LENGTH_ERROR = 'invalid-shoutcast-genre-length-error',
+  INVALID_SHOUTCAST_STREAM_ID_ERROR = 'invalid-shoutcast-stream-id-error',
   INVALID_TITLE_ERROR = 'invalid-title-error',
   INVALID_TITLE_LENGTH_ERROR = 'invalid-title-length-error',
   INVALID_TRACK_NUMBER_ERROR = 'invalid-track-number-error',

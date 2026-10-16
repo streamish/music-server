@@ -148,7 +148,7 @@ export class ShoutcastService {
     return {
       items: response.map((station) => {
         return {
-          id: `radio_${station.Name} http://yp.shoutcast.com/sbin/tunein-station.pls?id=${station.ID}`,
+          id: 0,
           title: station.Name,
           type: ShoutcastItemTypeEnum.STATION,
           url: `http://yp.shoutcast.com/sbin/tunein-station.pls?id=${station.ID}`,
@@ -224,6 +224,27 @@ export class ShoutcastService {
       throw new NotFoundException(ErrorCodes.SHOUTCAST_STATION_NOT_FOUND_ERROR);
     }
     return stationToRow(station);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async retrieveStationCurrentPlaying(stationUrl: string) {
+    const url = new URL(stationUrl);
+    const stationId = url.searchParams.get('id');
+    if (!stationId) {
+      throw new Error('Invalid stream URL');
+    }
+    const body = `stationID=${stationId}`;
+    const request = await fetch('https://directory.shoutcast.com/Player/GetCurrentTrack', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Content-Length': body.length.toString(),
+        Referer: 'https://directory.shoutcast.com/',
+      },
+      body,
+    });
+    const response = await request.json();
+    return response.Station.CurrentTrack as string;
   }
 
   /**
