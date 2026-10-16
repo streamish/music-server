@@ -48,17 +48,17 @@ export class SynologyProxyController {
         success: true,
       };
     }
+    // 3) Deleting the current-playing song info, this is not persisted on this server
     if (variousBodies.method === 'deletesonginfo') {
-      const body = plainToInstance(SynologyProxyDeleteSongInfoBodyDto, variousBodies);
-      await this.proxyService.deleteSongInfo(body.stream_id);
       return {
         success: true,
       };
     }
+    // 4) Retrieving the current-playing song info from the station
     const body = plainToInstance(SynologyProxySongInfoBodyDto, variousBodies);
-    const data = await this.proxyService.getCurrentSongInfo(body.stream_id);
+    const title = await this.proxyService.getCurrentSongInfo(body.stream_id);
     return {
-      data,
+      data: { title },
       success: true,
     };
   }

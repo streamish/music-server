@@ -72,10 +72,11 @@ export class ApiFavoritesService {
    * @param userId The authenticated user ID
    * @param [stationId] The ID of the shoutcast station to add to favorites
    * @param [stationUrl] The URL of the shoutcast station to add to favorites
+   * @param [stationTitle] The title of the shoutcast station to add to favorites
    * @throws If the specified shoutcast station is not found
    */
-  async setShoutcastStationFavorite(userId: number, stationId?: number, stationUrl?: string) {
-    return this.favoritesService.setShoutcastStationFavorite(userId, stationId, stationUrl);
+  async setShoutcastStationFavorite(userId: number, stationId?: number, stationUrl?: string, stationTitle?: string) {
+    return this.favoritesService.setShoutcastStationFavorite(userId, stationId, stationUrl, stationTitle);
   }
 
   /**

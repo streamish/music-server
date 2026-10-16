@@ -136,6 +136,7 @@ export class FavoritesService {
     accountId: number,
     shoutcastStationId?: number,
     shoutcastStationUrl?: string,
+    shoutcastStationTitle?: string,
   ): Promise<FavoriteItemEntity> {
     if (shoutcastStationId) {
       const station = await this.shoutcastStationEntity.findOne({
@@ -157,7 +158,7 @@ export class FavoritesService {
       const newStation = await this.shoutcastStationEntity.create({
         accountId,
         url: shoutcastStationUrl,
-        title: shoutcastStationUrl,
+        title: shoutcastStationTitle || shoutcastStationUrl,
       } as ShoutcastStationEntity);
       return this.favoriteItemEntity.create({
         accountId,

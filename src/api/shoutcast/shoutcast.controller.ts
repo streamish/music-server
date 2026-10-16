@@ -1,7 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint } from '../api.decorator';
 import { ApiShoutcastService } from './shoutcast.service';
-import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query, Res } from '@nestjs/common';
 import {
   CreateShoutcastGenreBodyDto,
   CreateShoutcastGenreResponseDto,
@@ -13,6 +13,8 @@ import {
   ListOnlineShoutcastStationsResponseDto,
   ListShoutcastGenresResponseDto,
   ListShoutcastStationsResponseDto,
+  ProxyShoutcastStreamQueryDto,
+  RetrieveCurrentPlayingResponseDto,
   UpdateShoutcastGenreBodyDto,
   UpdateShoutcastGenreQueryDto,
   UpdateShoutcastStationBodyDto,
@@ -21,6 +23,7 @@ import {
 import { ErrorCodes } from 'src/constants/error-codes';
 import { SuccessResponseDto, getValidationMessages } from 'src/api/response.dto';
 import { User } from 'src/api/user.decorator';
+import type { Response } from 'express';
 
 @Controller('api')
 export class ApiShoutcastController {
@@ -168,6 +171,38 @@ export class ApiShoutcastController {
     const data = await this.shoutcastService.listOnlineStations(user.id, query.id);
     return {
       ...data,
+      success: true,
+    };
+  }
+
+  @ApiEndpoint(Get, 'proxy-shoutcast-station', HttpStatus.OK, {
+    summary: 'Proxies a SHOUTcast station',
+    description: `Creates a basic HTTP proxy stream to a SHOUTcast radio station stream.`,
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(ProxyShoutcastStreamQueryDto),
+    },
+  })
+  async proxyStream(@Query() query: ProxyShoutcastStreamQueryDto, @Res() response: Response) {
+    await this.shoutcastService.proxyStream(query.shoutcastStationUrl, response);
+  }
+
+  @ApiEndpoint(Get, 'retrieve-shoutcast-playing', HttpStatus.OK, {
+    summary: 'Retrieve current track for a SHOUTcast station',
+    description: `Fetches the currently playing track information from a SHOUTcast radio stream.`,
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: RetrieveCurrentPlayingResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(ProxyShoutcastStreamQueryDto),
+    },
+  })
+  async retrieveCurrentPlaying(@Query() query: ProxyShoutcastStreamQueryDto) {
+    const title = await this.shoutcastService.retrieveCurrentPlaying(query.shoutcastStationUrl);
+    return {
+      title,
       success: true,
     };
   }

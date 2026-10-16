@@ -154,6 +154,7 @@ export class ApiFavoritesController {
       user.id,
       query.shoutcastStationId,
       query.shoutcastStationUrl,
+      query.shoutcastStationTitle,
     );
     return {
       favoriteId: favorite.id,

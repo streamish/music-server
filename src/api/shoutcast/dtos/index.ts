@@ -5,5 +5,7 @@ export * from './delete-shoutcast-station.dto';
 export * from './list-online-shoutcast-stations.dto';
 export * from './list-shoutcast-genres.dto';
 export * from './list-shoutcast-stations.dto';
+export * from './proxy-shoutcast-stream.dto';
+export * from './retrieve-current-playing.dto';
 export * from './update-shoutcast-genre.dto';
 export * from './update-shoutcast-station.dto';

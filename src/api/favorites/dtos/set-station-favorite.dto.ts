@@ -13,6 +13,14 @@ export class SetShoutcastStationFavoriteQueryDto {
   shoutcastStationId?: number;
 
   /**
+   * The title of the Shoutcast station if it is an online station that has not
+   * previously been added as a custom station.
+   */
+  @IsOptional()
+  @Length(1, 255, { message: ErrorCodes.INVALID_SHOUTCAST_STATION_TITLE_LENGTH_ERROR })
+  shoutcastStationTitle?: string;
+
+  /**
    * The URL of the Shoutcast station if it is an online station that has not
    * previously been added as a custom station.
    */
