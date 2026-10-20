@@ -1,4 +1,11 @@
 import {
+  type AuthenticatedApiClient,
+  type SynologyApiClient,
+  createAuthenticatedApi,
+  createSynologyApi,
+  encryptSynologyCredentials,
+} from '../../../../test-helper';
+import {
   SmartPlaylistConjugalEnum,
   SynologyApiEnum,
   SynologyLibraryEnum,
@@ -6,7 +13,6 @@ import {
   SynologyPinTypeEnum,
   components,
 } from '../../../../types/api-schema';
-import { type SynologyApiClient, createSynologyApi, encryptSynologyCredentials } from '../../../../test-helper';
 import { USER_PASSWORD, USER_USERNAME, testApi } from '../../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
@@ -18,6 +24,7 @@ type PlaylistContainerItem =
 
 describe('/webapi/AudioStation/entry.cgi', () => {
   let api: Awaited<SynologyApiClient>;
+  let userApi: Awaited<AuthenticatedApiClient>;
   let accountId: number;
 
   beforeAll(async () => {
@@ -28,6 +35,7 @@ describe('/webapi/AudioStation/entry.cgi', () => {
       throw new Error(`Failed to create test account`);
     }
     api = await createSynologyApi(username, USER_PASSWORD);
+    userApi = await createAuthenticatedApi(username, USER_PASSWORD);
   });
 
   afterAll(async () => {
@@ -276,10 +284,20 @@ describe('/webapi/AudioStation/entry.cgi', () => {
     });
 
     it('should favorite nested folder', async () => {
+      const { data: folderData } = await userApi.GET('/api/list-folder-contents', {
+        params: {
+          query: {
+            path: '/Artist 1/Album 2',
+          },
+        },
+      });
+      if (!folderData?.folder.id) {
+        throw new Error('Folder not found');
+      }
       const { items } = await addFavorite([
         {
           criteria: {
-            folder: '3',
+            folder: folderData.folder.id.toString(),
           },
           name: 'Nested Folder',
           type: SynologyPinTypeEnum.folder,

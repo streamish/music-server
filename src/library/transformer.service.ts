@@ -5,8 +5,7 @@ import {
   ShoutcastStationEntity,
   TrackEntity,
 } from 'src/database/entities';
-import { ErrorCodes } from 'src/constants/error-codes';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAlbumWithTracksDto } from './dtos/library.album.dto';
 import { LibraryAssociationDto } from './dtos/library.association.dto';
 import { LibraryFavoriteDto, LibraryFolderDto, LibraryShoutcastStationDto, LibraryTrackDto } from './dtos';
@@ -114,8 +113,8 @@ export class LibraryTransformerService {
   // eslint-disable-next-line class-methods-use-this
   convertFavoriteItemEntityToLibraryFavorite(
     favorite: FavoriteItemEntity,
-    folders?: LibraryFolderDto[],
     albums?: LibraryAlbumWithTracksDto[],
+    folder?: LibraryFolderDto,
   ): LibraryFavoriteDto {
     // Build a favorite album
     if (favorite.album?.id) {
@@ -134,28 +133,7 @@ export class LibraryTransformerService {
       };
     }
     // Build a favorite folder
-    if (favorite.folderPath) {
-      const findFolder = (branches: LibraryFolderDto[]) => {
-        for (let i = 0, len = branches.length; i < len; i += 1) {
-          const branch = branches[i];
-          if (branch) {
-            if (branch.fullPath === favorite.folderPath) {
-              return branch;
-            }
-            if (branch.children?.length) {
-              const found = findFolder(branch.children);
-              if (found) {
-                return found;
-              }
-            }
-          }
-        }
-        return undefined;
-      };
-      const folder = findFolder(folders || []);
-      if (!folder) {
-        throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
-      }
+    if (favorite.folderId) {
       return {
         id: favorite.id || 0,
         createdAt: favorite.createdAt || new Date(),

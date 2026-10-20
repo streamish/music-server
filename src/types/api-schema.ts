@@ -328,30 +328,6 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  '/api/folder-structure': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieve library folder structure
-     * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents. This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
-     *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
-     *
-     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
-     */
-    get: operations['ApiFoldersController_getTreeStructure'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/api/healthcheck': {
     parameters: {
       query?: never;
@@ -490,6 +466,30 @@ export type paths = {
     };
     /** @description `GET` request to `/api/list-favorites` */
     get: operations['ApiFavoritesController_listFavorites'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-folder-contents': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieve library folder structure
+     * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents. This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    get: operations['ApiFoldersController_listFolderContents'];
     put?: never;
     post?: never;
     delete?: never;
@@ -697,6 +697,30 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/proxy-shoutcast-station': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Proxies a SHOUTcast station
+     * @description Creates a basic HTTP proxy stream to a SHOUTcast radio station stream.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    get: operations['ApiShoutcastController_proxyStream'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/regenerate-master-session-key': {
     parameters: {
       query?: never;
@@ -819,6 +843,30 @@ export type paths = {
     };
     /** @description `GET` request to `/api/retrieve-association` */
     get: operations['ApiAssociationsController_retrieveAssociation'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/retrieve-shoutcast-playing': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieve current track for a SHOUTcast station
+     * @description Fetches the currently playing track information from a SHOUTcast radio stream.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    get: operations['ApiShoutcastController_retrieveCurrentPlaying'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1541,7 +1589,7 @@ export type paths = {
     put?: never;
     /**
      * Lists folders in the music library
-     * @description Lists folders found in the music library to enable navigating music by the file path.
+     * @description Lists folders found in the music library to enable navigating music by the file path. Synology uses a numerical ID to identify each folder which is internally mapped to the actual folder path. The internal mapping segregates each folder level using a pattern like `{n}00{n}00{n}00...{n}`.
      *
      *     The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the `/entry.cgi` endpoint, a two-step process requesting the encryption public key from `/certs` and then  submitting credentials encrypted with it.
      */
@@ -2532,13 +2580,16 @@ export type components = {
     };
     /**
      * @description A validation or other error occurred during the processing of the request.
-     * @enum {number}
+     * @enum {string}
      */
     ApiFavoritesSetFolderFavoriteBadRequestErrors: ApiFavoritesSetFolderFavoriteBadRequestErrors;
     ApiFavoritesSetFolderFavoriteBadRequestResponse: {
       /** @description General description of the error class */
       error: string;
-      /** @description A validation or other error occurred during the processing of the request. */
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-folder-id-error
+       */
       message: components['schemas']['ApiFavoritesSetFolderFavoriteBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
@@ -3234,6 +3285,44 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
+    ApiShoutcastProxyStreamBadRequestErrors: ApiShoutcastProxyStreamBadRequestErrors;
+    ApiShoutcastProxyStreamBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-shoutcast-station-url-length-error
+       */
+      message: components['schemas']['ApiShoutcastProxyStreamBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiShoutcastRetrieveCurrentPlayingBadRequestErrors: ApiShoutcastRetrieveCurrentPlayingBadRequestErrors;
+    ApiShoutcastRetrieveCurrentPlayingBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-shoutcast-station-url-length-error
+       */
+      message: components['schemas']['ApiShoutcastRetrieveCurrentPlayingBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
     ApiShoutcastUpdateGenreBadRequestErrors: ApiShoutcastUpdateGenreBadRequestErrors;
     ApiShoutcastUpdateGenreBadRequestResponse: {
       /** @description General description of the error class */
@@ -3603,15 +3692,6 @@ export type components = {
      * @enum {string}
      */
     FileTypeEnum: FileTypeEnum;
-    FolderStructureResponseDto: {
-      items: components['schemas']['LibraryFolderDto'][];
-      /**
-       * Format: constant
-       * @description The success being "true" indicates that the request completed.
-       * @default true
-       */
-      success: boolean;
-    };
     /**
      * @description A forbidden error occurred due to the user not having the necessary permissions to access the resource.
      * @enum {string}
@@ -3815,6 +3895,7 @@ export type components = {
       folder?: string;
       fullPath: string;
       id: number;
+      relativePath: string;
       track?: components['schemas']['LibraryTrackDto'];
     };
     LibraryShoutcastStationDto: {
@@ -3964,6 +4045,15 @@ export type components = {
        */
       success: boolean;
       total: number;
+    };
+    ListFolderContentsResponseDto: {
+      folder: components['schemas']['LibraryFolderDto'];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
     };
     ListIndexerLogsResponseDto: {
       logs: components['schemas']['LogEntryDto'][];
@@ -4420,11 +4510,11 @@ export type components = {
        */
       type: string;
     };
+    QnapMediaListFolderContentsResponseDto: {
+      datas: components['schemas']['QnapMediaListFoldersDto'];
+    };
     QnapMediaListFoldersDto: {
       data: components['schemas']['QnapFolderDto'][];
-    };
-    QnapMediaListFoldersResponseDto: {
-      datas: components['schemas']['QnapMediaListFoldersDto'];
     };
     QnapMediaListGeneralQueryDto: {
       /** @description The action (always "list") */
@@ -4767,6 +4857,15 @@ export type components = {
        * @default true
        */
       success: boolean;
+    };
+    RetrieveCurrentPlayingResponseDto: {
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      title: string;
     };
     RetrieveTestAccountResponseDto: {
       account: components['schemas']['TestAccountDto'];
@@ -8886,49 +8985,6 @@ export interface operations {
       };
     };
   };
-  ApiFoldersController_getTreeStructure: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['FolderStructureResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
   ApiHealthcheckController_healthcheck: {
     parameters: {
       query?: never;
@@ -9436,6 +9492,52 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiFavoritesListFavoritesBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiFoldersController_listFolderContents: {
+    parameters: {
+      query: {
+        /** @description The current path within the folder tree to retrieve, defaults to the root '/' */
+        path: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListFolderContentsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -10033,6 +10135,55 @@ export interface operations {
       };
     };
   };
+  ApiShoutcastController_proxyStream: {
+    parameters: {
+      query: {
+        /**
+         * @description The URL of the Shoutcast station if it is an online station that has not
+         *     previously been added as a custom station.
+         */
+        shoutcastStationUrl: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastProxyStreamBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiSessionsController_regenerateMasterSessionKey: {
     parameters: {
       query?: never;
@@ -10339,6 +10490,55 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiAssociationsRetrieveAssociationNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiShoutcastController_retrieveCurrentPlaying: {
+    parameters: {
+      query: {
+        /**
+         * @description The URL of the Shoutcast station if it is an online station that has not
+         *     previously been added as a custom station.
+         */
+        shoutcastStationUrl: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RetrieveCurrentPlayingResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiShoutcastRetrieveCurrentPlayingBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -10695,7 +10895,8 @@ export interface operations {
   ApiFavoritesController_setFolderFavorite: {
     parameters: {
       query: {
-        folder: string;
+        /** @description The database ID of the resource */
+        id: number;
       };
       header?: never;
       path?: never;
@@ -10800,6 +11001,11 @@ export interface operations {
          *     if a URL has also been supplied.
          */
         shoutcastStationId?: number;
+        /**
+         * @description The title of the Shoutcast station if it is an online station that has not
+         *     previously been added as a custom station.
+         */
+        shoutcastStationTitle?: string;
         /**
          * @description The URL of the Shoutcast station if it is an online station that has not
          *     previously been added as a custom station.
@@ -12048,7 +12254,7 @@ export interface operations {
             | components['schemas']['QnapMediaListArtistsResponseDto']
             | components['schemas']['QnapMediaListAlbumsResponseDto']
             | components['schemas']['QnapMediaListGenresResponseDto']
-            | components['schemas']['QnapMediaListFoldersResponseDto']
+            | components['schemas']['QnapMediaListFolderContentsResponseDto']
             | components['schemas']['QnapMediaListTracksResponseDto'];
         };
       };
@@ -13260,12 +13466,15 @@ export enum ApiFavoritesSetAssociationFavoriteBadRequestErrors {
 export enum ApiFavoritesSetAssociationFavoriteNotFoundErrors {
   association_not_found_error = 'association-not-found-error',
 }
-export enum ApiFavoritesSetFolderFavoriteBadRequestErrors {}
+export enum ApiFavoritesSetFolderFavoriteBadRequestErrors {
+  invalid_folder_id_error = 'invalid-folder-id-error',
+}
 export enum ApiFavoritesSetFolderFavoriteNotFoundErrors {
   folder_not_found_error = 'folder-not-found-error',
 }
 export enum ApiFavoritesSetShoutcastStationFavoriteBadRequestErrors {
   invalid_shoutcast_station_id_error = 'invalid-shoutcast-station-id-error',
+  invalid_shoutcast_station_title_length_error = 'invalid-shoutcast-station-title-length-error',
   invalid_shoutcast_station_url_length_error = 'invalid-shoutcast-station-url-length-error',
   invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
 }
@@ -13407,6 +13616,14 @@ export enum ApiShoutcastListOnlineStationsBadRequestErrors {
 }
 export enum ApiShoutcastListOnlineStationsNotFoundErrors {
   shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',
+}
+export enum ApiShoutcastProxyStreamBadRequestErrors {
+  invalid_shoutcast_station_url_length_error = 'invalid-shoutcast-station-url-length-error',
+  invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
+}
+export enum ApiShoutcastRetrieveCurrentPlayingBadRequestErrors {
+  invalid_shoutcast_station_url_length_error = 'invalid-shoutcast-station-url-length-error',
+  invalid_shoutcast_station_url_error = 'invalid-shoutcast-station-url-error',
 }
 export enum ApiShoutcastUpdateGenreBadRequestErrors {
   shoutcast_genre_not_found_error = 'shoutcast-genre-not-found-error',

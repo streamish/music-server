@@ -1,1 +1,1 @@
-export * from './folder-structure.dto';
+export * from './list-folder-contents.dto';

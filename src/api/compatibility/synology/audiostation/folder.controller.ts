@@ -20,7 +20,11 @@ export class SynologyFolderController {
 
   @SynologyApiEndpoint(Post, '/AudioStation/folder.cgi', HttpStatus.OK, {
     summary: 'Lists folders in the music library',
-    description: ['Lists folders found in the music library to enable navigating music by the file path.'].join(' '),
+    description: [
+      'Lists folders found in the music library to enable navigating music by the file path.',
+      'Synology uses a numerical ID to identify each folder which is internally mapped to the actual folder path.',
+      'The internal mapping segregates each folder level using a pattern like `{n}00{n}00{n}00...{n}`.',
+    ].join(' '),
     isAuthenticated: true,
     responses: {
       [HttpStatus.OK]: [SynologyFolderResponseDto],
@@ -41,7 +45,7 @@ export class SynologyFolderController {
       };
     }
     const body = plainToInstance(SynologyRootFolderBodyDto, variousBodies);
-    const data = await this.folderService.listRootFolders(user.id, body.offset, body.limit);
+    const data = await this.folderService.listFolders(user.id, 1, body.offset, body.limit);
     return {
       data,
       success: true,

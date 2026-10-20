@@ -9,6 +9,7 @@ import {
 } from '../../test-helper';
 import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { sep } from 'node:path';
 
 describe('/api/list-favorites', () => {
   let userApi: AuthenticatedApiClient;
@@ -44,8 +45,14 @@ describe('/api/list-favorites', () => {
     });
   }
 
-  async function folderStructure() {
-    return userApi.GET('/api/folder-structure', {});
+  async function listFolderContents(path: string) {
+    return userApi.GET('/api/list-folder-contents', {
+      params: {
+        query: {
+          path,
+        },
+      },
+    });
   }
 
   async function listAlbumAssociations(query: paths['/api/list-album-associations']['get']['parameters']['query']) {
@@ -84,11 +91,11 @@ describe('/api/list-favorites', () => {
     });
   }
 
-  async function setFolderFavorite(folderPath: string) {
+  async function setFolderFavorite(id: number) {
     return userApi.PUT('/api/set-folder-favorite', {
       params: {
         query: {
-          folder: folderPath,
+          id,
         },
       },
     });
@@ -133,8 +140,8 @@ describe('/api/list-favorites', () => {
         throw new Error('Track not found');
       }
       // get test folder
-      const { data: folderData } = await folderStructure();
-      const folderItem = folderData?.items?.[0]?.children?.[0]?.fullPath;
+      const { data: folderData } = await listFolderContents(sep);
+      const folderItem = folderData?.folder;
       if (!folderItem) {
         throw new Error('Folder not found');
       }
@@ -149,7 +156,7 @@ describe('/api/list-favorites', () => {
       // create favorites for the test album, track, and folder
       await setAlbumFavorite(album.id);
       await setTrackFavorite(track.id);
-      await setFolderFavorite(folderItem);
+      await setFolderFavorite(folderItem.id);
       await setAssociationFavorite(association.id, AssociationTypeEnum.composer);
       const { error, data } = await listFavorites({
         offset: 0,
@@ -158,7 +165,7 @@ describe('/api/list-favorites', () => {
       expect(error).toBeUndefined();
       expect(data?.favorites.some((f) => f.album?.id === album.id)).toBe(true);
       expect(data?.favorites.some((f) => f.track?.id === track.id)).toBe(true);
-      expect(data?.favorites.some((f) => f.folder?.fullPath === folderItem)).toBe(true);
+      expect(data?.favorites.some((f) => f.folder?.id === folderItem.id)).toBe(true);
       expect(data?.favorites.some((f) => f.association?.id === association.id)).toBe(true);
     });
   });

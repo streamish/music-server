@@ -40,14 +40,14 @@ import {
 })
 export class ${ENTITY_CLASS}Entity extends Model<${ENTITY_CLASS}Entity> {
   /**
-   * This field is managed by Sequelize and tracks the date and time the row was created.  This field should not be specified if you are
-   * inserting and updating data.
+   * This field is managed by Sequelize and tracks the date and time the row was created.  This
+   * field should not be specified if you are inserting and updating data.
    */
   @Column({
     type: DataType.DATE,
     defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
   })
-  declare createdAt: Date;
+  declare readonly createdAt: Date;
 
   /**
    * The ID of the table row is an integer that is assigned by the database when the row is created.
@@ -58,14 +58,15 @@ export class ${ENTITY_CLASS}Entity extends Model<${ENTITY_CLASS}Entity> {
     allowNull: false,
     autoIncrement: true,
   })
-  declare id: number;
+  declare readonly id: number;
 
   /**
-   * This field is managed by Sequelize and tracks the most recent date and time the row was last updated.  This field should not be specified if you are inserting and updating data.
+   * This field is managed by Sequelize and tracks the most recent date and time the row was last
+   * updated.  This field should not be specified if you are inserting and updating data.
    */
   @Column({
     type: DataType.DATE,
   })
-  declare updatedAt?: Date;
+  declare readonly updatedAt?: Date;
 }
 EOF

@@ -12,7 +12,7 @@ type RandomAlbums = components['schemas']['QnapMediaListRandomAlbumsResponseDto'
 type ListArtists = components['schemas']['QnapMediaListArtistsResponseDto'];
 type ListAlbums = components['schemas']['QnapMediaListAlbumsResponseDto'];
 type ListGenres = components['schemas']['QnapMediaListGenresResponseDto'];
-type ListFolders = components['schemas']['QnapMediaListFoldersResponseDto'];
+type ListFolders = components['schemas']['QnapMediaListFolderContentsResponseDto'];
 type ListTracks = components['schemas']['QnapMediaListTracksResponseDto'];
 
 describe('/musicstation/api/medialist_api.php', () => {

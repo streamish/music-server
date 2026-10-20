@@ -7,7 +7,7 @@ import {
   QnapMediaListAlbumsResponseDto,
   QnapMediaListArtistsResponseDto,
   QnapMediaListBucketQueryDto,
-  QnapMediaListFoldersResponseDto,
+  QnapMediaListFolderContentsResponseDto,
   QnapMediaListGeneralQueryDto,
   QnapMediaListGenresResponseDto,
   QnapMediaListRandomAlbumsResponseDto,
@@ -46,7 +46,7 @@ export class QnapMediaListController {
         QnapMediaListArtistsResponseDto,
         QnapMediaListAlbumsResponseDto,
         QnapMediaListGenresResponseDto,
-        QnapMediaListFoldersResponseDto,
+        QnapMediaListFolderContentsResponseDto,
         QnapMediaListTracksResponseDto,
       ],
     },
@@ -154,13 +154,13 @@ export class QnapMediaListController {
         return objectToXml({ status: 1, ...trackList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
       if (query.type === 'folder') {
-        // Route #9:  list folders
+        // Route #9:  list `/sub-folder` contents
         if (query.linkid) {
           const folderList = await this.mediaListApiService.listFolders(user.id, query.linkid);
           return objectToXml({ status: 1, ...folderList }, 'QDocRoot version="1.0"', 'QDocRoot');
         }
-        // Route #10:  list root folders
-        const folderList = await this.mediaListApiService.listRootFolders(user.id);
+        // Route #10:  list root `/` contents
+        const folderList = await this.mediaListApiService.listFolders(user.id, 1);
         return objectToXml({ status: 1, ...folderList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
     }

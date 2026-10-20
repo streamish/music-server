@@ -14,7 +14,7 @@ import { ConfigService } from 'src/config/config.service';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { InjectModel } from '@nestjs/sequelize';
-import { LibraryFavoriteDto, LibraryFolderDto } from 'src/library/dtos';
+import { LibraryFavoriteDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { Op } from 'sequelize';
 import {
@@ -40,13 +40,13 @@ function favoriteToRow(item: LibraryFavoriteDto): SynologyEntryPinItemDto {
       artist: item.associationType === AssociationTypeEnum.ARTIST ? item.association?.name : undefined,
       composer: item.associationType === AssociationTypeEnum.COMPOSER ? item.association?.name : undefined,
       genre: item.associationType === AssociationTypeEnum.GENRE ? item.association?.name : undefined,
-      folder: item.folder ? `dir_${item.folder?.folder}` : undefined,
+      folder: item.folder ? `dir_${item.folder?.id}` : undefined,
       playlist: item.playlist?.name,
     },
     name:
       item.association?.name ||
       item.album?.title ||
-      item.folder?.folder?.split(sep).pop() ||
+      item.folder?.fullPath?.split(sep).pop() ||
       item.playlist?.name ||
       (item.allSongs ? 'All songs' : undefined) ||
       (item.randomHundred ? 'Random 100' : undefined) ||
@@ -200,28 +200,6 @@ export class SynologyEntryService {
   }
 
   async createPinnedItem(accountId: number, items: SynologyEntryNewPinItemDto[]): Promise<SynologyEntryPinsDataDto> {
-    let tree: LibraryFolderDto[] | undefined;
-    function findTreeItem(id: number, branch: LibraryFolderDto[]): LibraryFolderDto | undefined {
-      if (!branch) {
-        return undefined;
-      }
-      for (let i = 0, len = branch.length; i < len; i += 1) {
-        const item = branch[i];
-        if (item) {
-          if (item.id === id) {
-            return item;
-          }
-          if (item.children) {
-            const found = findTreeItem(id, item.children);
-            if (found) {
-              return found;
-            }
-          }
-        }
-      }
-      return undefined;
-    }
-
     for (let i = 0, len = items.length; i < len; i += 1) {
       const item = items[i];
       if (item) {
@@ -271,13 +249,10 @@ export class SynologyEntryService {
           // eslint-disable-next-line no-await-in-loop
           await this.favoritesService.setAssociationFavorite(accountId, associationId, associationType);
         } else if (item.type === 'folder') {
-          if (!tree) {
-            // eslint-disable-next-line no-await-in-loop
-            tree = await this.libraryService.listFolders(accountId);
-          }
-          const itemId = Number.parseInt(item.criteria.folder || '1', 10);
-          const treeItem = findTreeItem(itemId, tree);
-          if (!treeItem?.folder?.length) {
+          const folderId = Number.parseInt(item.criteria.folder || '1', 10);
+          // eslint-disable-next-line no-await-in-loop
+          const folder = await this.libraryService.listFolderContents(accountId, folderId);
+          if (!folder) {
             throw new NotFoundException({
               success: false,
               message: 'Folder not found',
@@ -285,7 +260,7 @@ export class SynologyEntryService {
             });
           }
           // eslint-disable-next-line no-await-in-loop
-          await this.favoritesService.setFolderFavorite(accountId, treeItem.fullPath);
+          await this.favoritesService.setFolderFavorite(accountId, folder.id);
         } else if (item.type === 'playlist') {
           // eslint-disable-next-line no-await-in-loop
           const playlist = await this.playlistEntity.findOne({

@@ -3,6 +3,7 @@ import {
   AlbumEntity,
   AssociationEntity,
   AssociationLinkEntity,
+  FolderEntity,
   IndexerConfigurationEntity,
   RootPathEntity,
   TrackCustomDataEntity,
@@ -10,6 +11,7 @@ import {
 } from 'src/database/entities';
 import { IndexAlbumService } from './index-album.service';
 import { IndexAssociationService } from './index-association.service';
+import { IndexFolderService } from './index-folders.service';
 import { IndexTrackService } from './index-track.service';
 import { IndexerService } from './indexer.service';
 import { Module } from '@nestjs/common';
@@ -23,6 +25,7 @@ import { SystemConfigurationEntity } from 'src/database/entities/system-configur
       AlbumEntity,
       AssociationEntity,
       AssociationLinkEntity,
+      FolderEntity,
       IndexerConfigurationEntity,
       RootPathEntity,
       SystemConfigurationEntity,
@@ -30,7 +33,7 @@ import { SystemConfigurationEntity } from 'src/database/entities/system-configur
       TrackEntity,
     ]),
   ],
-  providers: [IndexerService, IndexAlbumService, IndexAssociationService, IndexTrackService],
+  providers: [IndexerService, IndexAlbumService, IndexAssociationService, IndexFolderService, IndexTrackService],
   exports: [IndexerService],
 })
 export class IndexerModule {}

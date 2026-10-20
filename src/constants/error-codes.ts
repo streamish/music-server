@@ -26,6 +26,8 @@ export enum ErrorCodes {
   INVALID_DISC_NUMBER_RANGE_ERROR = 'invalid-disc-number-range-error',
   INVALID_FILTER_ERROR = 'invalid-filter-error',
   INVALID_FILTER_LENGTH_ERROR = 'invalid-filter-length-error',
+  INVALID_FOLDER_PATH_ERROR = 'invalid-folder-path-error',
+  INVALID_FOLDER_PATH_LENGTH_ERROR = 'invalid-folder-path-length-error',
   INVALID_GENRE_ERROR = 'invalid-genre-error',
   INVALID_GENRE_LENGTH_ERROR = 'invalid-genre-length-error',
   INVALID_GENRES_ERROR = 'invalid-genres-error',

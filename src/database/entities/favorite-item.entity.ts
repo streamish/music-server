@@ -3,6 +3,7 @@ import { AlbumEntity } from './album.entity';
 import { AssociationEntity } from './association.entity';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from 'sequelize-typescript';
+import { FolderEntity } from './folder.entity';
 import { PlaylistEntity } from './playlist.entity';
 import { ShoutcastStationEntity } from './shoutcast-station.entity';
 import { TrackEntity } from './track.entity';
@@ -95,10 +96,19 @@ export class FavoriteItemEntity extends Model<FavoriteItemEntity> {
    * The folder path if a folder is pinned
    */
   @Column({
-    type: DataType.STRING,
+    type: DataType.INTEGER,
+    references: {
+      model: FolderEntity,
+      key: 'id',
+    },
     allowNull: true,
+    onDelete: 'CASCADE',
   })
-  declare folderPath: string | null;
+  @ForeignKey(() => FolderEntity)
+  declare folderId: number | null;
+
+  @BelongsTo(() => FolderEntity)
+  declare folder?: FolderEntity;
 
   /**
    * The ID of the table row is an integer that is assigned by the database when the row is created.

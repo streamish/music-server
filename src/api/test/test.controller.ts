@@ -19,7 +19,7 @@ export class ApiTestController {
   constructor(private readonly testService: ApiTestService) {}
 
   /**
-   * `POST` reuqest to `/api/test/create-test-account`
+   * `POST` request to `/api/test/create-test-account`
    */
   @ApiEndpoint(Post, 'create-test-account', HttpStatus.OK, {
     summary: 'Create an empty account for testing',

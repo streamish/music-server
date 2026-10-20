@@ -189,61 +189,17 @@ export class QnapMediaListService {
     };
   }
 
-  async listRootFolders(accountId: number) {
-    const folderTree = await this.libraryService.listFolders(accountId);
-    return {
-      datas: {
-        data: folderTree.map(folderToRow),
-      },
-    };
-  }
-
   async listFolders(accountId: number, folderId: number) {
-    function findItem(treeItem: LibraryFolderDto) {
-      const result = treeItem.id === folderId ? treeItem : null;
-      if (result) {
-        return result;
-      }
-      if (treeItem.children) {
-        for (let i = 0, len = treeItem.children.length; i < len; i += 1) {
-          const child = treeItem.children[i];
-          if (child?.folder) {
-            const found = findItem(child);
-            if (found) {
-              return found;
-            }
-          }
-        }
-      }
-      return null;
-    }
-    const folderTree = await this.libraryService.listFolders(accountId);
-    const startingFolder = folderTree.map(findItem).find((item) => item !== null);
-    if (!startingFolder) {
-      throw new Error(`Folder with id ${folderId} not found`);
-    }
-    const pathContents = startingFolder.children || [];
-    const files = await this.libraryService.listTracks(
-      accountId,
-      {
-        filePath: startingFolder.folder,
-      },
-      0,
-      100_000,
-      TrackSortFieldEnum.TITLE,
-    );
-    const fileItems = files.items
-      .filter((track) => {
-        return (
-          track.filePath.startsWith(startingFolder.folder) &&
-          track.filePath.lastIndexOf('/') === startingFolder.folder.length
-        );
-      })
-      .map(songToRow);
-    const folderItems = pathContents.map(folderToRow);
+    const folderContents = await this.libraryService.listFolderContents(accountId, folderId);
+    const items = folderContents.children || [];
     return {
       datas: {
-        data: [...folderItems, ...fileItems],
+        data: items.map((item) => {
+          if (item.track) {
+            return songToRow(item.track);
+          }
+          return folderToRow(item);
+        }),
       },
     };
   }

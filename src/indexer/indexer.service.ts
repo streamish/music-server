@@ -6,6 +6,7 @@ import { FSWatcher, readdir, stat, watch } from 'node:fs';
 import { IAudioMetadata, IOptions } from 'src/types/music-metadata';
 import { IndexAlbumService } from './index-album.service';
 import { IndexAssociationService } from './index-association.service';
+import { IndexFolderService } from './index-folders.service';
 import { IndexTrackService } from './index-track.service';
 import { IndexerConfigurationEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
@@ -56,6 +57,7 @@ export class IndexerService {
     private readonly indexAlbumService: IndexAlbumService,
     private readonly indexAssociationService: IndexAssociationService,
     private readonly indexFileService: IndexTrackService,
+    private readonly indexFolderService: IndexFolderService,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
     @InjectModel(IndexerConfigurationEntity)
@@ -289,10 +291,14 @@ export class IndexerService {
     await this.checkFile(rootPath, filesToScan, filesToUpdate);
     // start the metadata scanning to update the database with the latest file information
     await this.updateFile(rootPath, filesToUpdate);
+    // update the folder index after scanning files
+    await this.indexFolderService.indexFolders(rootPath);
   }
 
   /**
-   * Manually rescan a single specific file after changes to its custom data
+   * Manually re-scan a single specific file after changes to its custom data.  This
+   * does not involve file-system changes so the root paths are not re-scanned and the
+   * folders are not re-indexed.
    * @param trackId The ID of the file
    */
   async scanFile(trackId: number) {

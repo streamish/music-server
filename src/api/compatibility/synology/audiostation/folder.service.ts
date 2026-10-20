@@ -1,4 +1,4 @@
-import { ContentTypeEnum, TrackSortFieldEnum } from 'src/types/enums';
+import { ContentTypeEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
 import { SynologyFolderDataDto, SynologyFolderDto, SynologySongDto } from './dtos';
@@ -53,72 +53,29 @@ function fileToRow(track: LibraryTrackDto): SynologySongDto {
 export class SynologyFolderService {
   constructor(private readonly libraryService: LibraryService) {}
 
-  async listRootFolders(accountId: number, offset: number, limit: number): Promise<SynologyFolderDataDto> {
-    const folderTree = await this.libraryService.listFolders(accountId);
-    return {
-      items: folderTree
-        .map((folderTreeItem) => folderToRow(folderTreeItem))
-        .splice(offset)
-        .slice(0, limit),
-      folder_total: folderTree.length,
-      offset,
-      total: folderTree.length,
-    };
-  }
-
   async listFolders(
     accountId: number,
     folderId: number,
     offset: number,
     limit: number,
   ): Promise<SynologyFolderDataDto> {
-    function findItem(treeItem: LibraryFolderDto) {
-      const result = treeItem.id === folderId ? treeItem : null;
-      if (result) {
-        return result;
-      }
-      if (treeItem.children) {
-        for (let i = 0, len = treeItem.children.length; i < len; i += 1) {
-          const child = treeItem.children[i];
-          if (child?.folder) {
-            const found = findItem(child);
-            if (found) {
-              return found;
-            }
-          }
-        }
-      }
-      return null;
-    }
-    const folderTree = await this.libraryService.listFolders(accountId);
-    const startingFolder = folderTree.map(findItem).find((item) => item !== null);
+    const startingFolder = await this.libraryService.listFolderContents(accountId, folderId);
     if (!startingFolder) {
       throw new Error(`Folder with id ${folderId} not found`);
     }
-    const folderTotal = startingFolder.children ? startingFolder.children.length : 0;
     const pathContents = startingFolder.children || [];
-    const folderItems = pathContents.filter((item) => item?.folder).map(folderToRow);
-    const filePaths = pathContents.filter((item) => item?.file).map((file) => file.fullPath);
-    const fileItems = await this.libraryService.listTracks(
-      accountId,
-      {
-        filePath: `${startingFolder.fullPath}/`,
-      },
-      0,
-      100_000,
-      TrackSortFieldEnum.TITLE,
-    );
-    const fileItemsMapped = fileItems.items
-      .filter((track) => {
-        return filePaths.indexOf(track.filePath) > -1;
-      })
-      .map(fileToRow);
+    const folderTotal = pathContents.length;
+    const folderItems = pathContents.filter((item) => item.folder).map(folderToRow);
+    const fileTracks = pathContents
+      .filter((item) => item.track !== undefined)
+      .map((item) => item.track) as LibraryTrackDto[];
+    const fileItemsMapped = fileTracks.map((track) => fileToRow(track));
     return {
       folder_total: folderTotal,
       id: `dir_${startingFolder.id}`,
       items: [...folderItems, ...fileItemsMapped].slice(offset, offset + limit),
       offset,
-      total: startingFolder.children.length,
+      total: folderTotal,
     };
   }
 }
