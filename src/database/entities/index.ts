@@ -3,6 +3,7 @@ import { AlbumEntity } from './album.entity';
 import { AssociationEntity } from './association.entity';
 import { AssociationLinkEntity } from './association-link.entity';
 import { FavoriteItemEntity } from './favorite-item.entity';
+import { FolderEntity } from './folder.entity';
 import { IndexerConfigurationEntity } from './indexer-configuration.entity';
 import { PlaylistEntity } from './playlist.entity';
 import { PlaylistItemEntity } from './playlist-item.entity';
@@ -18,11 +19,10 @@ import { TrackEntity } from './track.entity';
 export {
   AccountEntity,
   AlbumEntity,
-  TrackEntity,
   AssociationEntity,
   AssociationLinkEntity,
   FavoriteItemEntity,
-  TrackCustomDataEntity,
+  FolderEntity,
   IndexerConfigurationEntity,
   PlaylistEntity,
   PlaylistItemEntity,
@@ -32,8 +32,14 @@ export {
   ShoutcastGenreEntity,
   ShoutcastStationEntity,
   SystemConfigurationEntity,
+  TrackCustomDataEntity,
+  TrackEntity,
 };
 
+// Note:  This array is the list of entities that will be processed by the ORM.  The order of
+// this array must respect the foreign key dependencies within the tables i.e. tables referenced
+// by foreign keys should appear before tables that reference them.  Getting this wrong will
+// prevent the server from starting.
 export const entitiesList = [
   AccountEntity,
   SessionEntity,
@@ -41,6 +47,7 @@ export const entitiesList = [
   SystemConfigurationEntity,
   RootPathEntity,
   AlbumEntity,
+  FolderEntity,
   ShoutcastGenreEntity,
   ShoutcastStationEntity,
   TrackEntity,

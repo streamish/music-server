@@ -38,15 +38,15 @@ describe('/webapi/AudioStation/folder.cgi', () => {
     expect(folders[2]?.path).toBe('Artist 3');
   });
 
-  it('should list folders under a root folder', async () => {
-    const { folders } = await listFolders('dir_1');
+  it('should list folders under root folder', async () => {
+    const { folders } = await listFolders('dir_2');
     expect(folders.length).toBe(2);
     expect(folders[0]?.title).toBe('Album 1');
     expect(folders[1]?.title).toBe('Album 2');
   });
 
   it('should list folders under a nested folder', async () => {
-    const { folders } = await listFolders('dir_2');
+    const { folders } = await listFolders('dir_3');
     expect(folders.length).toBe(5);
     expect(folders[0]?.title).toBe('01 First Track.flac');
     expect(folders[1]?.title).toBe('02 Second Track.m4a');
@@ -56,14 +56,14 @@ describe('/webapi/AudioStation/folder.cgi', () => {
   });
 
   it('should list folders under a deeper-nested folder', async () => {
-    const { folders } = await listFolders('dir_3');
+    const { folders } = await listFolders('dir_4');
     expect(folders.length).toBe(2);
     expect(folders[0]?.title).toBe('CD 1');
     expect(folders[1]?.title).toBe('CD 2');
   });
 
   it('should list files under a deeper-nested folder', async () => {
-    const { folders } = await listFolders('dir_4');
+    const { folders } = await listFolders('dir_5');
     expect(folders.length).toBe(4);
     expect(folders[0]?.title).toBe('01 First Track.flac');
     expect(folders[1]?.title).toBe('02 Second Track.flac');
@@ -73,12 +73,12 @@ describe('/webapi/AudioStation/folder.cgi', () => {
 
   it('should paginate folders', async () => {
     // page 1
-    const { folders, total } = await listFolders('dir_1', 0, 1);
+    const { folders, total } = await listFolders('dir_2', 0, 1);
     expect(total).toBe(2);
     expect(folders.length).toBe(1);
     expect(folders[0]?.title).toBe('Album 1');
     // page 2
-    const { folders: folders2, total: total2 } = await listFolders('dir_1', 1, 1);
+    const { folders: folders2, total: total2 } = await listFolders('dir_2', 1, 1);
     expect(total2).toBe(2);
     expect(folders2.length).toBe(1);
     expect(folders2[0]?.title).toBe('Album 2');

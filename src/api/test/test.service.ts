@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { AlbumEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
+import { AlbumEntity, FolderEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { CreateTestAccountBodyDto, TestAccountDto } from './dtos';
 import { ErrorCodes } from 'src/constants/error-codes';
@@ -24,6 +24,8 @@ export class ApiTestService {
     @InjectModel(AlbumEntity)
     private readonly albumEntity: typeof AlbumEntity,
     private readonly authenticationService: AuthenticationService,
+    @InjectModel(FolderEntity)
+    private readonly folderEntity: typeof FolderEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
     @Inject(IndexerService)
@@ -34,7 +36,7 @@ export class ApiTestService {
 
   /**
    * Creates a test account with no root path or media that can be used for testing operations.
-   * @param data The acocunt information
+   * @param data The account information
    * @returns The test account details
    */
   async createTestAccount(data: CreateTestAccountBodyDto) {
@@ -125,6 +127,21 @@ export class ApiTestService {
           updatedAt: undefined,
           id: undefined,
         } as unknown as TrackEntity);
+      }
+    }
+    // copy the folders
+    const folders = await this.folderEntity.findAll({ where: { accountId: account.id } });
+    for (let i = 0, len = folders.length; i < len; i += 1) {
+      const folder = folders[i];
+      if (folder) {
+        // eslint-disable-next-line no-await-in-loop
+        await this.folderEntity.create({
+          ...folder.toJSON(),
+          accountId: newAccount.id,
+          createdAt: new Date(1970, 0, 1),
+          updatedAt: undefined,
+          id: undefined,
+        } as unknown as FolderEntity);
       }
     }
     // re-index the new files

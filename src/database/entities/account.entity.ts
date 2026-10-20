@@ -16,8 +16,7 @@ import type { CreateOptions } from 'sequelize';
 export class AccountEntity extends Model<AccountEntity> {
   /**
    * This field is managed by Sequelize and tracks the date and time the row was created.  This
-   * field should not be specified if you are
-   * inserting and updating data.
+   * field should not be specified if you are inserting and updating data.
    */
   @Column({
     type: DataType.DATE,

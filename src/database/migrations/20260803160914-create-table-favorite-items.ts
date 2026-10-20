@@ -41,8 +41,8 @@ export async function up(queryInterface: QueryInterface) {
       type: DataType.DATE,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
-    folder_path: {
-      type: DataType.STRING(500),
+    folder_id: {
+      type: DataType.INTEGER,
       allowNull: true,
     },
     id: {

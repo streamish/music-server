@@ -9,7 +9,7 @@ import {
 import { ErrorCodes } from '../../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-describe('/users/folder-structure', () => {
+describe('/users/list-folder-contents', () => {
   let userApi: AuthenticatedApiClient;
   let accountId: number;
 
@@ -27,13 +27,25 @@ describe('/users/folder-structure', () => {
     await testApi.deleteAccount(accountId);
   });
 
-  async function folderStructure() {
-    return userApi.GET('/api/folder-structure', {});
+  async function listFolderContents(path: string = '/') {
+    return userApi.GET('/api/list-folder-contents', {
+      params: {
+        query: {
+          path,
+        },
+      },
+    });
   }
 
   describe('authorized access', () => {
     it('should reject guest access', async () => {
-      const { error } = await unauthenticatedApi.GET('/api/folder-structure', {});
+      const { error } = await unauthenticatedApi.GET('/api/list-folder-contents', {
+        params: {
+          query: {
+            path: '/',
+          },
+        },
+      });
       const typedError = error as unknown as Record<string, string | string[]>;
       expect(typedError?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
     });
@@ -41,53 +53,22 @@ describe('/users/folder-structure', () => {
 
   describe('success', () => {
     it('should return nested folder list', async () => {
-      const { data } = await folderStructure();
-      const artist1 = data?.items?.[0];
-      const artist2 = data?.items?.[1];
-      expect(data?.items.length).toBe(3);
-      expect(artist1?.children?.length).toBe(2);
-      expect(artist1?.children?.[0]?.folder).toBe('Album 1');
-      expect(artist1?.children?.[0]?.children?.length).toBe(5);
-      expect(artist1?.children?.[0]?.children?.[0]?.file?.length).toBeGreaterThan(0);
-      expect(artist1?.children?.[1]?.folder).toBe('Album 2');
-      expect(artist1?.children?.[1]?.children?.length).toBe(2);
-      expect(artist1?.children?.[1]?.children?.[0]?.folder).toBe('CD 1');
-      expect(artist1?.children?.[1]?.children?.[0]?.children?.length).toBe(4);
-      expect(artist1?.children?.[1]?.children?.[1]?.folder).toBe('CD 2');
-      expect(artist1?.children?.[1]?.children?.[1]?.children?.length).toBe(3);
-      expect(artist2?.children?.length).toBe(1);
-      expect(artist2?.children?.[0]?.folder).toBe('Album 3');
-      expect(artist2?.children?.[0]?.children?.length).toBe(5);
-      expect(artist2?.children?.[0]?.children?.[0]?.file?.length).toBeGreaterThan(0);
-      expect(artist2?.children?.[0]?.children?.[1]?.file?.length).toBeGreaterThan(0);
+      const { data } = await listFolderContents();
+      const artist1 = data?.folder.children?.[0];
+      const artist2 = data?.folder.children?.[1];
+      const artist3 = data?.folder.children?.[2];
+      expect(data?.folder.children?.length).toBe(3);
+      expect(artist1?.folder).toBe('Artist 1');
+      expect(artist2?.folder).toBe('Artist 2');
+      expect(artist3?.folder).toBe('Artist 3');
     });
 
     it('should return file list', async () => {
-      const { data } = await folderStructure();
-      const artist1 = data?.items?.[0];
-      const artist2 = data?.items?.[1];
-      expect(artist1?.children?.[0]?.folder).toBe('Album 1');
-      expect(artist1?.children?.[0]?.children?.length).toBe(5);
-      for (let i = 0; i < (artist1?.children?.[0]?.children?.length ?? 0); i += 1) {
-        expect(artist1?.children?.[0]?.children?.[i]?.file?.length).toBeGreaterThan(0);
-      }
-      expect(artist1?.children?.[1]?.folder).toBe('Album 2');
-      expect(artist1?.children?.[1]?.children?.length).toBe(2);
-      expect(artist1?.children?.[1]?.children?.[0]?.folder).toBe('CD 1');
-      expect(artist1?.children?.[1]?.children?.[0]?.children?.length).toBe(4);
-      for (let i = 0; i < (artist1?.children?.[1]?.children?.[0]?.children?.length ?? 0); i += 1) {
-        expect(artist1?.children?.[1]?.children?.[0]?.children?.[i]?.file?.length).toBeGreaterThan(0);
-      }
-      expect(artist1?.children?.[1]?.children?.[1]?.folder).toBe('CD 2');
-      expect(artist1?.children?.[1]?.children?.[1]?.children?.length).toBe(3);
-      for (let i = 0; i < (artist1?.children?.[1]?.children?.[1]?.children?.length ?? 0); i += 1) {
-        expect(artist1?.children?.[1]?.children?.[1]?.children?.[i]?.file?.length).toBeGreaterThan(0);
-      }
-      expect(artist2?.children?.length).toBe(1);
-      expect(artist2?.children?.[0]?.folder).toBe('Album 3');
-      expect(artist2?.children?.[0]?.children?.length).toBe(5);
-      for (let i = 0; i < (artist2?.children?.[0]?.children?.length ?? 0); i += 1) {
-        expect(artist2?.children?.[0]?.children?.[i]?.file?.length).toBeGreaterThan(0);
+      const { data } = await listFolderContents('/Artist 1/Album 1');
+      const files = data?.folder.children;
+      expect(files?.length).toBe(5);
+      for (let i = 0; i < (files?.length ?? 0); i += 1) {
+        expect(files?.[i]?.track?.id).toBeDefined();
       }
     });
   });

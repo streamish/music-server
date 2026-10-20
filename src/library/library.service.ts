@@ -3,7 +3,9 @@ import {
   AssociationEntity,
   AssociationLinkEntity,
   FavoriteItemEntity,
+  FolderEntity,
   PlaylistEntity,
+  RootPathEntity,
   ShoutcastStationEntity,
   TrackEntity,
 } from 'src/database/entities';
@@ -25,7 +27,8 @@ import { LibraryQueryService } from './query.service';
 import { LibraryTransformerService } from './transformer.service';
 import { Op } from 'sequelize';
 import { TrackFilter } from './types/track-filter';
-import { sep } from 'node:path';
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import type { AlbumFilter } from './types/album-filter';
 import type { ListResult } from '../types/list-result';
 
@@ -40,7 +43,11 @@ export class LibraryService {
     private readonly associationLinkEntity: typeof AssociationLinkEntity,
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
+    @InjectModel(FolderEntity)
+    private readonly folderEntity: typeof FolderEntity,
     private readonly queryService: LibraryQueryService,
+    @InjectModel(RootPathEntity)
+    private readonly rootPathEntity: typeof RootPathEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
     private readonly transformerService: LibraryTransformerService,
@@ -178,6 +185,10 @@ export class LibraryService {
           required: false,
         },
         {
+          model: FolderEntity,
+          required: false,
+        },
+        {
           model: AssociationEntity,
           required: false,
           include: [
@@ -204,11 +215,6 @@ export class LibraryService {
         accountId,
       },
     });
-    // optionally load the folders if any favorite has a folder path
-    let folders: LibraryFolderDto[];
-    if (favorites.find((f) => f.folderPath)) {
-      folders = await this.listFolders(accountId);
-    }
     return {
       total,
       items: await Promise.all(
@@ -236,84 +242,155 @@ export class LibraryService {
               .filter(Boolean);
             albums.push(...allAlbums);
           }
-          return this.transformerService.convertFavoriteItemEntityToLibraryFavorite(favorite, folders, albums);
+          let folder: LibraryFolderDto | undefined;
+          if (favorite.folderId) {
+            folder = await this.listFolderContents(accountId, favorite.folderId);
+          }
+          return this.transformerService.convertFavoriteItemEntityToLibraryFavorite(favorite, albums, folder);
         }),
       ),
     };
   }
 
   /**
-   * Lists all folders for a given account in a tree structure.
+   * Lists the contents of a path relative to the account's root folder(s).  The root folder contents
+   * are combined into a single view, eg `/root1/artist1` and `/root2/artist1` would both appear under
+   * the folder `/artist1`.
    * @param accountId The media owner account ID
+   * @param folderId The ID of the folder to list the contents of
    * @returns The tree structure of folders for the account
    */
-  async listFolders(accountId: number): Promise<LibraryFolderDto[]> {
-    const tracks = await this.listTracks(accountId, {}, 0, 100_000);
-    const favorites = await this.favoriteItemEntity.findAll({
-      attributes: ['id', 'folderPath'],
+  async listFolderContents(accountId: number, folderId: number): Promise<LibraryFolderDto> {
+    const folder = await this.folderEntity.findOne({
       where: {
         accountId,
-        folderPath: {
-          [Op.not]: null,
-        },
+        id: folderId,
       },
     });
-    const favoriteIndex: Record<string, number> = {};
+    if (!folder) {
+      throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
+    }
+    const rootFolders = await this.rootPathEntity.findAll({
+      where: {
+        accountId,
+      },
+    });
+    const favorites = await this.favoriteItemEntity.findAll({
+      where: {
+        accountId,
+        [Op.or]: [
+          {
+            folderId: {
+              [Op.gt]: 0,
+            },
+          },
+          {
+            trackId: {
+              [Op.gt]: 0,
+            },
+          },
+        ],
+      },
+    });
+    const favoriteIndex: Record<number, number> = {};
     for (let i = 0, len = favorites.length; i < len; i += 1) {
       const favorite = favorites[i];
-      if (favorite?.folderPath) {
-        favoriteIndex[favorite.folderPath] = favorite.id;
+      if (favorite?.folderId) {
+        favoriteIndex[favorite.folderId] = favorite.id;
+      }
+      if (favorite?.trackId) {
+        favoriteIndex[favorite.trackId] = favorite.id;
       }
     }
-    function sortChildren(node: LibraryFolderDto) {
-      node.children?.sort((a, b) => (a.folder || a.file || '').localeCompare(b.folder || b.file || ''));
-      node.children?.forEach(sortChildren);
-    }
-    const root: LibraryFolderDto = {
-      folder: '',
-      file: '',
-      fullPath: '',
-      id: 0,
-      children: [],
-    };
-    let folderId = 0;
-    const directoryMap = new Map([['', root]]);
-    for (let i = 0, len = tracks.items.length; i < len; i += 1) {
-      const track = tracks.items[i];
-      if (track) {
-        const { filePath } = track;
-        const parts = filePath.split('/').filter(Boolean);
-        let currentPath = '';
-        let parent = root;
-        for (let j = 0, jLen = parts.length; j < jLen; j += 1) {
-          const part = parts[j];
-          if (part) {
-            currentPath += `/${part}`;
-            let node = directoryMap.get(currentPath);
-            if (!node) {
-              const isFile = j === parts.length - 1;
-              if (!isFile) {
-                folderId += 1;
+    const items: LibraryFolderDto[] = [];
+    for (let i = 0, len = rootFolders.length; i < len; i += 1) {
+      const rootFolder = rootFolders[i];
+      if (rootFolder) {
+        const combinedPath = join(rootFolder.rootPath, folder.folderPath);
+        if (existsSync(combinedPath)) {
+          const folderContents = readdirSync(combinedPath, { withFileTypes: true });
+          for (let j = 0, jLen = folderContents.length; j < jLen; j += 1) {
+            const entry = folderContents[j];
+            if (entry) {
+              const isDirectory = entry.isDirectory();
+              const entryPath = join(combinedPath, entry.name);
+              const relativePath = join(folder.folderPath, entry.name);
+              if (isDirectory) {
+                // eslint-disable-next-line no-await-in-loop
+                const nestedFolder = await this.folderEntity.findOne({
+                  attributes: ['id'],
+                  where: {
+                    accountId,
+                    folderPath: relativePath,
+                  },
+                });
+                if (nestedFolder) {
+                  items.push({
+                    folder: entry.name,
+                    fullPath: entryPath,
+                    relativePath,
+                    id: nestedFolder.id,
+                    favoriteId: favoriteIndex[nestedFolder.id] || undefined,
+                    children: [],
+                  });
+                }
+              } else {
+                // eslint-disable-next-line no-await-in-loop
+                const track = await this.trackEntity.findOne({
+                  attributes: ['id'],
+                  where: {
+                    accountId,
+                    filePath: relativePath,
+                    rootPathId: rootFolder.id,
+                  },
+                });
+                if (track) {
+                  // eslint-disable-next-line no-await-in-loop
+                  const trackData = await this.retrieveTrack(accountId, [track.id]);
+                  items.push({
+                    file: entry.name,
+                    favoriteId: favoriteIndex[track.id] || undefined,
+                    fullPath: entryPath,
+                    relativePath,
+                    id: track?.id || 0,
+                    track: trackData[0],
+                    children: [],
+                  });
+                }
               }
-              node = {
-                favoriteId: favoriteIndex[currentPath] || undefined,
-                folder: isFile ? '' : part,
-                fullPath: currentPath,
-                track: isFile ? track : undefined,
-                ...(isFile
-                  ? { id: track.id, file: track.filePath.split(sep).pop() || '' }
-                  : { children: [], id: folderId }),
-              };
-              parent.children?.push(node);
-              directoryMap.set(currentPath, node);
             }
-            parent = node;
           }
         }
       }
     }
-    sortChildren(root);
-    return root.children || [];
+    return {
+      id: folderId,
+      fullPath: folder.folderPath,
+      relativePath: folder.folderPath,
+      favoriteId: favoriteIndex[folder.id] || undefined,
+      children: items,
+    };
+  }
+
+  /**
+   * Lists the contents of a path relative to the account's root folder(s).  The root folder contents
+   * are combined into a single view, eg `/root1/artist1` and `/root2/artist1` would both appear under
+   * the folder `/artist1`.
+   * @param accountId The media owner account ID
+   * @param folderPath The path of the folder to list the contents of
+   * @returns The tree structure of folders for the account
+   */
+  async listFolderContentsByPath(accountId: number, folderPath: string): Promise<LibraryFolderDto> {
+    const folder = await this.folderEntity.findOne({
+      where: {
+        accountId,
+        folderPath,
+      },
+    });
+    if (!folder) {
+      throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
+    }
+    return this.listFolderContents(accountId, folder.id);
   }
 
   /**

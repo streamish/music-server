@@ -128,7 +128,7 @@ export class ApiFavoritesController {
     },
   })
   async setFolderFavorite(@User() user: AccountEntity, @Query() query: SetFolderFavoriteQueryDto) {
-    const favorite = await this.favoritesService.setFolderFavorite(user.id, query.folder);
+    const favorite = await this.favoritesService.setFolderFavorite(user.id, query.id);
     return {
       favoriteId: favorite.id,
       success: true,

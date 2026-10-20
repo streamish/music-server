@@ -37,6 +37,9 @@ export class LibraryFolderDto {
   @IsInt()
   declare id: number;
 
+  @IsString()
+  declare relativePath: string;
+
   @ApiProperty({
     type: LibraryTrackDto,
     required: false,

@@ -8,11 +8,11 @@ import {
 } from '../../test-helper';
 import { ErrorCodes } from '../../constants/error-codes';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { paths } from 'src/types/api-schema';
 
 describe('/api/set-folder-favorite', () => {
   let accountId: number;
   let userApi: AuthenticatedApiClient;
+  let folderId: number;
 
   beforeAll(async () => {
     const newUsername = `user-${Date.now()}`;
@@ -22,6 +22,17 @@ describe('/api/set-folder-favorite', () => {
     }
     accountId = newAccount.data.account.accountId;
     userApi = await createAuthenticatedApi(newUsername, USER_PASSWORD);
+    const folders = await userApi.GET('/api/list-folder-contents', {
+      params: {
+        query: {
+          path: '/',
+        },
+      },
+    });
+    if (!folders.data?.folder?.id) {
+      throw new Error('Folder not found');
+    }
+    folderId = folders.data?.folder?.id;
   });
 
   afterAll(async () => {
@@ -39,11 +50,11 @@ describe('/api/set-folder-favorite', () => {
     });
   }
 
-  async function setFolderFavorite(folderPath: string) {
+  async function setFolderFavorite(id: number) {
     return userApi.PUT('/api/set-folder-favorite', {
       params: {
         query: {
-          folder: folderPath,
+          id,
         },
       },
     });
@@ -54,7 +65,7 @@ describe('/api/set-folder-favorite', () => {
       const { error } = await unauthenticatedApi.PUT(`/api/set-folder-favorite`, {
         params: {
           query: {
-            folder: '/Artist 1/Album 1',
+            id: folderId,
           },
         },
       });
@@ -63,8 +74,8 @@ describe('/api/set-folder-favorite', () => {
   });
 
   describe('errors', () => {
-    it('should reject invalid folder path', async () => {
-      const { error } = await setFolderFavorite('/Invalid/Folder/Path');
+    it('should reject invalid folder ID', async () => {
+      const { error } = await setFolderFavorite(9999);
       expect(error?.message[0]).toBe(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
     });
   });
@@ -72,7 +83,7 @@ describe('/api/set-folder-favorite', () => {
   describe('success', () => {
     it('should create favorite for the folder', async () => {
       // create the favorite
-      const { error, data } = await setFolderFavorite('/Artist 1/Album 1');
+      const { error, data } = await setFolderFavorite(folderId);
       expect(error).toBeUndefined();
       expect(data?.success).toBe(true);
       // find the favorite
@@ -81,29 +92,16 @@ describe('/api/set-folder-favorite', () => {
       if (!favoriteItem) {
         throw new Error('Favorite item not found');
       }
-      expect(favoriteItem.folder?.fullPath).toBe('/Artist 1/Album 1');
+      expect(favoriteItem.folder?.id).toBe(folderId);
       // verify the item is favorited
-      type FolderDto =
-        paths['/api/folder-structure']['get']['responses']['200']['content']['application/json']['items'][number];
-      const { data: folderStructure2 } = await userApi.GET('/api/folder-structure');
-      function findFolderStruture(items: FolderDto[]) {
-        for (let i = 0, len = items.length; i < len; i += 1) {
-          const child = items[i];
-          if (child) {
-            if (child.fullPath === '/Artist 1/Album 1') {
-              return child;
-            }
-            if (child.children) {
-              const result = findFolderStruture(child.children);
-              if (result) {
-                return result;
-              }
-            }
-          }
-        }
-        return undefined;
-      }
-      const folderNow = findFolderStruture(folderStructure2?.items || []);
+      const { data: folderStructure2 } = await userApi.GET('/api/list-folder-contents', {
+        params: {
+          query: {
+            path: '/',
+          },
+        },
+      });
+      const folderNow = folderStructure2?.folder;
       expect(folderNow?.favoriteId).toBe(favoriteItem.id);
     });
   });

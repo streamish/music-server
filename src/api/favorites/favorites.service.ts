@@ -60,11 +60,11 @@ export class ApiFavoritesService {
   /**
    * Sets an album as a favorite for the specified account.
    * @param userId The authenticated user ID
-   * @param folderPath The full path of the folder relative to root dir, eg `/Elvis Presley`
+   * @param folderId The ID of the folder to add to favorites
    * @throws If the specified folder is not found
    */
-  async setFolderFavorite(userId: number, folder: string) {
-    return this.favoritesService.setFolderFavorite(userId, folder);
+  async setFolderFavorite(userId: number, folderId: number) {
+    return this.favoritesService.setFolderFavorite(userId, folderId);
   }
 
   /**

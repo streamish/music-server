@@ -442,7 +442,7 @@ export class QnapMediaListGenresResponseDto {
   declare datas: QnapMediaListGenresPaginatedDto;
 }
 
-export class QnapMediaListFoldersResponseDto {
+export class QnapMediaListFolderContentsResponseDto {
   @ApiProperty({
     type: QnapMediaListFoldersDto,
   })

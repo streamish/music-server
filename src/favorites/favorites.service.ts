@@ -2,6 +2,7 @@ import {
   AlbumEntity,
   AssociationEntity,
   FavoriteItemEntity,
+  FolderEntity,
   ShoutcastStationEntity,
   TrackEntity,
 } from 'src/database/entities';
@@ -9,7 +10,6 @@ import { AssociationTypeEnum } from 'src/types/enums';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { LibraryService } from 'src/library/library.service';
 
 @Injectable()
 export class FavoritesService {
@@ -20,7 +20,8 @@ export class FavoritesService {
     private readonly associationEntity: typeof AssociationEntity,
     @InjectModel(FavoriteItemEntity)
     private readonly favoriteItemEntity: typeof FavoriteItemEntity,
-    private readonly libraryService: LibraryService,
+    @InjectModel(FolderEntity)
+    private readonly folderEntity: typeof FolderEntity,
     @InjectModel(ShoutcastStationEntity)
     private readonly shoutcastStationEntity: typeof ShoutcastStationEntity,
     @InjectModel(TrackEntity)
@@ -107,18 +108,23 @@ export class FavoritesService {
   /**
    * Sets a folder as a favorite for the specified account.
    * @param accountId The media owner account ID
-   * @param folderPath The full path of the folder relative to root dir, eg `/Elvis Presley`
+   * @param folderId The ID of the folder to set as favorite
    * @throws If the specified folder is not found
    */
-  async setFolderFavorite(accountId: number, folderPath: string): Promise<FavoriteItemEntity> {
-    const folderStructure = await this.libraryService.listFolders(accountId);
-    const folderExists = folderStructure.some((item) => item.children?.some((child) => child.fullPath === folderPath));
-    if (!folderExists) {
+  async setFolderFavorite(accountId: number, folderId: number): Promise<FavoriteItemEntity> {
+    const folder = await this.folderEntity.findOne({
+      attributes: ['id'],
+      where: {
+        id: folderId,
+        accountId,
+      },
+    });
+    if (!folder) {
       throw new NotFoundException(ErrorCodes.FOLDER_NOT_FOUND_ERROR);
     }
     return this.favoriteItemEntity.create({
       accountId,
-      folderPath,
+      folderId,
     } as FavoriteItemEntity);
   }
 
