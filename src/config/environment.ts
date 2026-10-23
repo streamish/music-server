@@ -84,8 +84,21 @@ export class Environment {
 
   /**
    * ------------------------------------------------------
+   * Subsonic configuration
+   * ------------------------------------------------------
+   */
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
+  declare SUBSONIC_ENABLED?: boolean;
+
+  /**
+   * ------------------------------------------------------
    * QNAP Music Station / QMusic configuration
    * ------------------------------------------------------
+   */
+
+  /**
+   * Optional flag for enabling the endpoints required to use QNAP QMusic apps
    */
   @IsBoolean()
   @Transform(({ value }) => value === 'true' || value === true)
@@ -93,7 +106,7 @@ export class Environment {
 
   /**
    * A server-wide and persistent unique identifier that poses as a secret passed
-   * to QMusic app and posted to the server to verify their access.
+   * to QNAP QMusic app and posted to the server to verify their access.
    */
   @IsString()
   declare QNAP_CUID?: string;

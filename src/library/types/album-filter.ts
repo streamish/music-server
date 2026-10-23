@@ -54,6 +54,10 @@ export type AlbumFilter = {
    */
   filter?: string;
   /**
+   * Optional filter for the root path ID.
+   */
+  rootPathId?: number;
+  /**
    * Optional filter for the release year, which will do an exact match against the
    */
   year?: number;
