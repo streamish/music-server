@@ -1,7 +1,6 @@
 export * from './authentication.dto';
 export * from './get-album.dto';
 export * from './get-album-list.dto';
-export * from './get-album-list2.dto';
 export * from './get-artist.dto';
 export * from './get-artists.dto';
 export * from './get-indexes.dto';
