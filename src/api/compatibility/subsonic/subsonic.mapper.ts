@@ -12,42 +12,43 @@ export function libraryTrackToRow(track: LibraryTrackDto) {
     album: track.albumTitle,
     albumId: `${track.albumId}`,
     artist: track.artists.map((artist) => artist.name).join(', '),
-    artistId: track.artists[0]?.id || 0,
-    bitRate: track.fileBitRate,
+    artistId: `${track.artists[0]?.id || 0}`,
+    bitRate: track.fileBitRate ? Math.round(track.fileBitRate / 1000) : undefined,
     contentType: `audio/${track.fileType}`,
     created: new Date().toISOString(),
-    discNumber: track.discNumber,
+    discNumber: track.discNumber ?? undefined,
     duration: Math.ceil(track.duration),
     genre: track.genres.map((genre) => genre.name).join(', '),
-    id: track.id,
+    id: `${track.id}`,
     isDir: false,
-    parent: track.albumId,
+    parent: `${track.albumId}`,
     path: `root-${track.rootPathId}${track.filePath}`,
     playCount: 0,
-    size: track.fileSize,
+    size: track.fileSize ?? undefined,
     suffix: track.fileType,
     title: track.title,
-    track: track.trackNumber,
+    track: track.trackNumber ?? undefined,
     // transcodedContentType: `audio/${track.fileType}`,
     // transcodedSuffix: track.fileType,
     type: 'music',
-    year: track.year,
+    year: track.year ?? undefined,
   };
 }
 
 export function libraryAlbumToRow(album: LibraryAlbumDto | LibraryAlbumWithTracksDto) {
   return {
     artist: album.artists.map((artist) => artist.name).join(', '),
-    artistId: album.artists?.[0]?.id ?? 0,
-    coverArt: album.id,
+    artistId: `${album.artists?.[0]?.id ?? 0}`,
+    coverArt: `${album.id}`,
+    created: new Date().toISOString(),
     duration: 'tracks' in album ? Math.ceil(album.tracks.reduce((sum, track) => sum + track.duration, 0)) : 0,
     genre: album.genres.map((genre) => genre.name).join(', '),
-    id: album.id,
+    id: `${album.id}`,
     name: album.title,
     playCount: 0,
     song: 'tracks' in album ? album.tracks.map(libraryTrackToRow) : undefined,
     songCount: 'tracks' in album ? album.tracks.length : 0,
-    year: album.year,
+    year: album.year ?? undefined,
   };
 }
 
@@ -58,14 +59,14 @@ export function libraryAssociationToRow(association: LibraryAssociationDto | Lib
   }
   return {
     album: albums?.map((album) => ({ id: `${album.id}`, name: album.title })),
-    id: association.id,
+    id: `${association.id}`,
     name: association.name,
   };
 }
 
 export function libraryFolderToRow(startingPath: LibraryFolderDto) {
   return {
-    id: startingPath.id,
+    id: `${startingPath.id}`,
     name: startingPath.folder,
   };
 }
