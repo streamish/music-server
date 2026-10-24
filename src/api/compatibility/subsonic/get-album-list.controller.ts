@@ -1,53 +1,62 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
+import { SubsonicAlbumList2QueryDto, SubsonicAlbumListQueryDto } from './dtos';
+import { SubsonicAlbumListService } from './get-album-list.service';
 import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicGetAlbumList2QueryDto, SubsonicGetAlbumListQueryDto } from './dtos';
-import { SubsonicGetAlbumListService } from './get-album-list.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class SubsonicGetAlbumListController {
-  constructor(private readonly getAlbumListService: SubsonicGetAlbumListService) {}
+export class SubsonicAlbumListController {
+  constructor(private readonly getAlbumListService: SubsonicAlbumListService) {}
 
-  @Get('getAlbumList')
+  @Get(['getAlbumList', 'getAlbumList.view'])
   async getAlbumList(
     @User() user: AccountEntity,
-    @Query() query: SubsonicGetAlbumListQueryDto,
+    @Query() query: SubsonicAlbumListQueryDto,
     @ResponseFormat() jsonResponse: boolean,
   ) {
     const album = await this.getAlbumListService.getAlbumList(user.id, query);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      albumList: {
+        album,
+      },
+    };
     if (jsonResponse) {
       return {
         'subsonic-response': {
-          albumList: {
-            album,
-          },
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ albumList: { album } }, 'subsonic-response');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 
-  @Get('getAlbumList2')
+  @Get(['getAlbumList2', 'getAlbumList2.view'])
   async getAlbumList2(
     @User() user: AccountEntity,
-    @Query() query: SubsonicGetAlbumList2QueryDto,
+    @Query() query: SubsonicAlbumList2QueryDto,
     @ResponseFormat() jsonResponse: boolean,
   ) {
     const album = await this.getAlbumListService.getAlbumList2(user.id, query);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      albumList2: {
+        album,
+      },
+    };
     if (jsonResponse) {
       return {
         'subsonic-response': {
-          albumList2: {
-            album,
-          },
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ albumList2: { album } }, 'subsonic-response');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }

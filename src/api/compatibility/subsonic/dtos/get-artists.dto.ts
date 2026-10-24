@@ -1,6 +1,6 @@
 import { IsInt, IsOptional } from 'class-validator';
 
-export class SubsonicGetArtistsQueryDto {
+export class SubsonicArtistsQueryDto {
   /**
    * Optionally limit artist list to a single root path
    */

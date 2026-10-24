@@ -1,8 +1,8 @@
 import { IsInt } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 
-export class SubsonicGetAlbumQueryDto {
+export class SubsonicAlbumQueryDto {
   @IsInt()
-  @Transform(({ obj }) => Number.parseInt(obj.f?.substring('album-'.length), 10) ?? undefined)
+  @Type(() => Number)
   declare id: number;
 }

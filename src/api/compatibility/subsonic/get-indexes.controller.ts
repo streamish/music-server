@@ -1,32 +1,36 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicGetIndexesQueryDto } from './dtos';
-import { SubsonicGetIndexesService } from './get-indexes.service';
+import { SubsonicIndexesQueryDto } from './dtos';
+import { SubsonicIndexesService } from './get-indexes.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class SubsonicGetIndexesController {
-  constructor(private readonly getIndexesService: SubsonicGetIndexesService) {}
+export class SubsonicIndexesController {
+  constructor(private readonly getIndexesService: SubsonicIndexesService) {}
 
   @Get(['getIndexes'])
   async getIndexes(
     @User() user: AccountEntity,
-    @Query() query: SubsonicGetIndexesQueryDto,
+    @Query() query: SubsonicIndexesQueryDto,
     @ResponseFormat() jsonResponse: boolean,
   ) {
     const indexes = await this.getIndexesService.getIndexes(user.id, query.musicFolderId);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      indexes,
+    };
     if (jsonResponse) {
       return {
         'subsonic-response': {
-          indexes,
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ indexes }, 'subsonic-response');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }

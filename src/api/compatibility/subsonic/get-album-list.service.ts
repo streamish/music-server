@@ -2,28 +2,20 @@ import { AlbumSortFieldEnum, SortDirectionEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
 import { LibraryAlbumDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
+import { SubsonicAlbumList2QueryDto, SubsonicAlbumListQueryDto } from './dtos';
 import { SubsonicAlbumListType } from './subsonic.enums';
-import { SubsonicGetAlbumList2QueryDto, SubsonicGetAlbumListQueryDto } from './dtos';
-
-function albumToRow(album: LibraryAlbumDto) {
-  return {
-    id: `album-${album.id}`,
-    album: album.title,
-    artist: album.artists.map((artist) => artist.name).join(', '),
-    year: album.year,
-  };
-}
+import { libraryAlbumToRow } from './subsonic.mapper';
 
 @Injectable()
-export class SubsonicGetAlbumListService {
-  constructor(private readonly library: LibraryService) {}
+export class SubsonicAlbumListService {
+  constructor(private readonly libraryService: LibraryService) {}
 
-  async getAlbumList(accountId: number, query: SubsonicGetAlbumListQueryDto) {
+  async getAlbumList(userId: number, query: SubsonicAlbumListQueryDto) {
     // favorite list
     if (query.type === SubsonicAlbumListType.STARRED) {
-      const favorites = await this.library.listFavorites(accountId, query.offset || 0, query.size || 100_000);
+      const favorites = await this.libraryService.listFavorites(userId, query.offset || 0, query.size || 100_000);
       const albums = favorites.items.filter((item) => item.album) as LibraryAlbumDto[];
-      return albums.map(albumToRow);
+      return albums.map(libraryAlbumToRow);
     }
     // sorted list
     let sort: AlbumSortFieldEnum | undefined;
@@ -42,8 +34,8 @@ export class SubsonicGetAlbumListService {
       sort = AlbumSortFieldEnum.RANDOM;
     }
     // TODO: "frequent" for most-played is not implemented (play counting is not available yet)
-    const albums = await this.library.listAlbums(
-      accountId,
+    const albums = await this.libraryService.listAlbums(
+      userId,
       {
         year: query.fromYear || query.toYear || undefined,
         genre: query.genre ? [query.genre] : undefined,
@@ -54,15 +46,15 @@ export class SubsonicGetAlbumListService {
       sort,
       direction,
     );
-    return albums.items.map(albumToRow);
+    return albums.items.map(libraryAlbumToRow);
   }
 
-  async getAlbumList2(accountId: number, query: SubsonicGetAlbumList2QueryDto) {
+  async getAlbumList2(userId: number, query: SubsonicAlbumList2QueryDto) {
     // favorite list
     if (query.type === SubsonicAlbumListType.STARRED) {
-      const favorites = await this.library.listFavorites(accountId, query.offset || 0, query.size || 100_000);
+      const favorites = await this.libraryService.listFavorites(userId, query.offset || 0, query.size || 100_000);
       const albums = favorites.items.filter((item) => item.album) as LibraryAlbumDto[];
-      return albums.map(albumToRow);
+      return albums.map(libraryAlbumToRow);
     }
     // sorted list
     let sort: AlbumSortFieldEnum | undefined;
@@ -81,8 +73,8 @@ export class SubsonicGetAlbumListService {
       sort = AlbumSortFieldEnum.RANDOM;
     }
     // TODO: "frequent" for most-played is not implemented (play counting is not available yet)
-    const albums = await this.library.listAlbums(
-      accountId,
+    const albums = await this.libraryService.listAlbums(
+      userId,
       {
         year: query.fromYear || query.toYear || undefined,
         genre: query.genre ? [query.genre] : undefined,
@@ -92,6 +84,6 @@ export class SubsonicGetAlbumListService {
       sort,
       direction,
     );
-    return albums.items.map(albumToRow);
+    return albums.items.map(libraryAlbumToRow);
   }
 }

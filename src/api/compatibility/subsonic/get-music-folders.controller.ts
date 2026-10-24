@@ -1,29 +1,33 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { Controller, Get, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicGetMusicFoldersService } from './get-music-folders.service';
+import { SubsonicMusicFoldersService } from './get-music-folders.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class SubsonicGetMusicFoldersController {
-  constructor(private readonly getMusicFoldersService: SubsonicGetMusicFoldersService) {}
+export class SubsonicMusicFoldersController {
+  constructor(private readonly getMusicFoldersService: SubsonicMusicFoldersService) {}
 
-  @Get('getMusicFolders')
+  @Get(['getMusicFolders', 'getMusicFolders.view'])
   async getMusicFolders(@User() user: AccountEntity, @ResponseFormat() jsonResponse: boolean) {
     const musicFolder = await this.getMusicFoldersService.getMusicFolders(user.id);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      musicFolders: {
+        musicFolder,
+      },
+    };
     if (jsonResponse) {
       return {
         'subsonic-response': {
-          musicFolders: {
-            musicFolder,
-          },
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ musicFolders: { musicFolder } }, 'subsonic-response');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }

@@ -1,21 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { LibraryAssociationDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
-
-function artistToRow(association: LibraryAssociationDto) {
-  return {
-    id: `artist-${association.id}`,
-    name: association.name,
-  };
-}
+import { libraryAssociationToRow } from './subsonic.mapper';
 
 @Injectable()
-export class SubsonicGetIndexesService {
-  constructor(private readonly library: LibraryService) {}
+export class SubsonicIndexesService {
+  constructor(private readonly libraryService: LibraryService) {}
 
-  async getIndexes(accountId: number, rootPathId?: number) {
-    const artists = await this.library.listAlbumAssociations(
-      accountId,
+  async getIndexes(userId: number, rootPathId?: number) {
+    const artists = await this.libraryService.listAlbumAssociations(
+      userId,
       {
         rootPathId,
       },
@@ -33,7 +26,7 @@ export class SubsonicGetIndexesService {
         if (!index[firstLetter]) {
           index[firstLetter] = [];
         }
-        index[firstLetter].push(artistToRow(artist));
+        index[firstLetter].push(libraryAssociationToRow(artist));
       }
     }
     return index;

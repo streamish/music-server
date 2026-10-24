@@ -1,32 +1,36 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
+import { SubsonicArtistsQueryDto } from './dtos';
+import { SubsonicArtistsService } from './get-artists.service';
 import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicGetArtistsQueryDto } from './dtos';
-import { SubsonicGetArtistsService } from './get-artists.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class SubsonicGetArtistsController {
-  constructor(private readonly getArtistsService: SubsonicGetArtistsService) {}
+export class SubsonicArtistsController {
+  constructor(private readonly getArtistsService: SubsonicArtistsService) {}
 
   @Get(['getArtists'])
   async getArtists(
     @User() user: AccountEntity,
-    @Query() query: SubsonicGetArtistsQueryDto,
+    @Query() query: SubsonicArtistsQueryDto,
     @ResponseFormat() jsonResponse: boolean,
   ) {
     const artist = await this.getArtistsService.getArtists(user.id, query.musicFolderId);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      artist,
+    };
     if (jsonResponse) {
       return {
         'subsonic-response': {
-          artist,
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ artist }, 'subsonic-response');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }

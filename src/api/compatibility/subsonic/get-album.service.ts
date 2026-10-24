@@ -1,25 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { LibraryAlbumWithTracksDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
-
-function albumToRow(album: LibraryAlbumWithTracksDto) {
-  return {
-    id: `album-${album.id}`,
-    name: album.title,
-    artist: album.artists.map((artist) => artist.name).join(', '),
-    songCount: album.tracks.length,
-  };
-}
+import { libraryAlbumToRow } from './subsonic.mapper';
 
 @Injectable()
-export class SubsonicGetAlbumService {
-  constructor(private readonly library: LibraryService) {}
+export class SubsonicAlbumService {
+  constructor(private readonly libraryService: LibraryService) {}
 
-  async getAlbum(accountId: number, albumId: number) {
-    const albums = await this.library.retrieveAlbum(accountId, albumId);
+  async getAlbum(userId: number, albumId: number) {
+    const albums = await this.libraryService.retrieveAlbum(userId, albumId);
     if (!albums || !albums?.[0]) {
       throw new NotFoundException(`Album not found: ${albumId}`);
     }
-    return albumToRow(albums[0]);
+    const album = albums[0];
+    const tracks = await this.libraryService.listTracks(userId, { albumIds: [albumId] }, 0, 500);
+    return libraryAlbumToRow({ ...album, tracks: tracks.items });
   }
 }

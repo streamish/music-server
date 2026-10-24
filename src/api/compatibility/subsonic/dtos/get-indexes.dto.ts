@@ -1,6 +1,6 @@
 import { IsInt, IsOptional } from 'class-validator';
 
-export class SubsonicGetIndexesQueryDto {
+export class SubsonicIndexesQueryDto {
   /**
    * Unix timestamp in milliseconds for the last modification time of the items.  This
    * value is currently ignored.

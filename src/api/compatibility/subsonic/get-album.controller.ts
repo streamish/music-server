@@ -1,32 +1,40 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
+import { SubsonicAlbumQueryDto } from './dtos';
+import { SubsonicAlbumService } from './get-album.service';
 import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicGetAlbumQueryDto } from './dtos';
-import { SubsonicGetAlbumService } from './get-album.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
+import type { Response } from 'express';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class SubsonicGetAlbumController {
-  constructor(private readonly getAlbumService: SubsonicGetAlbumService) {}
+export class SubsonicAlbumController {
+  constructor(private readonly getAlbumService: SubsonicAlbumService) {}
 
-  @Get('getAlbum')
+  @Get(['getAlbum', 'getAlbum.view'])
   async getAlbum(
     @User() user: AccountEntity,
-    @Query() query: SubsonicGetAlbumQueryDto,
+    @Query() query: SubsonicAlbumQueryDto,
     @ResponseFormat() jsonResponse: boolean,
+    @Res() res: Response,
   ) {
     const album = await this.getAlbumService.getAlbum(user.id, query.id);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      album,
+    };
     if (jsonResponse) {
+      res.setHeader('Content-Type', 'application/json');
       return {
         'subsonic-response': {
-          album,
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ album }, 'subsonic-response');
+    res.setHeader('Content-Type', 'application/xml');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }

@@ -1,14 +1,13 @@
-import { Controller, Get, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicAuthGuard } from './subsonic.guard';
 import { objectToXml } from 'src/utils/xml';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class SubsonicGetLicenseController {
+export class SubsonicLicenseController {
   // eslint-disable-next-line class-methods-use-this
-  @Get('getLicense')
+  @Get(['getLicense', 'getLicense.view'])
   async getLicense(@ResponseFormat() jsonResponse: boolean) {
     const date = new Date();
     date.setFullYear(date.getFullYear() + 100);
@@ -18,13 +17,18 @@ export class SubsonicGetLicenseController {
       email: 'user@example.com',
       licenseExpires,
     };
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      license,
+    };
     if (jsonResponse) {
       return {
         'subsonic-response': {
-          license,
+          ...responsePayload,
         },
       };
     }
-    return objectToXml({ license }, 'subsonic-response');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }
