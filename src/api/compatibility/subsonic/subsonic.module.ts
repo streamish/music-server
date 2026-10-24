@@ -15,15 +15,18 @@ import { SubsonicGenresController } from './get-genres.controller';
 import { SubsonicGenresService } from './get-genres.service';
 import { SubsonicIndexesController } from './get-indexes.controller';
 import { SubsonicIndexesService } from './get-indexes.service';
+import { SubsonicInternetRadioStationsController } from './get-internet-radio-stations.controller';
 import { SubsonicLicenseController } from './get-license.controller';
 import { SubsonicMusicDirectoryController } from './get-music-directory.controller';
 import { SubsonicMusicDirectoryService } from './get-music-directory.service';
 import { SubsonicMusicFoldersController } from './get-music-folders.controller';
 import { SubsonicMusicFoldersService } from './get-music-folders.service';
+import { SubsonicNewestPodcastsController } from './get-newest-podcasts.controller';
 import { SubsonicNowPlayingController } from './get-now-playing.controller';
 import { SubsonicNowPlayingService } from './get-now-playing.service';
 import { SubsonicPingController } from './ping.controller';
 import { SubsonicPlaylistsController } from './get-playlists.controller';
+import { SubsonicPodcastsController } from './get-podcasts.controller';
 import { SubsonicRandomSongsController } from './get-random-songs.controller';
 import { SubsonicRandomSongsService } from './get-random-songs.service';
 import { SubsonicSearchController } from './search.controller';
@@ -50,12 +53,15 @@ import { SubsonicTopSongsService } from './get-top-songs.service';
     SubsonicBookmarksController,
     SubsonicGenresController,
     SubsonicIndexesController,
+    SubsonicInternetRadioStationsController,
     SubsonicLicenseController,
     SubsonicMusicDirectoryController,
     SubsonicMusicFoldersController,
+    SubsonicNewestPodcastsController,
     SubsonicNowPlayingController,
     SubsonicPingController,
     SubsonicPlaylistsController,
+    SubsonicPodcastsController,
     SubsonicRandomSongsController,
     SubsonicSearchController,
     SubsonicSimilarSongsController,

@@ -754,6 +754,7 @@ export class LibraryQueryService {
         'frequency',
         'id',
         'rating',
+        'rootPathId',
         'title',
         'titleNormalized',
         'trackNumber',

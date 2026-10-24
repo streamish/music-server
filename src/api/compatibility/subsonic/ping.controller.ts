@@ -1,14 +1,16 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, Res, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicAuthGuard } from './subsonic.guard';
 import { objectToXml } from 'src/utils/xml';
+import type { Response } from 'express';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
 export class SubsonicPingController {
   /* eslint-disable-next-line class-methods-use-this */
   @Get(['ping', 'ping.view'])
-  ping(@ResponseFormat() jsonResponse: boolean) {
+  @Header('server', 'Jetty(6.1.x)')
+  ping(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responseData = {
       'subsonic-response': {
         status: 'ok',
@@ -16,8 +18,10 @@ export class SubsonicPingController {
       },
     };
     if (jsonResponse) {
+      res.setHeader('Content-Type', 'application/json');
       return responseData;
     }
+    res.setHeader('Content-Type', 'application/xml');
     return objectToXml(responseData, 'subsonic-response');
   }
 }

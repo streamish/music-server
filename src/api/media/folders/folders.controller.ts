@@ -1,4 +1,4 @@
-import { AccountEntity } from 'src/database/entities/account.entity';
+import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint } from 'src/api/api.decorator';
 import { ApiFoldersService } from './folders.service';
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';

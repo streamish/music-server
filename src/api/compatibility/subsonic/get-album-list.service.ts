@@ -1,6 +1,6 @@
 import { AlbumSortFieldEnum, SortDirectionEnum } from 'src/types/enums';
 import { Injectable } from '@nestjs/common';
-import { LibraryAlbumDto } from 'src/library/dtos';
+import { LibraryAlbumDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { SubsonicAlbumList2QueryDto, SubsonicAlbumListQueryDto } from './dtos';
 import { SubsonicAlbumListType } from './subsonic.enums';
@@ -84,6 +84,26 @@ export class SubsonicAlbumListService {
       sort,
       direction,
     );
-    return albums.items.map(libraryAlbumToRow);
+    const albumIds = albums.items.map((album) => album.id);
+    const trackList = await this.libraryService.listTracks(userId, { albumIds }, 0, 100_000);
+    const trackIndex: Record<number, LibraryTrackDto[]> = {};
+    for (let i = 0, len = trackList.items.length; i < len; i += 1) {
+      const track = trackList.items[i];
+      if (track) {
+        const array = trackIndex[track.albumId];
+        if (array) {
+          array.push(track);
+        } else {
+          trackIndex[track.albumId] = [track];
+        }
+      }
+    }
+    return albums.items.map((album) => {
+      const tracks = trackIndex[album.id] || [];
+      return {
+        ...libraryAlbumToRow(album),
+        songCount: tracks.length,
+      };
+    });
   }
 }

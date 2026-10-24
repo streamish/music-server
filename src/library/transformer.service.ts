@@ -244,6 +244,7 @@ export class LibraryTransformerService {
         })) || [],
       id: track.id,
       rating: track.rating ?? 0,
+      rootPathId: track.rootPathId,
       title: replaceDoubleQuotes(track.title),
       trackNumber: track.trackNumber,
       year: track.year,

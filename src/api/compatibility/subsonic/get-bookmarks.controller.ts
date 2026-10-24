@@ -1,26 +1,30 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, Res, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicAuthGuard } from './subsonic.guard';
 import { objectToXml } from 'src/utils/xml';
+import type { Response } from 'express';
 
 @Controller('rest')
 @UseGuards(SubsonicAuthGuard)
 export class SubsonicBookmarksController {
   // eslint-disable-next-line class-methods-use-this
   @Get(['getBookmarks', 'getBookmarks.view'])
-  async getBookmarks(@ResponseFormat() jsonResponse: boolean) {
+  @Header('server', 'Jetty(6.1.x)')
+  async getBookmarks(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responsePayload = {
       status: 'ok',
       version: '1.16.1',
       bookmarks: {},
     };
     if (jsonResponse) {
+      res.setHeader('Content-Type', 'application/json');
       return {
         'subsonic-response': {
           ...responsePayload,
         },
       };
     }
+    res.setHeader('Content-Type', 'application/xml');
     return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 }
