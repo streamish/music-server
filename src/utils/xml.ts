@@ -27,12 +27,7 @@ function xmlValue(value) {
  * @param indent The indentation level
  * @returns The XML string
  */
-export function objectToXml(
-  obj: Record<string | number, unknown> | Array<unknown>,
-  openingTag: string,
-  closingTag?: string,
-  indent: number = 0,
-): string {
+export function objectToXml(obj: unknown, openingTag: string, closingTag?: string, indent: number = 0): string {
   if (Array.isArray(obj)) {
     const array = obj as Array<unknown>;
     let xml = ``;
@@ -44,12 +39,13 @@ export function objectToXml(
     return indent === 0 ? `<?xml version="1.0" encoding="UTF-8"?>\n${xml}` : xml;
   }
   let xml = `${' '.repeat(indent)}<${openingTag}>`;
-  const objectKeys = Object.keys(obj);
+  const record = obj as Record<string | number, unknown>;
+  const objectKeys = Object.keys(record);
   for (let i = 0, len = objectKeys.length; i < len; i += 1) {
     const key = objectKeys[i];
     if (key) {
-      if (Object.hasOwn(obj, key)) {
-        const value = obj[key];
+      if (Object.hasOwn(record, key)) {
+        const value = record[key];
         if (typeof value === 'object' && value !== null) {
           const itemXml = objectToXml(value as Record<string | number, unknown>, key, key, indent + 2);
           xml += `\n${itemXml}${' '.repeat(indent)}`;

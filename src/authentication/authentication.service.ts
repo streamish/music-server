@@ -208,6 +208,14 @@ export class AuthenticationService {
     return account;
   }
 
+  async getAccountByUsername(username: string): Promise<AccountEntity> {
+    const account = await this.accountEntity.findOne({ where: { username } });
+    if (!account) {
+      throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
+    }
+    return account;
+  }
+
   async getSession(id: number): Promise<SessionEntity> {
     const session = await this.sessionEntity.findByPk(id);
     if (!session) {

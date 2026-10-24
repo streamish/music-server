@@ -1,17 +1,12 @@
-import { AlbumEntity, AssociationEntity, AssociationLinkEntity } from 'src/database/entities';
-import { CoverImage } from 'src/types/cover-image';
-import { InjectModel } from '@nestjs/sequelize';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Op } from 'sequelize';
+import { AssociationTypeEnum } from 'src/types/enums';
+import { CoverImagesService } from 'src/cover-images/cover-images.service';
+import { Injectable } from '@nestjs/common';
 
 const emptyBuffer = Buffer.alloc(0);
 
 @Injectable()
 export class QnapMediaCoverService {
-  constructor(
-    @InjectModel(AlbumEntity)
-    private readonly albumEntity: typeof AlbumEntity,
-  ) {}
+  constructor(private readonly coverImagesService: CoverImagesService) {}
 
   /**
    * Returns the cover image for a given artist.  If there are no albums it throws a NotFoundException.  The
@@ -23,40 +18,8 @@ export class QnapMediaCoverService {
    * @throws If no cover image was found for the association
    * @returns The album cover image.
    */
-  async getArtistCoverImage(userId: number, associationId: number): Promise<CoverImage | undefined> {
-    const album = await this.albumEntity.findOne({
-      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
-      where: {
-        accountId: userId,
-      },
-      include: [
-        {
-          model: AssociationLinkEntity,
-          include: [
-            {
-              attributes: [],
-              model: AssociationEntity,
-              where: {
-                associationId,
-                [Op.or]: [
-                  {
-                    isAlbumArtist: true,
-                  },
-                  {
-                    isTrackArtist: true,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      ],
-      order: [['isAlbumArtist', 'asc']],
-    });
-    if (!album) {
-      throw new NotFoundException(`Cover image not found for association ID: ${associationId}`);
-    }
-    return album;
+  async getArtistCoverImage(userId: number, associationId: number) {
+    return this.coverImagesService.getAssociationCover(userId, associationId, 600, AssociationTypeEnum.ARTIST);
   }
 
   /**
@@ -68,18 +31,8 @@ export class QnapMediaCoverService {
    * @param albumId The ID of the album for which to retrieve the cover image.
    * @returns The album cover image.
    */
-  async getAlbumCoverImage(userId: number, albumId: number): Promise<CoverImage | undefined> {
-    const album = await this.albumEntity.findOne({
-      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
-      where: {
-        id: albumId,
-        accountId: userId,
-      },
-    });
-    if (!album) {
-      throw new NotFoundException(`Album not found for album ID: ${albumId}`);
-    }
-    return album;
+  async getAlbumCoverImage(userId: number, albumId: number) {
+    return this.coverImagesService.getAlbumCover(userId, albumId);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -87,6 +40,8 @@ export class QnapMediaCoverService {
     return {
       coverImage: emptyBuffer,
       coverImageMimeType: '',
+      eTag: '',
+      fileName: 'folder.png',
       updatedAt: new Date(1970, 0, 1, 0, 0, 0, 0),
     };
   }

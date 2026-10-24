@@ -1,0 +1,47 @@
+import { AccountEntity } from 'src/database/entities';
+import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
+import { ResponseFormat } from './subsonic.decorator';
+import { SubsonicArtistsQueryDto } from './dtos';
+import { SubsonicArtistsService } from './get-artists.service';
+import { SubsonicAuthGuard } from './subsonic.guard';
+import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { User } from 'src/api/user.decorator';
+import { objectToXml } from 'src/utils/xml';
+import type { Response } from 'express';
+
+@Controller('rest')
+@UseFilters(SubsonicExceptionFilter)
+@UseGuards(SubsonicAuthGuard)
+export class SubsonicArtistsController {
+  constructor(private readonly getArtistsService: SubsonicArtistsService) {}
+
+  @Get(['getArtists'])
+  @Header('server', 'Jetty(6.1.x)')
+  async getArtists(
+    @User() user: AccountEntity,
+    @Query() query: SubsonicArtistsQueryDto,
+    @ResponseFormat() jsonResponse: boolean,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.setHeader('set-cookie', [
+      `player-${user.username}=2;Path=/;Expires=Sat, 23-Oct-27 23:58:03 GMT`,
+      `JSESSIONID=${user.id}-${user.username};Path=/`,
+    ]);
+    const artist = await this.getArtistsService.getArtists(user.id, query.musicFolderId);
+    const responsePayload = {
+      status: 'ok',
+      version: '1.16.1',
+      artist,
+    };
+    if (jsonResponse) {
+      res.setHeader('Content-Type', 'application/json');
+      return {
+        'subsonic-response': {
+          ...responsePayload,
+        },
+      };
+    }
+    res.setHeader('Content-Type', 'application/xml');
+    return objectToXml({ ...responsePayload }, 'subsonic-response');
+  }
+}

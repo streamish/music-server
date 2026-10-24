@@ -1,5 +1,4 @@
-import { AccountEntity } from 'src/database/entities/account.entity';
-import { AlbumEntity, FolderEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
+import { AccountEntity, AlbumEntity, FolderEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { CreateTestAccountBodyDto, TestAccountDto } from './dtos';
 import { ErrorCodes } from 'src/constants/error-codes';

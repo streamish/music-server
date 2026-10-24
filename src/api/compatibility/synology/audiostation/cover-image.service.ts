@@ -1,5 +1,5 @@
 import { AlbumEntity, AssociationEntity, AssociationLinkEntity, TrackEntity } from 'src/database/entities';
-import { CoverImage } from 'src/types/cover-image';
+import { CoverImage } from 'src/cover-images/types/cover-image';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Op } from 'sequelize';

@@ -168,6 +168,12 @@ export class LibraryTrackDto {
   declare rating: RatingOrUnset;
 
   /**
+   * The ID of the root path for the track.
+   */
+  @IsInt()
+  declare rootPathId: number;
+
+  /**
    * The title of the track, which is usually the name of the song or piece of music.
    */
   @IsString()

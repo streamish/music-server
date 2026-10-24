@@ -70,7 +70,7 @@ export function normalizeString(value: string): string {
  */
 export function replaceDoubleQuotes(value: string): string {
   // eslint-disable-next-line @typescript-eslint/quotes
-  return value.split("''").join("'");
+  return value?.split("''").join("'") || '';
 }
 
 /**
