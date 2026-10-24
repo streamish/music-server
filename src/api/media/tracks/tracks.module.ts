@@ -9,5 +9,6 @@ import { TrackEntity } from 'src/database/entities';
   imports: [LibraryModule, SequelizeModule.forFeature([TrackEntity])],
   controllers: [ApiTracksController],
   providers: [ApiTracksService],
+  exports: [ApiTracksService],
 })
 export class ApiTracksModule {}

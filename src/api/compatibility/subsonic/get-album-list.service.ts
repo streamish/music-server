@@ -46,6 +46,9 @@ export class SubsonicAlbumListService {
       sort,
       direction,
     );
+    if (!albums.items || albums.items.length === 0) {
+      return [];
+    }
     return albums.items.map(libraryAlbumToRow);
   }
 
@@ -84,6 +87,9 @@ export class SubsonicAlbumListService {
       sort,
       direction,
     );
+    if (!albums.items || albums.items.length === 0) {
+      return [];
+    }
     const albumIds = albums.items.map((album) => album.id);
     const trackList = await this.libraryService.listTracks(userId, { albumIds }, 0, 100_000);
     const trackIndex: Record<number, LibraryTrackDto[]> = {};

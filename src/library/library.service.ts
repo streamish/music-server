@@ -488,7 +488,6 @@ export class LibraryService {
       0,
       100_000,
     );
-
     albums.map(async (album) => {
       const builtAlbum = await this.transformerService.convertAlbumEntityToLibraryAlbum(album);
       const albumTracks = tracks.items.filter((track) => track.albumId === album.id);

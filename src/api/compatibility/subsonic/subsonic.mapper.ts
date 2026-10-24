@@ -15,6 +15,7 @@ export function libraryTrackToRow(track: LibraryTrackDto) {
     artistId: `${track.artists[0]?.id || 0}`,
     bitRate: track.fileBitRate ? Math.round(track.fileBitRate / 1000) : undefined,
     contentType: `audio/${track.fileType}`,
+    coverArt: `${track.albumId}`,
     created: new Date().toISOString(),
     discNumber: track.discNumber ?? undefined,
     duration: Math.ceil(track.duration),
@@ -59,6 +60,7 @@ export function libraryAssociationToRow(association: LibraryAssociationDto | Lib
   }
   return {
     album: albums?.map((album) => ({ id: `${album.id}`, name: album.title })),
+    coverArt: `ar-${association.id}`,
     id: `${association.id}`,
     name: association.name,
   };

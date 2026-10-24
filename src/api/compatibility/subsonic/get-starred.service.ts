@@ -17,7 +17,7 @@ export class SubsonicStarredService {
           artist.push({
             id: `${item.association.id}`,
             name: item.association.name,
-            coverArt: `${item.association.id}`,
+            coverArt: `ar-${item.association.id}`,
             albumCount: item.association.albums?.length,
             starred: item.createdAt,
           });

@@ -1,3 +1,5 @@
+import { ApiTracksModule } from 'src/api/media/tracks/tracks.module';
+import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
 import { SubsonicAlbumController } from './get-album.controller';
@@ -11,6 +13,7 @@ import { SubsonicArtistService } from './get-artist.service';
 import { SubsonicArtistsController } from './get-artists.controller';
 import { SubsonicArtistsService } from './get-artists.service';
 import { SubsonicBookmarksController } from './get-bookmarks.controller';
+import { SubsonicCoverArtController } from './get-cover-art.controller';
 import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { SubsonicGenresController } from './get-genres.controller';
 import { SubsonicGenresService } from './get-genres.service';
@@ -30,6 +33,8 @@ import { SubsonicPlaylistsController } from './get-playlists.controller';
 import { SubsonicPodcastsController } from './get-podcasts.controller';
 import { SubsonicRandomSongsController } from './get-random-songs.controller';
 import { SubsonicRandomSongsService } from './get-random-songs.service';
+import { SubsonicSavePlayQueueController } from './save-play-queue.controller';
+import { SubsonicScrobbleController } from './scrobble.controller';
 import { SubsonicSearchController } from './search.controller';
 import { SubsonicSearchService } from './search.service';
 import { SubsonicSimilarSongsController } from './get-similar-songs.controller';
@@ -40,11 +45,12 @@ import { SubsonicSongsByGenreController } from './get-songs-by-genre.controller'
 import { SubsonicSongsByGenreService } from './get-songs-by-genre.service';
 import { SubsonicStarredController } from './get-starred.controller';
 import { SubsonicStarredService } from './get-starred.service';
+import { SubsonicStreamController } from './stream.controller';
 import { SubsonicTopSongsController } from './get-top-songs.controller';
 import { SubsonicTopSongsService } from './get-top-songs.service';
 
 @Module({
-  imports: [LibraryModule],
+  imports: [CoverImagesModule, LibraryModule, ApiTracksModule],
   controllers: [
     SubsonicAlbumController,
     SubsonicAlbumInfoController,
@@ -52,6 +58,7 @@ import { SubsonicTopSongsService } from './get-top-songs.service';
     SubsonicArtistController,
     SubsonicArtistsController,
     SubsonicBookmarksController,
+    SubsonicCoverArtController,
     SubsonicGenresController,
     SubsonicIndexesController,
     SubsonicInternetRadioStationsController,
@@ -64,11 +71,14 @@ import { SubsonicTopSongsService } from './get-top-songs.service';
     SubsonicPlaylistsController,
     SubsonicPodcastsController,
     SubsonicRandomSongsController,
+    SubsonicSavePlayQueueController,
+    SubsonicScrobbleController,
     SubsonicSearchController,
     SubsonicSimilarSongsController,
     SubsonicSongController,
     SubsonicSongsByGenreController,
     SubsonicStarredController,
+    SubsonicStreamController,
     SubsonicTopSongsController,
   ],
   providers: [
