@@ -11,6 +11,7 @@ import { SubsonicArtistService } from './get-artist.service';
 import { SubsonicArtistsController } from './get-artists.controller';
 import { SubsonicArtistsService } from './get-artists.service';
 import { SubsonicBookmarksController } from './get-bookmarks.controller';
+import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { SubsonicGenresController } from './get-genres.controller';
 import { SubsonicGenresService } from './get-genres.service';
 import { SubsonicIndexesController } from './get-indexes.controller';
@@ -71,6 +72,7 @@ import { SubsonicTopSongsService } from './get-top-songs.service';
     SubsonicTopSongsController,
   ],
   providers: [
+    SubsonicExceptionFilter,
     SubsonicAlbumInfoService,
     SubsonicAlbumListService,
     SubsonicAlbumService,

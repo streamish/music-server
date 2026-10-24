@@ -1,12 +1,14 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicAuthGuard } from './subsonic.guard';
+import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
 @Controller('rest')
+@UseFilters(SubsonicExceptionFilter)
 @UseGuards(SubsonicAuthGuard)
 export class SubsonicStarredController {
   // eslint-disable-next-line class-methods-use-this

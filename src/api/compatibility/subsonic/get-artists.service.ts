@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
 import { libraryAssociationToRow } from './subsonic.mapper';
 
@@ -15,9 +15,6 @@ export class SubsonicArtistsService {
       0,
       100_000,
     );
-    if (!artists || !artists?.[0]) {
-      throw new NotFoundException(`Artist not found for rootPathId: ${rootPathId}`);
-    }
     const index = {};
     for (let i = 0, len = artists.items.length; i < len; i += 1) {
       const artist = artists.items[i];

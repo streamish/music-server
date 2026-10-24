@@ -1,14 +1,16 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { ResponseFormat } from './subsonic.decorator';
 import { SubsonicArtistsQueryDto } from './dtos';
 import { SubsonicArtistsService } from './get-artists.service';
 import { SubsonicAuthGuard } from './subsonic.guard';
+import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
 @Controller('rest')
+@UseFilters(SubsonicExceptionFilter)
 @UseGuards(SubsonicAuthGuard)
 export class SubsonicArtistsController {
   constructor(private readonly getArtistsService: SubsonicArtistsService) {}

@@ -1,6 +1,7 @@
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ErrorCodes } from 'src/constants/error-codes';
+import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
+import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
+import type { AccountEntity } from 'src/database/entities';
 
 function decodePassword(value: string): string {
   if (!value.startsWith('enc:')) {
@@ -8,7 +9,7 @@ function decodePassword(value: string): string {
   }
   const hex = value.slice(4);
   if (hex.length % 2 !== 0 || !/^[0-9a-f]*$/i.test(hex)) {
-    throw new UnauthorizedException('Malformed encoded password');
+    throw new SubsonicException(SubsonicErrorCode.WRONG_USERNAME_OR_PASSWORD, 'Wrong username or password');
   }
   return Buffer.from(hex, 'hex').toString('utf8');
 }
@@ -45,15 +46,51 @@ export class SubsonicAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const { u: username, p: password } = request.query as Record<string, string>;
-    if (!username || !password) {
-      throw new UnauthorizedException(ErrorCodes.AUTHORIZATION_ERROR);
+    const {
+      u: username,
+      p: password,
+      t: token,
+      s: salt,
+      v: protocolVersion,
+      c: clientName,
+    } = request.query as Record<string, string>;
+    if (!username) {
+      throw new SubsonicException(SubsonicErrorCode.REQUIRED_PARAMETER_MISSING, 'Required parameter is missing: u');
     }
-    const user = await this.authenticationService.getAccountByUsername(username);
+    if (!protocolVersion) {
+      throw new SubsonicException(SubsonicErrorCode.REQUIRED_PARAMETER_MISSING, 'Required parameter is missing: v');
+    }
+    if (!clientName) {
+      throw new SubsonicException(SubsonicErrorCode.REQUIRED_PARAMETER_MISSING, 'Required parameter is missing: c');
+    }
+    if (token !== undefined && salt !== undefined && password !== undefined) {
+      throw new SubsonicException(
+        SubsonicErrorCode.CONFLICTING_AUTHENTICATION_MECHANISMS,
+        'Multiple conflicting authentication mechanisms provided',
+      );
+    }
+    if (!password && token !== undefined && salt !== undefined) {
+      throw new SubsonicException(
+        SubsonicErrorCode.AUTHENTICATION_MECHANISM_NOT_SUPPORTED,
+        'Provided authentication mechanism not supported',
+      );
+    }
+    if (!password) {
+      throw new SubsonicException(SubsonicErrorCode.REQUIRED_PARAMETER_MISSING, 'Required parameter is missing: p');
+    }
+    let user: AccountEntity;
+    try {
+      user = await this.authenticationService.getAccountByUsername(username);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new SubsonicException(SubsonicErrorCode.WRONG_USERNAME_OR_PASSWORD, 'Wrong username or password');
+      }
+      throw error;
+    }
     const decodedPassword = decodePassword(password);
     const authenticated = await this.authenticationService.verifyPassword(user.id, decodedPassword);
     if (!authenticated) {
-      throw new UnauthorizedException(ErrorCodes.AUTHORIZATION_ERROR);
+      throw new SubsonicException(SubsonicErrorCode.WRONG_USERNAME_OR_PASSWORD, 'Wrong username or password');
     }
     request.user = user;
     return true;
