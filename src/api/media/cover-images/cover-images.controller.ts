@@ -53,11 +53,12 @@ export class ApiCoverImageController {
     },
   })
   async getAlbumCover(
+    @User() user: AccountEntity,
     @Query() query: AlbumCoverImageQueryDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const coverImage = await this.coverImageService.getAlbumCover(query.id, query.size);
+    const coverImage = await this.coverImageService.getAlbumCover(user.id, query.id, query.size);
     return ApiCoverImageController.serveImage(request, response, coverImage);
   }
 

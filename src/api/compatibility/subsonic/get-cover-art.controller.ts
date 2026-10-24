@@ -36,7 +36,7 @@ export class SubsonicCoverArtController {
     const size = query.size || DEFAULT_SIZE;
     const coverImage = isArtist
       ? await this.coverImagesService.getAssociationCover(user.id, id, size, AssociationTypeEnum.ARTIST)
-      : await this.coverImagesService.getAlbumCover(id, size);
+      : await this.coverImagesService.getAlbumCover(user.id, id, size);
     const updatedAt = 'updatedAt' in coverImage ? (coverImage.updatedAt as Date | undefined)?.getTime() : '';
     res.set({
       'Content-Type': coverImage.coverImageMimeType,

@@ -25,18 +25,18 @@ export class CoverImagesService {
 
   /**
    * Retrieves an association and their tracks, prioritizing album associations and falling back to track.
-   * @param userId The authenticated user ID
+   * @param accountId The authenticated user ID
    * @param associationId The ID of the association
    * @param associationType The type of association
    */
-  private async getAssociation(userId: number, associationId: number, associationType: AssociationTypeEnum) {
+  private async getAssociation(accountId: number, associationId: number, associationType: AssociationTypeEnum) {
     let associations: LibraryAssociationWithTracksDto[] | undefined;
     try {
-      associations = await this.libraryService.retrieveAlbumAssociation(userId, associationId, associationType);
+      associations = await this.libraryService.retrieveAlbumAssociation(accountId, associationId, associationType);
     } catch {
       if (!associations) {
         try {
-          associations = await this.libraryService.retrieveTrackAssociation(userId, associationId, associationType);
+          associations = await this.libraryService.retrieveTrackAssociation(accountId, associationId, associationType);
         } catch {
           return undefined;
         }
@@ -133,7 +133,7 @@ export class CoverImagesService {
    * Finds a cover image for an association based on the first album with a cover image
    * that is extracted from the first track within that album that contains a cover image.
    * @param albumIds Array of relevant album IDs
-   * @param associationId The ID of the associate
+   * @param associationId The ID of the associated entity
    * @param associationType The type of association
    * @param size The dimension of the image
    * @returns The image if it exists
@@ -177,16 +177,17 @@ export class CoverImagesService {
    * Returns an album cover if it exists, or a blank placeholder.  The image is embedded in the track
    * files, the first track found with an image provides it.  The image can be updated by saving a new
    * image into the IDv3 tag data and re-indexing.
-   * @param userId The authenticated user ID.
+   * @param accountId The owner of the data
    * @param albumId The ID of the album to retrieve the cover image for.
    * @returns The album cover image.
    */
-  async getAlbumCover(albumId: number | number[], size: number) {
+  async getAlbumCover(accountId: number, albumId: number | number[], size: number) {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
         [Op.and]: [where(col('coverImage'), Op.not, null), where(col('coverImageMimeType'), Op.not, null)],
         id: albumId,
+        accountId,
       },
     });
     if (!album) {
@@ -200,19 +201,19 @@ export class CoverImagesService {
    * albums they are credited to.  The image comes from the first available image in an album's
    * tracks or then the loose-track credits.  The image can be updated by saving a new
    * image into the IDv3 tag data and re-indexing.
-   * @param userId The authenticated user ID
+   * @param accountId The owner of the data
    * @param associationId The ID of the associate
    * @param associationType The type of association
    * @param size The dimension of the image
    * @returns The image if it exists
    */
-  async getAssociationCover(userId: number, associationId: number, size: number, type: AssociationTypeEnum) {
-    const association = await this.getAssociation(userId, associationId, type);
+  async getAssociationCover(accountId: number, associationId: number, size: number, type: AssociationTypeEnum) {
+    const association = await this.getAssociation(accountId, associationId, type);
     if (!association) {
       return CoverImagesService.getBlankCover();
     }
     const albumIds = association.albums.map((album) => album.id);
-    let coverImage = await this.getAlbumCover(albumIds, size);
+    let coverImage = await this.getAlbumCover(accountId, albumIds, size);
     if (!coverImage) {
       coverImage = await this.getAlbumCovers(albumIds, associationId, type, size);
       if (!coverImage) {
@@ -220,5 +221,26 @@ export class CoverImagesService {
       }
     }
     return coverImage;
+  }
+
+  /**
+   * Returns a track cover if it exists, or a blank placeholder.  The image returned comes from the album which
+   * is sourced from the first track containing an image.
+   * @param accountId The owner of the data
+   * @param trackId The ID of the track to retrieve the cover image for.
+   * @returns The track cover image.
+   */
+  async getTrackCover(accountId: number, trackId: number, size: number) {
+    const track = await this.trackEntity.findOne({
+      attributes: ['id', 'albumId'],
+      where: {
+        id: trackId,
+        accountId,
+      },
+    });
+    if (!track) {
+      return CoverImagesService.getBlankCover();
+    }
+    return this.getAlbumCover(accountId, track.albumId, size);
   }
 }

@@ -10,8 +10,8 @@ export class ApiCoverImageService {
     return this.coverImagesService.getAlbumCovers(albumIds, associationId, associationType, size);
   }
 
-  async getAlbumCover(albumId: number | number[], size: number) {
-    return this.coverImagesService.getAlbumCover(albumId, size);
+  async getAlbumCover(userId: number, albumId: number | number[], size: number) {
+    return this.coverImagesService.getAlbumCover(userId, albumId, size);
   }
 
   async getAssociationCover(userId: number, associationId: number, size: number, type: AssociationTypeEnum) {

@@ -1,5 +1,6 @@
-import { AlbumEntity, AssociationEntity, AssociationLinkEntity, TrackEntity } from 'src/database/entities';
-import { CoverImage } from 'src/cover-images/types/cover-image';
+import { AlbumEntity, AssociationEntity, AssociationLinkEntity } from 'src/database/entities';
+import { AssociationTypeEnum } from 'src/types/enums';
+import { CoverImagesService } from 'src/cover-images/cover-images.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Op } from 'sequelize';
@@ -8,11 +9,26 @@ import { normalizeString } from 'src/utils/strings';
 @Injectable()
 export class SynologyCoverImageService {
   constructor(
+    private readonly coverImageService: CoverImagesService,
+    @InjectModel(AssociationEntity)
+    private readonly associationEntity: typeof AssociationEntity,
     @InjectModel(AlbumEntity)
     private readonly albumEntity: typeof AlbumEntity,
-    @InjectModel(TrackEntity)
-    private readonly trackEntity: typeof TrackEntity,
   ) {}
+
+  private async getAssociationId(accountId: number, name: string) {
+    const association = await this.associationEntity.findOne({
+      attributes: ['id'],
+      where: {
+        accountId,
+        nameNormalized: normalizeString(name),
+      },
+    });
+    if (!association) {
+      throw new NotFoundException(`Association not found for name: ${name}`);
+    }
+    return association.id;
+  }
 
   /**
    * Returns the cover image for a given artist.  If there are no albums it throws a NotFoundException.  The
@@ -23,39 +39,9 @@ export class SynologyCoverImageService {
    * @param albumArtist The name of the artist for which to retrieve the cover image.
    * @returns The album cover image.
    */
-  async getArtistCoverImage(userId: number, albumArtist: string): Promise<CoverImage | undefined> {
-    const artist = await this.albumEntity.findOne({
-      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
-      where: {
-        accountId: userId,
-      },
-      include: [
-        {
-          model: AssociationLinkEntity,
-          include: [
-            {
-              attributes: [],
-              model: AssociationEntity,
-              where: {
-                nameNormalized: normalizeString(albumArtist),
-                [Op.or]: [
-                  {
-                    isAlbumArtist: true,
-                  },
-                  {
-                    isTrackArtist: true,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      ],
-    });
-    if (!artist) {
-      throw new NotFoundException(`Cover image not found for artist: ${albumArtist}`);
-    }
-    return artist;
+  async getArtistCoverImage(userId: number, albumArtist: string) {
+    const artistId = await this.getAssociationId(userId, albumArtist);
+    return this.coverImageService.getAssociationCover(userId, artistId, 600, AssociationTypeEnum.ARTIST);
   }
 
   /**
@@ -68,7 +54,7 @@ export class SynologyCoverImageService {
    * @param [albumTitle] The optional title of the album for which to retrieve the cover image.
    * @returns The album cover image.
    */
-  async getAlbumCoverImage(userId: number, albumArtist: string, albumTitle?: string): Promise<CoverImage | undefined> {
+  async getAlbumCoverImage(userId: number, albumArtist: string, albumTitle?: string) {
     const album = await this.albumEntity.findOne({
       attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
       where: {
@@ -101,7 +87,7 @@ export class SynologyCoverImageService {
     if (!album) {
       throw new NotFoundException(`Album not found for title: ${albumTitle} and artist: ${albumArtist}`);
     }
-    return album;
+    return this.coverImageService.getAlbumCover(userId, album.id, 600);
   }
 
   /**
@@ -113,32 +99,9 @@ export class SynologyCoverImageService {
    * @param composer The name of the composer for which to retrieve the cover image.
    * @returns The album cover image.
    */
-  async getComposerCoverImage(userId: number, composerName: string): Promise<CoverImage | undefined> {
-    const album = await this.albumEntity.findOne({
-      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
-      where: {
-        accountId: userId,
-      },
-      include: [
-        {
-          model: AssociationLinkEntity,
-          include: [
-            {
-              attributes: [],
-              model: AssociationEntity,
-              where: {
-                nameNormalized: normalizeString(composerName),
-                isComposer: true,
-              },
-            },
-          ],
-        },
-      ],
-    });
-    if (!album) {
-      throw new NotFoundException(`Album not found for composer: ${composerName}`);
-    }
-    return album;
+  async getComposerCoverImage(userId: number, composerName: string) {
+    const composerId = await this.getAssociationId(userId, composerName);
+    return this.coverImageService.getAssociationCover(userId, composerId, 600, AssociationTypeEnum.COMPOSER);
   }
 
   /**
@@ -150,23 +113,7 @@ export class SynologyCoverImageService {
    * @param trackId The ID of the track for which to retrieve the cover image.
    * @returns The track cover image.
    */
-  async getTrackCoverImage(userId: number, trackId: number): Promise<CoverImage | undefined> {
-    const track = await this.trackEntity.findOne({
-      attributes: [],
-      where: {
-        id: trackId,
-        accountId: userId,
-      },
-      include: [
-        {
-          model: AlbumEntity,
-          attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
-        },
-      ],
-    });
-    if (!track?.album) {
-      throw new NotFoundException(`Album not found for track ID: ${trackId}`);
-    }
-    return track?.album;
+  async getTrackCoverImage(userId: number, trackId: number) {
+    return this.coverImageService.getTrackCover(userId, trackId, 600);
   }
 }

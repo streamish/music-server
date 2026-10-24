@@ -32,7 +32,7 @@ export class QnapMediaCoverService {
    * @returns The album cover image.
    */
   async getAlbumCoverImage(userId: number, albumId: number) {
-    return this.coverImagesService.getAlbumCover(userId, albumId);
+    return this.coverImagesService.getAlbumCover(userId, albumId, 600);
   }
 
   // eslint-disable-next-line class-methods-use-this
