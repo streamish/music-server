@@ -4,13 +4,10 @@ import { ApiCoverImageService } from './cover-images.service';
 import { ApiEndpoint } from 'src/api/api.decorator';
 import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
 import { Controller, Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
-import { CoverImage } from 'src/types/cover-image';
+import { CoverImage } from 'src/cover-images/types/cover-image';
 import { User } from 'src/api/user.decorator';
-import { join, sep } from 'node:path';
-import { readFileSync } from 'node:fs';
 import type { Request, Response } from 'express';
 
-let blankBuffer: Buffer;
 const emptyBuffer = Buffer.alloc(0);
 
 @Controller('/api')
@@ -23,54 +20,19 @@ export class ApiCoverImageController {
    * date of the album.
    * @param request
    * @param response
-   * @param query
    * @param coverImage
    */
-  private static serveImage(
-    request: Request,
-    response: Response,
-    query: AlbumCoverImageQueryDto | AssociationCoverImageQueryDto,
-    coverImage: CoverImage | undefined,
-  ) {
-    const fileType = coverImage?.coverImageMimeType?.split(sep).pop() || 'png';
-    let fileName: string;
-    if ('associationType' in query) {
-      fileName = `${query.associationType}-${query.id}-cover-${query.size}.${fileType}`;
-    } else {
-      fileName = `album}-${query.id}-cover-${query.size}.${fileType}`;
-    }
-    if (coverImage?.coverImage && coverImage.coverImageMimeType) {
-      let eTag: string;
-      if ('associationType' in query) {
-        eTag = `${query.associationType}-${query.id}-cover-${query.size}-${coverImage.updatedAt?.getTime() || ''}`;
-      } else {
-        eTag = `album-${query.id}-cover-${query.size}-${coverImage.updatedAt?.getTime() || ''}`;
-      }
-      response.set({
-        'Content-Disposition': `inline; filename="${fileName}"`,
-        'Content-Type': coverImage.coverImageMimeType,
-        ETag: eTag,
-      });
-      if (request.fresh) {
-        response.status(304);
-        return new StreamableFile(emptyBuffer);
-      }
-      return new StreamableFile(coverImage.coverImage);
-    }
+  private static serveImage(request: Request, response: Response, coverImage: CoverImage) {
     response.set({
-      'Content-Disposition': `inline; filename="${fileName}.png"`,
-      'Content-Type': 'image/png',
-      ETag: 'blank-cover',
+      'Content-Disposition': `inline; filename="${coverImage.fileName}"`,
+      'Content-Type': coverImage.coverImageMimeType,
+      ETag: coverImage.eTag,
     });
     if (request.fresh) {
       response.status(304);
       return new StreamableFile(emptyBuffer);
     }
-    if (!blankBuffer) {
-      const blankCoverPath = join(__dirname, 'resources', 'blank-cover.png');
-      blankBuffer = readFileSync(blankCoverPath);
-    }
-    return new StreamableFile(blankBuffer);
+    return new StreamableFile(coverImage.coverImage);
   }
 
   /**
@@ -96,7 +58,7 @@ export class ApiCoverImageController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const coverImage = await this.coverImageService.getAlbumCover(query.id, query.size);
-    return ApiCoverImageController.serveImage(request, response, query, coverImage);
+    return ApiCoverImageController.serveImage(request, response, coverImage);
   }
 
   /**
@@ -125,6 +87,6 @@ export class ApiCoverImageController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const coverImage = await this.coverImageService.getAssociationCover(user.id, query.id, query.size, query.type);
-    return ApiCoverImageController.serveImage(request, response, query, coverImage);
+    return ApiCoverImageController.serveImage(request, response, coverImage);
   }
 }
