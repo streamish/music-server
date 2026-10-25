@@ -19,7 +19,7 @@ export class ApiTracksService {
    * Returns paginated list of tracks for the account, matching the specified filters.
    * @param userId The authenticated user ID
    * @param query Optional query filters
-   * @returns Paginated dataset of albums
+   * @returns Paginated dataset of tracks
    */
   async listTracks(userId: number, query: ListTracksQueryDto) {
     const data = await this.libraryService.listTracks(
@@ -40,15 +40,17 @@ export class ApiTracksService {
 
   /**
    * Returns a track's file data and information for streaming.
+   * @param userId The authenticated user ID
    * @param trackId The ID of the track to retrieve.
    * @throws If the specified track is not found
    * @returns The absolute file path, codec and size for streaming the file.
    */
-  async getStream(trackId: number) {
+  async getStream(userId: number, trackId: number) {
     const file = await this.trackEntity.findOne({
       attributes: ['createdAt', 'filePath', 'fileSize', 'fileType', 'updatedAt'],
       where: {
         id: trackId,
+        accountId: userId,
       },
       include: [
         {
