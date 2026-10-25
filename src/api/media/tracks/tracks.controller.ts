@@ -59,11 +59,12 @@ export class ApiTracksController {
     },
   })
   async get(
+    @User() user: AccountEntity,
     @Query() query: StreamFileQueryDto,
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const streamInfo = await this.tracksService.getStream(query.id);
+    const streamInfo = await this.tracksService.getStream(user.id, query.id);
     const fileType = streamInfo.path.split('.').pop();
     const eTag = `file-${query.id}-${streamInfo.updatedAt?.getTime() || ''}`;
     response.set({
