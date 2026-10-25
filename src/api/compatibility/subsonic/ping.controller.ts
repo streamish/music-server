@@ -1,6 +1,7 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicPingResponseDto } from './dtos';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
@@ -11,7 +12,7 @@ export class SubsonicPingController {
     summary: 'Ping',
     description: 'Test connectivity with the Subsonic server.',
     responses: {
-      [HttpStatus.OK]: SubsonicPingResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicPingResponseDto),
     },
   })
   ping(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

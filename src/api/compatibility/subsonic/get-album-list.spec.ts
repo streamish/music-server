@@ -24,15 +24,16 @@ describe('/rest/getAlbumList2', () => {
     if (!data) {
       throw new Error('No data returned from getAlbumList');
     }
-    return { data, error };
+    const typedData = data as paths['/rest/getAlbumList2']['get']['responses']['200']['content']['application/json'];
+    return { data: typedData['subsonic-response'], error };
   }
 
   it('should return albums sorted alphabetically by name', async () => {
     const { data } = await getAlbumList({ type: SubsonicAlbumListTypeEnum.alphabeticallyByName });
-    const albums = data['subsonic-response'].albumList2.album;
-    expect(data['subsonic-response'].status).toBe('ok');
+    const albums = data.albumList2.album;
+    expect(data.status).toBe('ok');
     expect(albums.map((album) => album.name)).toEqual(['Album 1', 'Album 2', 'Album 3', 'Album 4', 'Album 5']);
-    expect(albums.every((album) => album.id.length > 0)).toBe(true);
+    expect(albums.every((album) => (album?.id || '').length > 0)).toBe(true);
   });
 
   it('should paginate albums', async () => {
@@ -46,8 +47,8 @@ describe('/rest/getAlbumList2', () => {
       size: 2,
       offset: 2,
     });
-    const firstPageAlbums = firstPage['subsonic-response'].albumList2.album;
-    const secondPageAlbums = secondPage['subsonic-response'].albumList2.album;
+    const firstPageAlbums = firstPage.albumList2.album;
+    const secondPageAlbums = secondPage.albumList2.album;
     expect(firstPageAlbums).toHaveLength(2);
     expect(secondPageAlbums).toHaveLength(2);
     expect(

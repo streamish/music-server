@@ -28,8 +28,9 @@ import {
   ApiProduces,
   ApiResponse,
   ApiTags,
+  ContentObject,
+  SchemaObject,
 } from '@nestjs/swagger';
-import { ContentObject, SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpCode, HttpStatus, Type, UseGuards, applyDecorators } from '@nestjs/common';
 import { UserRoleEnum } from 'src/types/enums';

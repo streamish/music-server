@@ -5168,8 +5168,12 @@ export type components = {
       genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the album */
       id: number;
-      /** @description The aggregate rating for the album, which is a value between 0 and 5 inclusive applied to tracks. */
-      rating: number;
+      /**
+       * @description The aggregate rating for the album, which is the average of the rating values
+       *     between 0 (not rated) and 5 inclusive applied to tracks.
+       * @default 0
+       */
+      rating: components['schemas']['RatingOrUnset'];
       /**
        * @description The name or title of the album, this would usually come from an official source such as MusicBrainz
        *     or Discogs.
@@ -5206,8 +5210,12 @@ export type components = {
       genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the album */
       id: number;
-      /** @description The aggregate rating for the album, which is a value between 0 and 5 inclusive applied to tracks. */
-      rating: number;
+      /**
+       * @description The aggregate rating for the album, which is the average of the rating values
+       *     between 0 (not rated) and 5 inclusive applied to tracks.
+       * @default 0
+       */
+      rating: components['schemas']['RatingOrUnset'];
       /**
        * @description The name or title of the album, this would usually come from an official source such as MusicBrainz
        *     or Discogs.
@@ -5355,8 +5363,11 @@ export type components = {
       genres: components['schemas']['LibraryAssociationDto'][];
       /** @description The internally-generated unique ID of the track */
       id: number;
-      /** @description The rating of the track which is a value between 0 and 5 inclusive applied to the track. */
-      rating: number;
+      /**
+       * @description The rating of the track which is a value between 0 and 5 inclusive applied to the track.
+       * @default 0
+       */
+      rating: components['schemas']['RatingOrUnset'];
       /** @description The ID of the root path for the track. */
       rootPathId: number;
       /** @description The title of the track, which is usually the name of the song or piece of music. */
@@ -6020,7 +6031,7 @@ export type components = {
     QnapSysRequestDto: {
       authPassed: number;
       customLogo: components['schemas']['QnapSysRequestCustomLogoDto'];
-      DemoSiteSuppurt: Record<string, never>;
+      DemoSiteSuppurt: components['schemas']['QnapYesNoEnum'];
       firmware: components['schemas']['QnapSysRequestFirmwareDto'];
       func: components['schemas']['QnapSysRequestFuncDto'];
       hostname: string;
@@ -6157,7 +6168,7 @@ export type components = {
        * Format: integer
        * @default 0
        */
-      Rating: Record<string, never>;
+      Rating: components['schemas']['RatingOrUnset'];
       SongID: number;
       Title: string;
       Tracknumber?: number;
@@ -6167,8 +6178,7 @@ export type components = {
     QnapUserAsLoginDatasDto: {
       /** @description The first item contains user information. The second item contains system and application information. */
       data: (
-        | components['schemas']['QnapUserAsLoginUserDataDto']
-        | components['schemas']['QnapUserAsLoginSystemDataDto']
+        components['schemas']['QnapUserAsLoginUserDataDto'] | components['schemas']['QnapUserAsLoginSystemDataDto']
       )[];
     };
     QnapUserAsLoginDto: {
@@ -6227,6 +6237,14 @@ export type components = {
       usr_id: number;
       writable: string;
     };
+    /** @enum {string} */
+    QnapYesNoEnum: QnapYesNoEnum;
+    /**
+     * @description The aggregate rating for the album, which is the average of the rating values
+     *     between 0 (not rated) and 5 inclusive applied to tracks.
+     * @enum {integer}
+     */
+    RatingOrUnset: RatingOrUnset;
     ResetUserPasswordBodyDto: {
       /** @description The administrator's password to authorize the operation. */
       adminPassword: string;
@@ -6355,10 +6373,10 @@ export type components = {
     };
     SetAlbumRatingBodyDto: {
       /**
-       * Format: int32
        * @description The rating value to be set for the track.  If it is 0 the rating will be unset.
+       * @default 0
        */
-      rating: number;
+      rating: components['schemas']['RatingOrUnset'];
     };
     SetAssociationNameBodyDto: {
       /**
@@ -6484,10 +6502,10 @@ export type components = {
     };
     SetTrackRatingBodyDto: {
       /**
-       * Format: int32
        * @description The rating value to be set for the track.  If it is 0 the rating will be unset.
+       * @default 0
        */
-      rating: number;
+      rating: components['schemas']['RatingOrUnset'];
     };
     /**
      * @description The name of the container the favorite is in.
@@ -6524,185 +6542,347 @@ export type components = {
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
     /** @enum {string} */
     SortDirectionEnum: SortDirectionEnum;
+    SubsonicAlbumDataDto: {
+      album: components['schemas']['SubsonicAlbumDto'][];
+    };
+    SubsonicAlbumDto: {
+      artist: string;
+      artistId: string;
+      coverArt: string;
+      created?: string;
+      duration: number;
+      genre?: string;
+      id: string;
+      name: string;
+      playCount?: number;
+      song?: components['schemas']['SubsonicSongDto'][];
+      songCount: number;
+      starred?: string;
+      year?: number;
+    };
+    SubsonicAlbumInfoDto: {
+      largeImageUrl?: string;
+      lastFmUrl?: string;
+      mediumImageUrl?: string;
+      musicBrainzId?: string;
+      notes?: string;
+      smallImageUrl?: string;
+    };
     SubsonicAlbumInfoResponseDto: {
-      albumInfo: Record<string, never>;
+      albumInfo: components['schemas']['SubsonicAlbumInfoDto'];
       status: string;
       version: string;
+    };
+    SubsonicAlbumInfoResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicAlbumInfoResponseDto'];
     };
     SubsonicAlbumList2ResponseDto: {
-      albumList2: {
-        album: Record<string, never>[];
-      };
+      albumList2: components['schemas']['SubsonicAlbumDataDto'];
       status: string;
       version: string;
     };
+    SubsonicAlbumList2ResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicAlbumList2ResponseDto'];
+    };
     SubsonicAlbumListResponseDto: {
-      albumList: {
-        album: Record<string, never>[];
-      };
+      albumList: components['schemas']['SubsonicAlbumDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicAlbumListResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicAlbumListResponseDto'];
     };
     /** @enum {string} */
     SubsonicAlbumListTypeEnum: SubsonicAlbumListTypeEnum;
     SubsonicAlbumResponseDto: {
-      album: Record<string, never>;
+      album: components['schemas']['SubsonicAlbumWithTracksDto'];
       status: string;
       version: string;
+    };
+    SubsonicAlbumResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicAlbumResponseDto'];
+    };
+    SubsonicAlbumWithTracksDto: {
+      artist: string;
+      artistId: string;
+      coverArt: string;
+      created?: string;
+      duration: number;
+      genre?: string;
+      id: string;
+      name: string;
+      playCount?: number;
+      song: components['schemas']['SubsonicSongDto'][];
+      songCount: number;
+      starred?: string;
+      year?: number;
+    };
+    SubsonicArtistAlbumDto: {
+      id: string;
+      name: string;
+    };
+    SubsonicArtistDto: {
+      album?: components['schemas']['SubsonicArtistAlbumDto'][];
+      albumCount?: number;
+      coverArt: string;
+      id: string;
+      name: string;
+      starred?: string;
     };
     SubsonicArtistResponseDto: {
-      artist: Record<string, never>;
+      artist: components['schemas']['SubsonicArtistDto'];
       status: string;
       version: string;
+    };
+    SubsonicArtistResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicArtistResponseDto'];
     };
     SubsonicArtistsResponseDto: {
-      artist: Record<string, never>;
+      artist: {
+        [key: string]: components['schemas']['SubsonicArtistDto'][];
+      };
       status: string;
       version: string;
     };
+    SubsonicArtistsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicArtistsResponseDto'];
+    };
+    SubsonicBookmarksDataDto: Record<string, never>;
     SubsonicBookmarksResponseDto: {
-      bookmarks: Record<string, never>;
+      bookmarks: components['schemas']['SubsonicBookmarksDataDto'];
       status: string;
       version: string;
     };
-    SubsonicCoverArtResponseDto: {
-      data: Record<string, never>;
+    SubsonicBookmarksResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicBookmarksResponseDto'];
+    };
+    SubsonicGenreDto: {
+      value: string;
+    };
+    SubsonicGenresDataDto: {
+      genre: components['schemas']['SubsonicGenreDto'][];
     };
     SubsonicGenresResponseDto: {
-      genres: {
-        genre?: {
-          value: string;
-        }[];
-      };
+      genres: components['schemas']['SubsonicGenresDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicGenresResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicGenresResponseDto'];
     };
     SubsonicIndexesResponseDto: {
-      indexes: Record<string, never>;
+      indexes: {
+        [key: string]: components['schemas']['SubsonicArtistDto'][];
+      };
       status: string;
       version: string;
     };
+    SubsonicIndexesResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicIndexesResponseDto'];
+    };
+    SubsonicInternetRadioStationsDataDto: Record<string, never>;
     SubsonicInternetRadioStationsResponseDto: {
-      internetRadioStations: Record<string, never>;
+      internetRadioStations: components['schemas']['SubsonicInternetRadioStationsDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicInternetRadioStationsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicInternetRadioStationsResponseDto'];
+    };
+    SubsonicLicenseDto: {
+      email: string;
+      licenseExpires: string;
+      valid: boolean;
     };
     SubsonicLicenseResponseDto: {
-      license: {
-        email: string;
-        licenseExpires: string;
-        valid: boolean;
-      };
+      license: components['schemas']['SubsonicLicenseDto'];
       status: string;
       version: string;
+    };
+    SubsonicLicenseResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicLicenseResponseDto'];
+    };
+    SubsonicMusicDirectoryDataDto: {
+      musicFolder: components['schemas']['SubsonicMusicDirectoryDto'];
+    };
+    SubsonicMusicDirectoryDto: {
+      id: string;
+      name: string;
     };
     SubsonicMusicDirectoryResponseDto: {
-      musicDirectory: {
-        musicFolder: {
-          id?: string;
-          name?: string;
-        };
-      };
+      musicDirectory: components['schemas']['SubsonicMusicDirectoryDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicMusicDirectoryResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicMusicDirectoryResponseDto'];
+    };
+    SubsonicMusicFolderDto: {
+      id: string;
+      name: string;
+    };
+    SubsonicMusicFoldersDataDto: {
+      musicFolder: components['schemas']['SubsonicMusicFolderDto'][];
     };
     SubsonicMusicFoldersResponseDto: {
-      musicFolders: {
-        musicFolder?: {
-          id: string;
-          name: string;
-        }[];
-      };
+      musicFolders: components['schemas']['SubsonicMusicFoldersDataDto'];
       status: string;
       version: string;
     };
+    SubsonicMusicFoldersResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicMusicFoldersResponseDto'];
+    };
+    SubsonicNewestPodcastsDataDto: Record<string, never>;
     SubsonicNewestPodcastsResponseDto: {
-      newestPodcasts: Record<string, never>;
+      newestPodcasts: components['schemas']['SubsonicNewestPodcastsDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicNewestPodcastsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicNewestPodcastsResponseDto'];
+    };
+    SubsonicNowPlayingDataDto: {
+      entry: components['schemas']['SubsonicSongDto'][];
     };
     SubsonicNowPlayingResponseDto: {
-      nowPlaying: {
-        entry: Record<string, never>[];
-      };
+      nowPlaying: components['schemas']['SubsonicNowPlayingDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicNowPlayingResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicNowPlayingResponseDto'];
     };
     SubsonicPingResponseDto: {
       status: string;
       version: string;
     };
+    SubsonicPingResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicPingResponseDto'];
+    };
+    SubsonicPlaylistsDataDto: Record<string, never>;
     SubsonicPlaylistsResponseDto: {
-      playlists: Record<string, never>;
+      playlists: components['schemas']['SubsonicPlaylistsDataDto'];
       status: string;
       version: string;
     };
+    SubsonicPlaylistsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicPlaylistsResponseDto'];
+    };
+    SubsonicPodcastsDataDto: Record<string, never>;
     SubsonicPodcastsResponseDto: {
-      podcasts: Record<string, never>;
+      podcasts: components['schemas']['SubsonicPodcastsDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicPodcastsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicPodcastsResponseDto'];
     };
     SubsonicRandomSongsResponseDto: {
-      randomSongs: {
-        song: Record<string, never>[];
-      };
+      randomSongs: components['schemas']['SubsonicSongDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicRandomSongsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicRandomSongsResponseDto'];
     };
     SubsonicSavePlayQueueResponseDto: {
       status: string;
       version: string;
     };
+    SubsonicSavePlayQueueResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicSavePlayQueueResponseDto'];
+    };
     SubsonicScrobbleResponseDto: {
       status: string;
       version: string;
     };
+    SubsonicScrobbleResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicScrobbleResponseDto'];
+    };
     SubsonicSearchResponseDto: {
-      searchResult: {
-        match: Record<string, never>[];
-        offset: number;
-        totalHits: number;
-      };
+      searchResult: components['schemas']['SubsonicSearchResultDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicSearchResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicSearchResponseDto'];
+    };
+    SubsonicSearchResultDataDto: {
+      match: components['schemas']['SubsonicSongDto'][];
+      offset: number;
+      totalHits: number;
     };
     SubsonicSimilarSongsResponseDto: {
-      similarSongs: {
-        song: Record<string, never>[];
-      };
+      similarSongs: components['schemas']['SubsonicSongDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicSimilarSongsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicSimilarSongsResponseDto'];
+    };
+    SubsonicSongDataDto: {
+      song: components['schemas']['SubsonicSongDto'][];
+    };
+    SubsonicSongDto: {
+      album: string;
+      albumId: string;
+      artist: string;
+      artistId: string;
+      bitRate?: number;
+      contentType: string;
+      created?: string;
+      discNumber?: number;
+      duration: number;
+      genre?: string;
+      id: string;
+      isDir?: boolean;
+      parent: string;
+      path?: string;
+      playCount?: number;
+      size?: number;
+      starred?: string;
+      suffix: string;
+      title: string;
+      track?: number;
+      type?: string;
+      year?: number;
     };
     SubsonicSongResponseDto: {
-      song: Record<string, never>;
+      song: components['schemas']['SubsonicSongDto'];
       status: string;
       version: string;
+    };
+    SubsonicSongResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicSongResponseDto'];
     };
     SubsonicSongsByGenreResponseDto: {
-      songsByGenre: {
-        song: Record<string, never>[];
-      };
+      songsByGenre: components['schemas']['SubsonicSongDataDto'];
       status: string;
       version: string;
+    };
+    SubsonicSongsByGenreResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicSongsByGenreResponseDto'];
+    };
+    SubsonicStarredDataDto: {
+      album?: components['schemas']['SubsonicAlbumDto'][];
+      artist?: components['schemas']['SubsonicArtistDto'][];
+      song?: components['schemas']['SubsonicSongDto'][];
     };
     SubsonicStarredResponseDto: {
-      starred: {
-        album?: Record<string, never>[];
-        artist?: Record<string, never>[];
-        song?: Record<string, never>[];
-      };
+      starred: components['schemas']['SubsonicStarredDataDto'];
       status: string;
       version: string;
     };
-    SubsonicStreamResponseDto: {
-      data: Record<string, never>;
+    SubsonicStarredResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicStarredResponseDto'];
     };
     SubsonicTopSongsResponseDto: {
       status: string;
-      topSongs: {
-        song: Record<string, never>[];
-      };
+      topSongs: components['schemas']['SubsonicSongDataDto'];
       version: string;
+    };
+    SubsonicTopSongsResponseEnvelopeDto: {
+      'subsonic-response': components['schemas']['SubsonicTopSongsResponseDto'];
     };
     SuccessResponseDto: {
       /**
@@ -6716,7 +6896,8 @@ export type components = {
       avg_rating: components['schemas']['SynologyAlbumAverageRatingDto'];
     };
     SynologyAlbumAverageRatingDto: {
-      rating: number;
+      /** @default 0 */
+      rating: components['schemas']['RatingOrUnset'];
     };
     SynologyAlbumDataDto: {
       /**
@@ -9078,7 +9259,8 @@ export type components = {
       type: components['schemas']['ContentTypeEnum'];
     };
     SynologySongRatingDto: {
-      rating: number;
+      /** @default 0 */
+      rating: components['schemas']['RatingOrUnset'];
     };
     SynologySongResponseDto: {
       data: components['schemas']['SynologySongDataDto'];
@@ -9615,8 +9797,11 @@ export type components = {
        * @example setrating
        */
       method: components['schemas']['SynologyMethodEnum'];
-      /** @description The rating of the track */
-      rating: number;
+      /**
+       * @description The rating of the track
+       * @default 0
+       */
+      rating: components['schemas']['RatingOrUnset'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
@@ -13425,7 +13610,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': string;
+          'text/xml': string;
         };
       };
       400: {
@@ -13433,7 +13618,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13441,7 +13626,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13449,7 +13634,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13470,7 +13655,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': string;
+          'text/xml': string;
         };
       };
       400: {
@@ -13478,7 +13663,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13486,7 +13671,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13494,7 +13679,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13520,7 +13705,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['QnapUserAsLoginDto'];
+          'text/xml': components['schemas']['QnapUserAsLoginDto'];
         };
       };
       400: {
@@ -13528,7 +13713,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13536,7 +13721,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13544,7 +13729,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13583,7 +13768,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'text/xml':
             | components['schemas']['QnapPreauthenticateDto']
             | components['schemas']['QnapAuthLoginDto']
             | components['schemas']['QnapAuthLoginFailedDto']
@@ -13595,7 +13780,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13603,7 +13788,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13611,7 +13796,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13634,7 +13819,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'text/xml':
             | components['schemas']['QnapPreauthenticateDto']
             | components['schemas']['QnapAuthLoginDto']
             | components['schemas']['QnapAuthLoginFailedDto']
@@ -13646,7 +13831,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13654,7 +13839,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13662,7 +13847,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13686,7 +13871,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': string;
+          'text/xml': string;
         };
       };
       400: {
@@ -13694,7 +13879,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13702,7 +13887,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13710,7 +13895,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13729,7 +13914,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['QnapMediaToolResponseDto'];
+          'text/xml': components['schemas']['QnapMediaToolResponseDto'];
         };
       };
       400: {
@@ -13737,7 +13922,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13745,7 +13930,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13753,7 +13938,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13774,7 +13959,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['QnapSysRequestDto'];
+          'text/xml': components['schemas']['QnapSysRequestDto'];
         };
       };
       400: {
@@ -13782,7 +13967,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13790,7 +13975,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13798,7 +13983,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13817,7 +14002,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'text/xml':
             | components['schemas']['QnapMediaListRandomQueryDto']
             | components['schemas']['QnapMediaListGeneralQueryDto']
             | components['schemas']['QnapMediaListBucketQueryDto']
@@ -13835,7 +14020,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['BadRequestResponseDto'];
+          'text/xml': components['schemas']['BadRequestResponseDto'];
         };
       };
       403: {
@@ -13843,7 +14028,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -13851,7 +14036,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };
@@ -13872,7 +14057,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+          'application/json': string;
+          'text/xml': string;
         };
       };
     };
@@ -13893,7 +14079,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+          'application/json': string;
+          'text/xml': string;
         };
       };
     };
@@ -13914,7 +14101,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumResponseEnvelopeDto'];
         };
       };
     };
@@ -13935,7 +14123,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumResponseEnvelopeDto'];
         };
       };
     };
@@ -13956,7 +14145,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
         };
       };
     };
@@ -13977,7 +14167,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
         };
       };
     };
@@ -13998,7 +14189,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
         };
       };
     };
@@ -14019,7 +14211,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumInfoResponseEnvelopeDto'];
         };
       };
     };
@@ -14046,7 +14239,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumListResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumListResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumListResponseEnvelopeDto'];
         };
       };
     };
@@ -14073,7 +14267,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumListResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumListResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumListResponseEnvelopeDto'];
         };
       };
     };
@@ -14099,7 +14294,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumList2ResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumList2ResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumList2ResponseEnvelopeDto'];
         };
       };
     };
@@ -14125,7 +14321,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicAlbumList2ResponseDto'];
+          'application/json': components['schemas']['SubsonicAlbumList2ResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicAlbumList2ResponseEnvelopeDto'];
         };
       };
     };
@@ -14146,7 +14343,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicArtistResponseDto'];
+          'application/json': components['schemas']['SubsonicArtistResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicArtistResponseEnvelopeDto'];
         };
       };
     };
@@ -14167,7 +14365,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicArtistResponseDto'];
+          'application/json': components['schemas']['SubsonicArtistResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicArtistResponseEnvelopeDto'];
         };
       };
     };
@@ -14189,7 +14388,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicArtistsResponseDto'];
+          'application/json': components['schemas']['SubsonicArtistsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicArtistsResponseEnvelopeDto'];
         };
       };
     };
@@ -14211,7 +14411,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicArtistsResponseDto'];
+          'application/json': components['schemas']['SubsonicArtistsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicArtistsResponseEnvelopeDto'];
         };
       };
     };
@@ -14230,7 +14431,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicBookmarksResponseDto'];
+          'application/json': components['schemas']['SubsonicBookmarksResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicBookmarksResponseEnvelopeDto'];
         };
       };
     };
@@ -14249,7 +14451,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicBookmarksResponseDto'];
+          'application/json': components['schemas']['SubsonicBookmarksResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicBookmarksResponseEnvelopeDto'];
         };
       };
     };
@@ -14271,7 +14474,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicCoverArtResponseDto'];
+          'application/json': string;
+          'text/xml': string;
         };
       };
     };
@@ -14293,7 +14497,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicCoverArtResponseDto'];
+          'application/json': string;
+          'text/xml': string;
         };
       };
     };
@@ -14312,7 +14517,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicGenresResponseDto'];
+          'application/json': components['schemas']['SubsonicGenresResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicGenresResponseEnvelopeDto'];
         };
       };
     };
@@ -14331,7 +14537,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicGenresResponseDto'];
+          'application/json': components['schemas']['SubsonicGenresResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicGenresResponseEnvelopeDto'];
         };
       };
     };
@@ -14358,7 +14565,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicIndexesResponseDto'];
+          'application/json': components['schemas']['SubsonicIndexesResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicIndexesResponseEnvelopeDto'];
         };
       };
     };
@@ -14385,7 +14593,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicIndexesResponseDto'];
+          'application/json': components['schemas']['SubsonicIndexesResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicIndexesResponseEnvelopeDto'];
         };
       };
     };
@@ -14404,7 +14613,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicInternetRadioStationsResponseDto'];
+          'application/json': components['schemas']['SubsonicInternetRadioStationsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicInternetRadioStationsResponseEnvelopeDto'];
         };
       };
     };
@@ -14423,7 +14633,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicInternetRadioStationsResponseDto'];
+          'application/json': components['schemas']['SubsonicInternetRadioStationsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicInternetRadioStationsResponseEnvelopeDto'];
         };
       };
     };
@@ -14442,7 +14653,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicLicenseResponseDto'];
+          'application/json': components['schemas']['SubsonicLicenseResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicLicenseResponseEnvelopeDto'];
         };
       };
     };
@@ -14461,7 +14673,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicLicenseResponseDto'];
+          'application/json': components['schemas']['SubsonicLicenseResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicLicenseResponseEnvelopeDto'];
         };
       };
     };
@@ -14483,7 +14696,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicMusicDirectoryResponseDto'];
+          'application/json': components['schemas']['SubsonicMusicDirectoryResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicMusicDirectoryResponseEnvelopeDto'];
         };
       };
     };
@@ -14505,7 +14719,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicMusicDirectoryResponseDto'];
+          'application/json': components['schemas']['SubsonicMusicDirectoryResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicMusicDirectoryResponseEnvelopeDto'];
         };
       };
     };
@@ -14524,7 +14739,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicMusicFoldersResponseDto'];
+          'application/json': components['schemas']['SubsonicMusicFoldersResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicMusicFoldersResponseEnvelopeDto'];
         };
       };
     };
@@ -14543,7 +14759,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicMusicFoldersResponseDto'];
+          'application/json': components['schemas']['SubsonicMusicFoldersResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicMusicFoldersResponseEnvelopeDto'];
         };
       };
     };
@@ -14562,7 +14779,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicNewestPodcastsResponseDto'];
+          'application/json': components['schemas']['SubsonicNewestPodcastsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicNewestPodcastsResponseEnvelopeDto'];
         };
       };
     };
@@ -14581,7 +14799,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicNewestPodcastsResponseDto'];
+          'application/json': components['schemas']['SubsonicNewestPodcastsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicNewestPodcastsResponseEnvelopeDto'];
         };
       };
     };
@@ -14600,7 +14819,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicNowPlayingResponseDto'];
+          'application/json': components['schemas']['SubsonicNowPlayingResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicNowPlayingResponseEnvelopeDto'];
         };
       };
     };
@@ -14619,7 +14839,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicNowPlayingResponseDto'];
+          'application/json': components['schemas']['SubsonicNowPlayingResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicNowPlayingResponseEnvelopeDto'];
         };
       };
     };
@@ -14638,7 +14859,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicPlaylistsResponseDto'];
+          'application/json': components['schemas']['SubsonicPlaylistsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicPlaylistsResponseEnvelopeDto'];
         };
       };
     };
@@ -14657,7 +14879,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicPlaylistsResponseDto'];
+          'application/json': components['schemas']['SubsonicPlaylistsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicPlaylistsResponseEnvelopeDto'];
         };
       };
     };
@@ -14676,7 +14899,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicPodcastsResponseDto'];
+          'application/json': components['schemas']['SubsonicPodcastsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicPodcastsResponseEnvelopeDto'];
         };
       };
     };
@@ -14695,7 +14919,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicPodcastsResponseDto'];
+          'application/json': components['schemas']['SubsonicPodcastsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicPodcastsResponseEnvelopeDto'];
         };
       };
     };
@@ -14720,7 +14945,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicRandomSongsResponseDto'];
+          'application/json': components['schemas']['SubsonicRandomSongsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicRandomSongsResponseEnvelopeDto'];
         };
       };
     };
@@ -14745,7 +14971,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicRandomSongsResponseDto'];
+          'application/json': components['schemas']['SubsonicRandomSongsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicRandomSongsResponseEnvelopeDto'];
         };
       };
     };
@@ -14767,7 +14994,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSimilarSongsResponseDto'];
+          'application/json': components['schemas']['SubsonicSimilarSongsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSimilarSongsResponseEnvelopeDto'];
         };
       };
     };
@@ -14789,7 +15017,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSimilarSongsResponseDto'];
+          'application/json': components['schemas']['SubsonicSimilarSongsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSimilarSongsResponseEnvelopeDto'];
         };
       };
     };
@@ -14810,7 +15039,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSongResponseDto'];
+          'application/json': components['schemas']['SubsonicSongResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSongResponseEnvelopeDto'];
         };
       };
     };
@@ -14831,7 +15061,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSongResponseDto'];
+          'application/json': components['schemas']['SubsonicSongResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSongResponseEnvelopeDto'];
         };
       };
     };
@@ -14855,7 +15086,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSongsByGenreResponseDto'];
+          'application/json': components['schemas']['SubsonicSongsByGenreResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSongsByGenreResponseEnvelopeDto'];
         };
       };
     };
@@ -14879,7 +15111,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSongsByGenreResponseDto'];
+          'application/json': components['schemas']['SubsonicSongsByGenreResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSongsByGenreResponseEnvelopeDto'];
         };
       };
     };
@@ -14898,7 +15131,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStarredResponseDto'];
+          'application/json': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
         };
       };
     };
@@ -14917,7 +15151,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStarredResponseDto'];
+          'application/json': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
         };
       };
     };
@@ -14936,7 +15171,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStarredResponseDto'];
+          'application/json': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
         };
       };
     };
@@ -14955,7 +15191,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStarredResponseDto'];
+          'application/json': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicStarredResponseEnvelopeDto'];
         };
       };
     };
@@ -14977,7 +15214,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicTopSongsResponseDto'];
+          'application/json': components['schemas']['SubsonicTopSongsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicTopSongsResponseEnvelopeDto'];
         };
       };
     };
@@ -14999,7 +15237,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicTopSongsResponseDto'];
+          'application/json': components['schemas']['SubsonicTopSongsResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicTopSongsResponseEnvelopeDto'];
         };
       };
     };
@@ -15018,7 +15257,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicPingResponseDto'];
+          'application/json': components['schemas']['SubsonicPingResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicPingResponseEnvelopeDto'];
         };
       };
     };
@@ -15037,7 +15277,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicPingResponseDto'];
+          'application/json': components['schemas']['SubsonicPingResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicPingResponseEnvelopeDto'];
         };
       };
     };
@@ -15056,7 +15297,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSavePlayQueueResponseDto'];
+          'application/json': components['schemas']['SubsonicSavePlayQueueResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSavePlayQueueResponseEnvelopeDto'];
         };
       };
     };
@@ -15075,7 +15317,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSavePlayQueueResponseDto'];
+          'application/json': components['schemas']['SubsonicSavePlayQueueResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSavePlayQueueResponseEnvelopeDto'];
         };
       };
     };
@@ -15094,7 +15337,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicScrobbleResponseDto'];
+          'application/json': components['schemas']['SubsonicScrobbleResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicScrobbleResponseEnvelopeDto'];
         };
       };
     };
@@ -15113,7 +15357,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicScrobbleResponseDto'];
+          'application/json': components['schemas']['SubsonicScrobbleResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicScrobbleResponseEnvelopeDto'];
         };
       };
     };
@@ -15140,7 +15385,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSearchResponseDto'];
+          'application/json': components['schemas']['SubsonicSearchResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSearchResponseEnvelopeDto'];
         };
       };
     };
@@ -15167,7 +15413,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicSearchResponseDto'];
+          'application/json': components['schemas']['SubsonicSearchResponseEnvelopeDto'];
+          'text/xml': components['schemas']['SubsonicSearchResponseEnvelopeDto'];
         };
       };
     };
@@ -15188,7 +15435,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+          'application/json': string;
+          'text/xml': string;
         };
       };
     };
@@ -15209,7 +15457,8 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+          'application/json': string;
+          'text/xml': string;
         };
       };
     };
@@ -15433,8 +15682,7 @@ export interface operations {
     requestBody: {
       content: {
         'application/json':
-          | components['schemas']['SynologyRootFolderBodyDto']
-          | components['schemas']['SynologyFolderBodyDto'];
+          components['schemas']['SynologyRootFolderBodyDto'] | components['schemas']['SynologyFolderBodyDto'];
       };
     };
     responses: {
@@ -15794,8 +16042,7 @@ export interface operations {
         };
         content: {
           'application/json':
-            | components['schemas']['SynologyRadioItemResponseDto']
-            | components['schemas']['SynologySuccessResponseDto'];
+            components['schemas']['SynologyRadioItemResponseDto'] | components['schemas']['SynologySuccessResponseDto'];
         };
       };
       400: {
@@ -15909,8 +16156,7 @@ export interface operations {
         };
         content: {
           'application/json':
-            | components['schemas']['SynologySongResponseDto']
-            | components['schemas']['SynologySuccessResponseDto'];
+            components['schemas']['SynologySongResponseDto'] | components['schemas']['SynologySuccessResponseDto'];
         };
       };
       400: {
@@ -16661,6 +16907,18 @@ export enum InternalServerErrorEnum {
 export enum PlaylistTypeEnum {
   normal = 'normal',
   smart = 'smart',
+}
+export enum QnapYesNoEnum {
+  yes = 'yes',
+  no = 'no',
+}
+export enum RatingOrUnset {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
+  Value4 = 4,
+  Value5 = 5,
 }
 export enum ShoutcastContainerNamesEnum {
   SHOUTcast = 'SHOUTcast',

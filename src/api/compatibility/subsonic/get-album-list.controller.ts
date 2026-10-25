@@ -8,6 +8,7 @@ import {
   SubsonicAlbumListResponseDto,
 } from './dtos';
 import { SubsonicAlbumListService } from './get-album-list.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -20,7 +21,7 @@ export class SubsonicAlbumListController {
     summary: 'Get Album List',
     description: 'Retrieve an album list using the legacy response format.',
     responses: {
-      [HttpStatus.OK]: SubsonicAlbumListResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicAlbumListResponseDto),
     },
   })
   async getAlbumList(
@@ -57,7 +58,7 @@ export class SubsonicAlbumListController {
     summary: 'Get Album List 2',
     description: 'Retrieve an album list.',
     responses: {
-      [HttpStatus.OK]: SubsonicAlbumList2ResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicAlbumList2ResponseDto),
     },
   })
   async getAlbumList2(

@@ -1,7 +1,28 @@
 /* eslint-disable max-classes-per-file */
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt } from 'class-validator';
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+import { SubsonicResponseDto } from '../subsonic.dto';
 import { Type } from 'class-transformer';
+
+export class SubsonicAlbumInfoDto {
+  @ApiPropertyOptional({ type: String })
+  declare notes?: string;
+
+  @ApiPropertyOptional({ type: String })
+  declare musicBrainzId?: string;
+
+  @ApiPropertyOptional({ type: String })
+  declare lastFmUrl?: string;
+
+  @ApiPropertyOptional({ type: String })
+  declare smallImageUrl?: string;
+
+  @ApiPropertyOptional({ type: String })
+  declare mediumImageUrl?: string;
+
+  @ApiPropertyOptional({ type: String })
+  declare largeImageUrl?: string;
+}
 
 export class SubsonicAlbumInfoQueryDto {
   @IsInt()
@@ -10,5 +31,6 @@ export class SubsonicAlbumInfoQueryDto {
 }
 
 export class SubsonicAlbumInfoResponseDto extends SubsonicResponseDto {
-  declare albumInfo: SubsonicResponseObject;
+  @ApiProperty({ type: SubsonicAlbumInfoDto })
+  declare albumInfo: SubsonicAlbumInfoDto;
 }

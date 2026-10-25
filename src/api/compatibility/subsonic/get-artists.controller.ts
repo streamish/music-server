@@ -3,6 +3,7 @@ import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicArtistsQueryDto, SubsonicArtistsResponseDto } from './dtos';
 import { SubsonicArtistsService } from './get-artists.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -15,7 +16,7 @@ export class SubsonicArtistsController {
     summary: 'Get Artists',
     description: 'Retrieve an indexed list of artists.',
     responses: {
-      [HttpStatus.OK]: SubsonicArtistsResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicArtistsResponseDto),
     },
   })
   async getArtists(

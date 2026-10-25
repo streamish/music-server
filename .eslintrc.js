@@ -21,18 +21,17 @@ module.exports = {
   rules: {
     // single quotes
     '@typescript-eslint/quotes': ['error', 'single', { allowTemplateLiterals: true }],
+    // folder naming convention
     'folders/match-regex': [2, /^[a-z0-9-]+$/, '/src'],
+    // filename naming convention
     'check-file/filename-naming-convention': [
       'error',
       {
         '*.{js,ts,json}': 'KEBAB_CASE',
       },
     ],
-    // module import/export sorting
+    // import sorting
     'import/order': 'off',
-    'import/no-cycle': 'off',
-    'import/no-extraneous-dependencies': 'off',
-    'import/prefer-default-export': 'off',
     'sort-imports-es6-autofix/sort-imports-es6': [
       2,
       {
@@ -41,7 +40,16 @@ module.exports = {
         memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
       },
     ],
-    // line length
+    // maximum line length
     'max-len': ['error', { code: 120 }],
+    // allow named exports even if there's only one
+    'import/prefer-default-export': 'off',
   },
+  overrides: [
+    {
+      // sequelize entity relations are bidirectional and resolved lazily
+      files: ['src/database/entities/*.entity.ts'],
+      rules: { 'import/no-cycle': 'off' },
+    },
+  ],
 };

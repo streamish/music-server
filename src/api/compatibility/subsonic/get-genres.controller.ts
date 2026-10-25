@@ -3,6 +3,7 @@ import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicGenresResponseDto } from './dtos';
 import { SubsonicGenresService } from './get-genres.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -15,7 +16,7 @@ export class SubsonicGenresController {
     summary: 'Get Genres',
     description: 'Retrieve the list of music genres.',
     responses: {
-      [HttpStatus.OK]: SubsonicGenresResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicGenresResponseDto),
     },
   })
   async getGenres(

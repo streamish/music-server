@@ -1,6 +1,8 @@
 /* eslint-disable max-classes-per-file */
+import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import { IsInt, IsOptional } from 'class-validator';
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+import { SubsonicArtistDto } from './artist.dto';
+import { SubsonicResponseDto } from '../subsonic.dto';
 
 export class SubsonicIndexesQueryDto {
   /**
@@ -19,6 +21,14 @@ export class SubsonicIndexesQueryDto {
   declare musicFolderId?: number;
 }
 
+@ApiExtraModels(SubsonicArtistDto)
 export class SubsonicIndexesResponseDto extends SubsonicResponseDto {
-  declare indexes: Record<string, SubsonicResponseObject[]>;
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      type: 'array',
+      items: { $ref: getSchemaPath(SubsonicArtistDto) },
+    },
+  })
+  declare indexes: Record<string, SubsonicArtistDto[]>;
 }

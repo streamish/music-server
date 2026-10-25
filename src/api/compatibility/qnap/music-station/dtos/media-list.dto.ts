@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { type RatingOrUnset } from 'src/types';
 import { SortDirectionEnum } from 'src/types/enums';
 import { Transform } from 'class-transformer';
@@ -151,7 +151,7 @@ export class QnapTrackDto {
     format: 'integer',
     default: 0,
   })
-  @IsNumber()
+  @IsInt()
   declare MediaType: 0;
 
   @IsString()
@@ -160,8 +160,12 @@ export class QnapTrackDto {
   @ApiProperty({
     format: 'integer',
     default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   declare Rating: RatingOrUnset;
 
   @IsInt()

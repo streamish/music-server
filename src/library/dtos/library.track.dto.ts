@@ -9,7 +9,10 @@ export class LibraryTrackDto {
   /**
    * The list of artists for the track.
    */
-  @ApiProperty() // not sure why but defining type + isArray results in LibraryArtistDto[][]
+  @ApiProperty({
+    type: LibraryAssociationDto,
+    isArray: true,
+  })
   declare albumArtists: LibraryAssociationDto[];
 
   /**
@@ -163,8 +166,13 @@ export class LibraryTrackDto {
    */
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   declare rating: RatingOrUnset;
 
   /**

@@ -2,6 +2,7 @@ import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicFoldersResponseDto } from './dtos';
 import { SubsonicMusicFoldersService } from './get-music-folders.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
@@ -13,7 +14,7 @@ export class SubsonicMusicFoldersController {
     summary: 'Get Music Folders',
     description: 'Retrieve the configured music folders.',
     responses: {
-      [HttpStatus.OK]: SubsonicMusicFoldersResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicMusicFoldersResponseDto),
     },
   })
   async getMusicFolders(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

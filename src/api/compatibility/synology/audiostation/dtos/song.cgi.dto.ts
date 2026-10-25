@@ -104,9 +104,13 @@ export class SynologySongsRateBodyDto extends OmitType(
   })
   @IsInt()
   @Transform(({ value }) =>
-    value.split(',').map((v) => {
+    value.split(',').map((v: string) => {
       if (v.startsWith('music_')) {
-        return Number.parseInt(v.split('_').pop(), 10);
+        const lastSegment = v.split('_').pop();
+        if (lastSegment) {
+          return Number.parseInt(lastSegment, 10);
+        }
+        return NaN;
       }
       return v;
     }),
@@ -118,6 +122,11 @@ export class SynologySongsRateBodyDto extends OmitType(
    */
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
   @IsInt()
   @Min(0)
@@ -128,8 +137,13 @@ export class SynologySongsRateBodyDto extends OmitType(
 class SynologySongRatingDto {
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   @Min(0)
   @Max(5)
   declare rating: RatingOrUnset;

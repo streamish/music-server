@@ -3,6 +3,7 @@ import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNowPlayingResponseDto } from './dtos';
 import { SubsonicNowPlayingService } from './get-now-playing.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -15,7 +16,7 @@ export class SubsonicNowPlayingController {
     summary: 'Get Now Playing',
     description: 'Retrieve the songs currently being played.',
     responses: {
-      [HttpStatus.OK]: SubsonicNowPlayingResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicNowPlayingResponseDto),
     },
   })
   async getNowPlaying(

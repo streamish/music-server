@@ -1,5 +1,6 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicScrobbleResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -12,7 +13,7 @@ export class SubsonicScrobbleController {
     summary: 'Scrobble',
     description: 'Report success for a scrobble request.',
     responses: {
-      [HttpStatus.OK]: SubsonicScrobbleResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicScrobbleResponseDto),
     },
   })
   scrobble(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

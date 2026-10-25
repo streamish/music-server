@@ -1,6 +1,7 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNewestPodcastsResponseDto } from './dtos';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
@@ -11,7 +12,7 @@ export class SubsonicNewestPodcastsController {
     summary: 'Get Newest Podcasts',
     description: 'Retrieve the newest podcast episodes.',
     responses: {
-      [HttpStatus.OK]: SubsonicNewestPodcastsResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicNewestPodcastsResponseDto),
     },
   })
   async getNewestPodcasts(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

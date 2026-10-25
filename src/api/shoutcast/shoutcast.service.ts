@@ -15,7 +15,7 @@ const startStream = promisify((url: string, callback: (error: Error | null, stre
     });
     response.on('data', (data) => {
       const playlist = data.toString().split('\n');
-      const newUrlLine = playlist.find((line) => line.startsWith('File'));
+      const newUrlLine = playlist.find((line: string) => line.startsWith('File'));
       if (!newUrlLine) {
         return callback(new Error('No stream URL found in playlist'));
       }

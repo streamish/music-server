@@ -23,7 +23,7 @@ import { SynologyEntryService } from './entry.service';
 import { SynologySuccessResponseDto } from './synology.response.dto';
 import { User } from '../../../user.decorator';
 import { plainToInstance } from 'class-transformer';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 
 @SynologyController({ allowGuest: true })
 export class SynologyEntryController {

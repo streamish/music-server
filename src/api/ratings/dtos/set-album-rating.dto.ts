@@ -12,10 +12,12 @@ export class SetAlbumRatingBodyDto {
    * The rating value to be set for the track.  If it is 0 the rating will be unset.
    */
   @ApiProperty({
-    type: 'number',
-    format: 'int32',
+    type: 'integer',
+    default: 0,
     minimum: 0,
     maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
   @IsInt({ message: ErrorCodes.INVALID_RATING_ERROR })
   @Min(0, { message: ErrorCodes.INVALID_MIN_RATING_ERROR })

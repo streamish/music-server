@@ -3,12 +3,13 @@ import { ApiTracksService } from 'src/api/media/tracks/tracks.service';
 import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
 import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
-import { SubsonicStreamQueryDto, SubsonicStreamResponseDto } from './dtos';
+import { SubsonicStreamQueryDto } from './dtos';
 import { User } from 'src/api/user.decorator';
 import { createReadStream, statSync } from 'node:fs';
 import { getAudioContentType } from 'src/utils/strings';
 import type { Request, Response } from 'express';
 
+import { BINARY_RESPONSE } from 'src/constants/swagger';
 import { SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 
 @SubsonicController()
@@ -26,7 +27,7 @@ export class SubsonicStreamController {
     summary: 'Stream',
     description: 'Stream or download a song.',
     responses: {
-      [HttpStatus.OK]: SubsonicStreamResponseDto,
+      [HttpStatus.OK]: BINARY_RESPONSE,
     },
   })
   async stream(

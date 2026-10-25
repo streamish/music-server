@@ -1,14 +1,20 @@
 import { SubsonicApiClient, createSubsonicApi } from '../../../test-helper';
 import { beforeAll, describe, expect, it } from '@jest/globals';
-import { components } from '../../../types/api-schema';
+import { paths } from '../../../types/api-schema';
 
 describe('/rest/ping', () => {
   let api: SubsonicApiClient;
 
   async function ping(params: Record<string, string> = {}) {
-    const { data, error } = await api.GET('/rest/ping', { params: { query: params } } as never);
-    const typedData = data as unknown as components['schemas']['SubsonicPingResponseDto'];
-    return { data: typedData, error };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await api.GET('/rest/ping', { params: { query: params } } as any);
+    // note: 'any' is used because the authentication parameters are not defined on the
+    // endpoint but are required for all endpoints.  The reason for this is defining them
+    // on each request would then make every typed-request have to populate them manually
+    // and every controller would need a @Query() to capture them that may not be used
+    // except in the Subsonic guard.
+    const typedData = data as paths['/rest/ping']['get']['responses']['200']['content']['application/json'];
+    return { data: typedData['subsonic-response'], error };
   }
 
   beforeAll(async () => {
@@ -22,7 +28,7 @@ describe('/rest/ping', () => {
     const { data, error } = await ping();
     expect(error).toBeUndefined();
     expect(data).toBeDefined();
-    expect(data['subsonic-response']).toMatchObject({
+    expect(data).toMatchObject({
       status: 'ok',
       version: '1.16.1',
     });
@@ -36,7 +42,7 @@ describe('/rest/ping', () => {
 
   it('should report the missing username', async () => {
     const { data } = await ping({ f: 'json', v: '1.16.1', c: 'jest', u: '' });
-    expect(data['subsonic-response']).toMatchObject({
+    expect(data).toMatchObject({
       status: 'failed',
       error: {
         code: 10,
@@ -47,7 +53,7 @@ describe('/rest/ping', () => {
 
   it('should reject an invalid password', async () => {
     const { data } = await ping({ f: 'json', v: '1.16.1', c: 'jest', p: 'invalid' });
-    expect(data['subsonic-response']).toMatchObject({
+    expect(data).toMatchObject({
       status: 'failed',
       error: {
         code: 40,
@@ -59,12 +65,12 @@ describe('/rest/ping', () => {
   it('should accept a hex-encoded password', async () => {
     const password = Buffer.from(process.env.DEFAULT_ADMIN_PASSWORD || 'admin').toString('hex');
     const { data } = await ping({ f: 'json', v: '1.16.1', c: 'jest', p: `enc:${password}` });
-    expect(data['subsonic-response'].status).toBe('ok');
+    expect(data.status).toBe('ok');
   });
 
   it('should reject unsupported token authentication', async () => {
     const { data } = await ping({ f: 'json', v: '1.16.1', c: 'jest', p: '', s: 'salt', t: 'token' });
-    expect(data['subsonic-response']).toMatchObject({
+    expect(data).toMatchObject({
       status: 'failed',
       error: { code: 42 },
     });
@@ -72,7 +78,7 @@ describe('/rest/ping', () => {
 
   it('should reject conflicting authentication mechanisms', async () => {
     const { data } = await ping({ f: 'json', v: '1.16.1', c: 'jest', s: 'salt', t: 'token' });
-    expect(data['subsonic-response']).toMatchObject({
+    expect(data).toMatchObject({
       status: 'failed',
       error: { code: 43 },
     });

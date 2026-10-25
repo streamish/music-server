@@ -144,7 +144,7 @@ export class ShoutcastService {
       },
       body: postBody,
     });
-    const response = await request.json();
+    const response: { Name: string; ID: number }[] = await request.json();
     return {
       items: response.map((station) => {
         return {

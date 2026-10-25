@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSimilarSongsQueryDto, SubsonicSimilarSongsResponseDto } from './dtos';
 import { SubsonicSimilarSongsService } from './get-similar-songs.service';
 import { User } from 'src/api/user.decorator';
@@ -15,7 +16,7 @@ export class SubsonicSimilarSongsController {
     summary: 'Get Similar Songs',
     description: 'Retrieve songs similar to the specified song.',
     responses: {
-      [HttpStatus.OK]: SubsonicSimilarSongsResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicSimilarSongsResponseDto),
     },
   })
   async getSimilarSongs(
