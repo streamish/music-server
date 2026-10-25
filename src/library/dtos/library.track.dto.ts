@@ -9,7 +9,10 @@ export class LibraryTrackDto {
   /**
    * The list of artists for the track.
    */
-  @ApiProperty() // not sure why but defining type + isArray results in LibraryArtistDto[][]
+  @ApiProperty({
+    type: LibraryAssociationDto,
+    isArray: true,
+  })
   declare albumArtists: LibraryAssociationDto[];
 
   /**
