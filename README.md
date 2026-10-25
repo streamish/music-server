@@ -1,8 +1,10 @@
-# Music Server
+# Streamish Music Server
 
-This software indexes music files across one or more folders, for one or more users, and provides an API for accessing them that is compatible with some mobile apps and includes a web interface.
+This software indexes music files across one or more folders, for one or more users, and provides an API for accessing them that is compatible with 3rd-party mobile apps and a 1st-party web interface.
 
-The goal of this server is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary Synology or QNAP NAS. It provides an offramp if you use Synology Audiostation or QNAP Music Station, allowing you to continue using their accompanying DS Audio and QMusic smartphone apps with your own self-hosted backend.
+The goal of this server is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary Synology or QNAP NAS. It provides an off-ramp if you use Synology AudioStation or QNAP Music Station, allowing you to continue using their accompanying DS Audio and QMusic smartphone apps with your own self-hosted backend.
+
+The server also has preliminary support for Subsonic-compatible apps as a first-step towards becoming an all-in-one music server where your users can all use their preferred music apps.
 
 ## Synology apps
 
@@ -16,29 +18,34 @@ The goal of this server is to be a multi-client backend that allows existing mus
 - Android: https://play.google.com/store/apps/details?id=com.qnap.qmusic
 - Sideload: https://www.qnap.com/en-ca/mobile-apps/?category=entertainment
 
+## Subsonic apps
+
+- iOS: https://apps.apple.com/us/iphone/search?term=subsonic
+- Android: https://play.google.com/store/search?q=subsonic&c=apps
+
 ## Compatibility table
 
-| Feature               | DS Audio (Android) | DS Audio (iOS) | QMusic (Android) | QMusic (iOS) |
-| --------------------- | ------------------ | -------------- | ---------------- | ------------ |
-| Authentication        | ✅                 | ✅             | ✅               | ✅           |
-| Browse albums         | ✅                 | ✅             | ✅               | ✅           |
-| Browse artists        | ✅                 | ✅             | ✅               | ✅           |
-| Browse composers      | ✅                 | ✅             | ✖️               | ✖️           |
-| Browse genres         | ✅                 | ✅             | ✅               | ✅           |
-| Browse songs          | ✅                 | ✅             | ✅               | ✅           |
-| Download songs        | ✅                 | ✅             | ✅               | ✅           |
-| Favorites / Pins      | ✅                 | ✅             | ⬜               | ⬜           |
-| Frequently played     | ⬜                 | ⬜             | ⬜               | ⬜           |
-| Lyrics                | ⬜                 | ⬜             | ⬜               | ⬜           |
-| Play downloaded songs | ✅                 | ✅             | ✅               | ✅           |
-| Playlists             | ✅                 | ✅             | ⬜               | ⬜           |
-| Radio                 | ✅                 | ✅             | ⬜               | ⬜           |
-| Rating                | ✅                 | ✅             | ⬜               | ⬜           |
-| Recently added        | ✅                 | ✅             | ✅               | ⬜           |
-| Share media           | ✖️                 | ✖️             | ⬜               | ⬜           |
-| Streaming             | ✅                 | ✅             | ✅               | ✅           |
-| Top rated             | ✅                 | ✅             | ⬜               | ⬜           |
-| Trash can             | ✖️                 | ✖️             | ⬜               | ⬜           |
+| Feature               | DS Audio (Android) | DS Audio (iOS) | QMusic (Android) | QMusic (iOS) | Subsonic |
+| --------------------- | ------------------ | -------------- | ---------------- | ------------ | -------- |
+| Authentication        | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Browse albums         | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Browse artists        | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Browse composers      | ✅                 | ✅             | ✖️               | ✖️           | ✖️       |
+| Browse genres         | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Browse songs          | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Download songs        | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Favorites / Pins      | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
+| Frequently played     | ⬜                 | ⬜             | ⬜               | ⬜           | ⬜       |
+| Lyrics                | ⬜                 | ⬜             | ⬜               | ⬜           | ⬜       |
+| Play downloaded songs | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Playlists             | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
+| Radio                 | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
+| Rating                | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
+| Recently added        | ✅                 | ✅             | ✅               | ⬜           | ✅       |
+| Share media           | ✖️                 | ✖️             | ⬜               | ⬜           | ⬜       |
+| Streaming             | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Top rated             | ✅                 | ✅             | ⬜               | ⬜           | ✅       |
+| Trash can             | ✖️                 | ✖️             | ⬜               | ⬜           | ✖️       |
 
 ✖️ means unsupported by the app
 
@@ -56,6 +63,7 @@ $ docker run \
   -e DISABLE_DEFAULT_USER=true \
   -e SYNOLOGY_AUDIOSTATION_ENABLED=true \
   -e QNAP_MUSIC_STATION_ENABLED=true \
+  -e SUBSONIC_ENABLED=true \
   streamish/music
 ```
 
@@ -75,6 +83,7 @@ You can enable API compatibility:
 | ------------------------------- | ------------- | ---------------------------------------------------------------- |
 | `SYNOLOGY_AUDIOSTATION_ENABLED` | false         | Set to `true` to enable Synology Audio Station API compatibility |
 | `QNAP_MUSIC_STATION_ENABLED`    | false         | Set to `true` to enable QNAP Music Station API compatibility     |
+| `SUBSONIC_ENABLED`              | false         | Set to `true` to enable Subsonic API compatibility               |
 
 You can enable Swagger API interface for the backend APIs:
 
