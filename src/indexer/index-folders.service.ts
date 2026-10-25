@@ -1,13 +1,11 @@
 import { FolderEntity, RootPathEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
-import { Injectable, Logger } from '@nestjs/common';
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { Injectable } from '@nestjs/common';
+import { access, readdir, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 
 @Injectable()
 export class IndexFolderService {
-  private readonly logger: Logger = new Logger(IndexFolderService.name);
-
   constructor(
     @InjectModel(FolderEntity)
     private readonly folderEntity: typeof FolderEntity,
@@ -23,18 +21,23 @@ export class IndexFolderService {
    * @param folderContents An array to accumulate folder paths
    * @returns An array of all folder paths found within the given path.
    */
-  scanPath(path: string, rootPath: string, folderContents: string[]): string[] {
-    const relativePath = path.substring(rootPath.length) || '/';
-    const items = readdirSync(path);
-    for (let i = 0, len = items.length; i < len; i += 1) {
-      const item = items[i];
-      if (item) {
-        const isDirectory = statSync(join(path, item)).isDirectory();
-        if (isDirectory) {
-          folderContents.push(join(relativePath, item));
-          const absolutePath = join(path, item);
-          this.scanPath(absolutePath, rootPath, folderContents);
-        }
+  private static async scanPath(path: string, rootPath: string, folderContents: string[]): Promise<string[]> {
+    const foldersToScan = [path];
+    for (let i = 0; i < foldersToScan.length; i += 1) {
+      const currentPath = foldersToScan[i];
+      if (currentPath) {
+        const relativePath = currentPath.substring(rootPath.length) || '/';
+        // eslint-disable-next-line no-await-in-loop
+        const items = await readdir(currentPath);
+        // eslint-disable-next-line no-await-in-loop
+        const itemStats = await Promise.all(items.map((item) => stat(join(currentPath, item))));
+        items.forEach((item, itemIndex) => {
+          if (itemStats[itemIndex]?.isDirectory()) {
+            const absolutePath = join(currentPath, item);
+            folderContents.push(join(relativePath, item));
+            foldersToScan.push(absolutePath);
+          }
+        });
       }
     }
     return folderContents;
@@ -60,23 +63,19 @@ export class IndexFolderService {
       }
     }
     // scan the root path folder structure recursively
-    const activeIndex: Record<string, FolderEntity> = {};
     const folderContents: string[] = ['/'];
-    this.scanPath(rootPath.rootPath, rootPath.rootPath, folderContents);
+    await IndexFolderService.scanPath(rootPath.rootPath, rootPath.rootPath, folderContents);
     // index the paths that were found to identify new and existing entries
     for (let i = 0, len = folderContents.length; i < len; i += 1) {
       const folderPath = folderContents[i];
       if (folderPath) {
         const existingItem = existingIndex[folderPath];
-        if (existingItem) {
-          activeIndex[folderPath] = existingItem;
-        } else {
+        if (!existingItem) {
           // eslint-disable-next-line no-await-in-loop
-          const newFolder = await this.folderEntity.create({
+          await this.folderEntity.create({
             accountId: rootPath.accountId,
             folderPath,
           } as FolderEntity);
-          activeIndex[folderPath] = newFolder.get({ plain: true });
         }
       }
     }
@@ -105,7 +104,8 @@ export class IndexFolderService {
           const rootPath = rootPaths[j];
           if (rootPath) {
             const combined = join(rootPath.rootPath, folder.folderPath);
-            if (existsSync(combined)) {
+            // eslint-disable-next-line no-await-in-loop
+            if (await IndexFolderService.pathExists(combined)) {
               exists = true;
               break;
             }
@@ -123,6 +123,19 @@ export class IndexFolderService {
           accountId,
         },
       });
+    }
+  }
+
+  private static async pathExists(path: string): Promise<boolean> {
+    try {
+      await access(path);
+      return true;
+    } catch (error) {
+      const code = error instanceof Error && 'code' in error ? error.code : undefined;
+      if (code === 'ENOENT' || code === 'ENOTDIR') {
+        return false;
+      }
+      throw error;
     }
   }
 }
