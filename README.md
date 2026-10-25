@@ -160,3 +160,5 @@ NodeJS with NestJS framework is used for the server, and Sequelize ORM is used f
 Test suites are run with Jest using an in-memory SQLite database and a test library containing a small number of audio files with dummy metadata.
 
 Swagger can be enabled for API documentation and can be accessed at `http://localhost:7000/swagger` when the server is running. The OpenAPI specification is available as JSON (`/swagger.json`) and YAML (`/swagger.yaml`).
+
+The TypeScript configuration is deliberately strict, and the linting uses AirBNB's style guide as-is, complemented with import ordering and filename/folder naming conventions.

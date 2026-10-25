@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { IsBoolean, IsDate, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { LibraryAlbumDto } from './library.album.dto';
-import { LibraryAssociationWithTracksDto } from './library.association.dto';
+import { LibraryAssociationWithTracksDto } from './library.association-with-tracks.dto';
 import { LibraryFolderDto } from './library.folder.dto';
 import { LibraryShoutcastStationDto } from './library.shoutcast-station.dto';
 import { LibraryTrackDto } from './library.track.dto';

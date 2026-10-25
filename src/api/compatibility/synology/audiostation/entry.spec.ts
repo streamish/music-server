@@ -17,10 +17,7 @@ import { USER_PASSWORD, USER_USERNAME, testApi } from '../../../../test-helper';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 type PlaylistContainerItem =
-  | { album: string; album_artist: string }
-  | { artist: string }
-  | { composer: string }
-  | { genre: string };
+  { album: string; album_artist: string } | { artist: string } | { composer: string } | { genre: string };
 
 describe('/webapi/AudioStation/entry.cgi', () => {
   let api: Awaited<SynologyApiClient>;

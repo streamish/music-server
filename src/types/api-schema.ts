@@ -6167,8 +6167,7 @@ export type components = {
     QnapUserAsLoginDatasDto: {
       /** @description The first item contains user information. The second item contains system and application information. */
       data: (
-        | components['schemas']['QnapUserAsLoginUserDataDto']
-        | components['schemas']['QnapUserAsLoginSystemDataDto']
+        components['schemas']['QnapUserAsLoginUserDataDto'] | components['schemas']['QnapUserAsLoginSystemDataDto']
       )[];
     };
     QnapUserAsLoginDto: {
@@ -15595,8 +15594,7 @@ export interface operations {
     requestBody: {
       content: {
         'application/json':
-          | components['schemas']['SynologyRootFolderBodyDto']
-          | components['schemas']['SynologyFolderBodyDto'];
+          components['schemas']['SynologyRootFolderBodyDto'] | components['schemas']['SynologyFolderBodyDto'];
       };
     };
     responses: {
@@ -15956,8 +15954,7 @@ export interface operations {
         };
         content: {
           'application/json':
-            | components['schemas']['SynologyRadioItemResponseDto']
-            | components['schemas']['SynologySuccessResponseDto'];
+            components['schemas']['SynologyRadioItemResponseDto'] | components['schemas']['SynologySuccessResponseDto'];
         };
       };
       400: {
@@ -16071,8 +16068,7 @@ export interface operations {
         };
         content: {
           'application/json':
-            | components['schemas']['SynologySongResponseDto']
-            | components['schemas']['SynologySuccessResponseDto'];
+            components['schemas']['SynologySongResponseDto'] | components['schemas']['SynologySuccessResponseDto'];
         };
       };
       400: {

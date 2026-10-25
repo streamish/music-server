@@ -1,7 +1,5 @@
-/* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsInt, IsString } from 'class-validator';
-import { LibraryAlbumWithTracksDto } from './library.album.dto';
 
 export class LibraryAssociationDto {
   /**
@@ -31,12 +29,4 @@ export class LibraryAssociationDto {
    */
   @IsString()
   declare name: string;
-}
-
-export class LibraryAssociationWithTracksDto extends LibraryAssociationDto {
-  /**
-   * The list of albums including tracks for the artist
-   */
-  @ApiProperty() // not sure why but defining type + isArray results in LibraryAlbumWithTracksDto[][]
-  declare albums: LibraryAlbumWithTracksDto[];
 }
