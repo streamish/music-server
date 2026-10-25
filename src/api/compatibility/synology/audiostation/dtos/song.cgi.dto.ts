@@ -104,9 +104,13 @@ export class SynologySongsRateBodyDto extends OmitType(
   })
   @IsInt()
   @Transform(({ value }) =>
-    value.split(',').map((v) => {
+    value.split(',').map((v: string) => {
       if (v.startsWith('music_')) {
-        return Number.parseInt(v.split('_').pop(), 10);
+        const lastSegment = v.split('_').pop();
+        if (lastSegment) {
+          return Number.parseInt(lastSegment, 10);
+        }
+        return NaN;
       }
       return v;
     }),

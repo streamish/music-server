@@ -88,12 +88,12 @@ export const testApi = {
     const accounts = await testApi.listAccounts();
     const adminUsers = accounts.filter((user) => user.roles.includes(UserRoleEnum.admin));
     if (adminUsers?.length === 1) {
-      return true;
+      return;
     }
     await new Promise((resolve) => {
       setTimeout(resolve, 1000);
     });
-    return testApi.extraAdminsCleared();
+    testApi.extraAdminsCleared();
   },
   listAccounts: async () => {
     const { data } = await unauthenticatedApi.GET(`/api/test/list-test-accounts`);

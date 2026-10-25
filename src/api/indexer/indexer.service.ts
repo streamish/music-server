@@ -4,8 +4,13 @@ import { IndexerConfigurationDto, LogWithUserEntryDto } from './dtos';
 import { IndexerService } from 'src/indexer/indexer.service';
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { LogEntry } from 'src/indexer/types';
 
-function logToRow(item, usernameMap: Record<number, string>, rootPaths: Record<number, string>): LogWithUserEntryDto {
+function logToRow(
+  item: LogEntry,
+  usernameMap: Record<number, string>,
+  rootPaths: Record<number, string>,
+): LogWithUserEntryDto {
   return {
     ...item,
     username: usernameMap[item.accountId] || '',

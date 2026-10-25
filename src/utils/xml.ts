@@ -1,4 +1,4 @@
-function escapeXml(value) {
+function escapeXml(value: string | number | boolean | null | undefined | unknown) {
   return String(value)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -7,15 +7,11 @@ function escapeXml(value) {
     .replace(/'/g, '&apos;');
 }
 
-function xmlValue(value) {
+function sanitizeXmlValue(value: string | number | boolean | null | undefined | unknown) {
   const text = String(value);
-
-  // CDATA is useful when the value contains markup-sensitive characters
   if (/[<&]/.test(text)) {
-    // CDATA cannot contain "]]>", so split it safely if necessary
     return `<![CDATA[${text.replace(/\]\]>/g, ']]]]><![CDATA[>')}]]>`;
   }
-
   return escapeXml(text);
 }
 
@@ -50,7 +46,7 @@ export function objectToXml(obj: unknown, openingTag: string, closingTag?: strin
           const itemXml = objectToXml(value as Record<string | number, unknown>, key, key, indent + 2);
           xml += `\n${itemXml}${' '.repeat(indent)}`;
         } else {
-          xml += `\n${' '.repeat(indent + 2)}<${key}>${xmlValue(value)}</${key}>`;
+          xml += `\n${' '.repeat(indent + 2)}<${key}>${sanitizeXmlValue(value)}</${key}>`;
         }
       }
     }

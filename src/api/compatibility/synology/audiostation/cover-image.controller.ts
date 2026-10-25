@@ -1,11 +1,12 @@
 import { AccountEntity } from 'src/database/entities';
 import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
 import { CoverCgiAlbumQueryDto, CoverCgiArtistQueryDto, CoverCgiComposerQueryDto, CoverCgiSongQueryDto } from './dtos';
+import { CoverImage } from 'src/cover-images/types/cover-image';
 import { Get, HttpStatus, Logger, Query, Req, Res } from '@nestjs/common';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
 import { SynologyCoverImageService } from './cover-image.service';
 import { User } from '../../../user.decorator';
-import { join, sep } from 'node:path';
+import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
 import type { Request, Response } from 'express';
 
@@ -38,7 +39,7 @@ export class SynologyCoverImageController {
     @Query()
     query: CoverCgiAlbumQueryDto | CoverCgiArtistQueryDto | CoverCgiComposerQueryDto | CoverCgiSongQueryDto,
   ) {
-    let album;
+    let album: CoverImage | undefined;
     if ('id' in query) {
       album = await this.coverImageService.getTrackCoverImage(user.id, query.id);
     } else if ('artist_name' in query) {
@@ -49,12 +50,10 @@ export class SynologyCoverImageController {
       album = await this.coverImageService.getComposerCoverImage(user.id, query.composer_name);
     }
     if (album?.coverImage) {
-      const eTag = `album-${album.id}-${album.updatedAt?.getTime() || ''}-2`;
-      const fileType = album.coverImageMimeType.split(sep).pop();
       response.set({
         'Content-Type': album.coverImageMimeType,
-        'Content-Disposition': `inline; filename="album-cover.${album.id}.${fileType}"`,
-        ETag: eTag,
+        'Content-Disposition': `inline; filename="${album.fileName}"`,
+        ETag: album.eTag,
       });
       if (request.fresh) {
         response.status(304);

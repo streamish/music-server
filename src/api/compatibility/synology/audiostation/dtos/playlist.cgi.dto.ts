@@ -150,7 +150,7 @@ export class SynologyPlaylistCreateSmartBodyDto extends SynologyBody({
     type: SynologySmartListRule,
     isArray: true,
   })
-  @Transform(({ value }) => JSON.parse(value).map((rule) => plainToInstance(SynologySmartListRule, rule)))
+  @Transform(({ value }) => JSON.parse(value).map((rule: unknown) => plainToInstance(SynologySmartListRule, rule)))
   declare rules_json: SynologySmartListRule[];
 }
 
@@ -258,9 +258,13 @@ export class SynologyPlaylistAddOrRemoveItemBodyDto extends SynologyBody({
    */
   @IsInt()
   @Transform(({ value }) =>
-    value.split(',').map((v) => {
+    value.split(',').map((v: string) => {
       if (v.startsWith('music_')) {
-        return Number.parseInt(v.split('_').pop(), 10);
+        const lastSegment = v.split('_').pop();
+        if (lastSegment) {
+          return Number.parseInt(lastSegment, 10);
+        }
+        return NaN;
       }
       return v;
     }),
@@ -300,7 +304,15 @@ export class SynologyPlaylistMoveItemsBodyDto extends SynologyBody({
    * or when deleting, an empty value.
    */
   @IsInt()
-  @Transform(({ value }) => value.split(',').map((v) => Number.parseInt(v.split('_').pop(), 10)))
+  @Transform(({ value }) =>
+    value.split(',').map((v: string) => {
+      const lastSegment = v.split('_').pop();
+      if (lastSegment) {
+        return Number.parseInt(lastSegment, 10);
+      }
+      return NaN;
+    }),
+  )
   declare songs: number[];
 }
 

@@ -3,6 +3,7 @@ import { ConfigService } from 'src/config/config.service';
 import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { FSWatcher, readdir, stat, watch } from 'node:fs';
+import { FileItem, FileUpdateItem, LogEntry } from './types';
 import { IAudioMetadata, IOptions } from 'src/types/music-metadata';
 import { IndexAlbumService } from './index-album.service';
 import { IndexAssociationService } from './index-association.service';
@@ -19,22 +20,6 @@ import { promisify } from 'util';
 const readDirAsync = promisify(readdir);
 const statAsync = promisify(stat);
 const validFiles = ['mp3', 'flac', 'ogg', 'm4a'];
-
-type FileItem = { path: string; lastModified: Date; size: number };
-type FileUpdateItem = {
-  embeddedData: IAudioMetadata;
-  trackId: number;
-  path: string;
-  lastModified: Date;
-  size: number;
-};
-
-type LogEntry = {
-  date: Date;
-  accountId: number;
-  message: string;
-  rootPathId: number;
-};
 
 @Injectable()
 export class IndexerService {

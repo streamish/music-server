@@ -103,12 +103,16 @@ export class SynologyRadioService {
         },
         body: postBody,
       });
-      const response = await request.json();
+      const response: {
+        Name: string;
+        ID: string;
+      }[] = await request.json();
       return {
         radios: response.map((station) => {
           return {
             id: `radio_${station.Name} http://yp.shoutcast.com/sbin/tunein-station.pls?id=${station.ID}`,
             title: station.Name,
+            desc: '',
             type: ShoutcastItemTypeEnum.STATION,
             url: `http://yp.shoutcast.com/sbin/tunein-station.pls?id=${station.ID}`,
           };
