@@ -3,6 +3,7 @@ import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicDirectoryQueryDto, SubsonicMusicDirectoryResponseDto } from './dtos';
 import { SubsonicMusicDirectoryService } from './get-music-directory.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -15,7 +16,7 @@ export class SubsonicMusicDirectoryController {
     summary: 'Get Music Directory',
     description: 'Retrieve a music directory and its child items.',
     responses: {
-      [HttpStatus.OK]: SubsonicMusicDirectoryResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicMusicDirectoryResponseDto),
     },
   })
   async getMusicDirectory(

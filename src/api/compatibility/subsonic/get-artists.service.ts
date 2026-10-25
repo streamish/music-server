@@ -15,15 +15,20 @@ export class SubsonicArtistsService {
       0,
       100_000,
     );
-    const index = {};
+    const index: Record<string, ReturnType<typeof libraryAssociationToRow>[]> = {};
     for (let i = 0, len = artists.items.length; i < len; i += 1) {
       const artist = artists.items[i];
       if (artist) {
         const firstLetter = artist.name.charAt(0).toUpperCase();
-        if (!index[firstLetter]) {
-          index[firstLetter] = [];
+        if (firstLetter) {
+          const object = libraryAssociationToRow(artist);
+          const array = index[firstLetter];
+          if (!array) {
+            index[firstLetter] = [object];
+          } else {
+            array.push(object);
+          }
         }
-        index[firstLetter].push(libraryAssociationToRow(artist));
       }
     }
     return index;

@@ -1,6 +1,7 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicPlaylistsResponseDto } from './dtos';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
@@ -11,7 +12,7 @@ export class SubsonicPlaylistsController {
     summary: 'Get Playlists',
     description: 'Retrieve the user playlists.',
     responses: {
-      [HttpStatus.OK]: SubsonicPlaylistsResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicPlaylistsResponseDto),
     },
   })
   async getPlayLists(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

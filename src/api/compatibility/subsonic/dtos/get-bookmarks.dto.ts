@@ -1,5 +1,10 @@
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+/* eslint-disable max-classes-per-file */
+import { ApiProperty } from '@nestjs/swagger';
+import { SubsonicResponseDto } from '../subsonic.dto';
+
+export class SubsonicBookmarksDataDto {}
 
 export class SubsonicBookmarksResponseDto extends SubsonicResponseDto {
-  declare bookmarks: SubsonicResponseObject;
+  @ApiProperty({ type: SubsonicBookmarksDataDto })
+  declare bookmarks: SubsonicBookmarksDataDto;
 }

@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSongQueryDto, SubsonicSongResponseDto } from './dtos';
 import { SubsonicSongService } from './get-song.service';
 import { User } from 'src/api/user.decorator';
@@ -15,7 +16,7 @@ export class SubsonicSongController {
     summary: 'Get Song',
     description: 'Retrieve a song by its identifier.',
     responses: {
-      [HttpStatus.OK]: SubsonicSongResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicSongResponseDto),
     },
   })
   async getSong(

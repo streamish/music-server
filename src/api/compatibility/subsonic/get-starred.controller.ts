@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicStarredResponseDto } from './dtos';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
@@ -13,7 +14,7 @@ export class SubsonicStarredController {
     summary: 'Get Starred',
     description: 'Retrieve the starred songs, albums, and artists using the legacy response format.',
     responses: {
-      [HttpStatus.OK]: SubsonicStarredResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicStarredResponseDto),
     },
   })
   async getStarred(
@@ -47,7 +48,7 @@ export class SubsonicStarredController {
     summary: 'Get Starred 2',
     description: 'Retrieve the starred songs, albums, and artists.',
     responses: {
-      [HttpStatus.OK]: SubsonicStarredResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicStarredResponseDto),
     },
   })
   async getStarred2(

@@ -1,5 +1,6 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSavePlayQueueResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -12,7 +13,7 @@ export class SubsonicSavePlayQueueController {
     summary: 'Save Play Queue',
     description: 'Report success for a play queue save request.',
     responses: {
-      [HttpStatus.OK]: SubsonicSavePlayQueueResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicSavePlayQueueResponseDto),
     },
   })
   savePlayQueue(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

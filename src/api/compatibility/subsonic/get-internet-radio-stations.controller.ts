@@ -1,6 +1,7 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicInternetRadioStationsResponseDto } from './dtos';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
@@ -11,7 +12,7 @@ export class SubsonicInternetRadioStationsController {
     summary: 'Get Internet Radio Stations',
     description: 'Retrieve configured internet radio stations.',
     responses: {
-      [HttpStatus.OK]: SubsonicInternetRadioStationsResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicInternetRadioStationsResponseDto),
     },
   })
   async getInternetRadioStations(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

@@ -1,6 +1,7 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicLicenseResponseDto } from './dtos';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
@@ -11,7 +12,7 @@ export class SubsonicLicenseController {
     summary: 'Get License',
     description: 'Retrieve the server license information.',
     responses: {
-      [HttpStatus.OK]: SubsonicLicenseResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicLicenseResponseDto),
     },
   })
   async getLicense(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {

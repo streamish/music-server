@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSearchQueryDto, SubsonicSearchResponseDto } from './dtos';
 import { SubsonicSearchService } from './search.service';
 import { User } from 'src/api/user.decorator';
@@ -15,7 +16,7 @@ export class SubsonicSearchController {
     summary: 'Search',
     description: 'Search for artists, albums, and songs.',
     responses: {
-      [HttpStatus.OK]: SubsonicSearchResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicSearchResponseDto),
     },
   })
   async search(

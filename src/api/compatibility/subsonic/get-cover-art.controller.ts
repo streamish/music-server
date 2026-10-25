@@ -1,8 +1,9 @@
 import { AccountEntity } from 'src/database/entities';
 import { AssociationTypeEnum } from 'src/types/enums';
+import { BINARY_RESPONSE } from 'src/constants/swagger';
 import { CoverImagesService } from 'src/cover-images/cover-images.service';
 import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
-import { SubsonicCoverArtQueryDto, SubsonicCoverArtResponseDto } from './dtos';
+import { SubsonicCoverArtQueryDto } from './dtos';
 import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
 import { User } from 'src/api/user.decorator';
 import type { Request, Response } from 'express';
@@ -22,7 +23,7 @@ export class SubsonicCoverArtController {
     summary: 'Get Cover Art',
     description: 'Retrieve cover art for an album or artist.',
     responses: {
-      [HttpStatus.OK]: SubsonicCoverArtResponseDto,
+      [HttpStatus.OK]: BINARY_RESPONSE,
     },
   })
   async getCoverArt(

@@ -1,5 +1,10 @@
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+/* eslint-disable max-classes-per-file */
+import { ApiProperty } from '@nestjs/swagger';
+import { SubsonicResponseDto } from '../subsonic.dto';
+
+export class SubsonicNewestPodcastsDataDto {}
 
 export class SubsonicNewestPodcastsResponseDto extends SubsonicResponseDto {
-  declare newestPodcasts: SubsonicResponseObject;
+  @ApiProperty({ type: SubsonicNewestPodcastsDataDto })
+  declare newestPodcasts: SubsonicNewestPodcastsDataDto;
 }

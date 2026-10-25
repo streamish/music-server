@@ -1,4 +1,4 @@
-import { SubsonicAlbumListTypeEnum, components } from '../../../types/api-schema';
+import { SubsonicAlbumListTypeEnum, paths } from '../../../types/api-schema';
 import { SubsonicApiClient, createSubsonicApi } from '../../../test-helper';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 
@@ -17,7 +17,8 @@ describe('/rest/getAlbum', () => {
     if (!data) {
       throw new Error('No data returned from getAlbum');
     }
-    return { data, error };
+    const typedData = data as paths['/rest/getAlbum']['get']['responses']['200']['content']['application/json'];
+    return { data: typedData['subsonic-response'], error };
   }
 
   beforeAll(async () => {
@@ -31,8 +32,8 @@ describe('/rest/getAlbum', () => {
         },
       } as never,
     });
-    const body = data as components['schemas']['SubsonicAlbumList2ResponseDto'];
-    const album = body['subsonic-response'].albumList2.album.find(({ name }) => name === 'Album 1');
+    const typedData = data as paths['/rest/getAlbumList2']['get']['responses']['200']['content']['application/json'];
+    const album = typedData['subsonic-response'].albumList2.album.find(({ name }) => name === 'Album 1');
     if (!album) {
       throw new Error('Album 1 was not returned by getAlbumList2');
     }
@@ -41,9 +42,9 @@ describe('/rest/getAlbum', () => {
 
   it('should return an album and its tracks', async () => {
     const { data, error } = await getAlbum(albumId);
-    const { album } = data['subsonic-response'];
+    const { album } = data;
     expect(error).toBeUndefined();
-    expect(data['subsonic-response'].status).toBe('ok');
+    expect(data.status).toBe('ok');
     expect(album).toMatchObject({
       id: albumId,
       name: 'Album 1',
@@ -54,7 +55,7 @@ describe('/rest/getAlbum', () => {
 
   it('should report an unknown album', async () => {
     const { data } = await getAlbum('2147483647');
-    expect(data['subsonic-response']).toMatchObject({
+    expect(data).toMatchObject({
       status: 'failed',
       error: { code: 70, message: expect.any(String) },
     });

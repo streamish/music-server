@@ -20,16 +20,17 @@ describe('/rest/search', () => {
     if (!data) {
       throw new Error('No data returned from search');
     }
-    return { data, error };
+    const typedData = data as paths['/rest/search']['get']['responses']['200']['content']['application/json'];
+    return { data: typedData['subsonic-response'], error };
   }
 
   it('should find matching tracks', async () => {
     const { data, error } = await search({
       title: 'First Track',
     });
-    const result = data['subsonic-response'].searchResult;
+    const result = data.searchResult;
     expect(error).toBeUndefined();
-    expect(data['subsonic-response'].status).toBe('ok');
+    expect(data.status).toBe('ok');
     expect(result.totalHits).toBeGreaterThan(0);
     expect(result.match.some((track) => track.title.includes('First Track'))).toBe(true);
   });
@@ -39,8 +40,8 @@ describe('/rest/search', () => {
       title: 'no matching track',
     });
     expect(error).toBeUndefined();
-    expect(data['subsonic-response'].status).toBe('ok');
-    expect(data['subsonic-response'].searchResult).toMatchObject({
+    expect(data.status).toBe('ok');
+    expect(data.searchResult).toMatchObject({
       totalHits: 0,
       match: [],
     });

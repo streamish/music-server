@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSongsByGenreQueryDto, SubsonicSongsByGenreResponseDto } from './dtos';
 import { SubsonicSongsByGenreService } from './get-songs-by-genre.service';
 import { User } from 'src/api/user.decorator';
@@ -15,7 +16,7 @@ export class SubsonicSongsByGenreController {
     summary: 'Get Songs by Genre',
     description: 'Retrieve songs matching a genre.',
     responses: {
-      [HttpStatus.OK]: SubsonicSongsByGenreResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicSongsByGenreResponseDto),
     },
   })
   async getSongsByGenre(

@@ -1,6 +1,8 @@
 /* eslint-disable max-classes-per-file */
+import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+import { SubsonicResponseDto } from '../subsonic.dto';
+import { SubsonicSongDto } from './song.dto';
 import { Type } from 'class-transformer';
 
 export class SubsonicSearchQueryDto {
@@ -36,10 +38,18 @@ export class SubsonicSearchQueryDto {
   declare newerThan?: number;
 }
 
+export class SubsonicSearchResultDataDto {
+  @ApiProperty({ type: 'integer' })
+  declare offset: number;
+
+  @ApiProperty({ type: 'integer' })
+  declare totalHits: number;
+
+  @ApiProperty({ type: SubsonicSongDto, isArray: true })
+  declare match: SubsonicSongDto[];
+}
+
 export class SubsonicSearchResponseDto extends SubsonicResponseDto {
-  declare searchResult: {
-    offset: number;
-    totalHits: number;
-    match: SubsonicResponseObject[];
-  };
+  @ApiProperty({ type: SubsonicSearchResultDataDto })
+  declare searchResult: SubsonicSearchResultDataDto;
 }

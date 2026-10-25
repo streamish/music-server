@@ -3,6 +3,7 @@ import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicAlbumInfoQueryDto, SubsonicAlbumInfoResponseDto } from './dtos';
 import { SubsonicAlbumInfoService } from './get-album-info.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -15,7 +16,7 @@ export class SubsonicAlbumInfoController {
     summary: 'Get Album Info',
     description: 'Retrieve information about a specific album.',
     responses: {
-      [HttpStatus.OK]: SubsonicAlbumInfoResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicAlbumInfoResponseDto),
     },
   })
   async getAlbumInfo(
@@ -50,7 +51,7 @@ export class SubsonicAlbumInfoController {
     summary: 'Get Album Info 2',
     description: 'Retrieve information about a specific album (version 2).',
     responses: {
-      [HttpStatus.OK]: SubsonicAlbumInfoResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicAlbumInfoResponseDto),
     },
   })
   async getAlbumInfo2(

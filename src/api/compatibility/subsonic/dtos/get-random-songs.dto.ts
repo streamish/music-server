@@ -1,6 +1,8 @@
 /* eslint-disable max-classes-per-file */
+import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+import { SubsonicResponseDto } from '../subsonic.dto';
+import { SubsonicSongDataDto } from './song.dto';
 import { Type } from 'class-transformer';
 
 export class SubsonicRandomSongsQueryDto {
@@ -30,5 +32,6 @@ export class SubsonicRandomSongsQueryDto {
 }
 
 export class SubsonicRandomSongsResponseDto extends SubsonicResponseDto {
-  declare randomSongs: { song: SubsonicResponseObject[] };
+  @ApiProperty({ type: SubsonicSongDataDto })
+  declare randomSongs: SubsonicSongDataDto;
 }

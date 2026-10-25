@@ -1,7 +1,15 @@
 /* eslint-disable max-classes-per-file */
+import { ApiProperty } from '@nestjs/swagger';
 import { IsInt } from 'class-validator';
-import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
+import { SubsonicAlbumDto } from './album.dto';
+import { SubsonicResponseDto } from '../subsonic.dto';
+import { SubsonicSongDto } from './song.dto';
 import { Type } from 'class-transformer';
+
+class SubsonicAlbumWithTracksDto extends SubsonicAlbumDto {
+  @ApiProperty({ type: [SubsonicSongDto], required: true })
+  declare song: SubsonicSongDto[];
+}
 
 export class SubsonicAlbumQueryDto {
   @IsInt()
@@ -10,5 +18,6 @@ export class SubsonicAlbumQueryDto {
 }
 
 export class SubsonicAlbumResponseDto extends SubsonicResponseDto {
-  declare album: SubsonicResponseObject;
+  @ApiProperty({ type: SubsonicAlbumWithTracksDto })
+  declare album: SubsonicAlbumWithTracksDto;
 }

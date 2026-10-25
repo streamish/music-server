@@ -3,6 +3,7 @@ import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicRandomSongsQueryDto, SubsonicRandomSongsResponseDto } from './dtos';
 import { SubsonicRandomSongsService } from './get-random-songs.service';
+import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
@@ -15,7 +16,7 @@ export class SubsonicRandomSongsController {
     summary: 'Get Random Songs',
     description: 'Retrieve a random collection of songs.',
     responses: {
-      [HttpStatus.OK]: SubsonicRandomSongsResponseDto,
+      [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicRandomSongsResponseDto),
     },
   })
   async getRandomSongs(
