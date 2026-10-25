@@ -115,7 +115,9 @@ async function bootstrap() {
         JWT_BEARER_AUTH,
       )
       .build();
-    const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentOptions);
+    const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentOptions, {
+      autoTagControllers: false,
+    });
     SwaggerModule.setup('swagger', app, swaggerDocument, {
       jsonDocumentUrl: 'swagger.json',
       yamlDocumentUrl: 'swagger.yaml',

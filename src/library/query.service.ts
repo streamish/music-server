@@ -295,7 +295,7 @@ export class LibraryQueryService {
         sortFieldColumn = 'year';
         break;
       case AlbumSortFieldEnum.ARTIST:
-        sortFieldColumn = 'artists';
+        sortFieldColumn = 'artistSort';
         additionalSortFields.push([
           this.createConcatenatedAssociation('is_artist', 'album_id', 'AlbumEntity'),
           'artistSort',

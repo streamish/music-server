@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicRandomSongsQueryDto, SubsonicRandomSongsResponseDto } from './dtos';
 import { SubsonicRandomSongsService } from './get-random-songs.service';
@@ -18,7 +18,6 @@ export class SubsonicRandomSongsController {
       [HttpStatus.OK]: SubsonicRandomSongsResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getRandomSongs(
     @User() user: AccountEntity,
     @Query() query: SubsonicRandomSongsQueryDto,

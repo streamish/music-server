@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiTracksService } from 'src/api/media/tracks/tracks.service';
-import { Get, Header, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
+import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
 import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
 import { SubsonicStreamQueryDto, SubsonicStreamResponseDto } from './dtos';
@@ -29,7 +29,6 @@ export class SubsonicStreamController {
       [HttpStatus.OK]: SubsonicStreamResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async stream(
     @User() user: AccountEntity,
     @Query() query: SubsonicStreamQueryDto,

@@ -1,4 +1,4 @@
-import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicFoldersResponseDto } from './dtos';
 import { SubsonicMusicFoldersService } from './get-music-folders.service';
@@ -16,7 +16,6 @@ export class SubsonicMusicFoldersController {
       [HttpStatus.OK]: SubsonicMusicFoldersResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getMusicFolders(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const musicFolder = await this.getMusicFoldersService.getMusicFolders();
     const responsePayload = {

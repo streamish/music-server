@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicArtistQueryDto, SubsonicArtistResponseDto } from './dtos';
 import { SubsonicArtistService } from './get-artist.service';
@@ -18,7 +18,6 @@ export class SubsonicArtistController {
       [HttpStatus.OK]: SubsonicArtistResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getArtists(
     @User() user: AccountEntity,
     @Query() query: SubsonicArtistQueryDto,

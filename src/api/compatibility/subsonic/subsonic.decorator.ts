@@ -40,7 +40,7 @@ export const ResponseFormat = createParamDecorator((_data: unknown, context: Exe
   return accept.includes('application/json');
 });
 
-export function SubsonicController({ path }: { path?: string } = { path: '/cgi-bin' }) {
+export function SubsonicController({ path }: { path?: string } = { path: '/rest' }) {
   return applyDecorators(
     Controller({
       path: path || '/rest',
@@ -88,6 +88,7 @@ export function SubsonicApiEndpoint(
       description: [description, SUBSONIC_AUTHENTICATED_REQUEST_DESCRIPTION].map((line) => line.trim()).join('\n\n'),
     }),
     // responses
+    Header('server', 'Jetty(6.1.x)'),
     Header('Content-Type', 'application/xml'),
     ...Object.entries(allResponses).map(([status, dto]) => {
       if ('schema' in dto) {

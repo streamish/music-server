@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNowPlayingResponseDto } from './dtos';
 import { SubsonicNowPlayingService } from './get-now-playing.service';
@@ -18,7 +18,6 @@ export class SubsonicNowPlayingController {
       [HttpStatus.OK]: SubsonicNowPlayingResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getNowPlaying(
     @User() user: AccountEntity,
     @ResponseFormat() jsonResponse: boolean,

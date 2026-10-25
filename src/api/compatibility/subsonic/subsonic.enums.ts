@@ -1,4 +1,4 @@
-export enum SubsonicAlbumListType {
+export enum SubsonicAlbumListTypeEnum {
   ALPHABETICALLY_BY_ARTIST = 'alphabeticallyByArtist',
   ALPHABETICALLY_BY_NAME = 'alphabeticallyByName',
   BY_GENRE = 'byGenre',

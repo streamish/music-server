@@ -1,4 +1,4 @@
-import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicPlaylistsResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
@@ -14,7 +14,6 @@ export class SubsonicPlaylistsController {
       [HttpStatus.OK]: SubsonicPlaylistsResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getPlayLists(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responsePayload = {
       status: 'ok',

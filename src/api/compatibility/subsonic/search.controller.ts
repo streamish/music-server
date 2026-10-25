@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicSearchQueryDto, SubsonicSearchResponseDto } from './dtos';
 import { SubsonicSearchService } from './search.service';
@@ -18,7 +18,6 @@ export class SubsonicSearchController {
       [HttpStatus.OK]: SubsonicSearchResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async search(
     @User() user: AccountEntity,
     @Query() query: SubsonicSearchQueryDto,

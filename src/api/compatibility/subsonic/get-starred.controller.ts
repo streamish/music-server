@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicStarredResponseDto } from './dtos';
 import { User } from 'src/api/user.decorator';
@@ -16,7 +16,6 @@ export class SubsonicStarredController {
       [HttpStatus.OK]: SubsonicStarredResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getStarred(
     @User() user: AccountEntity,
     @ResponseFormat() jsonResponse: boolean,
@@ -51,7 +50,6 @@ export class SubsonicStarredController {
       [HttpStatus.OK]: SubsonicStarredResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getStarred2(
     @User() user: AccountEntity,
     @ResponseFormat() jsonResponse: boolean,

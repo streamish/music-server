@@ -22,6 +22,7 @@ export const unauthenticatedApi: ReturnType<typeof createClient<paths>> = create
 
 export type AuthenticatedApiClient = ReturnType<typeof createClient<paths>>;
 export type QnapApiClient = AuthenticatedApiClient;
+export type SubsonicApiClient = AuthenticatedApiClient;
 export type SynologyApiClient = AuthenticatedApiClient;
 
 export const guestApi = {
@@ -53,7 +54,6 @@ export const testApi = {
       roles: newRoles,
     };
   },
-
   deleteAccount: async (id: number) => {
     return unauthenticatedApi.DELETE(`/api/test/delete-test-account`, {
       params: {
@@ -135,6 +135,73 @@ export async function createAuthenticatedApi(
     onRequest({ request }) {
       request.headers.set('Authorization', `Bearer ${jwtToken}`);
       return request;
+    },
+  });
+  return client;
+}
+
+/**
+ * Creates an authenticated Subsonic API
+ * @param username The Subsonic account username.
+ * @param password The Subsonic account password.
+ * @returns The API client instance built on the OpenAPI specification
+ */
+export async function createSubsonicApi(username?: string, password?: string): Promise<SubsonicApiClient> {
+  const client = createClient<paths>({
+    baseUrl: `http://localhost:${process.env.SERVER_PORT}`,
+  });
+  client.use({
+    onRequest({ request }) {
+      const url = new URL(request.url);
+      if (!url.searchParams.has('p')) {
+        url.searchParams.set('p', password || ADMIN_PASSWORD);
+      }
+      if (!url.searchParams.has('u')) {
+        url.searchParams.set('u', username || ADMIN_USERNAME);
+      }
+      if (!url.searchParams.has('v')) {
+        url.searchParams.set('v', '1.16.1');
+      }
+      if (!url.searchParams.has('c')) {
+        url.searchParams.set('c', 'jest');
+      }
+      if (!url.searchParams.has('f')) {
+        url.searchParams.set('f', 'json');
+      }
+      return new Request(url, request);
+    },
+    async onResponse({ response }) {
+      if (!response.body) {
+        return response;
+      }
+      if (response.headers.get('content-type')?.includes('application/json')) {
+        return response;
+      }
+      const bodyBuffer = await response.arrayBuffer();
+      const bodyText = new TextDecoder('utf-8').decode(bodyBuffer);
+      const isXml = /^\uFEFF?\s*<\?xml\b/i.test(bodyText);
+      if (!isXml) {
+        return new Response(bodyBuffer, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+        });
+      }
+      const parsedBody = await xml2js.parseStringPromise(bodyText, {
+        explicitArray: false,
+      });
+      const jsonBody = parsedBody?.['subsonic-response'] ? JSON.stringify(parsedBody['subsonic-response']) : '';
+      const headers = new Headers(response.headers);
+      headers.set('content-type', 'application/json');
+      return new Response(jsonBody, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    },
+    async onError({ error }) {
+      // wrap errors thrown by fetch
+      return new Error('Oops, fetch failed', { cause: error });
     },
   });
   return client;
@@ -223,8 +290,6 @@ export async function createSynologyApi(username?: string, password?: string): P
 /**
  * Creates an unauthenticated QNAP API.  This API returns XML by default so the API has
  * middleware configured to parse responses to JSON.
- * @param username The QNAP account username.
- * @param password The QNAP account password.
  * @returns The API client instance built on the OpenAPI specification
  */
 export function createQnapApiWithXmlResponse(): QnapApiClient {

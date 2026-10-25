@@ -1,7 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { CoverImagesService } from 'src/cover-images/cover-images.service';
-import { Get, Header, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
+import { Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { SubsonicCoverArtQueryDto, SubsonicCoverArtResponseDto } from './dtos';
 import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
 import { User } from 'src/api/user.decorator';
@@ -25,7 +25,6 @@ export class SubsonicCoverArtController {
       [HttpStatus.OK]: SubsonicCoverArtResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getCoverArt(
     @User() user: AccountEntity,
     @Query() query: SubsonicCoverArtQueryDto,

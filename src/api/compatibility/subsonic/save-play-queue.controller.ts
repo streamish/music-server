@@ -1,4 +1,4 @@
-import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicSavePlayQueueResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
@@ -15,7 +15,6 @@ export class SubsonicSavePlayQueueController {
       [HttpStatus.OK]: SubsonicSavePlayQueueResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   savePlayQueue(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responseData = {
       'subsonic-response': {

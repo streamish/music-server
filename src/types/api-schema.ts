@@ -1531,6 +1531,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album
+     * @description Retrieve an album and its songs.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumController_getAlbum[0]'];
     put?: never;
     post?: never;
@@ -1547,6 +1553,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album
+     * @description Retrieve an album and its songs.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumController_getAlbum[1]'];
     put?: never;
     post?: never;
@@ -1563,6 +1575,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album Info
+     * @description Retrieve information about a specific album.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumInfoController_getAlbumInfo[0]'];
     put?: never;
     post?: never;
@@ -1579,6 +1597,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album Info
+     * @description Retrieve information about a specific album.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumInfoController_getAlbumInfo[1]'];
     put?: never;
     post?: never;
@@ -1595,6 +1619,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album Info 2
+     * @description Retrieve information about a specific album (version 2).
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumInfoController_getAlbumInfo2[0]'];
     put?: never;
     post?: never;
@@ -1611,6 +1641,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album Info 2
+     * @description Retrieve information about a specific album (version 2).
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumInfoController_getAlbumInfo2[1]'];
     put?: never;
     post?: never;
@@ -1627,6 +1663,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album List
+     * @description Retrieve an album list using the legacy response format.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumListController_getAlbumList[0]'];
     put?: never;
     post?: never;
@@ -1643,6 +1685,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album List
+     * @description Retrieve an album list using the legacy response format.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumListController_getAlbumList[1]'];
     put?: never;
     post?: never;
@@ -1659,6 +1707,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album List 2
+     * @description Retrieve an album list.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumListController_getAlbumList2[0]'];
     put?: never;
     post?: never;
@@ -1675,6 +1729,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Album List 2
+     * @description Retrieve an album list.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicAlbumListController_getAlbumList2[1]'];
     put?: never;
     post?: never;
@@ -1691,6 +1751,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Artist
+     * @description Retrieve an artist and its albums.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicArtistController_getArtists[0]'];
     put?: never;
     post?: never;
@@ -1707,6 +1773,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Artist
+     * @description Retrieve an artist and its albums.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicArtistController_getArtists[1]'];
     put?: never;
     post?: never;
@@ -1723,7 +1795,35 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    get: operations['SubsonicArtistsController_getArtists'];
+    /**
+     * Get Artists
+     * @description Retrieve an indexed list of artists.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
+    get: operations['SubsonicArtistsController_getArtists[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getArtists.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get Artists
+     * @description Retrieve an indexed list of artists.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
+    get: operations['SubsonicArtistsController_getArtists[1]'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1739,6 +1839,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Bookmarks
+     * @description Retrieve the user bookmarks.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicBookmarksController_getBookmarks[0]'];
     put?: never;
     post?: never;
@@ -1755,6 +1861,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Bookmarks
+     * @description Retrieve the user bookmarks.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicBookmarksController_getBookmarks[1]'];
     put?: never;
     post?: never;
@@ -1805,6 +1917,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Genres
+     * @description Retrieve the list of music genres.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicGenresController_getGenres[0]'];
     put?: never;
     post?: never;
@@ -1821,6 +1939,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Genres
+     * @description Retrieve the list of music genres.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicGenresController_getGenres[1]'];
     put?: never;
     post?: never;
@@ -1837,7 +1961,35 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    get: operations['SubsonicIndexesController_getIndexes'];
+    /**
+     * Get Indexes
+     * @description Retrieve an indexed list of artists and albums.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
+    get: operations['SubsonicIndexesController_getIndexes[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getIndexes.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get Indexes
+     * @description Retrieve an indexed list of artists and albums.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
+    get: operations['SubsonicIndexesController_getIndexes[1]'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1853,6 +2005,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Internet Radio Stations
+     * @description Retrieve configured internet radio stations.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicInternetRadioStationsController_getInternetRadioStations[0]'];
     put?: never;
     post?: never;
@@ -1869,6 +2027,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Internet Radio Stations
+     * @description Retrieve configured internet radio stations.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicInternetRadioStationsController_getInternetRadioStations[1]'];
     put?: never;
     post?: never;
@@ -1885,6 +2049,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get License
+     * @description Retrieve the server license information.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicLicenseController_getLicense[0]'];
     put?: never;
     post?: never;
@@ -1901,6 +2071,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get License
+     * @description Retrieve the server license information.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicLicenseController_getLicense[1]'];
     put?: never;
     post?: never;
@@ -1917,6 +2093,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Music Directory
+     * @description Retrieve a music directory and its child items.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicMusicDirectoryController_getMusicDirectory[0]'];
     put?: never;
     post?: never;
@@ -1933,6 +2115,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Music Directory
+     * @description Retrieve a music directory and its child items.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicMusicDirectoryController_getMusicDirectory[1]'];
     put?: never;
     post?: never;
@@ -1949,6 +2137,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Music Folders
+     * @description Retrieve the configured music folders.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicMusicFoldersController_getMusicFolders[0]'];
     put?: never;
     post?: never;
@@ -1965,6 +2159,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Music Folders
+     * @description Retrieve the configured music folders.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicMusicFoldersController_getMusicFolders[1]'];
     put?: never;
     post?: never;
@@ -1981,6 +2181,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Newest Podcasts
+     * @description Retrieve the newest podcast episodes.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicNewestPodcastsController_getNewestPodcasts[0]'];
     put?: never;
     post?: never;
@@ -1997,6 +2203,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Newest Podcasts
+     * @description Retrieve the newest podcast episodes.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicNewestPodcastsController_getNewestPodcasts[1]'];
     put?: never;
     post?: never;
@@ -2013,6 +2225,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Now Playing
+     * @description Retrieve the songs currently being played.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicNowPlayingController_getNowPlaying[0]'];
     put?: never;
     post?: never;
@@ -2029,6 +2247,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Now Playing
+     * @description Retrieve the songs currently being played.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicNowPlayingController_getNowPlaying[1]'];
     put?: never;
     post?: never;
@@ -2045,6 +2269,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Playlists
+     * @description Retrieve the user playlists.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicPlaylistsController_getPlayLists[0]'];
     put?: never;
     post?: never;
@@ -2061,6 +2291,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Playlists
+     * @description Retrieve the user playlists.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicPlaylistsController_getPlayLists[1]'];
     put?: never;
     post?: never;
@@ -2077,6 +2313,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Podcasts
+     * @description Retrieve the podcast subscriptions and episodes.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicPodcastsController_getPodcasts[0]'];
     put?: never;
     post?: never;
@@ -2093,6 +2335,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Podcasts
+     * @description Retrieve the podcast subscriptions and episodes.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicPodcastsController_getPodcasts[1]'];
     put?: never;
     post?: never;
@@ -2109,6 +2357,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Random Songs
+     * @description Retrieve a random collection of songs.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicRandomSongsController_getRandomSongs[0]'];
     put?: never;
     post?: never;
@@ -2125,6 +2379,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Random Songs
+     * @description Retrieve a random collection of songs.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicRandomSongsController_getRandomSongs[1]'];
     put?: never;
     post?: never;
@@ -2141,6 +2401,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Similar Songs
+     * @description Retrieve songs similar to the specified song.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSimilarSongsController_getSimilarSongs[0]'];
     put?: never;
     post?: never;
@@ -2157,6 +2423,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Similar Songs
+     * @description Retrieve songs similar to the specified song.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSimilarSongsController_getSimilarSongs[1]'];
     put?: never;
     post?: never;
@@ -2173,6 +2445,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Song
+     * @description Retrieve a song by its identifier.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSongController_getSong[0]'];
     put?: never;
     post?: never;
@@ -2189,6 +2467,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Song
+     * @description Retrieve a song by its identifier.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSongController_getSong[1]'];
     put?: never;
     post?: never;
@@ -2205,6 +2489,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Songs by Genre
+     * @description Retrieve songs matching a genre.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSongsByGenreController_getSongsByGenre[0]'];
     put?: never;
     post?: never;
@@ -2221,6 +2511,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Songs by Genre
+     * @description Retrieve songs matching a genre.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSongsByGenreController_getSongsByGenre[1]'];
     put?: never;
     post?: never;
@@ -2237,6 +2533,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Starred
+     * @description Retrieve the starred songs, albums, and artists using the legacy response format.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicStarredController_getStarred[0]'];
     put?: never;
     post?: never;
@@ -2253,6 +2555,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Starred
+     * @description Retrieve the starred songs, albums, and artists using the legacy response format.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicStarredController_getStarred[1]'];
     put?: never;
     post?: never;
@@ -2269,6 +2577,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Starred 2
+     * @description Retrieve the starred songs, albums, and artists.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicStarredController_getStarred2[0]'];
     put?: never;
     post?: never;
@@ -2285,6 +2599,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Starred 2
+     * @description Retrieve the starred songs, albums, and artists.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicStarredController_getStarred2[1]'];
     put?: never;
     post?: never;
@@ -2301,6 +2621,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Top Songs
+     * @description Retrieve the top songs for an artist.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicTopSongsController_getTopSongs[0]'];
     put?: never;
     post?: never;
@@ -2317,6 +2643,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Get Top Songs
+     * @description Retrieve the top songs for an artist.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicTopSongsController_getTopSongs[1]'];
     put?: never;
     post?: never;
@@ -2333,6 +2665,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Ping
+     * @description Test connectivity with the Subsonic server.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicPingController_ping[0]'];
     put?: never;
     post?: never;
@@ -2349,6 +2687,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Ping
+     * @description Test connectivity with the Subsonic server.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicPingController_ping[1]'];
     put?: never;
     post?: never;
@@ -2365,6 +2709,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Save Play Queue
+     * @description Report success for a play queue save request.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSavePlayQueueController_savePlayQueue[0]'];
     put?: never;
     post?: never;
@@ -2381,6 +2731,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Save Play Queue
+     * @description Report success for a play queue save request.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSavePlayQueueController_savePlayQueue[1]'];
     put?: never;
     post?: never;
@@ -2397,6 +2753,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Scrobble
+     * @description Report success for a scrobble request.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicScrobbleController_scrobble[0]'];
     put?: never;
     post?: never;
@@ -2413,6 +2775,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Scrobble
+     * @description Report success for a scrobble request.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicScrobbleController_scrobble[1]'];
     put?: never;
     post?: never;
@@ -2429,6 +2797,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Search
+     * @description Search for artists, albums, and songs.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSearchController_search[0]'];
     put?: never;
     post?: never;
@@ -2445,6 +2819,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Search
+     * @description Search for artists, albums, and songs.
+     *
+     *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
+     */
     get: operations['SubsonicSearchController_search[1]'];
     put?: never;
     post?: never;
@@ -6144,8 +6524,186 @@ export type components = {
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
     /** @enum {string} */
     SortDirectionEnum: SortDirectionEnum;
+    SubsonicAlbumInfoResponseDto: {
+      albumInfo: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicAlbumList2ResponseDto: {
+      albumList2: {
+        album: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicAlbumListResponseDto: {
+      albumList: {
+        album: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
     /** @enum {string} */
-    SubsonicAlbumListType: SubsonicAlbumListType;
+    SubsonicAlbumListTypeEnum: SubsonicAlbumListTypeEnum;
+    SubsonicAlbumResponseDto: {
+      album: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicArtistResponseDto: {
+      artist: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicArtistsResponseDto: {
+      artist: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicBookmarksResponseDto: {
+      bookmarks: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicCoverArtResponseDto: {
+      data: Record<string, never>;
+    };
+    SubsonicGenresResponseDto: {
+      genres: {
+        genre?: {
+          value: string;
+        }[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicIndexesResponseDto: {
+      indexes: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicInternetRadioStationsResponseDto: {
+      internetRadioStations: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicLicenseResponseDto: {
+      license: {
+        email: string;
+        licenseExpires: string;
+        valid: boolean;
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicMusicDirectoryResponseDto: {
+      musicDirectory: {
+        musicFolder: {
+          id?: string;
+          name?: string;
+        };
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicMusicFoldersResponseDto: {
+      musicFolders: {
+        musicFolder?: {
+          id: string;
+          name: string;
+        }[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicNewestPodcastsResponseDto: {
+      newestPodcasts: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicNowPlayingResponseDto: {
+      nowPlaying: {
+        entry: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicPingResponseDto: {
+      status: string;
+      version: string;
+    };
+    SubsonicPlaylistsResponseDto: {
+      playlists: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicPodcastsResponseDto: {
+      podcasts: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicRandomSongsResponseDto: {
+      randomSongs: {
+        song: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicSavePlayQueueResponseDto: {
+      status: string;
+      version: string;
+    };
+    SubsonicScrobbleResponseDto: {
+      status: string;
+      version: string;
+    };
+    SubsonicSearchResponseDto: {
+      searchResult: {
+        match: Record<string, never>[];
+        offset: number;
+        totalHits: number;
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicSimilarSongsResponseDto: {
+      similarSongs: {
+        song: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicSongResponseDto: {
+      song: Record<string, never>;
+      status: string;
+      version: string;
+    };
+    SubsonicSongsByGenreResponseDto: {
+      songsByGenre: {
+        song: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicStarredResponseDto: {
+      starred: {
+        album?: Record<string, never>[];
+        artist?: Record<string, never>[];
+        song?: Record<string, never>[];
+      };
+      status: string;
+      version: string;
+    };
+    SubsonicStreamResponseDto: {
+      data: Record<string, never>;
+    };
+    SubsonicTopSongsResponseDto: {
+      status: string;
+      topSongs: {
+        song: Record<string, never>[];
+      };
+      version: string;
+    };
     SuccessResponseDto: {
       /**
        * Format: constant
@@ -13313,7 +13871,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+        };
       };
     };
   };
@@ -13332,7 +13892,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+        };
       };
     };
   };
@@ -13352,7 +13914,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumResponseDto'];
         };
       };
     };
@@ -13373,7 +13935,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumResponseDto'];
         };
       };
     };
@@ -13394,7 +13956,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
         };
       };
     };
@@ -13415,7 +13977,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
         };
       };
     };
@@ -13436,7 +13998,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
         };
       };
     };
@@ -13457,7 +14019,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumInfoResponseDto'];
         };
       };
     };
@@ -13471,7 +14033,7 @@ export interface operations {
         offset?: number;
         size?: number;
         toYear?: number;
-        type: components['schemas']['SubsonicAlbumListType'];
+        type: components['schemas']['SubsonicAlbumListTypeEnum'];
       };
       header?: never;
       path?: never;
@@ -13484,7 +14046,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumListResponseDto'];
         };
       };
     };
@@ -13498,7 +14060,7 @@ export interface operations {
         offset?: number;
         size?: number;
         toYear?: number;
-        type: components['schemas']['SubsonicAlbumListType'];
+        type: components['schemas']['SubsonicAlbumListTypeEnum'];
       };
       header?: never;
       path?: never;
@@ -13511,7 +14073,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumListResponseDto'];
         };
       };
     };
@@ -13524,7 +14086,7 @@ export interface operations {
         offset?: number;
         size?: number;
         toYear?: number;
-        type: components['schemas']['SubsonicAlbumListType'];
+        type: components['schemas']['SubsonicAlbumListTypeEnum'];
       };
       header?: never;
       path?: never;
@@ -13537,7 +14099,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumList2ResponseDto'];
         };
       };
     };
@@ -13550,7 +14112,7 @@ export interface operations {
         offset?: number;
         size?: number;
         toYear?: number;
-        type: components['schemas']['SubsonicAlbumListType'];
+        type: components['schemas']['SubsonicAlbumListTypeEnum'];
       };
       header?: never;
       path?: never;
@@ -13563,7 +14125,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicAlbumList2ResponseDto'];
         };
       };
     };
@@ -13584,7 +14146,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicArtistResponseDto'];
         };
       };
     };
@@ -13605,12 +14167,12 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicArtistResponseDto'];
         };
       };
     };
   };
-  SubsonicArtistsController_getArtists: {
+  'SubsonicArtistsController_getArtists[0]': {
     parameters: {
       query?: {
         /** @description Optionally limit artist list to a single root path */
@@ -13627,7 +14189,29 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicArtistsResponseDto'];
+        };
+      };
+    };
+  };
+  'SubsonicArtistsController_getArtists[1]': {
+    parameters: {
+      query?: {
+        /** @description Optionally limit artist list to a single root path */
+        musicFolderId?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SubsonicArtistsResponseDto'];
         };
       };
     };
@@ -13646,7 +14230,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicBookmarksResponseDto'];
         };
       };
     };
@@ -13665,7 +14249,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicBookmarksResponseDto'];
         };
       };
     };
@@ -13686,7 +14270,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['SubsonicCoverArtResponseDto'];
+        };
       };
     };
   };
@@ -13706,7 +14292,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['SubsonicCoverArtResponseDto'];
+        };
       };
     };
   };
@@ -13724,7 +14312,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicGenresResponseDto'];
         };
       };
     };
@@ -13743,12 +14331,12 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicGenresResponseDto'];
         };
       };
     };
   };
-  SubsonicIndexesController_getIndexes: {
+  'SubsonicIndexesController_getIndexes[0]': {
     parameters: {
       query?: {
         /**
@@ -13770,7 +14358,34 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicIndexesResponseDto'];
+        };
+      };
+    };
+  };
+  'SubsonicIndexesController_getIndexes[1]': {
+    parameters: {
+      query?: {
+        /**
+         * @description Unix timestamp in milliseconds for the last modification time of the items.  This
+         *     value is currently ignored.
+         */
+        ifModifiedSince?: number;
+        /** @description Optionally limit artist list to a single root path */
+        musicFolderId?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SubsonicIndexesResponseDto'];
         };
       };
     };
@@ -13789,7 +14404,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicInternetRadioStationsResponseDto'];
         };
       };
     };
@@ -13808,7 +14423,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicInternetRadioStationsResponseDto'];
         };
       };
     };
@@ -13827,7 +14442,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicLicenseResponseDto'];
         };
       };
     };
@@ -13846,7 +14461,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicLicenseResponseDto'];
         };
       };
     };
@@ -13868,7 +14483,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicMusicDirectoryResponseDto'];
         };
       };
     };
@@ -13890,7 +14505,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicMusicDirectoryResponseDto'];
         };
       };
     };
@@ -13909,7 +14524,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicMusicFoldersResponseDto'];
         };
       };
     };
@@ -13928,7 +14543,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicMusicFoldersResponseDto'];
         };
       };
     };
@@ -13947,7 +14562,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicNewestPodcastsResponseDto'];
         };
       };
     };
@@ -13966,7 +14581,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicNewestPodcastsResponseDto'];
         };
       };
     };
@@ -13985,7 +14600,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicNowPlayingResponseDto'];
         };
       };
     };
@@ -14004,7 +14619,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicNowPlayingResponseDto'];
         };
       };
     };
@@ -14023,7 +14638,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicPlaylistsResponseDto'];
         };
       };
     };
@@ -14042,7 +14657,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicPlaylistsResponseDto'];
         };
       };
     };
@@ -14061,7 +14676,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicPodcastsResponseDto'];
         };
       };
     };
@@ -14080,7 +14695,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicPodcastsResponseDto'];
         };
       };
     };
@@ -14105,7 +14720,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicRandomSongsResponseDto'];
         };
       };
     };
@@ -14130,7 +14745,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicRandomSongsResponseDto'];
         };
       };
     };
@@ -14152,7 +14767,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSimilarSongsResponseDto'];
         };
       };
     };
@@ -14174,7 +14789,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSimilarSongsResponseDto'];
         };
       };
     };
@@ -14195,7 +14810,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSongResponseDto'];
         };
       };
     };
@@ -14216,7 +14831,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSongResponseDto'];
         };
       };
     };
@@ -14240,7 +14855,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSongsByGenreResponseDto'];
         };
       };
     };
@@ -14264,7 +14879,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSongsByGenreResponseDto'];
         };
       };
     };
@@ -14283,7 +14898,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicStarredResponseDto'];
         };
       };
     };
@@ -14302,7 +14917,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicStarredResponseDto'];
         };
       };
     };
@@ -14321,7 +14936,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicStarredResponseDto'];
         };
       };
     };
@@ -14340,7 +14955,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicStarredResponseDto'];
         };
       };
     };
@@ -14362,7 +14977,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicTopSongsResponseDto'];
         };
       };
     };
@@ -14384,7 +14999,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicTopSongsResponseDto'];
         };
       };
     };
@@ -14403,7 +15018,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicPingResponseDto'];
         };
       };
     };
@@ -14422,7 +15037,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicPingResponseDto'];
         };
       };
     };
@@ -14441,7 +15056,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSavePlayQueueResponseDto'];
         };
       };
     };
@@ -14460,7 +15075,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSavePlayQueueResponseDto'];
         };
       };
     };
@@ -14479,7 +15094,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicScrobbleResponseDto'];
         };
       };
     };
@@ -14498,7 +15113,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicScrobbleResponseDto'];
         };
       };
     };
@@ -14525,7 +15140,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSearchResponseDto'];
         };
       };
     };
@@ -14552,7 +15167,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': Record<string, never>;
+          'application/json': components['schemas']['SubsonicSearchResponseDto'];
         };
       };
     };
@@ -14572,7 +15187,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+        };
       };
     };
   };
@@ -14591,7 +15208,9 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': components['schemas']['SubsonicStreamResponseDto'];
+        };
       };
     };
   };
@@ -16060,7 +16679,7 @@ export enum SortDirectionEnum {
   asc = 'asc',
   desc = 'desc',
 }
-export enum SubsonicAlbumListType {
+export enum SubsonicAlbumListTypeEnum {
   alphabeticallyByArtist = 'alphabeticallyByArtist',
   alphabeticallyByName = 'alphabeticallyByName',
   byGenre = 'byGenre',

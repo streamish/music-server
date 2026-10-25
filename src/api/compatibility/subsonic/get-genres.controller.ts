@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicGenresResponseDto } from './dtos';
 import { SubsonicGenresService } from './get-genres.service';
@@ -18,7 +18,6 @@ export class SubsonicGenresController {
       [HttpStatus.OK]: SubsonicGenresResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getGenres(
     @User() user: AccountEntity,
     @ResponseFormat() jsonResponse: boolean,

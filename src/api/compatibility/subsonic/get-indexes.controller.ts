@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { Get, HttpStatus, Query, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicIndexesQueryDto, SubsonicIndexesResponseDto } from './dtos';
 import { SubsonicIndexesService } from './get-indexes.service';
@@ -18,7 +18,6 @@ export class SubsonicIndexesController {
       [HttpStatus.OK]: SubsonicIndexesResponseDto,
     },
   })
-  @Header('server', 'Jetty(6.1.x)')
   async getIndexes(
     @User() user: AccountEntity,
     @Query() query: SubsonicIndexesQueryDto,

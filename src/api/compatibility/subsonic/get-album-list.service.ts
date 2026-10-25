@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
 import { SubsonicAlbumList2QueryDto, SubsonicAlbumListQueryDto } from './dtos';
-import { SubsonicAlbumListType } from './subsonic.enums';
+import { SubsonicAlbumListTypeEnum } from './subsonic.enums';
 import { libraryAlbumToRow } from './subsonic.mapper';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class SubsonicAlbumListService {
 
   async getAlbumList(userId: number, query: SubsonicAlbumListQueryDto) {
     // favorite list
-    if (query.type === SubsonicAlbumListType.STARRED) {
+    if (query.type === SubsonicAlbumListTypeEnum.STARRED) {
       const favorites = await this.libraryService.listFavorites(userId, query.offset || 0, query.size || 100_000);
       const albums = favorites.items.filter((item) => item.album) as LibraryAlbumDto[];
       return albums.map(libraryAlbumToRow);
@@ -20,17 +20,17 @@ export class SubsonicAlbumListService {
     // sorted list
     let sort: AlbumSortFieldEnum | undefined;
     let direction: SortDirectionEnum | undefined;
-    if (query.type === SubsonicAlbumListType.ALPHABETICALLY_BY_ARTIST) {
+    if (query.type === SubsonicAlbumListTypeEnum.ALPHABETICALLY_BY_ARTIST) {
       sort = AlbumSortFieldEnum.ARTIST;
-    } else if (query.type === SubsonicAlbumListType.ALPHABETICALLY_BY_NAME) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.ALPHABETICALLY_BY_NAME) {
       sort = AlbumSortFieldEnum.ALBUM;
-    } else if (query.type === SubsonicAlbumListType.NEWEST) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.NEWEST) {
       sort = AlbumSortFieldEnum.YEAR;
       direction = SortDirectionEnum.DESC;
-    } else if (query.type === SubsonicAlbumListType.HIGHEST_RATING) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.HIGHEST_RATING) {
       sort = AlbumSortFieldEnum.RATING;
       direction = SortDirectionEnum.DESC;
-    } else if (query.type === SubsonicAlbumListType.RANDOM) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.RANDOM) {
       sort = AlbumSortFieldEnum.RANDOM;
     }
     // TODO: "frequent" for most-played is not implemented (play counting is not available yet)
@@ -54,7 +54,7 @@ export class SubsonicAlbumListService {
 
   async getAlbumList2(userId: number, query: SubsonicAlbumList2QueryDto) {
     // favorite list
-    if (query.type === SubsonicAlbumListType.STARRED) {
+    if (query.type === SubsonicAlbumListTypeEnum.STARRED) {
       const favorites = await this.libraryService.listFavorites(userId, query.offset || 0, query.size || 100_000);
       const albums = favorites.items.filter((item) => item.album) as LibraryAlbumDto[];
       return albums.map(libraryAlbumToRow);
@@ -62,17 +62,17 @@ export class SubsonicAlbumListService {
     // sorted list
     let sort: AlbumSortFieldEnum | undefined;
     let direction: SortDirectionEnum | undefined;
-    if (query.type === SubsonicAlbumListType.ALPHABETICALLY_BY_ARTIST) {
+    if (query.type === SubsonicAlbumListTypeEnum.ALPHABETICALLY_BY_ARTIST) {
       sort = AlbumSortFieldEnum.ARTIST;
-    } else if (query.type === SubsonicAlbumListType.ALPHABETICALLY_BY_NAME) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.ALPHABETICALLY_BY_NAME) {
       sort = AlbumSortFieldEnum.ALBUM;
-    } else if (query.type === SubsonicAlbumListType.NEWEST) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.NEWEST) {
       sort = AlbumSortFieldEnum.YEAR;
       direction = SortDirectionEnum.DESC;
-    } else if (query.type === SubsonicAlbumListType.HIGHEST_RATING) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.HIGHEST_RATING) {
       sort = AlbumSortFieldEnum.RATING;
       direction = SortDirectionEnum.DESC;
-    } else if (query.type === SubsonicAlbumListType.RANDOM) {
+    } else if (query.type === SubsonicAlbumListTypeEnum.RANDOM) {
       sort = AlbumSortFieldEnum.RANDOM;
     }
     // TODO: "frequent" for most-played is not implemented (play counting is not available yet)
