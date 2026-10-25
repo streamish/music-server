@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { QnapYesNoEnum } from '../qnap.enums';
 
 export class QnapSysRequestQueryDto {
   @IsString()
@@ -285,9 +286,12 @@ export class QnapSysRequestDto {
   })
   declare customLogo: QnapSysRequestCustomLogoDto;
 
-  @IsString()
-  @IsEnum(['yes', 'no'])
-  declare DemoSiteSuppurt: 'yes' | 'no';
+  @ApiProperty({
+    enum: QnapYesNoEnum,
+    enumName: 'QnapYesNoEnum',
+  })
+  @IsEnum(QnapYesNoEnum)
+  declare DemoSiteSuppurt: QnapYesNoEnum;
 
   @ApiProperty({
     type: QnapSysRequestFirmwareDto,

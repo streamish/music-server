@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsInt, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsInt, IsString } from 'class-validator';
 import { LibraryAssociationDto } from './library.association.dto';
 import { LibraryTrackDto } from './library.track.dto';
 import type { RatingOrUnset } from 'src/types';
@@ -88,12 +88,18 @@ export class LibraryAlbumDto {
   declare id: number;
 
   /**
-   * The aggregate rating for the album, which is a value between 0 and 5 inclusive applied to tracks.
+   * The aggregate rating for the album, which is the average of the rating values
+   * between 0 (not rated) and 5 inclusive applied to tracks.
    */
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   declare rating: RatingOrUnset;
 
   /**

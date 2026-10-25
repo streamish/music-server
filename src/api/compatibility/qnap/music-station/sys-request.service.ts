@@ -4,6 +4,7 @@ import { ErrorCodes } from 'src/constants/error-codes';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { QnapSysRequestDto } from './dtos/sys-request.dto';
+import { QnapYesNoEnum } from './qnap.enums';
 
 function getTimezoneLabel(timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone) {
   const offset = new Intl.DateTimeFormat('en-US', {
@@ -73,7 +74,7 @@ export class QnapSysRequestService {
         rfs_bits: 64,
         specVersion: '1.0',
         hostname: 'music-server',
-        DemoSiteSuppurt: 'no',
+        DemoSiteSuppurt: QnapYesNoEnum.NO,
         customLogo: {
           customFrontLogo: '',
           customLoginLogo: '',
@@ -173,7 +174,7 @@ export class QnapSysRequestService {
       rfs_bits: 64,
       specVersion: '1.0',
       hostname: 'music-server',
-      DemoSiteSuppurt: 'no',
+      DemoSiteSuppurt: QnapYesNoEnum.NO,
       customLogo: {
         customFrontLogo: '',
         customLoginLogo: '',

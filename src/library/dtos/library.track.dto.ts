@@ -166,8 +166,13 @@ export class LibraryTrackDto {
    */
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   declare rating: RatingOrUnset;
 
   /**

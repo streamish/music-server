@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 import { SynologyApiEnum, SynologyLibraryEnum, SynologyMethodEnum } from '../synology.enums';
 import { SynologyBodyWithPagination } from '../synology.request.dto';
 import { SynologyPaginationResponseDto, SynologySuccessResponseDto } from '../synology.response.dto';
@@ -27,8 +27,13 @@ export class SynologyArtistsByDefaultGenreBodyDto extends ArtistBodyDto {
 class SynologyAlbumArtistRatingDto {
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   declare rating: RatingOrUnset;
 }
 

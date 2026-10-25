@@ -122,6 +122,11 @@ export class SynologySongsRateBodyDto extends OmitType(
    */
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
   @IsInt()
   @Min(0)
@@ -132,8 +137,13 @@ export class SynologySongsRateBodyDto extends OmitType(
 class SynologySongRatingDto {
   @ApiProperty({
     type: 'integer',
+    default: 0,
+    minimum: 0,
+    maximum: 5,
+    enum: [0, 1, 2, 3, 4, 5],
+    enumName: 'RatingOrUnset',
   })
-  @IsNumber()
+  @IsInt()
   @Min(0)
   @Max(5)
   declare rating: RatingOrUnset;
