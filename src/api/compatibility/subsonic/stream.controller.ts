@@ -40,7 +40,7 @@ export class SubsonicStreamController {
     if (!tracks?.[0]) {
       throw notFound;
     }
-    const streamInfo = await this.tracksService.getStream(query.id).catch(() => undefined);
+    const streamInfo = await this.tracksService.getStream(user.id, query.id).catch(() => undefined);
     let size: number;
     try {
       size = statSync(streamInfo?.path || '').size;
