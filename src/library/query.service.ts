@@ -295,7 +295,7 @@ export class LibraryQueryService {
         sortFieldColumn = 'year';
         break;
       case AlbumSortFieldEnum.ARTIST:
-        sortFieldColumn = 'artists';
+        sortFieldColumn = 'artistSort';
         additionalSortFields.push([
           this.createConcatenatedAssociation('is_artist', 'album_id', 'AlbumEntity'),
           'artistSort',
@@ -396,6 +396,9 @@ export class LibraryQueryService {
         }),
         ...this.createAddedDateFilter(filter?.addedAfter, filter?.addedBefore),
         ...this.createRatingFilter(filter?.minRating, filter?.maxRating),
+        ...(filter?.rootPathId && {
+          rootPathId: filter.rootPathId,
+        }),
       },
       order,
     };
@@ -475,6 +478,11 @@ export class LibraryQueryService {
           attributes: ['id', 'title'],
           model: AlbumEntity,
           required: true,
+          where: {
+            ...(filter?.rootPathId && {
+              rootPathId: filter.rootPathId,
+            }),
+          },
           include: genreIds.length
             ? [
                 {
@@ -746,6 +754,7 @@ export class LibraryQueryService {
         'frequency',
         'id',
         'rating',
+        'rootPathId',
         'title',
         'titleNormalized',
         'trackNumber',

@@ -1,3 +1,4 @@
+import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { FavoritesModule } from 'src/favorites/favorites.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
@@ -39,7 +40,14 @@ import { SynologyStreamService } from './stream.service';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
-  imports: [FavoritesModule, LibraryModule, RatingsModule, SequelizeModule.forFeature(entitiesList), ShoutcastModule],
+  imports: [
+    CoverImagesModule,
+    FavoritesModule,
+    LibraryModule,
+    RatingsModule,
+    SequelizeModule.forFeature(entitiesList),
+    ShoutcastModule,
+  ],
   controllers: [
     SynologyAlbumController,
     SynologyArtistController,

@@ -5,7 +5,7 @@ import { LibraryAlbumWithTracksDto } from './library.album.dto';
 
 export class LibraryAssociationDto {
   /**
-   * The date the artist was added to the library
+   * The date the person or group was added to the library
    */
   @ApiProperty({
     type: Date,
@@ -21,13 +21,13 @@ export class LibraryAssociationDto {
   declare favoriteId?: number;
 
   /**
-   * The internally-generated unique ID of the artist
+   * The internally-generated unique ID of the person or group
    */
   @IsInt()
   declare id: number;
 
   /**
-   * The name of the artist.
+   * The name of the associated person or group.
    */
   @IsString()
   declare name: string;

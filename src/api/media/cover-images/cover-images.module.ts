@@ -1,13 +1,12 @@
-import { AlbumEntity, TrackEntity } from 'src/database/entities';
 import { ApiCoverImageController } from './cover-images.controller';
 import { ApiCoverImageService } from './cover-images.service';
-import { LibraryModule } from 'src/library/library.module';
+import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
-  imports: [LibraryModule, SequelizeModule.forFeature([AlbumEntity, TrackEntity])],
+  imports: [CoverImagesModule],
   controllers: [ApiCoverImageController],
   providers: [ApiCoverImageService],
+  exports: [ApiCoverImageService],
 })
 export class ApiCoverImageModule {}

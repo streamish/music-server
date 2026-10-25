@@ -104,7 +104,7 @@ export class LibraryTransformerService {
   convertAssociationEntityToLibraryAssociation(association: AssociationEntity): LibraryAssociationDto {
     return {
       id: association.id || 0,
-      name: association.name || '',
+      name: replaceDoubleQuotes(association.name || ''),
       createdAt: association.createdAt || new Date(),
       favoriteId: association.favorite?.id,
     };
@@ -244,6 +244,7 @@ export class LibraryTransformerService {
         })) || [],
       id: track.id,
       rating: track.rating ?? 0,
+      rootPathId: track.rootPathId,
       title: replaceDoubleQuotes(track.title),
       trackNumber: track.trackNumber,
       year: track.year,

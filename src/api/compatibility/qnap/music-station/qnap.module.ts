@@ -1,3 +1,4 @@
+import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
 import { QnapAsGetFileController } from './as-get-file.controller';
@@ -20,7 +21,7 @@ import { SequelizeModule } from '@nestjs/sequelize/dist/sequelize.module';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
-  imports: [LibraryModule, SequelizeModule.forFeature(entitiesList)],
+  imports: [CoverImagesModule, LibraryModule, SequelizeModule.forFeature(entitiesList)],
   controllers: [
     QnapAsGetFileController,
     QnapAsLocalPlaybackController,

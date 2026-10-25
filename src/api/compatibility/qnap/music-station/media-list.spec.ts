@@ -36,6 +36,7 @@ describe('/musicstation/api/medialist_api.php', () => {
     const typedData = data as ResponseType;
     return { data: typedData, error };
   }
+
   it('should list recently-added', async () => {
     const { error, data } = await listMedia<ListTracks>({
       act: 'list',

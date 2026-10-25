@@ -33,4 +33,8 @@ export type AssociationFilter = {
    * associated artists and composers with works in the specified genres.
    */
   genre?: string[];
+  /**
+   * Optional filter for the root path ID.
+   */
+  rootPathId?: number;
 };
