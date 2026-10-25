@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { SubsonicSongDto } from './song.dto';
 
 export class SubsonicAlbumDto {
