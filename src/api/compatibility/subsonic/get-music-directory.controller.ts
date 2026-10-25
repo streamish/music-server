@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicMusicDirectoryQueryDto } from './dtos/get-music-directory.dto';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicMusicDirectoryQueryDto, SubsonicMusicDirectoryResponseDto } from './dtos';
 import { SubsonicMusicDirectoryService } from './get-music-directory.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicMusicDirectoryController {
   constructor(private readonly getMusicDirectoryService: SubsonicMusicDirectoryService) {}
 
-  @Get(['getMusicDirectory', 'getMusicDirectory.view'])
+  @SubsonicApiEndpoint(Get, 'getMusicDirectory', HttpStatus.OK, {
+    summary: 'Get Music Directory',
+    description: 'Retrieve a music directory and its child items.',
+    responses: {
+      [HttpStatus.OK]: SubsonicMusicDirectoryResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getMusicDirectory(
     @User() user: AccountEntity,

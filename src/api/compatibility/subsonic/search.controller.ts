@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicSearchQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicSearchQueryDto, SubsonicSearchResponseDto } from './dtos';
 import { SubsonicSearchService } from './search.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicSearchController {
   constructor(private readonly service: SubsonicSearchService) {}
 
-  @Get(['search', 'search.view'])
+  @SubsonicApiEndpoint(Get, 'search', HttpStatus.OK, {
+    summary: 'Search',
+    description: 'Search for artists, albums, and songs.',
+    responses: {
+      [HttpStatus.OK]: SubsonicSearchResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async search(
     @User() user: AccountEntity,

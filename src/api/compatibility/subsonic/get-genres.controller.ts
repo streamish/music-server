@@ -1,20 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicGenresResponseDto } from './dtos';
 import { SubsonicGenresService } from './get-genres.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicGenresController {
   constructor(private readonly service: SubsonicGenresService) {}
 
-  @Get(['getGenres', 'getGenres.view'])
+  @SubsonicApiEndpoint(Get, 'getGenres', HttpStatus.OK, {
+    summary: 'Get Genres',
+    description: 'Retrieve the list of music genres.',
+    responses: {
+      [HttpStatus.OK]: SubsonicGenresResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getGenres(
     @User() user: AccountEntity,

@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicIndexesQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicIndexesQueryDto, SubsonicIndexesResponseDto } from './dtos';
 import { SubsonicIndexesService } from './get-indexes.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicIndexesController {
   constructor(private readonly getIndexesService: SubsonicIndexesService) {}
 
-  @Get(['getIndexes'])
+  @SubsonicApiEndpoint(Get, 'getIndexes', HttpStatus.OK, {
+    summary: 'Get Indexes',
+    description: 'Retrieve an indexed list of artists and albums.',
+    responses: {
+      [HttpStatus.OK]: SubsonicIndexesResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getIndexes(
     @User() user: AccountEntity,

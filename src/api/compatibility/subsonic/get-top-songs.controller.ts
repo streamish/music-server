@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicTopSongsQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicTopSongsQueryDto, SubsonicTopSongsResponseDto } from './dtos';
 import { SubsonicTopSongsService } from './get-top-songs.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicTopSongsController {
   constructor(private readonly service: SubsonicTopSongsService) {}
 
-  @Get(['getTopSongs', 'getTopSongs.view'])
+  @SubsonicApiEndpoint(Get, 'getTopSongs', HttpStatus.OK, {
+    summary: 'Get Top Songs',
+    description: 'Retrieve the top songs for an artist.',
+    responses: {
+      [HttpStatus.OK]: SubsonicTopSongsResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getTopSongs(
     @User() user: AccountEntity,

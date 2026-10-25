@@ -1,21 +1,28 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAlbumList2QueryDto, SubsonicAlbumListQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import {
+  SubsonicAlbumList2QueryDto,
+  SubsonicAlbumList2ResponseDto,
+  SubsonicAlbumListQueryDto,
+  SubsonicAlbumListResponseDto,
+} from './dtos';
 import { SubsonicAlbumListService } from './get-album-list.service';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicAlbumListController {
   constructor(private readonly getAlbumListService: SubsonicAlbumListService) {}
 
-  @Get(['getAlbumList', 'getAlbumList.view'])
+  @SubsonicApiEndpoint(Get, 'getAlbumList', HttpStatus.OK, {
+    summary: 'Get Album List',
+    description: 'Retrieve an album list using the legacy response format.',
+    responses: {
+      [HttpStatus.OK]: SubsonicAlbumListResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getAlbumList(
     @User() user: AccountEntity,
@@ -47,7 +54,13 @@ export class SubsonicAlbumListController {
     return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 
-  @Get(['getAlbumList2', 'getAlbumList2.view'])
+  @SubsonicApiEndpoint(Get, 'getAlbumList2', HttpStatus.OK, {
+    summary: 'Get Album List 2',
+    description: 'Retrieve an album list.',
+    responses: {
+      [HttpStatus.OK]: SubsonicAlbumList2ResponseDto,
+    },
+  })
   async getAlbumList2(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumList2QueryDto,

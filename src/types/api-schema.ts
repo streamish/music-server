@@ -1119,7 +1119,7 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` reuqest to `/api/test/create-test-account` */
+    /** @description `POST` request to `/api/test/create-test-account` */
     post: operations['ApiTestController_createTestAccount'];
     delete?: never;
     options?: never;
@@ -1478,6 +1478,1016 @@ export type paths = {
      *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     post: operations['QnapMediaListController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/download': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * @description Streams the original file, with `Range` support for seeking.
+     *     Transcoding parameters such as `maxBitRate` and `format` are ignored.
+     */
+    get: operations['SubsonicStreamController_stream[2]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/download.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * @description Streams the original file, with `Range` support for seeking.
+     *     Transcoding parameters such as `maxBitRate` and `format` are ignored.
+     */
+    get: operations['SubsonicStreamController_stream[3]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbum': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumController_getAlbum[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbum.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumController_getAlbum[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumInfo': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumInfoController_getAlbumInfo[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumInfo.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumInfoController_getAlbumInfo[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumInfo2': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumInfoController_getAlbumInfo2[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumInfo2.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumInfoController_getAlbumInfo2[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumList': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumListController_getAlbumList[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumList.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumListController_getAlbumList[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumList2': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumListController_getAlbumList2[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getAlbumList2.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicAlbumListController_getAlbumList2[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getArtist': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicArtistController_getArtists[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getArtist.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicArtistController_getArtists[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getArtists': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicArtistsController_getArtists'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getBookmarks': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicBookmarksController_getBookmarks[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getBookmarks.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicBookmarksController_getBookmarks[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getCoverArt': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Ids are album ids, or `ar-<id>` for artists. */
+    get: operations['SubsonicCoverArtController_getCoverArt[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getCoverArt.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Ids are album ids, or `ar-<id>` for artists. */
+    get: operations['SubsonicCoverArtController_getCoverArt[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getGenres': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicGenresController_getGenres[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getGenres.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicGenresController_getGenres[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getIndexes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicIndexesController_getIndexes'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getInternetRadioStations': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicInternetRadioStationsController_getInternetRadioStations[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getInternetRadioStations.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicInternetRadioStationsController_getInternetRadioStations[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getLicense': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicLicenseController_getLicense[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getLicense.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicLicenseController_getLicense[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getMusicDirectory': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicMusicDirectoryController_getMusicDirectory[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getMusicDirectory.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicMusicDirectoryController_getMusicDirectory[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getMusicFolders': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicMusicFoldersController_getMusicFolders[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getMusicFolders.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicMusicFoldersController_getMusicFolders[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getNewestPodcasts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicNewestPodcastsController_getNewestPodcasts[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getNewestPodcasts.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicNewestPodcastsController_getNewestPodcasts[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getNowPlaying': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicNowPlayingController_getNowPlaying[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getNowPlaying.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicNowPlayingController_getNowPlaying[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getPlayLists': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicPlaylistsController_getPlayLists[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getPlayLists.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicPlaylistsController_getPlayLists[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getPodcasts': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicPodcastsController_getPodcasts[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getPodcasts.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicPodcastsController_getPodcasts[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getRandomSongs': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicRandomSongsController_getRandomSongs[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getRandomSongs.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicRandomSongsController_getRandomSongs[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getSimilarSongs': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSimilarSongsController_getSimilarSongs[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getSimilarSongs.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSimilarSongsController_getSimilarSongs[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getSong': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSongController_getSong[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getSong.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSongController_getSong[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getSongsByGenre': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSongsByGenreController_getSongsByGenre[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getSongsByGenre.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSongsByGenreController_getSongsByGenre[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getStarred': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicStarredController_getStarred[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getStarred.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicStarredController_getStarred[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getStarred2': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicStarredController_getStarred2[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getStarred2.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicStarredController_getStarred2[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getTopSongs': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicTopSongsController_getTopSongs[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/getTopSongs.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicTopSongsController_getTopSongs[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/ping': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicPingController_ping[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/ping.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicPingController_ping[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/savePlayQueue': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSavePlayQueueController_savePlayQueue[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/savePlayQueue.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSavePlayQueueController_savePlayQueue[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/scrobble': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicScrobbleController_scrobble[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/scrobble.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicScrobbleController_scrobble[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/search': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSearchController_search[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/search.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SubsonicSearchController_search[1]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/stream': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * @description Streams the original file, with `Range` support for seeking.
+     *     Transcoding parameters such as `maxBitRate` and `format` are ignored.
+     */
+    get: operations['SubsonicStreamController_stream[0]'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/rest/stream.view': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * @description Streams the original file, with `Range` support for seeking.
+     *     Transcoding parameters such as `maxBitRate` and `format` are ignored.
+     */
+    get: operations['SubsonicStreamController_stream[1]'];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -3557,15 +4567,15 @@ export type components = {
       composerCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
       /**
        * Format: date-time
-       * @description The date the artist was added to the library
+       * @description The date the person or group was added to the library
        */
       createdAt: string;
       /** @description The favorite data for the album if it exists */
       favoriteId?: number;
       genreCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
-      /** @description The internally-generated unique ID of the artist */
+      /** @description The internally-generated unique ID of the person or group */
       id: number;
-      /** @description The name of the artist. */
+      /** @description The name of the associated person or group. */
       name: string;
     };
     /**
@@ -3831,14 +4841,14 @@ export type components = {
     LibraryAssociationDto: {
       /**
        * Format: date-time
-       * @description The date the artist was added to the library
+       * @description The date the person or group was added to the library
        */
       createdAt: string;
       /** @description The favorite data for the album if it exists */
       favoriteId?: number;
-      /** @description The internally-generated unique ID of the artist */
+      /** @description The internally-generated unique ID of the person or group */
       id: number;
-      /** @description The name of the artist. */
+      /** @description The name of the associated person or group. */
       name: string;
     };
     LibraryAssociationWithTracksDto: {
@@ -3846,14 +4856,14 @@ export type components = {
       albums: components['schemas']['LibraryAlbumWithTracksDto'][];
       /**
        * Format: date-time
-       * @description The date the artist was added to the library
+       * @description The date the person or group was added to the library
        */
       createdAt: string;
       /** @description The favorite data for the album if it exists */
       favoriteId?: number;
-      /** @description The internally-generated unique ID of the artist */
+      /** @description The internally-generated unique ID of the person or group */
       id: number;
-      /** @description The name of the artist. */
+      /** @description The name of the associated person or group. */
       name: string;
     };
     LibraryFavoriteDto: {
@@ -3967,6 +4977,8 @@ export type components = {
       id: number;
       /** @description The rating of the track which is a value between 0 and 5 inclusive applied to the track. */
       rating: number;
+      /** @description The ID of the root path for the track. */
+      rootPathId: number;
       /** @description The title of the track, which is usually the name of the song or piece of music. */
       title: string;
       /** @description The track number of the track on the album or disc if there are multiple discs. */
@@ -5132,6 +6144,8 @@ export type components = {
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
     /** @enum {string} */
     SortDirectionEnum: SortDirectionEnum;
+    /** @enum {string} */
+    SubsonicAlbumListType: SubsonicAlbumListType;
     SuccessResponseDto: {
       /**
        * Format: constant
@@ -12284,6 +13298,1303 @@ export interface operations {
       };
     };
   };
+  'SubsonicStreamController_stream[2]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'SubsonicStreamController_stream[3]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'SubsonicAlbumController_getAlbum[0]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumController_getAlbum[1]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumInfoController_getAlbumInfo[0]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumInfoController_getAlbumInfo[1]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumInfoController_getAlbumInfo2[0]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumInfoController_getAlbumInfo2[1]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumListController_getAlbumList[0]': {
+    parameters: {
+      query: {
+        fromYear?: number;
+        genre?: string;
+        musicFolderId?: number;
+        offset?: number;
+        size?: number;
+        toYear?: number;
+        type: components['schemas']['SubsonicAlbumListType'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumListController_getAlbumList[1]': {
+    parameters: {
+      query: {
+        fromYear?: number;
+        genre?: string;
+        musicFolderId?: number;
+        offset?: number;
+        size?: number;
+        toYear?: number;
+        type: components['schemas']['SubsonicAlbumListType'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumListController_getAlbumList2[0]': {
+    parameters: {
+      query: {
+        fromYear?: number;
+        genre?: string;
+        offset?: number;
+        size?: number;
+        toYear?: number;
+        type: components['schemas']['SubsonicAlbumListType'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicAlbumListController_getAlbumList2[1]': {
+    parameters: {
+      query: {
+        fromYear?: number;
+        genre?: string;
+        offset?: number;
+        size?: number;
+        toYear?: number;
+        type: components['schemas']['SubsonicAlbumListType'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicArtistController_getArtists[0]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicArtistController_getArtists[1]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  SubsonicArtistsController_getArtists: {
+    parameters: {
+      query?: {
+        /** @description Optionally limit artist list to a single root path */
+        musicFolderId?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicBookmarksController_getBookmarks[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicBookmarksController_getBookmarks[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicCoverArtController_getCoverArt[0]': {
+    parameters: {
+      query: {
+        id: string;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'SubsonicCoverArtController_getCoverArt[1]': {
+    parameters: {
+      query: {
+        id: string;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'SubsonicGenresController_getGenres[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicGenresController_getGenres[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  SubsonicIndexesController_getIndexes: {
+    parameters: {
+      query?: {
+        /**
+         * @description Unix timestamp in milliseconds for the last modification time of the items.  This
+         *     value is currently ignored.
+         */
+        ifModifiedSince?: number;
+        /** @description Optionally limit artist list to a single root path */
+        musicFolderId?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicInternetRadioStationsController_getInternetRadioStations[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicInternetRadioStationsController_getInternetRadioStations[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicLicenseController_getLicense[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicLicenseController_getLicense[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicMusicDirectoryController_getMusicDirectory[0]': {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicMusicDirectoryController_getMusicDirectory[1]': {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicMusicFoldersController_getMusicFolders[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicMusicFoldersController_getMusicFolders[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicNewestPodcastsController_getNewestPodcasts[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicNewestPodcastsController_getNewestPodcasts[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicNowPlayingController_getNowPlaying[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicNowPlayingController_getNowPlaying[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicPlaylistsController_getPlayLists[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicPlaylistsController_getPlayLists[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicPodcastsController_getPodcasts[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicPodcastsController_getPodcasts[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicRandomSongsController_getRandomSongs[0]': {
+    parameters: {
+      query?: {
+        fromYear?: number;
+        genre?: string;
+        musicFolderId?: number;
+        size?: number;
+        toYear?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicRandomSongsController_getRandomSongs[1]': {
+    parameters: {
+      query?: {
+        fromYear?: number;
+        genre?: string;
+        musicFolderId?: number;
+        size?: number;
+        toYear?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSimilarSongsController_getSimilarSongs[0]': {
+    parameters: {
+      query: {
+        count?: number;
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSimilarSongsController_getSimilarSongs[1]': {
+    parameters: {
+      query: {
+        count?: number;
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSongController_getSong[0]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSongController_getSong[1]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSongsByGenreController_getSongsByGenre[0]': {
+    parameters: {
+      query: {
+        count?: number;
+        genre: string;
+        musicFolderId?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSongsByGenreController_getSongsByGenre[1]': {
+    parameters: {
+      query: {
+        count?: number;
+        genre: string;
+        musicFolderId?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicStarredController_getStarred[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicStarredController_getStarred[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicStarredController_getStarred2[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicStarredController_getStarred2[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicTopSongsController_getTopSongs[0]': {
+    parameters: {
+      query: {
+        artist: string;
+        count?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicTopSongsController_getTopSongs[1]': {
+    parameters: {
+      query: {
+        artist: string;
+        count?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicPingController_ping[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicPingController_ping[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSavePlayQueueController_savePlayQueue[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSavePlayQueueController_savePlayQueue[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicScrobbleController_scrobble[0]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicScrobbleController_scrobble[1]': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSearchController_search[0]': {
+    parameters: {
+      query?: {
+        album?: string;
+        any?: string;
+        artist?: string;
+        count?: number;
+        newerThan?: number;
+        offset?: number;
+        title?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicSearchController_search[1]': {
+    parameters: {
+      query?: {
+        album?: string;
+        any?: string;
+        artist?: string;
+        count?: number;
+        newerThan?: number;
+        offset?: number;
+        title?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': Record<string, never>;
+        };
+      };
+    };
+  };
+  'SubsonicStreamController_stream[0]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  'SubsonicStreamController_stream[1]': {
+    parameters: {
+      query: {
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
   SynologyAlbumController_route: {
     parameters: {
       query?: never;
@@ -13748,6 +16059,18 @@ export enum SmartPlaylistConjugalEnum {
 export enum SortDirectionEnum {
   asc = 'asc',
   desc = 'desc',
+}
+export enum SubsonicAlbumListType {
+  alphabeticallyByArtist = 'alphabeticallyByArtist',
+  alphabeticallyByName = 'alphabeticallyByName',
+  byGenre = 'byGenre',
+  byYear = 'byYear',
+  frequent = 'frequent',
+  newest = 'newest',
+  highest = 'highest',
+  random = 'random',
+  recent = 'recent',
+  starred = 'starred',
 }
 export enum SynologyApiEnum {
   SYNO_AudioStation_Album = 'SYNO.AudioStation.Album',

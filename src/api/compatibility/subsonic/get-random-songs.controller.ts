@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicRandomSongsQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicRandomSongsQueryDto, SubsonicRandomSongsResponseDto } from './dtos';
 import { SubsonicRandomSongsService } from './get-random-songs.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicRandomSongsController {
   constructor(private readonly service: SubsonicRandomSongsService) {}
 
-  @Get(['getRandomSongs', 'getRandomSongs.view'])
+  @SubsonicApiEndpoint(Get, 'getRandomSongs', HttpStatus.OK, {
+    summary: 'Get Random Songs',
+    description: 'Retrieve a random collection of songs.',
+    responses: {
+      [HttpStatus.OK]: SubsonicRandomSongsResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getRandomSongs(
     @User() user: AccountEntity,

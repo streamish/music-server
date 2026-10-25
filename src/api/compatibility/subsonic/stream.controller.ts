@@ -1,19 +1,17 @@
 import { AccountEntity } from 'src/database/entities';
 import { ApiTracksService } from 'src/api/media/tracks/tracks.service';
-import { Controller, Get, Header, Query, Req, Res, StreamableFile, UseFilters, UseGuards } from '@nestjs/common';
+import { Get, Header, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
-import { SubsonicAuthGuard } from './subsonic.guard';
 import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicStreamQueryDto } from './dtos';
+import { SubsonicStreamQueryDto, SubsonicStreamResponseDto } from './dtos';
 import { User } from 'src/api/user.decorator';
 import { createReadStream, statSync } from 'node:fs';
 import { getAudioContentType } from 'src/utils/strings';
 import type { Request, Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+import { SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+
+@SubsonicController()
 export class SubsonicStreamController {
   constructor(
     private readonly tracksService: ApiTracksService,
@@ -24,7 +22,13 @@ export class SubsonicStreamController {
    * Streams the original file, with `Range` support for seeking.
    * Transcoding parameters such as `maxBitRate` and `format` are ignored.
    */
-  @Get(['stream', 'stream.view', 'download', 'download.view'])
+  @SubsonicApiEndpoint(Get, ['stream', 'download'], HttpStatus.OK, {
+    summary: 'Stream',
+    description: 'Stream or download a song.',
+    responses: {
+      [HttpStatus.OK]: SubsonicStreamResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async stream(
     @User() user: AccountEntity,

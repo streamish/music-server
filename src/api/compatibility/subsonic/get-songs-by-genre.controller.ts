@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicSongsByGenreQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicSongsByGenreQueryDto, SubsonicSongsByGenreResponseDto } from './dtos';
 import { SubsonicSongsByGenreService } from './get-songs-by-genre.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicSongsByGenreController {
   constructor(private readonly service: SubsonicSongsByGenreService) {}
 
-  @Get(['getSongsByGenre', 'getSongsByGenre.view'])
+  @SubsonicApiEndpoint(Get, 'getSongsByGenre', HttpStatus.OK, {
+    summary: 'Get Songs by Genre',
+    description: 'Retrieve songs matching a genre.',
+    responses: {
+      [HttpStatus.OK]: SubsonicSongsByGenreResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getSongsByGenre(
     @User() user: AccountEntity,

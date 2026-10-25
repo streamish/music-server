@@ -1,16 +1,19 @@
-import { Controller, Get, Header, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicPingResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicPingController {
   /* eslint-disable-next-line class-methods-use-this */
-  @Get(['ping', 'ping.view'])
+  @SubsonicApiEndpoint(Get, 'ping', HttpStatus.OK, {
+    summary: 'Ping',
+    description: 'Test connectivity with the Subsonic server.',
+    responses: {
+      [HttpStatus.OK]: SubsonicPingResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   ping(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responseData = {

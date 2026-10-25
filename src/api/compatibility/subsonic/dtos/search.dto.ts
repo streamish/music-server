@@ -1,4 +1,6 @@
+/* eslint-disable max-classes-per-file */
 import { IsInt, IsOptional, IsString } from 'class-validator';
+import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
 import { Type } from 'class-transformer';
 
 export class SubsonicSearchQueryDto {
@@ -32,4 +34,12 @@ export class SubsonicSearchQueryDto {
   @IsOptional()
   @Type(() => Number)
   declare newerThan?: number;
+}
+
+export class SubsonicSearchResponseDto extends SubsonicResponseDto {
+  declare searchResult: {
+    offset: number;
+    totalHits: number;
+    match: SubsonicResponseObject[];
+  };
 }

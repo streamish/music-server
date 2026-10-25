@@ -2,6 +2,7 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, ValidateIf } from 'class-validator';
 import { SubsonicAlbumListType } from '../subsonic.enums';
+import { SubsonicResponseDto, SubsonicResponseObject } from '../subsonic.dto';
 
 export class SubsonicAlbumListQueryDto {
   @ApiProperty({ enum: SubsonicAlbumListType, enumName: 'SubsonicAlbumListType' })
@@ -37,3 +38,11 @@ export class SubsonicAlbumListQueryDto {
 }
 
 export class SubsonicAlbumList2QueryDto extends OmitType(SubsonicAlbumListQueryDto, ['musicFolderId'] as const) {}
+
+export class SubsonicAlbumListResponseDto extends SubsonicResponseDto {
+  declare albumList: { album: SubsonicResponseObject[] };
+}
+
+export class SubsonicAlbumList2ResponseDto extends SubsonicResponseDto {
+  declare albumList2: { album: SubsonicResponseObject[] };
+}

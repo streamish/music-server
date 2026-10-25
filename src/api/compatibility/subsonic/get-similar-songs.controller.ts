@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicSimilarSongsQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicSimilarSongsQueryDto, SubsonicSimilarSongsResponseDto } from './dtos';
 import { SubsonicSimilarSongsService } from './get-similar-songs.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicSimilarSongsController {
   constructor(private readonly service: SubsonicSimilarSongsService) {}
 
-  @Get(['getSimilarSongs', 'getSimilarSongs.view'])
+  @SubsonicApiEndpoint(Get, 'getSimilarSongs', HttpStatus.OK, {
+    summary: 'Get Similar Songs',
+    description: 'Retrieve songs similar to the specified song.',
+    responses: {
+      [HttpStatus.OK]: SubsonicSimilarSongsResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getSimilarSongs(
     @User() user: AccountEntity,

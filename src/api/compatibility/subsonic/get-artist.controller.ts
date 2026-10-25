@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicArtistQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicArtistQueryDto, SubsonicArtistResponseDto } from './dtos';
 import { SubsonicArtistService } from './get-artist.service';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicArtistController {
   constructor(private readonly getArtistService: SubsonicArtistService) {}
 
-  @Get(['getArtist', 'getArtist.view'])
+  @SubsonicApiEndpoint(Get, 'getArtist', HttpStatus.OK, {
+    summary: 'Get Artist',
+    description: 'Retrieve an artist and its albums.',
+    responses: {
+      [HttpStatus.OK]: SubsonicArtistResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getArtists(
     @User() user: AccountEntity,

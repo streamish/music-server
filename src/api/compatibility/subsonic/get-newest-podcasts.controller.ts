@@ -1,16 +1,19 @@
-import { Controller, Get, Header, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicNewestPodcastsResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicNewestPodcastsController {
   // eslint-disable-next-line class-methods-use-this
-  @Get(['getNewestPodcasts', 'getNewestPodcasts.view'])
+  @SubsonicApiEndpoint(Get, 'getNewestPodcasts', HttpStatus.OK, {
+    summary: 'Get Newest Podcasts',
+    description: 'Retrieve the newest podcast episodes.',
+    responses: {
+      [HttpStatus.OK]: SubsonicNewestPodcastsResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getNewestPodcasts(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responsePayload = {

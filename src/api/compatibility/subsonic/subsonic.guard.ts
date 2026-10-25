@@ -41,7 +41,7 @@ function decodePassword(value: string): string {
 // the UI to provide oversight.
 
 @Injectable()
-export class SubsonicAuthGuard implements CanActivate {
+export class SubsonicGuard implements CanActivate {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -63,16 +63,16 @@ export class SubsonicAuthGuard implements CanActivate {
     if (!clientName) {
       throw new SubsonicException(SubsonicErrorCode.REQUIRED_PARAMETER_MISSING, 'Required parameter is missing: c');
     }
-    if (token !== undefined && salt !== undefined && password !== undefined) {
-      throw new SubsonicException(
-        SubsonicErrorCode.CONFLICTING_AUTHENTICATION_MECHANISMS,
-        'Multiple conflicting authentication mechanisms provided',
-      );
-    }
     if (!password && token !== undefined && salt !== undefined) {
       throw new SubsonicException(
         SubsonicErrorCode.AUTHENTICATION_MECHANISM_NOT_SUPPORTED,
         'Provided authentication mechanism not supported',
+      );
+    }
+    if (token !== undefined && salt !== undefined && password !== undefined) {
+      throw new SubsonicException(
+        SubsonicErrorCode.CONFLICTING_AUTHENTICATION_MECHANISMS,
+        'Multiple conflicting authentication mechanisms provided',
       );
     }
     if (!password) {

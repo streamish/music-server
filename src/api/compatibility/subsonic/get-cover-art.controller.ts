@@ -1,26 +1,30 @@
 import { AccountEntity } from 'src/database/entities';
 import { AssociationTypeEnum } from 'src/types/enums';
-import { Controller, Get, Header, Query, Req, Res, StreamableFile, UseFilters, UseGuards } from '@nestjs/common';
 import { CoverImagesService } from 'src/cover-images/cover-images.service';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicCoverArtQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
+import { SubsonicCoverArtQueryDto, SubsonicCoverArtResponseDto } from './dtos';
 import { SubsonicErrorCode, SubsonicException } from './subsonic-error';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import type { Request, Response } from 'express';
 
+import { SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+
 const DEFAULT_SIZE = 600;
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicCoverArtController {
   constructor(private readonly coverImagesService: CoverImagesService) {}
 
   /**
    * Ids are album ids, or `ar-<id>` for artists.
    */
-  @Get(['getCoverArt', 'getCoverArt.view'])
+  @SubsonicApiEndpoint(Get, 'getCoverArt', HttpStatus.OK, {
+    summary: 'Get Cover Art',
+    description: 'Retrieve cover art for an album or artist.',
+    responses: {
+      [HttpStatus.OK]: SubsonicCoverArtResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getCoverArt(
     @User() user: AccountEntity,

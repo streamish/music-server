@@ -28,6 +28,11 @@ export const SYNOLOGY_AUDIOSTATION_APIS = 'Synology AudioStation APIs';
 export const QNAP_MUSICSTATION_APIS = 'QNAP Music Station APIs';
 
 /**
+ * The compatibility layer for SSubsonic and their Subsonic-compatible smartphone apps.
+ */
+export const SUBSONIC_APIS = 'Subsonic APIs';
+
+/**
  * The "test" endpoints for test-helpers such as duplicating user accounts.
  */
 export const TEST_APIS = 'Test APIs';
@@ -74,6 +79,8 @@ export const JSON_MIME_TYPE = 'application/json';
 export const SYNOLOGY_AUTHENTICATED_REQUEST_DESCRIPTION = `The request must be authenticated using a valid Synology session ID and device ID cookie for the user, which can be obtained by signing in via the \`/entry.cgi\` endpoint, a two-step process requesting the encryption public key from \`/certs\` and then  submitting credentials encrypted with it.`;
 
 export const QNAP_AUTHENTICATED_REQUEST_DESCRIPTION = `The request must be authenticated using a valid JWT token passed as a URL parameter \`sid\`.`;
+
+export const SUBSONIC_AUTHENTICATED_REQUEST_DESCRIPTION = `The request must be authenticated using a valid plain password for the user provided in the URL query parameters.`;
 
 export const JWT_AUTHENTICATED_REQUEST_DESCRIPTION =
   'The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.';

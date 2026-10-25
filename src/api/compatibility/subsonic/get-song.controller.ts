@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
-import { SubsonicSongQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicSongQueryDto, SubsonicSongResponseDto } from './dtos';
 import { SubsonicSongService } from './get-song.service';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicSongController {
   constructor(private readonly service: SubsonicSongService) {}
 
-  @Get(['getSong', 'getSong.view'])
+  @SubsonicApiEndpoint(Get, 'getSong', HttpStatus.OK, {
+    summary: 'Get Song',
+    description: 'Retrieve a song by its identifier.',
+    responses: {
+      [HttpStatus.OK]: SubsonicSongResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getSong(
     @User() user: AccountEntity,

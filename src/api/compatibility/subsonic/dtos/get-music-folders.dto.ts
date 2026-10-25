@@ -1,4 +1,6 @@
+/* eslint-disable max-classes-per-file */
 import { IsInt, IsOptional } from 'class-validator';
+import { SubsonicResponseDto } from '../subsonic.dto';
 
 export class SubsonicMusicFolderQueryDto {
   /**
@@ -14,4 +16,8 @@ export class SubsonicMusicFolderQueryDto {
    */
   @IsInt()
   declare musicFolderId?: number;
+}
+
+export class SubsonicMusicFoldersResponseDto extends SubsonicResponseDto {
+  declare musicFolders: { musicFolder: { id: string; name: string }[] };
 }

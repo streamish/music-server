@@ -1,16 +1,19 @@
-import { Controller, Get, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { Get, HttpStatus, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicLicenseResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicLicenseController {
   // eslint-disable-next-line class-methods-use-this
-  @Get(['getLicense', 'getLicense.view'])
+  @SubsonicApiEndpoint(Get, 'getLicense', HttpStatus.OK, {
+    summary: 'Get License',
+    description: 'Retrieve the server license information.',
+    responses: {
+      [HttpStatus.OK]: SubsonicLicenseResponseDto,
+    },
+  })
   async getLicense(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const date = new Date();
     date.setFullYear(date.getFullYear() + 100);

@@ -1,22 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAlbumInfoQueryDto } from './dtos';
+import { Get, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicAlbumInfoQueryDto, SubsonicAlbumInfoResponseDto } from './dtos';
 import { SubsonicAlbumInfoService } from './get-album-info.service';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicAlbumInfoController {
   constructor(private readonly albumInfoService: SubsonicAlbumInfoService) {}
 
-  @Get(['getAlbumInfo', 'getAlbumInfo.view'])
-  @Header('server', 'Jetty(6.1.x)')
+  @SubsonicApiEndpoint(Get, 'getAlbumInfo', HttpStatus.OK, {
+    summary: 'Get Album Info',
+    description: 'Retrieve information about a specific album.',
+    responses: {
+      [HttpStatus.OK]: SubsonicAlbumInfoResponseDto,
+    },
+  })
   async getAlbumInfo(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumInfoQueryDto,
@@ -45,7 +46,13 @@ export class SubsonicAlbumInfoController {
     return objectToXml({ ...responsePayload }, 'subsonic-response');
   }
 
-  @Get(['getAlbumInfo2', 'getAlbumInfo2.view'])
+  @SubsonicApiEndpoint(Get, 'getAlbumInfo2', HttpStatus.OK, {
+    summary: 'Get Album Info 2',
+    description: 'Retrieve information about a specific album (version 2).',
+    responses: {
+      [HttpStatus.OK]: SubsonicAlbumInfoResponseDto,
+    },
+  })
   async getAlbumInfo2(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumInfoQueryDto,

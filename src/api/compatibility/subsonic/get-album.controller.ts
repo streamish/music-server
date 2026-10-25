@@ -1,21 +1,23 @@
 import { AccountEntity } from 'src/database/entities';
-import { Controller, Get, Header, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAlbumQueryDto } from './dtos';
+import { Get, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicAlbumQueryDto, SubsonicAlbumResponseDto } from './dtos';
 import { SubsonicAlbumService } from './get-album.service';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { User } from 'src/api/user.decorator';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicAlbumController {
   constructor(private readonly getAlbumService: SubsonicAlbumService) {}
 
-  @Get(['getAlbum', 'getAlbum.view'])
+  @SubsonicApiEndpoint(Get, 'getAlbum', HttpStatus.OK, {
+    summary: 'Get Album',
+    description: 'Retrieve an album and its songs.',
+    responses: {
+      [HttpStatus.OK]: SubsonicAlbumResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getAlbum(
     @User() user: AccountEntity,

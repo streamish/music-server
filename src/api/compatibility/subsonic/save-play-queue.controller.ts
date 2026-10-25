@@ -1,17 +1,20 @@
-import { Controller, Get, Header, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicSavePlayQueueResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicSavePlayQueueController {
   // Placeholder: accepts the request and reports success without persisting anything
   // eslint-disable-next-line class-methods-use-this
-  @Get(['savePlayQueue', 'savePlayQueue.view'])
+  @SubsonicApiEndpoint(Get, 'savePlayQueue', HttpStatus.OK, {
+    summary: 'Save Play Queue',
+    description: 'Report success for a play queue save request.',
+    responses: {
+      [HttpStatus.OK]: SubsonicSavePlayQueueResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   savePlayQueue(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responseData = {

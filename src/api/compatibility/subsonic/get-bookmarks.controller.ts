@@ -1,16 +1,19 @@
-import { Controller, Get, Header, Res, UseFilters, UseGuards } from '@nestjs/common';
-import { ResponseFormat } from './subsonic.decorator';
-import { SubsonicAuthGuard } from './subsonic.guard';
-import { SubsonicExceptionFilter } from './subsonic-exception.filter';
+import { Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { SubsonicBookmarksResponseDto } from './dtos';
 import { objectToXml } from 'src/utils/xml';
 import type { Response } from 'express';
 
-@Controller('rest')
-@UseFilters(SubsonicExceptionFilter)
-@UseGuards(SubsonicAuthGuard)
+@SubsonicController()
 export class SubsonicBookmarksController {
   // eslint-disable-next-line class-methods-use-this
-  @Get(['getBookmarks', 'getBookmarks.view'])
+  @SubsonicApiEndpoint(Get, 'getBookmarks', HttpStatus.OK, {
+    summary: 'Get Bookmarks',
+    description: 'Retrieve the user bookmarks.',
+    responses: {
+      [HttpStatus.OK]: SubsonicBookmarksResponseDto,
+    },
+  })
   @Header('server', 'Jetty(6.1.x)')
   async getBookmarks(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const responsePayload = {
