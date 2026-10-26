@@ -8,11 +8,11 @@ describe('/rest/ping', () => {
   async function ping(params: Record<string, string> = {}) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await api.GET('/rest/ping', { params: { query: params } } as any);
-    // note: 'any' is used because the authentication parameters are not defined on the
-    // endpoint but are required for all endpoints.  The reason for this is defining them
-    // on each request would then make every typed-request have to populate them manually
-    // and every controller would need a @Query() to capture them that may not be used
-    // except in the Subsonic guard.
+    // note: 'any' is used because the authentication and response parameters are not defined
+    // on the endpoint but are required for all endpoints.  The reason for this is defining
+    // them on each request would then make every typed-request have to populate them manually
+    // and every controller would need a @Query() to capture them so they are present in
+    // the OpenAPI spec.
     const typedData = data as paths['/rest/ping']['get']['responses']['200']['content']['application/json'];
     return { data: typedData['subsonic-response'], error };
   }

@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import {
   SubsonicAlbumList2QueryDto,
   SubsonicAlbumList2ResponseDto,
@@ -10,7 +10,7 @@ import {
 import { SubsonicAlbumListService } from './get-album-list.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -27,7 +27,7 @@ export class SubsonicAlbumListController {
   async getAlbumList(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumListQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -35,23 +35,15 @@ export class SubsonicAlbumListController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const album = await this.getAlbumListService.getAlbumList(user.id, query);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      albumList: {
-        album,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
+    return formatResponse(
+      {
+        albumList: {
+          album,
         },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+      },
+      isJsonResponse,
+      res,
+    );
   }
 
   @SubsonicApiEndpoint(Get, 'getAlbumList2', HttpStatus.OK, {
@@ -64,7 +56,7 @@ export class SubsonicAlbumListController {
   async getAlbumList2(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumList2QueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -72,22 +64,14 @@ export class SubsonicAlbumListController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const album = await this.getAlbumListService.getAlbumList2(user.id, query);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      albumList2: {
-        album,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
+    return formatResponse(
+      {
+        albumList2: {
+          album,
         },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+      },
+      isJsonResponse,
+      res,
+    );
   }
 }

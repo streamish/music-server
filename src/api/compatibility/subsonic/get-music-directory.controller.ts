@@ -1,11 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicDirectoryQueryDto, SubsonicMusicDirectoryResponseDto } from './dtos';
 import { SubsonicMusicDirectoryService } from './get-music-directory.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -22,7 +22,7 @@ export class SubsonicMusicDirectoryController {
   async getMusicDirectory(
     @User() user: AccountEntity,
     @Query() query: SubsonicMusicDirectoryQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,22 +30,6 @@ export class SubsonicMusicDirectoryController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const musicFolder = await this.getMusicDirectoryService.getMusicDirectory(user.id, query.id);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      musicDirectory: {
-        musicFolder,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ musicDirectory: { musicFolder } }, isJsonResponse, res);
   }
 }

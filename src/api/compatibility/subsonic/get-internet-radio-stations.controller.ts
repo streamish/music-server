@@ -1,11 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { ShoutcastService } from 'src/shoutcast/shoutcast.service';
 import { SubsonicInternetRadioStationsResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -21,30 +21,10 @@ export class SubsonicInternetRadioStationsController {
   })
   async getInternetRadioStations(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     const stations = await this.shoutcastService.listMostPlayedStations(user.id, 100_000);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      internetRadioStations: {
-        internetRadioStation: stations.map((station) => ({
-          id: `${station.id}`,
-          name: station.title,
-          streamUrl: station.url,
-        })),
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ internetRadioStations: stations }, isJsonResponse, res);
   }
 }

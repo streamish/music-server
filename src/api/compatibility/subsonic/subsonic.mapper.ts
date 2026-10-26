@@ -6,6 +6,7 @@ import {
   LibraryFolderDto,
   LibraryTrackDto,
 } from 'src/library/dtos';
+import { PlaylistEntity, PlaylistItemEntity } from 'src/database/entities';
 
 export function libraryTrackToRow(track: LibraryTrackDto) {
   return {
@@ -70,5 +71,33 @@ export function libraryFolderToRow(startingPath: LibraryFolderDto) {
   return {
     id: `${startingPath.id}`,
     name: startingPath.folder,
+  };
+}
+
+export function subsonicPlaylistToRow(
+  playlist: PlaylistEntity,
+  username: string,
+  items: PlaylistItemEntity[],
+  tracks: LibraryTrackDto[],
+) {
+  const trackRows = new Map(tracks.map((track) => [track.id, libraryTrackToRow(track)]));
+  const entry = items.flatMap((item) => {
+    if (item.trackId === null) {
+      return [];
+    }
+    const song = trackRows.get(item.trackId);
+    return song ? [song] : [];
+  });
+  return {
+    id: `${playlist.id}`,
+    name: playlist.name,
+    owner: username,
+    public: false,
+    songCount: entry.length,
+    duration: entry.reduce((duration, song) => duration + Number(song.duration), 0),
+    created: playlist.createdAt.toISOString(),
+    changed: playlist.updatedAt?.toISOString(),
+    coverArt: entry[0]?.coverArt,
+    entry,
   };
 }

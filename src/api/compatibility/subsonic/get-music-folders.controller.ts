@@ -1,9 +1,9 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicFoldersResponseDto } from './dtos';
 import { SubsonicMusicFoldersService } from './get-music-folders.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -17,24 +17,8 @@ export class SubsonicMusicFoldersController {
       [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicMusicFoldersResponseDto),
     },
   })
-  async getMusicFolders(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
+  async getMusicFolders(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const musicFolder = await this.getMusicFoldersService.getMusicFolders();
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      musicFolders: {
-        musicFolder,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ musicFolders: { musicFolder } }, isJsonResponse, res);
   }
 }

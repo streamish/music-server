@@ -1,11 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNowPlayingResponseDto } from './dtos';
 import { SubsonicNowPlayingService } from './get-now-playing.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -21,7 +21,7 @@ export class SubsonicNowPlayingController {
   })
   async getNowPlaying(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -29,20 +29,6 @@ export class SubsonicNowPlayingController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const nowPlaying = await this.service.getNowPlaying(user.id);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      nowPlaying,
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ nowPlaying }, isJsonResponse, res);
   }
 }

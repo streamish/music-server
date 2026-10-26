@@ -1,11 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicTopSongsQueryDto, SubsonicTopSongsResponseDto } from './dtos';
 import { SubsonicTopSongsService } from './get-top-songs.service';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -22,7 +22,7 @@ export class SubsonicTopSongsController {
   async getTopSongs(
     @User() user: AccountEntity,
     @Query() query: SubsonicTopSongsQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,22 +30,6 @@ export class SubsonicTopSongsController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const songs = await this.service.getTopSongs(user.id, query);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      topSongs: {
-        song: songs,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ topSongs: { song: songs } }, isJsonResponse, res);
   }
 }

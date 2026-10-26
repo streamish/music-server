@@ -1,11 +1,11 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicIndexesQueryDto, SubsonicIndexesResponseDto } from './dtos';
 import { SubsonicIndexesService } from './get-indexes.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -22,7 +22,7 @@ export class SubsonicIndexesController {
   async getIndexes(
     @User() user: AccountEntity,
     @Query() query: SubsonicIndexesQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,20 +30,6 @@ export class SubsonicIndexesController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const indexes = await this.getIndexesService.getIndexes(user.id, query.musicFolderId);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      indexes,
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ indexes }, isJsonResponse, res);
   }
 }
