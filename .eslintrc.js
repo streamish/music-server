@@ -44,6 +44,8 @@ module.exports = {
     'max-len': ['error', { code: 120 }],
     // allow named exports even if there's only one
     'import/prefer-default-export': 'off',
+    // no stray log messages
+    'no-console': 'error',
   },
   overrides: [
     {

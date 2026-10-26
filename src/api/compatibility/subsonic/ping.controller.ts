@@ -16,7 +16,6 @@ export class SubsonicPingController {
     },
   })
   ping(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
-    console.log('Ping request received', IsJsonResponse);
     return formatResponse({}, isJsonResponse, res);
   }
 }
