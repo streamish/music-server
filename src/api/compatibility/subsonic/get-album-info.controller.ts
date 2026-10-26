@@ -5,7 +5,7 @@ import { SubsonicAlbumInfoQueryDto, SubsonicAlbumInfoResponseDto } from './dtos'
 import { SubsonicAlbumInfoService } from './get-album-info.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -30,21 +30,13 @@ export class SubsonicAlbumInfoController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const albumInfo = await this.albumInfoService.getAlbumInfo(user.id, query.id);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      albumInfo,
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse(
+      {
+        albumInfo,
+      },
+      jsonResponse,
+      res,
+    );
   }
 
   @SubsonicApiEndpoint(Get, 'getAlbumInfo2', HttpStatus.OK, {
@@ -65,21 +57,13 @@ export class SubsonicAlbumInfoController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
 
-    await this.albumInfoService.getAlbumInfo2(user.id, query.id);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      albumInfo: {},
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    const albumInfo = await this.albumInfoService.getAlbumInfo2(user.id, query.id);
+    return formatResponse(
+      {
+        albumInfo,
+      },
+      jsonResponse,
+      res,
+    );
   }
 }

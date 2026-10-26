@@ -2,7 +2,7 @@ import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSavePlayQueueResponseDto } from './dtos';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -17,17 +17,6 @@ export class SubsonicSavePlayQueueController {
     },
   })
   savePlayQueue(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
-    const responseData = {
-      'subsonic-response': {
-        status: 'ok',
-        version: '1.16.1',
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return responseData;
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml(responseData, 'subsonic-response');
+    return formatResponse({}, jsonResponse, res);
   }
 }

@@ -5,7 +5,7 @@ import { SubsonicArtistQueryDto, SubsonicArtistResponseDto } from './dtos';
 import { SubsonicArtistService } from './get-artist.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -30,20 +30,12 @@ export class SubsonicArtistController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const artist = await this.getArtistService.getArtist(user.id, query.id);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      artist,
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse(
+      {
+        artist,
+      },
+      jsonResponse,
+      res,
+    );
   }
 }

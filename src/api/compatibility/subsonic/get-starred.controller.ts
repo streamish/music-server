@@ -4,7 +4,7 @@ import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subso
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicStarredResponseDto } from './dtos';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -26,21 +26,7 @@ export class SubsonicStarredController {
       `player-${user.username}=2;Path=/;Expires=Sat, 23-Oct-27 23:58:03 GMT`,
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      starred: {},
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ starred: {} }, jsonResponse, res);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -60,20 +46,6 @@ export class SubsonicStarredController {
       `player-${user.username}=2;Path=/;Expires=Sat, 23-Oct-27 23:58:03 GMT`,
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      starred: {},
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ starred: {} }, jsonResponse, res);
   }
 }

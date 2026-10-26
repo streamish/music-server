@@ -2,7 +2,7 @@ import { Get, HttpStatus, Res } from '@nestjs/common';
 import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNewestPodcastsResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -16,20 +16,6 @@ export class SubsonicNewestPodcastsController {
     },
   })
   async getNewestPodcasts(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      newestPodcasts: {},
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ newestPodcasts: {} }, jsonResponse, res);
   }
 }

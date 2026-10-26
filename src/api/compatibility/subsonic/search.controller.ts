@@ -5,7 +5,7 @@ import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSearchQueryDto, SubsonicSearchResponseDto } from './dtos';
 import { SubsonicSearchService } from './search.service';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -30,20 +30,6 @@ export class SubsonicSearchController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const searchResult = await this.service.search(user.id, query);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      searchResult,
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse(searchResult, jsonResponse, res);
   }
 }

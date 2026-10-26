@@ -5,7 +5,7 @@ import { SubsonicRandomSongsQueryDto, SubsonicRandomSongsResponseDto } from './d
 import { SubsonicRandomSongsService } from './get-random-songs.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -30,22 +30,6 @@ export class SubsonicRandomSongsController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const songs = await this.service.getRandomSongs(user.id, query);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      randomSongs: {
-        song: songs,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ randomSongs: { song: songs } }, jsonResponse, res);
   }
 }

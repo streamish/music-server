@@ -5,7 +5,7 @@ import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicTopSongsQueryDto, SubsonicTopSongsResponseDto } from './dtos';
 import { SubsonicTopSongsService } from './get-top-songs.service';
 import { User } from 'src/api/user.decorator';
-import { objectToXml } from 'src/utils/xml';
+import { formatResponse } from './subsonic.response';
 import type { Response } from 'express';
 
 @SubsonicController()
@@ -30,22 +30,6 @@ export class SubsonicTopSongsController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const songs = await this.service.getTopSongs(user.id, query);
-    const responsePayload = {
-      status: 'ok',
-      version: '1.16.1',
-      topSongs: {
-        song: songs,
-      },
-    };
-    if (jsonResponse) {
-      res.setHeader('Content-Type', 'application/json');
-      return {
-        'subsonic-response': {
-          ...responsePayload,
-        },
-      };
-    }
-    res.setHeader('Content-Type', 'application/xml');
-    return objectToXml({ ...responsePayload }, 'subsonic-response');
+    return formatResponse({ topSongs: { song: songs } }, jsonResponse, res);
   }
 }
