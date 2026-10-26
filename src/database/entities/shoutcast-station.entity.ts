@@ -54,6 +54,13 @@ export class ShoutcastStationEntity extends Model<ShoutcastStationEntity> {
   })
   declare id: number;
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  declare playCount: number;
+
   /**
    * The title of the genre
    */

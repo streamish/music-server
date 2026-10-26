@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ErrorCodes } from 'src/constants/error-codes';
 import { FavoriteItemEntity, ShoutcastGenreEntity, ShoutcastStationEntity } from 'src/database/entities';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { ShoutcastGenreDto, ShoutcastStationDto } from './dtos';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
 import type { ListResult } from 'src/types/list-result';
@@ -17,6 +18,7 @@ function stationToRow(item: ShoutcastStationEntity): ShoutcastStationDto {
   return {
     favoriteId: item.favorite?.id,
     id: item.id,
+    playCount: item.playCount ?? 0,
     title: item.title,
     type: item.type,
     url: item.url || '',
@@ -149,6 +151,7 @@ export class ShoutcastService {
       items: response.map((station) => {
         return {
           id: 0,
+          playCount: 0,
           title: station.Name,
           type: ShoutcastItemTypeEnum.STATION,
           url: `http://yp.shoutcast.com/sbin/tunein-station.pls?id=${station.ID}`,
@@ -184,6 +187,46 @@ export class ShoutcastService {
       items: data.rows.map((item) => stationToRow(item)),
       total: data.count,
     };
+  }
+
+  /**
+   * Lists the stations for a user ranked by play count, most played first.
+   * @param accountId The account to list stations for
+   * @param limit The maximum number of stations to return
+   * @param onlyPlayed Excludes stations that have never been played
+   * @returns The stations ordered by play count descending
+   */
+  async listMostPlayedStations(accountId: number, limit: number, onlyPlayed = false): Promise<ShoutcastStationDto[]> {
+    const rows = await this.shoutcastStationEntity.findAll({
+      where: {
+        accountId,
+        type: ShoutcastItemTypeEnum.STATION,
+        ...(onlyPlayed && { playCount: { [Op.gt]: 0 } }),
+      },
+      include: [
+        {
+          model: FavoriteItemEntity,
+          required: false,
+        },
+      ],
+      order: [
+        ['playCount', 'DESC'],
+        ['title', 'ASC'],
+      ],
+      limit,
+    });
+    return rows.map((item) => stationToRow(item));
+  }
+
+  /**
+   * Increments the play count of the user's saved stations that match the stream URL.
+   * @param accountId The account the stream belongs to
+   * @param url The station stream URL
+   */
+  async incrementStationPlayCount(accountId: number, url: string) {
+    await this.shoutcastStationEntity.increment('playCount', {
+      where: { accountId, type: ShoutcastItemTypeEnum.STATION, url },
+    });
   }
 
   /**

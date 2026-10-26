@@ -39,7 +39,7 @@ The server also has preliminary support for Subsonic-compatible apps as a first-
 | Lyrics                | ⬜                 | ⬜             | ⬜               | ⬜           | ⬜       |
 | Play downloaded songs | ✅                 | ✅             | ✅               | ✅           | ✅       |
 | Playlists             | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
-| Radio                 | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
+| Radio                 | ✅                 | ✅             | ✅               | ✅           | ✅       |
 | Rating                | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
 | Recently added        | ✅                 | ✅             | ✅               | ⬜           | ✅       |
 | Share media           | ✖️                 | ✖️             | ⬜               | ⬜           | ⬜       |

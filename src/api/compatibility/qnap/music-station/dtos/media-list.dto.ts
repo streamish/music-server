@@ -213,7 +213,7 @@ export class QnapMediaListBucketQueryDto {
     type: 'string',
     default: 'myfavorite',
   })
-  @IsEnum(['myfavorite', 'get_spotlight_list', 'recycle'])
+  @IsEnum(['myfavorite', 'get_spotlight_list', 'get_radio_spotlight_list', 'recycle'])
   declare type: string;
 }
 

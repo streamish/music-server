@@ -8,6 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { LibraryAlbumDto, LibraryAssociationDto, LibraryFolderDto, LibraryTrackDto } from 'src/library/dtos';
 import { LibraryService } from 'src/library/library.service';
+import { ShoutcastService } from 'src/shoutcast/shoutcast.service';
 import { sep } from 'path';
 
 function songToRow(track: LibraryTrackDto) {
@@ -78,7 +79,10 @@ function folderToRow(folder: LibraryFolderDto) {
 
 @Injectable()
 export class QnapMediaListService {
-  constructor(private readonly libraryService: LibraryService) {}
+  constructor(
+    private readonly libraryService: LibraryService,
+    private readonly shoutcastService: ShoutcastService,
+  ) {}
 
   async listRandomArtists(accountId: number, limit: number) {
     const artists = await this.libraryService.listAlbumAssociations(
@@ -302,6 +306,22 @@ export class QnapMediaListService {
     return {
       datas: {
         data: tracks.map(songToRow),
+      },
+    };
+  }
+
+  async listStationsFrequentlyPlayed(accountId: number) {
+    const stations = await this.shoutcastService.listMostPlayedStations(accountId, 250, true);
+    return {
+      datas: {
+        data: stations.map((station) => ({
+          FileName: station.title,
+          FilePath: station.url,
+          FileType: 'radio',
+          LinkID: `radio_${station.id}`,
+          Title: station.title,
+          UseCount: station.playCount,
+        })),
       },
     };
   }

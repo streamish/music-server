@@ -144,12 +144,12 @@ export class ApiShoutcastService {
    * @param stationUrl The URL of the SHOUTcast station to create a stream for
    * @param response The HTTP response object to pipe the stream to
    */
-  // eslint-disable-next-line class-methods-use-this
-  async proxyStream(stationUrl: string, response: Response) {
+  async proxyStream(accountId: number, stationUrl: string, response: Response) {
     const stream = await startStream(stationUrl);
     if (!stream) {
       throw new InternalServerErrorException(ErrorCodes.INVALID_SHOUTCAST_STATION_URL_ERROR);
     }
+    await this.shoutcastService.incrementStationPlayCount(accountId, stationUrl);
     stream.pipe(response);
   }
 

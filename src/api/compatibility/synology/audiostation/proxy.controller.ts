@@ -1,3 +1,4 @@
+import { AccountEntity } from 'src/database/entities';
 import { AllowGuest } from '../../../role.guard';
 import { Body, Get, HttpStatus, Logger, Post, Query, Res } from '@nestjs/common';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
@@ -11,6 +12,7 @@ import {
 } from './dtos/proxy.cgi.dto';
 import { SynologyProxyService } from './proxy.service';
 import { SynologySuccessResponseDto } from './synology.response.dto';
+import { User } from 'src/api/user.decorator';
 import { plainToInstance } from 'class-transformer';
 import type { Response } from 'express';
 
@@ -34,6 +36,7 @@ export class SynologyProxyController {
     bodyModels: [SynologyProxyStreamInfoBodyDto, SynologyProxySongInfoBodyDto, SynologyProxyDeleteSongInfoBodyDto],
   })
   async route(
+    @User() user: AccountEntity,
     @Body()
     variousBodies: SynologyProxyStreamInfoBodyDto | SynologyProxySongInfoBodyDto | SynologyProxyDeleteSongInfoBodyDto,
   ): Promise<SynologyProxyStreamInfoResponseDto | SynologyProxySongInfoResponseDto | SynologySuccessResponseDto> {
@@ -42,7 +45,7 @@ export class SynologyProxyController {
       // 1) `id` of the SHOUTcast radio station is `radio_<station title> <station url>`
       // 2) `id` of the SHOUTcast radio station is `<container>_<genre> <favorite title>`
       const body = plainToInstance(SynologyProxyStreamInfoBodyDto, variousBodies);
-      const data = await this.proxyService.createStream(body.id);
+      const data = await this.proxyService.createStream(user.id, body.id);
       return {
         data,
         success: true,

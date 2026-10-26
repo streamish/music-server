@@ -12,6 +12,12 @@ export class ShoutcastStationDto {
   @IsInt()
   declare id: number;
 
+  /**
+   * The number of times the station has been played.
+   */
+  @IsInt()
+  declare playCount: number;
+
   @IsString()
   declare title: string;
 
