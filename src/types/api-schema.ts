@@ -2007,7 +2007,7 @@ export type paths = {
     };
     /**
      * Get Internet Radio Stations
-     * @description Retrieve configured internet radio stations.
+     * @description Retrieve configured internet radio stations, ranked by play count.
      *
      *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
      */
@@ -2029,7 +2029,7 @@ export type paths = {
     };
     /**
      * Get Internet Radio Stations
-     * @description Retrieve configured internet radio stations.
+     * @description Retrieve configured internet radio stations, ranked by play count.
      *
      *     The request must be authenticated using a valid plain password for the user provided in the URL query parameters.
      */
@@ -6531,6 +6531,8 @@ export type components = {
       /** @description The favorite data for the station if it exists */
       favoriteId?: number;
       id: number;
+      /** @description The number of times the station has been played. */
+      playCount: number;
       title: string;
       /**
        * @description The `type` value is `container` for SHOUTcast genres, and
@@ -6685,7 +6687,14 @@ export type components = {
     SubsonicIndexesResponseEnvelopeDto: {
       'subsonic-response': components['schemas']['SubsonicIndexesResponseDto'];
     };
-    SubsonicInternetRadioStationsDataDto: Record<string, never>;
+    SubsonicInternetRadioStationDto: {
+      id: string;
+      name: string;
+      streamUrl: string;
+    };
+    SubsonicInternetRadioStationsDataDto: {
+      internetRadioStation: components['schemas']['SubsonicInternetRadioStationDto'][];
+    };
     SubsonicInternetRadioStationsResponseDto: {
       internetRadioStations: components['schemas']['SubsonicInternetRadioStationsDataDto'];
       status: string;
