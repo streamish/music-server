@@ -199,7 +199,6 @@ export class LibraryTransformerService {
 
   // eslint-disable-next-line class-methods-use-this
   convertTrackEntityToLibraryTrack(track: TrackEntity): LibraryTrackDto {
-    console.log('Converting track entity to library track:', track);
     return {
       albumArtists:
         track.album?.albumArtists?.map((associationLink) => ({
