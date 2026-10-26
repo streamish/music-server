@@ -306,6 +306,22 @@ export class QnapMediaListService {
     };
   }
 
+  async listTracksFrequentlyPlayed(accountId: number) {
+    const tracks = await this.libraryService.listTracks(
+      accountId,
+      {},
+      0,
+      250,
+      TrackSortFieldEnum.PLAY_COUNT,
+      SortDirectionEnum.DESC,
+    );
+    return {
+      datas: {
+        data: tracks.items.filter((track) => track.playCount > 0).map(songToRow),
+      },
+    };
+  }
+
   async listTracksRecentlyAdded(accountId: number) {
     const tracks = await this.libraryService.listTracks(
       accountId,
