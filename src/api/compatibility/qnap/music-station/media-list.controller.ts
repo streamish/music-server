@@ -174,6 +174,10 @@ export class QnapMediaListController {
         return objectToXml({ status: 1, ...spotlightList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
       // Route #12:  list frequently played
+      if (query.type === 'get_radio_spotlight_list' && query.linkid === 'Mw-3D-3D') {
+        const frequentStations = await this.mediaListApiService.listStationsFrequentlyPlayed(user.id);
+        return objectToXml({ status: 1, ...frequentStations }, 'QDocRoot version="1.0"', 'QDocRoot');
+      }
       if (query.type === 'get_spotlight_list' && query.linkid === 'Mw-3D-3D') {
         const frequentList = await this.mediaListApiService.listTracksFrequentlyPlayed(user.id);
         return objectToXml({ status: 1, ...frequentList }, 'QDocRoot version="1.0"', 'QDocRoot');

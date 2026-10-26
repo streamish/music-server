@@ -26,6 +26,11 @@ export async function up(queryInterface: QueryInterface) {
       autoIncrement: true,
       allowNull: false,
     },
+    play_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     title: DataTypes.STRING(255),
     type: DataTypes.STRING(50),
     updated_at: {

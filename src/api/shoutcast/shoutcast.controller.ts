@@ -185,8 +185,12 @@ export class ApiShoutcastController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(ProxyShoutcastStreamQueryDto),
     },
   })
-  async proxyStream(@Query() query: ProxyShoutcastStreamQueryDto, @Res() response: Response) {
-    await this.shoutcastService.proxyStream(query.shoutcastStationUrl, response);
+  async proxyStream(
+    @User() user: AccountEntity,
+    @Query() query: ProxyShoutcastStreamQueryDto,
+    @Res() response: Response,
+  ) {
+    await this.shoutcastService.proxyStream(user.id, query.shoutcastStationUrl, response);
   }
 
   @ApiEndpoint(Get, 'retrieve-shoutcast-playing', HttpStatus.OK, {

@@ -17,11 +17,18 @@ import { QnapMediaToolService } from './media-tool.service';
 import { QnapSysRequestController } from './sys-request.controller';
 import { QnapSysRequestService } from './sys-request.service';
 import { SequelizeModule } from '@nestjs/sequelize/dist/sequelize.module';
+import { ShoutcastModule } from 'src/shoutcast/shoutcast.module';
 import { StreamingModule } from 'src/streaming/streaming.module';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
-  imports: [CoverImagesModule, LibraryModule, SequelizeModule.forFeature(entitiesList), StreamingModule],
+  imports: [
+    CoverImagesModule,
+    LibraryModule,
+    SequelizeModule.forFeature(entitiesList),
+    ShoutcastModule,
+    StreamingModule,
+  ],
   controllers: [
     QnapAsGetFileController,
     QnapAsLocalPlaybackController,

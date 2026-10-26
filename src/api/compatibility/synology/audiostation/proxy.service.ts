@@ -84,8 +84,9 @@ export class SynologyProxyService {
     return favorite.url;
   }
 
-  async createStream(stationIdentifier: string) {
+  async createStream(accountId: number, stationIdentifier: string) {
     const streamUrl = await this.getStreamUrl(stationIdentifier);
+    await this.shoutcastService.incrementStationPlayCount(accountId, streamUrl);
     const existingStream = this.streams.find((s) => s.streamUrl === streamUrl);
     if (!existingStream) {
       const stream = await startStream(streamUrl);
