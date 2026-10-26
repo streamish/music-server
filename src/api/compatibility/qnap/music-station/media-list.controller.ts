@@ -173,9 +173,13 @@ export class QnapMediaListController {
         const spotlightList = await this.mediaListApiService.listTracksRecentlyAdded(user.id);
         return objectToXml({ status: 1, ...spotlightList }, 'QDocRoot version="1.0"', 'QDocRoot');
       }
+      // Route #12:  list frequently played
+      if (query.type === 'get_spotlight_list' && query.linkid === 'Mw-3D-3D') {
+        const frequentList = await this.mediaListApiService.listTracksFrequentlyPlayed(user.id);
+        return objectToXml({ status: 1, ...frequentList }, 'QDocRoot version="1.0"', 'QDocRoot');
+      }
     }
     // return an empty list for unsupported routes including:
-    // Route #12:  list frequently played
     // Route #13:  list favorites
     // Route #14:  list trash
     return objectToXml(

@@ -34,8 +34,8 @@ The server also has preliminary support for Subsonic-compatible apps as a first-
 | Browse genres         | ✅                 | ✅             | ✅               | ✅           | ✅       |
 | Browse songs          | ✅                 | ✅             | ✅               | ✅           | ✅       |
 | Download songs        | ✅                 | ✅             | ✅               | ✅           | ✅       |
-| Favorites / Pins      | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |
-| Frequently played     | ⬜                 | ⬜             | ⬜               | ⬜           | ⬜       |
+| Favorites / Pins      | ✅                 | ✅             | ✅               | ✅           | ✅       |
+| Frequently played     | ✖️                 | ✖️             | ⬜               | ⬜           | ⬜       |
 | Lyrics                | ⬜                 | ⬜             | ⬜               | ⬜           | ⬜       |
 | Play downloaded songs | ✅                 | ✅             | ✅               | ✅           | ✅       |
 | Playlists             | ✅                 | ✅             | ⬜               | ⬜           | ⬜       |

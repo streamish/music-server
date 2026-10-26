@@ -683,6 +683,7 @@ export class LibraryQueryService {
   ): Promise<FindOptions<TrackEntity>> {
     // the sort column can be an actual field or a derived field from joined tables
     let sortFieldColumn: string | undefined;
+    let numericSort = false;
     // the additional sort fields allow sorting by values concatenated from joined tables
     const additionalSortFields: FindAttributeOptions = [];
     switch (sortField) {
@@ -726,11 +727,19 @@ export class LibraryQueryService {
       case TrackSortFieldEnum.TITLE:
         sortFieldColumn = 'TrackEntity.title';
         break;
+      case TrackSortFieldEnum.PLAY_COUNT:
+        numericSort = true;
+        break;
       default:
         break;
     }
     const order: OrderItem[] = [];
-    if (sortFieldColumn) {
+    if (numericSort) {
+      order.push(
+        ['playCount', sortDirection || 'DESC'],
+        [Sequelize.fn('lower', Sequelize.col('TrackEntity.title')), 'ASC'],
+      );
+    } else if (sortFieldColumn) {
       order.push([Sequelize.fn('lower', Sequelize.col(sortFieldColumn as string)), sortDirection || 'ASC']);
     } else {
       order.push(

@@ -167,4 +167,5 @@ export enum TrackSortFieldEnum {
   GENRE = 'genre',
   TITLE = 'title',
   YEAR = 'year',
+  PLAY_COUNT = 'play_count',
 }

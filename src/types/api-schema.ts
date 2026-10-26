@@ -17069,6 +17069,7 @@ export enum TrackSortFieldEnum {
   genre = 'genre',
   title = 'title',
   year = 'year',
+  play_count = 'play_count',
 }
 export enum UserRoleEnum {
   admin = 'admin',
