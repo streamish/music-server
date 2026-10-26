@@ -34,6 +34,7 @@ export class SynologyStreamController {
     const streamInfo = await this.streamingService.getTrack(user.id, query.id);
     return this.streamingService.streamFile(streamInfo.path, streamInfo.codec, request, response, {
       fileName: `track.${query.id}.${streamInfo.codec}`,
+      trackId: streamInfo.trackId,
       etag: `file-${query.id}-${streamInfo.updatedAt.getTime()}`,
     });
   }

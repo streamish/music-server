@@ -143,6 +143,13 @@ export class TrackEntity extends Model<TrackEntity> {
   })
   declare id: number;
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  })
+  declare playCount: number;
+
   @HasMany(() => PlaylistItemEntity)
   declare playlistItems?: PlaylistItemEntity[];
 

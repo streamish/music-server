@@ -32,6 +32,7 @@ export class SubsonicStreamController {
     const streamInfo = await this.streamingService.getTrack(user.id, query.id);
     return this.streamingService.streamFile(streamInfo.path, streamInfo.codec, request, res, {
       fileName: `track.${query.id}.${streamInfo.codec}`,
+      trackId: streamInfo.trackId,
     });
   }
 }

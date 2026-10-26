@@ -13,11 +13,13 @@ export interface TrackStreamInfo {
   codec: FileTypeEnum;
   fileSize: number;
   updatedAt: Date;
+  trackId: number;
 }
 
 interface StreamOptions {
   fileName: string;
   etag?: string;
+  trackId?: number;
 }
 
 interface ByteRange {
@@ -36,7 +38,7 @@ export class StreamingService {
 
   async getTrack(accountId: number, trackId: number): Promise<TrackStreamInfo> {
     const track = await this.trackEntity.findOne({
-      attributes: ['createdAt', 'filePath', 'fileSize', 'fileType', 'updatedAt'],
+      attributes: ['id', 'createdAt', 'filePath', 'fileSize', 'fileType', 'updatedAt'],
       where: {
         id: trackId,
         accountId,
@@ -52,6 +54,7 @@ export class StreamingService {
       throw new NotFoundException('Track not found');
     }
     return {
+      trackId: track.id,
       path: join(track.rootPath.rootPath, track.filePath),
       codec: track.fileType,
       fileSize: track.fileSize || 0,
@@ -109,10 +112,20 @@ export class StreamingService {
         'Content-Length': String(range.end - range.start + 1),
         'Content-Range': `bytes ${range.start}-${range.end}/${fileStats.size}`,
       });
+      if (range.start === 0) {
+        await this.incrementPlayCount(options.trackId);
+      }
       return new StreamableFile(createReadStream(path, range));
     }
     response.set('Content-Length', String(fileStats.size));
+    await this.incrementPlayCount(options.trackId);
     return new StreamableFile(createReadStream(path));
+  }
+
+  private async incrementPlayCount(trackId?: number) {
+    if (trackId !== undefined) {
+      await this.trackEntity.increment('playCount', { where: { id: trackId } });
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this

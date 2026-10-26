@@ -35,7 +35,7 @@ function songToRow(track: LibraryTrackDto) {
     SongID: track.id,
     Title: track.title,
     Tracknumber: track.trackNumber,
-    UseCount: 0,
+    UseCount: track.playCount,
     Year: track.year,
   };
 }

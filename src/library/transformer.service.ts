@@ -243,6 +243,7 @@ export class LibraryTransformerService {
           createdAt: associationLink.association?.createdAt || new Date(),
         })) || [],
       id: track.id,
+      playCount: track.playCount ?? 0,
       rating: track.rating ?? 0,
       rootPathId: track.rootPathId,
       title: replaceDoubleQuotes(track.title),
