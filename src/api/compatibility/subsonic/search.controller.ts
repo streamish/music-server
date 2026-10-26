@@ -30,6 +30,6 @@ export class SubsonicSearchController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const searchResult = await this.service.search(user.id, query);
-    return formatResponse(searchResult, jsonResponse, res);
+    return formatResponse({ searchResult }, jsonResponse, res);
   }
 }
