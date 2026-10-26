@@ -2,7 +2,6 @@ import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
 import { QnapAsGetFileController } from './as-get-file.controller';
-import { QnapAsGetFileService } from './as-get-file.service';
 import { QnapAsLocalPlaybackController } from './as-local-playback.controller';
 import { QnapAsLocalPlaybackService } from './as-local-playback.service';
 import { QnapAsLoginController } from './as-login.controller';
@@ -18,10 +17,11 @@ import { QnapMediaToolService } from './media-tool.service';
 import { QnapSysRequestController } from './sys-request.controller';
 import { QnapSysRequestService } from './sys-request.service';
 import { SequelizeModule } from '@nestjs/sequelize/dist/sequelize.module';
+import { StreamingModule } from 'src/streaming/streaming.module';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
-  imports: [CoverImagesModule, LibraryModule, SequelizeModule.forFeature(entitiesList)],
+  imports: [CoverImagesModule, LibraryModule, SequelizeModule.forFeature(entitiesList), StreamingModule],
   controllers: [
     QnapAsGetFileController,
     QnapAsLocalPlaybackController,
@@ -33,7 +33,6 @@ import { entitiesList } from 'src/database/entities';
     QnapSysRequestController,
   ],
   providers: [
-    QnapAsGetFileService,
     QnapAsLocalPlaybackService,
     QnapAsLoginService,
     QnapAuthLoginService,

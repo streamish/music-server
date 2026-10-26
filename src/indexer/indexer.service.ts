@@ -1,8 +1,5 @@
 import { AssociationTypeEnum } from 'src/types/enums';
-import { ConfigService } from 'src/config/config.service';
-import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { FSWatcher, readdir, stat, watch } from 'node:fs';
 import { FileItem, FileUpdateItem, LogEntry } from './types';
 import { IAudioMetadata, IOptions } from 'src/types/music-metadata';
 import { IndexAlbumService } from './index-album.service';
@@ -16,6 +13,7 @@ import { Op } from 'sequelize';
 import { SystemConfigurationEntity } from 'src/database/entities/system-configurations.entity';
 import { basename, join, sep } from 'node:path';
 import { promisify } from 'util';
+import { readdir, stat } from 'node:fs';
 
 const readDirAsync = promisify(readdir);
 const statAsync = promisify(stat);
@@ -25,12 +23,6 @@ const validFiles = ['mp3', 'flac', 'ogg', 'm4a'];
 export class IndexerService {
   private readonly logger: Logger = new Logger(IndexerService.name);
 
-  private readonly scannerQueue: number[] = [];
-
-  private readonly watchedFolders: Record<number, FSWatcher> = {};
-
-  private isIndexing: boolean = false;
-
   public readonly logs: LogEntry[] = [];
 
   private logSizeLimit: number = 1000;
@@ -38,7 +30,6 @@ export class IndexerService {
   private parseMetaData!: (filePath: string, options?: IOptions) => Promise<IAudioMetadata>;
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly indexAlbumService: IndexAlbumService,
     private readonly indexAssociationService: IndexAssociationService,
     private readonly indexFileService: IndexTrackService,
@@ -53,142 +44,6 @@ export class IndexerService {
     private readonly systemConfigurationEntity: typeof SystemConfigurationEntity,
   ) {}
 
-  @Timeout(1000)
-  async manualStart() {
-    this.addLogEntry(0, 0, 'Queueing root paths (manualStart)');
-    await this.refreshFileWatchers();
-    await this.scanQueuedPaths();
-  }
-
-  @Timeout(1)
-  async testingStart() {
-    if (this.configService.isTesting()) {
-      const rootPaths = await this.rootPathEntity.findAll({
-        attributes: ['id', 'rootPath'],
-      });
-      for (let i = 0, len = rootPaths.length; i < len; i += 1) {
-        const rootPath = rootPaths[i];
-        if (rootPath) {
-          this.scannerQueue.push(rootPath.id);
-        }
-      }
-      for (let i = this.scannerQueue.length - 1; i > -1; i -= 1) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.scanQueuedPaths();
-      }
-    }
-    this.addLogEntry(0, 0, 'Finished test indexing');
-  }
-
-  /**
-   * Scans all root paths once an hour for any changes to the files and folders that
-   * weren't detected by the file system watcher. This is a backup to ensure that any changes
-   * that are missed by the file system watcher are still detected and processed.
-   * @returns {Promise<void>}
-   */
-  @Cron(CronExpression.EVERY_HOUR)
-  async periodicRefresh() {
-    this.addLogEntry(0, 0, 'Queueing root paths (periodicRefresh)');
-    // load the root paths to scan
-    const rootPaths = await this.rootPathEntity.findAll({
-      attributes: ['id'],
-    });
-    for (let i = 0, len = rootPaths.length; i < len; i += 1) {
-      const rootPath = rootPaths[i];
-      if (rootPath) {
-        if (this.scannerQueue.indexOf(rootPath.id) === -1) {
-          this.scannerQueue.push(rootPath.id);
-        }
-      }
-    }
-  }
-
-  /**
-   * Periodically do a SQLite vacuum to clean up
-   */
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async vacuumDatabase() {
-    this.addLogEntry(0, 0, 'Vacuuming database');
-    await this.trackEntity.sequelize?.query('VACUUM');
-  }
-
-  /**
-   * Periodically checks for deletions and additions to the root paths and sets up or
-   * destroys their filesystem watcher.
-   */
-  @Interval(10000)
-  async refreshFileWatchers() {
-    const rootPaths = await this.rootPathEntity.findAll({
-      attributes: ['id', 'rootPath'],
-    });
-    // set file watchers on any new root paths
-    for (let i = 0, len = rootPaths.length; i < len; i += 1) {
-      const rootPath = rootPaths[i];
-      if (rootPath) {
-        if (!this.watchedFolders[rootPath.id]) {
-          this.addLogEntry(0, 0, `Setting up watcher for root path: ${rootPath.rootPath}`);
-          const watcher = watch(rootPath.rootPath, async (eventType, filename) => {
-            this.addLogEntry(
-              0,
-              0,
-              `File system event detected: ${eventType} - ${filename} (root path: ${rootPath.rootPath})`,
-            );
-            if (this.scannerQueue.indexOf(rootPath.id) === -1) {
-              this.scannerQueue.push(rootPath.id);
-            }
-          });
-          this.watchedFolders[rootPath.id] = watcher;
-          this.scannerQueue.push(rootPath.id);
-        }
-      }
-    }
-    // delete obsolete watchers
-    const currentIndexedRootPathIds = rootPaths.map((rootPath) => rootPath.id);
-    const watchingRootPathIds = Object.keys(this.watchedFolders).map((id) => parseInt(id, 10));
-    for (let i = 0, len = watchingRootPathIds.length; i < len; i += 1) {
-      const watchingRootPathId = watchingRootPathIds[i];
-      if (watchingRootPathId) {
-        if (!currentIndexedRootPathIds.includes(watchingRootPathId)) {
-          const staleWatcher = this.watchedFolders[watchingRootPathId];
-          if (staleWatcher) {
-            staleWatcher.close();
-            delete this.watchedFolders[watchingRootPathId];
-          }
-          if (this.scannerQueue.indexOf(watchingRootPathId) !== -1) {
-            this.scannerQueue.splice(this.scannerQueue.indexOf(watchingRootPathId), 1);
-          }
-        }
-      }
-    }
-  }
-
-  @Interval(10000)
-  async scanQueuedPaths() {
-    if (!this.scannerQueue.length) {
-      return;
-    }
-    const config = await this.getSystemConfiguration();
-    this.logSizeLimit = config.indexerLogSize;
-    if (this.isIndexing) {
-      this.addLogEntry(0, 0, `indexing in progress, queue will be processed later (${this.scannerQueue.length})`);
-      return;
-    }
-    if (await this.isDisabled()) {
-      this.addLogEntry(0, 0, `scanner is disabled, queue will be processed later (${this.scannerQueue.length})`);
-      return;
-    }
-    this.addLogEntry(0, 0, `checking for queued root paths to scan (${this.scannerQueue.length})`);
-    this.isIndexing = true;
-    const nextRootPathToScan = this.scannerQueue.shift();
-    if (nextRootPathToScan) {
-      const rootPath = await this.rootPathEntity.findByPk(nextRootPathToScan);
-      if (rootPath) {
-        await this.scanRootPath(rootPath);
-      }
-    }
-    this.isIndexing = false;
-  }
-
   async addLogEntry(accountId: number, rootPathId: number, message: string) {
     const logEntry: LogEntry = {
       accountId,
@@ -198,6 +53,13 @@ export class IndexerService {
     };
     this.logger.log(`[accountId: ${accountId} rootPathId: ${rootPathId}] ${message}`);
     this.logs.push(logEntry);
+    while (this.logs.length > this.logSizeLimit) {
+      this.logs.shift();
+    }
+  }
+
+  setLogSizeLimit(limit: number): void {
+    this.logSizeLimit = limit;
     while (this.logs.length > this.logSizeLimit) {
       this.logs.shift();
     }

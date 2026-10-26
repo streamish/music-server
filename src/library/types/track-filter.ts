@@ -32,6 +32,10 @@ export type TrackFilter = {
    */
   artist?: string[];
   /**
+   * Optional filter for the track IDs, which will match only the specified tracks.
+   */
+  trackIds?: number[];
+  /**
    * Optional filter for the composer(s), which will do a case-insensitive match against the
    * composers associated with a track.
    */

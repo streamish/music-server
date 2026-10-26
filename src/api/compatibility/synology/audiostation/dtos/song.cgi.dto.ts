@@ -84,6 +84,33 @@ export class SynologySongsByDefaultGenreBodyDto extends SynologySongsBodyDto {
   declare genre_filter: string;
 }
 
+export class SynologySongsByIdBodyDto extends OmitType(
+  SynologyBody({
+    expectedApi: SynologyApiEnum.SONG,
+    expectedMethod: SynologyMethodEnum.GET_INFO,
+  }),
+  ['library'],
+) {
+  /**
+   * The IDs of the track(s) to retrieve in a `music_<id>,music_<id>` format, transformed to
+   * an array of song IDs as numbers.
+   */
+  @ApiProperty({
+    type: 'integer',
+    isArray: true,
+  })
+  @IsInt({ each: true })
+  @Transform(({ value }) =>
+    String(value)
+      .split(',')
+      .map((v: string) => Number.parseInt(v.split('_').pop() || '', 10)),
+  )
+  declare id: number[];
+
+  @IsString()
+  declare additional: string;
+}
+
 export class SynologySongsRateBodyDto extends OmitType(
   SynologyBody({
     expectedApi: SynologyApiEnum.SONG,

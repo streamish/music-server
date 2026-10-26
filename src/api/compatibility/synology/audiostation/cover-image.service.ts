@@ -3,7 +3,6 @@ import { AssociationTypeEnum } from 'src/types/enums';
 import { CoverImagesService } from 'src/cover-images/cover-images.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Op } from 'sequelize';
 import { normalizeString } from 'src/utils/strings';
 
 @Injectable()
@@ -63,26 +62,26 @@ export class SynologyCoverImageService {
       },
       include: [
         {
+          attributes: [],
           model: AssociationLinkEntity,
+          as: 'albumArtists',
+          where: {
+            isArtist: true,
+          },
+          required: true,
           include: [
             {
               attributes: [],
               model: AssociationEntity,
               where: {
                 nameNormalized: normalizeString(albumArtist),
-                [Op.or]: [
-                  {
-                    isAlbumArtist: true,
-                  },
-                  {
-                    isTrackArtist: true,
-                  },
-                ],
               },
+              required: true,
             },
           ],
         },
       ],
+      subQuery: false,
     });
     if (!album) {
       throw new NotFoundException(`Album not found for title: ${albumTitle} and artist: ${albumArtist}`);

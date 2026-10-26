@@ -3,15 +3,12 @@ import { AssociationLinkEntity, TrackEntity } from 'src/database/entities';
 import { AssociationTypeEnum } from 'src/types/enums';
 import { InjectModel } from '@nestjs/sequelize/dist/common/sequelize.decorators';
 import { Injectable } from '@nestjs/common';
-import { LibraryAssociationWithTracksDto } from 'src/library/dtos';
-import { LibraryService } from 'src/library/library.service';
 import { Op, col, where } from 'sequelize';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
 import sharp from 'sharp';
 
 let blankBuffer: Buffer;
-const blankCoverPath = join(__dirname, 'resources', 'blank-cover.png');
 
 @Injectable()
 export class CoverImagesService {
@@ -20,33 +17,7 @@ export class CoverImagesService {
     private readonly albumEntity: typeof AlbumEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
-    private readonly libraryService: LibraryService,
   ) {}
-
-  /**
-   * Retrieves an association and their tracks, prioritizing album associations and falling back to track.
-   * @param accountId The authenticated user ID
-   * @param associationId The ID of the association
-   * @param associationType The type of association
-   */
-  private async getAssociation(accountId: number, associationId: number, associationType: AssociationTypeEnum) {
-    let associations: LibraryAssociationWithTracksDto[] | undefined;
-    try {
-      associations = await this.libraryService.retrieveAlbumAssociation(accountId, associationId, associationType);
-    } catch {
-      if (!associations) {
-        try {
-          associations = await this.libraryService.retrieveTrackAssociation(accountId, associationId, associationType);
-        } catch {
-          return undefined;
-        }
-      }
-    }
-    if (associations?.[0]?.id) {
-      return associations[0];
-    }
-    return undefined;
-  }
 
   /**
    * Retrieves the default blank cover image.
@@ -54,6 +25,7 @@ export class CoverImagesService {
    */
   private static getBlankCover() {
     if (!blankBuffer) {
+      const blankCoverPath = join(__dirname, 'resources', 'blank-cover.png');
       blankBuffer = readFileSync(blankCoverPath);
     }
     return {
@@ -138,11 +110,16 @@ export class CoverImagesService {
    * @param size The dimension of the image
    * @returns The image if it exists
    */
-  async getAlbumCovers(albumIds: number[], associationId: number, associationType: AssociationTypeEnum, size: number) {
+  async getAlbumCovers(
+    albumIds: number[] | undefined,
+    associationId: number,
+    associationType: AssociationTypeEnum,
+    size: number,
+  ) {
     const track = await this.trackEntity.findOne({
       attributes: ['albumId'],
       where: {
-        albumId: albumIds,
+        ...(albumIds ? { albumId: albumIds } : {}),
       },
       include: [
         {
@@ -208,19 +185,38 @@ export class CoverImagesService {
    * @returns The image if it exists
    */
   async getAssociationCover(accountId: number, associationId: number, size: number, type: AssociationTypeEnum) {
-    const association = await this.getAssociation(accountId, associationId, type);
-    if (!association) {
-      return CoverImagesService.getBlankCover();
+    const flag = { isArtist: 'isArtist', isComposer: 'isComposer', isGenre: 'isGenre' };
+    let alias = 'albumGenres';
+    let flagColumn = flag.isGenre;
+    if (type === AssociationTypeEnum.ARTIST) {
+      alias = 'albumArtists';
+      flagColumn = flag.isArtist;
+    } else if (type === AssociationTypeEnum.COMPOSER) {
+      alias = 'albumComposers';
+      flagColumn = flag.isComposer;
     }
-    const albumIds = association.albums.map((album) => album.id);
-    let coverImage = await this.getAlbumCover(accountId, albumIds, size);
-    if (!coverImage) {
-      coverImage = await this.getAlbumCovers(albumIds, associationId, type, size);
-      if (!coverImage) {
-        return CoverImagesService.getBlankCover();
-      }
+    const album = await this.albumEntity.findOne({
+      attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
+      where: {
+        [Op.and]: [where(col('coverImage'), Op.not, null), where(col('coverImageMimeType'), Op.not, null)],
+        accountId,
+      },
+      include: [
+        {
+          attributes: [],
+          model: AssociationLinkEntity,
+          as: alias,
+          required: true,
+          where: { associationId, [flagColumn]: true },
+        },
+      ],
+      order: [['id', 'ASC']],
+      subQuery: false,
+    });
+    if (album) {
+      return CoverImagesService.processImage(album, size);
     }
-    return coverImage;
+    return this.getAlbumCovers(undefined, associationId, type, size);
   }
 
   /**

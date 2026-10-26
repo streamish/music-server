@@ -779,10 +779,18 @@ export class LibraryQueryService {
           required: true,
           where: {
             ...(filter?.album && {
-              titleNormalized: { [Op.like]: `%${normalizeString(filter.album)}%` },
+              titleNormalized: normalizeString(filter.album),
             }),
           },
-          include: [...(await this.createTrackAssociationJoin(accountId, AssociationTypeEnum.ARTIST, 'album'))],
+          include: [
+            ...(await this.createTrackAssociationJoin(
+              accountId,
+              AssociationTypeEnum.ARTIST,
+              'album',
+              undefined,
+              filter?.albumArtist,
+            )),
+          ],
         },
         {
           attributes: ['id'],
@@ -815,6 +823,9 @@ export class LibraryQueryService {
         accountId,
         ...(filter?.albumIds?.length && {
           albumId: filter.albumIds,
+        }),
+        ...(filter?.trackIds?.length && {
+          id: filter.trackIds,
         }),
         ...(filter?.filter && {
           titleNormalized: { [Op.like]: `%${normalizeString(filter.filter)}%` },
