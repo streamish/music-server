@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicArtistsQueryDto, SubsonicArtistsResponseDto } from './dtos';
 import { SubsonicArtistsService } from './get-artists.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -22,7 +22,7 @@ export class SubsonicArtistsController {
   async getArtists(
     @User() user: AccountEntity,
     @Query() query: SubsonicArtistsQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -34,7 +34,7 @@ export class SubsonicArtistsController {
       {
         artist,
       },
-      jsonResponse,
+      isJsonResponse,
       res,
     );
   }

@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSimilarSongsQueryDto, SubsonicSimilarSongsResponseDto } from './dtos';
 import { SubsonicSimilarSongsService } from './get-similar-songs.service';
@@ -22,7 +22,7 @@ export class SubsonicSimilarSongsController {
   async getSimilarSongs(
     @User() user: AccountEntity,
     @Query() query: SubsonicSimilarSongsQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,6 +30,6 @@ export class SubsonicSimilarSongsController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const songs = await this.service.getSimilarSongs(user.id, query);
-    return formatResponse({ similarSongs: { song: songs } }, jsonResponse, res);
+    return formatResponse({ similarSongs: { song: songs } }, isJsonResponse, res);
   }
 }

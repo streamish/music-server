@@ -1,5 +1,5 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicPingResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { formatResponse } from './subsonic.response';
@@ -15,7 +15,8 @@ export class SubsonicPingController {
       [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicPingResponseDto),
     },
   })
-  ping(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
-    return formatResponse({}, jsonResponse, res);
+  ping(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
+    console.log('Ping request received', IsJsonResponse);
+    return formatResponse({}, isJsonResponse, res);
   }
 }

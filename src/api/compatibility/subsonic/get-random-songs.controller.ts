@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicRandomSongsQueryDto, SubsonicRandomSongsResponseDto } from './dtos';
 import { SubsonicRandomSongsService } from './get-random-songs.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -22,7 +22,7 @@ export class SubsonicRandomSongsController {
   async getRandomSongs(
     @User() user: AccountEntity,
     @Query() query: SubsonicRandomSongsQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,6 +30,6 @@ export class SubsonicRandomSongsController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const songs = await this.service.getRandomSongs(user.id, query);
-    return formatResponse({ randomSongs: { song: songs } }, jsonResponse, res);
+    return formatResponse({ randomSongs: { song: songs } }, isJsonResponse, res);
   }
 }

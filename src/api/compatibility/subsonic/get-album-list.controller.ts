@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import {
   SubsonicAlbumList2QueryDto,
   SubsonicAlbumList2ResponseDto,
@@ -27,7 +27,7 @@ export class SubsonicAlbumListController {
   async getAlbumList(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumListQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -41,7 +41,7 @@ export class SubsonicAlbumListController {
           album,
         },
       },
-      jsonResponse,
+      isJsonResponse,
       res,
     );
   }
@@ -56,7 +56,7 @@ export class SubsonicAlbumListController {
   async getAlbumList2(
     @User() user: AccountEntity,
     @Query() query: SubsonicAlbumList2QueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -70,7 +70,7 @@ export class SubsonicAlbumListController {
           album,
         },
       },
-      jsonResponse,
+      isJsonResponse,
       res,
     );
   }

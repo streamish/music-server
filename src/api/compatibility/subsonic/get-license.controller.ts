@@ -1,5 +1,5 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicLicenseResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { formatResponse } from './subsonic.response';
@@ -15,7 +15,7 @@ export class SubsonicLicenseController {
       [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicLicenseResponseDto),
     },
   })
-  async getLicense(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
+  async getLicense(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const date = new Date();
     date.setFullYear(date.getFullYear() + 100);
     const licenseExpires = date.toISOString();
@@ -24,6 +24,6 @@ export class SubsonicLicenseController {
       email: 'user@example.com',
       licenseExpires,
     };
-    return formatResponse({ license }, jsonResponse, res);
+    return formatResponse({ license }, isJsonResponse, res);
   }
 }

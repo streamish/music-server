@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicGenresResponseDto } from './dtos';
 import { SubsonicGenresService } from './get-genres.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -21,7 +21,7 @@ export class SubsonicGenresController {
   })
   async getGenres(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -29,6 +29,6 @@ export class SubsonicGenresController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const genres = await this.service.getGenres(user.id);
-    return formatResponse({ genres }, jsonResponse, res);
+    return formatResponse({ genres }, isJsonResponse, res);
   }
 }

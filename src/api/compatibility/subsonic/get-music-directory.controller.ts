@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicDirectoryQueryDto, SubsonicMusicDirectoryResponseDto } from './dtos';
 import { SubsonicMusicDirectoryService } from './get-music-directory.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -22,7 +22,7 @@ export class SubsonicMusicDirectoryController {
   async getMusicDirectory(
     @User() user: AccountEntity,
     @Query() query: SubsonicMusicDirectoryQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,6 +30,6 @@ export class SubsonicMusicDirectoryController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const musicFolder = await this.getMusicDirectoryService.getMusicDirectory(user.id, query.id);
-    return formatResponse({ musicDirectory: { musicFolder } }, jsonResponse, res);
+    return formatResponse({ musicDirectory: { musicFolder } }, isJsonResponse, res);
   }
 }

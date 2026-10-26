@@ -1,5 +1,5 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNewestPodcastsResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { formatResponse } from './subsonic.response';
@@ -15,7 +15,7 @@ export class SubsonicNewestPodcastsController {
       [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicNewestPodcastsResponseDto),
     },
   })
-  async getNewestPodcasts(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
-    return formatResponse({ newestPodcasts: {} }, jsonResponse, res);
+  async getNewestPodcasts(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
+    return formatResponse({ newestPodcasts: {} }, isJsonResponse, res);
   }
 }

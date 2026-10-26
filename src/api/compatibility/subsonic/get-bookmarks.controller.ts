@@ -1,5 +1,5 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicBookmarksResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { formatResponse } from './subsonic.response';
@@ -15,7 +15,7 @@ export class SubsonicBookmarksController {
       [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicBookmarksResponseDto),
     },
   })
-  async getBookmarks(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
-    return formatResponse({ bookmarks: {} }, jsonResponse, res);
+  async getBookmarks(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
+    return formatResponse({ bookmarks: {} }, isJsonResponse, res);
   }
 }

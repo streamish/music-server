@@ -30,11 +30,11 @@ import { SubsonicExceptionFilter } from './subsonic-exception.filter';
 import { SubsonicGuard } from './subsonic.guard';
 import type { Request } from 'express';
 
-export const ResponseFormat = createParamDecorator((_data: unknown, context: ExecutionContext): boolean => {
+export const IsJsonResponse = createParamDecorator((_data: unknown, context: ExecutionContext): boolean => {
   const request = context.switchToHttp().getRequest<Request>();
   const queryFormat = request.query.f;
-  if (queryFormat === 'json' || queryFormat === 'xml') {
-    return queryFormat === 'json';
+  if (queryFormat === 'json' || queryFormat !== 'xml') {
+    return true;
   }
   const accept = request.headers.accept ?? '';
   return accept.includes('application/json');

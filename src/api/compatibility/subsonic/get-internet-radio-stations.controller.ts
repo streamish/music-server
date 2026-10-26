@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { ShoutcastService } from 'src/shoutcast/shoutcast.service';
 import { SubsonicInternetRadioStationsResponseDto } from './dtos';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -21,10 +21,10 @@ export class SubsonicInternetRadioStationsController {
   })
   async getInternetRadioStations(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     const stations = await this.shoutcastService.listMostPlayedStations(user.id, 100_000);
-    return formatResponse({ internetRadioStations: stations }, jsonResponse, res);
+    return formatResponse({ internetRadioStations: stations }, isJsonResponse, res);
   }
 }

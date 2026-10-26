@@ -1,5 +1,5 @@
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicMusicFoldersResponseDto } from './dtos';
 import { SubsonicMusicFoldersService } from './get-music-folders.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -17,8 +17,8 @@ export class SubsonicMusicFoldersController {
       [HttpStatus.OK]: SubsonicResponseEnvelopeDtoFactory(SubsonicMusicFoldersResponseDto),
     },
   })
-  async getMusicFolders(@ResponseFormat() jsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
+  async getMusicFolders(@IsJsonResponse() isJsonResponse: boolean, @Res({ passthrough: true }) res: Response) {
     const musicFolder = await this.getMusicFoldersService.getMusicFolders();
-    return formatResponse({ musicFolders: { musicFolder } }, jsonResponse, res);
+    return formatResponse({ musicFolders: { musicFolder } }, isJsonResponse, res);
   }
 }

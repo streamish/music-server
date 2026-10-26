@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicStarredResponseDto } from './dtos';
 import { User } from 'src/api/user.decorator';
@@ -19,14 +19,14 @@ export class SubsonicStarredController {
   })
   async getStarred(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
       `player-${user.username}=2;Path=/;Expires=Sat, 23-Oct-27 23:58:03 GMT`,
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
-    return formatResponse({ starred: {} }, jsonResponse, res);
+    return formatResponse({ starred: {} }, isJsonResponse, res);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -39,13 +39,13 @@ export class SubsonicStarredController {
   })
   async getStarred2(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
       `player-${user.username}=2;Path=/;Expires=Sat, 23-Oct-27 23:58:03 GMT`,
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
-    return formatResponse({ starred: {} }, jsonResponse, res);
+    return formatResponse({ starred: {} }, isJsonResponse, res);
   }
 }

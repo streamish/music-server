@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicNowPlayingResponseDto } from './dtos';
 import { SubsonicNowPlayingService } from './get-now-playing.service';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
@@ -21,7 +21,7 @@ export class SubsonicNowPlayingController {
   })
   async getNowPlaying(
     @User() user: AccountEntity,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -29,6 +29,6 @@ export class SubsonicNowPlayingController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const nowPlaying = await this.service.getNowPlaying(user.id);
-    return formatResponse({ nowPlaying }, jsonResponse, res);
+    return formatResponse({ nowPlaying }, isJsonResponse, res);
   }
 }

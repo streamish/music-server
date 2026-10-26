@@ -1,6 +1,6 @@
 import { AccountEntity } from 'src/database/entities';
 import { Get, HttpStatus, Query, Res } from '@nestjs/common';
-import { ResponseFormat, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
+import { IsJsonResponse, SubsonicApiEndpoint, SubsonicController } from './subsonic.decorator';
 import { SubsonicResponseEnvelopeDtoFactory } from './subsonic.dto';
 import { SubsonicSearchQueryDto, SubsonicSearchResponseDto } from './dtos';
 import { SubsonicSearchService } from './search.service';
@@ -22,7 +22,7 @@ export class SubsonicSearchController {
   async search(
     @User() user: AccountEntity,
     @Query() query: SubsonicSearchQueryDto,
-    @ResponseFormat() jsonResponse: boolean,
+    @IsJsonResponse() isJsonResponse: boolean,
     @Res({ passthrough: true }) res: Response,
   ) {
     res.setHeader('set-cookie', [
@@ -30,6 +30,6 @@ export class SubsonicSearchController {
       `JSESSIONID=${user.id}-${user.username};Path=/`,
     ]);
     const searchResult = await this.service.search(user.id, query);
-    return formatResponse({ searchResult }, jsonResponse, res);
+    return formatResponse({ searchResult }, isJsonResponse, res);
   }
 }
