@@ -46,7 +46,7 @@ describe('/webapi/AudioStation/folder.cgi', () => {
   });
 
   it('should list folders under a nested folder', async () => {
-    const { folders } = await listFolders('dir_3');
+    const { folders } = await listFolders('dir_4');
     expect(folders.length).toBe(5);
     expect(folders[0]?.title).toBe('01 First Track.flac');
     expect(folders[1]?.title).toBe('02 Second Track.m4a');
@@ -56,14 +56,14 @@ describe('/webapi/AudioStation/folder.cgi', () => {
   });
 
   it('should list folders under a deeper-nested folder', async () => {
-    const { folders } = await listFolders('dir_4');
+    const { folders } = await listFolders('dir_5');
     expect(folders.length).toBe(2);
     expect(folders[0]?.title).toBe('CD 1');
     expect(folders[1]?.title).toBe('CD 2');
   });
 
   it('should list files under a deeper-nested folder', async () => {
-    const { folders } = await listFolders('dir_5');
+    const { folders } = await listFolders('dir_7');
     expect(folders.length).toBe(4);
     expect(folders[0]?.title).toBe('01 First Track.flac');
     expect(folders[1]?.title).toBe('02 Second Track.flac');
