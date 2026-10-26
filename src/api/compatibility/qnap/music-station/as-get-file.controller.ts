@@ -28,6 +28,7 @@ export class QnapAsGetFileController {
     const file = await this.streamingService.getTrack(user.id, query.f);
     return this.streamingService.streamFile(file.path, file.codec, request, response, {
       fileName: `track.${query.f}.${file.codec}`,
+      trackId: file.trackId,
       etag: `file-${query.f}-${file.updatedAt.getTime()}`,
     });
   }

@@ -162,6 +162,13 @@ export class LibraryTrackDto {
   declare id: number;
 
   /**
+   * The number of times the track has been streamed.
+   */
+  @ApiProperty({ type: 'integer', default: 0, minimum: 0 })
+  @IsInt()
+  declare playCount: number;
+
+  /**
    * The rating of the track which is a value between 0 and 5 inclusive applied to the track.
    */
   @ApiProperty({

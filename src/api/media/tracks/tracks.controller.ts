@@ -68,6 +68,7 @@ export class ApiTracksController {
     const eTag = `file-${query.id}-${streamInfo.updatedAt?.getTime() || ''}`;
     return this.streamingService.streamFile(streamInfo.path, streamInfo.codec, request, response, {
       fileName: `track.${query.id}.${streamInfo.codec}`,
+      trackId: streamInfo.trackId,
       etag: eTag,
     });
   }

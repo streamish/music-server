@@ -5364,6 +5364,11 @@ export type components = {
       /** @description The internally-generated unique ID of the track */
       id: number;
       /**
+       * @description The number of times the track has been streamed.
+       * @default 0
+       */
+      playCount: number;
+      /**
        * @description The rating of the track which is a value between 0 and 5 inclusive applied to the track.
        * @default 0
        */
@@ -9760,6 +9765,41 @@ export type components = {
        *     used to start at the beginning of a result set.
        */
       offset: number;
+      /**
+       * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
+       *     currently only supports the latest version of the API for each endpoint and ignores this value
+       *     for now.
+       *
+       *     It's possible to build in support for prior versions of an endpoint but that would
+       *     require using the `debug-proxy` to capture the request and response payloads to understand the
+       *     differences between versions.
+       *
+       *     If you are running an older DSM NAS and wish to help then check
+       *     out the GitHub Issues page and submit a request to support your version of the API.
+       */
+      version: number;
+    };
+    SynologySongsByIdBodyDto: {
+      additional: string;
+      /**
+       * @description Synology's API uses this value to route requests appropriately but this software has
+       *     direct endpoints for their relevant URL paths.  As such this value is ignored for now
+       *     but defined to match the Synology API.
+       * @example SYNO.AudioStation.Song
+       */
+      api: components['schemas']['SynologyApiEnum'];
+      /**
+       * @description The IDs of the track(s) to retrieve in a `music_<id>,music_<id>` format, transformed to
+       *     an array of song IDs as numbers.
+       */
+      id: number[];
+      /**
+       * @description Synology's API uses this value to route requests appropriately but for AudioStation the
+       *     endpoints have limited functionality, all music-related endpoints `list` except cover
+       *     images.  As such this value is ignored for now but defined to match the Synology API.
+       * @example getinfo
+       */
+      method: components['schemas']['SynologyMethodEnum'];
       /**
        * @description Synology's API has versioned endpoints and some have at least 3 versions.  This software
        *     currently only supports the latest version of the API for each endpoint and ignores this value
@@ -16144,6 +16184,7 @@ export interface operations {
           | components['schemas']['SynologySongsByComposerBodyDto']
           | components['schemas']['SynologySongsByDefaultGenreBodyDto']
           | components['schemas']['SynologySongsByGenreBodyDto']
+          | components['schemas']['SynologySongsByIdBodyDto']
           | components['schemas']['SynologySongsRateBodyDto']
           | components['schemas']['SynologySongResponseDto']
           | components['schemas']['SynologySuccessResponseDto'];

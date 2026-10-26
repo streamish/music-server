@@ -45,6 +45,11 @@ export async function up(queryInterface: QueryInterface) {
     file_type: DataTypes.STRING(50),
     frequency: DataTypes.INTEGER,
     rating: DataTypes.INTEGER,
+    play_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     root_path_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -753,6 +753,7 @@ export class LibraryQueryService {
         'fileType',
         'frequency',
         'id',
+        'playCount',
         'rating',
         'rootPathId',
         'title',
