@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/database/entities';
 import { Body, HttpStatus, Logger, Post } from '@nestjs/common';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
+import { SynologyMethodEnum } from './synology.enums';
 import {
   SynologySongResponseDto,
   SynologySongsBodyDto,
@@ -13,6 +14,7 @@ import {
   SynologySongsByComposerBodyDto,
   SynologySongsByDefaultGenreBodyDto,
   SynologySongsByGenreBodyDto,
+  SynologySongsByIdBodyDto,
   SynologySongsRateBodyDto,
 } from './dtos';
 import { SynologySongService } from './song.service';
@@ -46,6 +48,7 @@ export class SynologySongController {
       SynologySongsByComposerBodyDto,
       SynologySongsByDefaultGenreBodyDto,
       SynologySongsByGenreBodyDto,
+      SynologySongsByIdBodyDto,
       SynologySongsRateBodyDto,
       SynologySongResponseDto,
       SynologySuccessResponseDto,
@@ -64,7 +67,8 @@ export class SynologySongController {
       | SynologySongsByAlbumGenreBodyDto
       | SynologySongsByGenreBodyDto
       | SynologySongsByDefaultGenreBodyDto
-      | SynologySongsByAlbumDefaultGenreBodyDto,
+      | SynologySongsByAlbumDefaultGenreBodyDto
+      | SynologySongsByIdBodyDto,
   ): Promise<SynologySongResponseDto | SynologySuccessResponseDto> {
     if ('composer' in variousBodies) {
       // Route #1:  Composer tracks for an album
@@ -173,7 +177,16 @@ export class SynologySongController {
         success: true,
       };
     }
-    // Route #10:  Generic track list
+    // Route #10:  Song info for specific track ID(s)
+    if ('id' in variousBodies && variousBodies.method === SynologyMethodEnum.GET_INFO) {
+      const body = plainToInstance(SynologySongsByIdBodyDto, variousBodies);
+      const data = await this.songService.listTracksByIds(user.id, body.id);
+      return {
+        data,
+        success: true,
+      };
+    }
+    // Route #11:  Generic track list
     const body = plainToInstance(SynologySongsBodyDto, variousBodies);
     const data = await this.songService.listTracks(user.id, body.offset, body.limit);
     return {

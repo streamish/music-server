@@ -65,6 +65,25 @@ describe('/webapi/AudioStation/song.cgi', () => {
     expect(songs[3]?.additional.song_tag.album).toBe('Album 5');
   });
 
+  it('should return only the requested songs for getinfo', async () => {
+    const { songs: allSongs } = await listSongs({ album: 'Album 5', album_artist: 'Artist 3' });
+    const ids = allSongs.slice(0, 2).map((song) => song.id);
+    const { data } = await api.POST('/webapi/AudioStation/song.cgi', {
+      body: {
+        additional: 'song_rating',
+        api: SynologyApiEnum.SYNO_AudioStation_Song,
+        method: SynologyMethodEnum.getinfo,
+        version: 2,
+        id: ids.join(','),
+        offset: 0,
+        limit: 1024,
+      } as never,
+    });
+    const typedData = data as components['schemas']['SynologySongResponseDto'];
+    expect(typedData.data.total).toBe(2);
+    expect(typedData.data.songs.map((song) => song.id).sort()).toEqual([...ids].sort());
+  });
+
   it('should paginate album songs', async () => {
     const filter = { album: 'Album 5', album_artist: 'Artist 3' };
     // page 1

@@ -1,18 +1,15 @@
 import { AUDIO_MIME_TYPES, BINARY_RESPONSE } from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
-import { Get, HttpStatus, Logger, Query, Res } from '@nestjs/common';
+import { Get, HttpStatus, Query, Req, Res } from '@nestjs/common';
 import { StreamCgiQueryDto } from './dtos';
+import { StreamingService } from 'src/streaming/streaming.service';
 import { SynologyApiEndpoint, SynologyController } from './synology.decorator';
-import { SynologyStreamService } from './stream.service';
 import { User } from '../../../user.decorator';
-import { getAudioContentType } from 'src/utils/strings';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 
 @SynologyController()
 export class SynologyStreamController {
-  private readonly logger: Logger = new Logger(SynologyStreamController.name);
-
-  constructor(private readonly streamService: SynologyStreamService) {}
+  constructor(private readonly streamingService: StreamingService) {}
 
   @SynologyApiEndpoint(Get, '/AudioStation/stream.cgi', HttpStatus.OK, {
     summary: 'Streams audio files',
@@ -28,13 +25,16 @@ export class SynologyStreamController {
       [HttpStatus.OK]: BINARY_RESPONSE,
     },
   })
-  async getStreamCgi(@User() user: AccountEntity, @Query() query: StreamCgiQueryDto, @Res() res: Response) {
-    const streamInfo = await this.streamService.getStream(user.id, query.id);
-    res.sendFile(streamInfo.path, {
-      headers: {
-        'Content-Type': getAudioContentType(streamInfo.codec),
-        'Content-Length': streamInfo.fileSize,
-      },
+  async getStreamCgi(
+    @User() user: AccountEntity,
+    @Query() query: StreamCgiQueryDto,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const streamInfo = await this.streamingService.getTrack(user.id, query.id);
+    return this.streamingService.streamFile(streamInfo.path, streamInfo.codec, request, response, {
+      fileName: `track.${query.id}.${streamInfo.codec}`,
+      etag: `file-${query.id}-${streamInfo.updatedAt.getTime()}`,
     });
   }
 }

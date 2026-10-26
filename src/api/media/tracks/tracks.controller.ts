@@ -2,20 +2,20 @@ import { AUDIO_MIME_TYPES, BINARY_RESPONSE } from 'src/constants/swagger';
 import { AccountEntity } from 'src/database/entities';
 import { ApiEndpoint } from 'src/api/api.decorator';
 import { ApiTracksService } from './tracks.service';
-import { Controller, Get, HttpStatus, Query, Req, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query, Req, Res } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { ListTracksQueryDto, ListTracksResponseDto, StreamFileQueryDto } from './dtos';
+import { StreamingService } from 'src/streaming/streaming.service';
 import { User } from 'src/api/user.decorator';
-import { getAudioContentType } from 'src/utils/strings';
 import { getValidationMessages } from 'src/api/response.dto';
-import { readFileSync } from 'fs';
 import type { Request, Response } from 'express';
-
-const emptyBuffer = Buffer.alloc(0);
 
 @Controller('/api')
 export class ApiTracksController {
-  constructor(private readonly tracksService: ApiTracksService) {}
+  constructor(
+    private readonly tracksService: ApiTracksService,
+    private readonly streamingService: StreamingService,
+  ) {}
 
   /**
    * `GET` request to `/api/list-tracks`
@@ -64,19 +64,11 @@ export class ApiTracksController {
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const streamInfo = await this.tracksService.getStream(user.id, query.id);
-    const fileType = streamInfo.path.split('.').pop();
+    const streamInfo = await this.streamingService.getTrack(user.id, query.id);
     const eTag = `file-${query.id}-${streamInfo.updatedAt?.getTime() || ''}`;
-    response.set({
-      'Content-Disposition': `inline; filename="track.${query.id}.${fileType}"`,
-      'Content-Type': getAudioContentType(streamInfo.codec),
-      ETag: eTag,
+    return this.streamingService.streamFile(streamInfo.path, streamInfo.codec, request, response, {
+      fileName: `track.${query.id}.${streamInfo.codec}`,
+      etag: eTag,
     });
-    if (request.fresh) {
-      response.status(304);
-      return new StreamableFile(emptyBuffer);
-    }
-    const buffer = readFileSync(streamInfo.path);
-    return new StreamableFile(buffer);
   }
 }

@@ -1,7 +1,7 @@
-import { ApiTracksModule } from 'src/api/media/tracks/tracks.module';
 import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
+import { StreamingModule } from 'src/streaming/streaming.module';
 import { SubsonicAlbumController } from './get-album.controller';
 import { SubsonicAlbumInfoController } from './get-album-info.controller';
 import { SubsonicAlbumInfoService } from './get-album-info.service';
@@ -50,7 +50,7 @@ import { SubsonicTopSongsController } from './get-top-songs.controller';
 import { SubsonicTopSongsService } from './get-top-songs.service';
 
 @Module({
-  imports: [CoverImagesModule, LibraryModule, ApiTracksModule],
+  imports: [CoverImagesModule, LibraryModule, StreamingModule],
   controllers: [
     SubsonicAlbumController,
     SubsonicAlbumInfoController,
