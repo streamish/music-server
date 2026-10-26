@@ -190,7 +190,7 @@ export async function createSubsonicApi(username?: string, password?: string): P
       const parsedBody = await xml2js.parseStringPromise(bodyText, {
         explicitArray: false,
       });
-      const jsonBody = parsedBody?.['subsonic-response'] ? JSON.stringify(parsedBody['subsonic-response']) : '';
+      const jsonBody = parsedBody ? JSON.stringify(parsedBody) : '';
       const headers = new Headers(response.headers);
       headers.set('content-type', 'application/json');
       return new Response(jsonBody, {
