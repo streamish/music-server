@@ -215,6 +215,18 @@ export class SynologySongService {
     };
   }
 
+  async listTracksByIds(accountId: number, trackIds: number[]): Promise<SynologySongDataDto> {
+    if (!trackIds.length) {
+      return { songs: [], offset: 0, total: 0 };
+    }
+    const tracks = await this.libraryService.listTracks(accountId, { trackIds }, 0, trackIds.length);
+    return {
+      songs: tracks.items.map(songToRow),
+      offset: 0,
+      total: tracks.total,
+    };
+  }
+
   async listTracks(accountId: number, offset: number, limit: number): Promise<SynologySongDataDto> {
     const tracks = await this.libraryService.listTracks(accountId, {}, offset, limit);
     return {

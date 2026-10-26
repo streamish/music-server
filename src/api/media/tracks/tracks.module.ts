@@ -2,11 +2,10 @@ import { ApiTracksController } from './tracks.controller';
 import { ApiTracksService } from './tracks.service';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { TrackEntity } from 'src/database/entities';
+import { StreamingModule } from 'src/streaming/streaming.module';
 
 @Module({
-  imports: [LibraryModule, SequelizeModule.forFeature([TrackEntity])],
+  imports: [LibraryModule, StreamingModule],
   controllers: [ApiTracksController],
   providers: [ApiTracksService],
   exports: [ApiTracksService],

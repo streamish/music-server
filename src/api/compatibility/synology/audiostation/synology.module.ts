@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { RatingsModule } from 'src/ratings/ratings.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ShoutcastModule } from 'src/shoutcast/shoutcast.module';
+import { StreamingModule } from 'src/streaming/streaming.module';
 import { SynologyAlbumController } from './album.controller';
 import { SynologyAlbumService } from './album.service';
 import { SynologyArtistController } from './artist.controller';
@@ -36,7 +37,6 @@ import { SynologySearchService } from './search.service';
 import { SynologySongController } from './song.controller';
 import { SynologySongService } from './song.service';
 import { SynologyStreamController } from './stream.controller';
-import { SynologyStreamService } from './stream.service';
 import { entitiesList } from 'src/database/entities';
 
 @Module({
@@ -47,6 +47,7 @@ import { entitiesList } from 'src/database/entities';
     RatingsModule,
     SequelizeModule.forFeature(entitiesList),
     ShoutcastModule,
+    StreamingModule,
   ],
   controllers: [
     SynologyAlbumController,
@@ -82,7 +83,6 @@ import { entitiesList } from 'src/database/entities';
     SynologyRadioService,
     SynologySearchService,
     SynologySongService,
-    SynologyStreamService,
   ],
 })
 export class SynologyModule {}

@@ -116,7 +116,7 @@
     "sequelize:seed:create": "npx sequelize-cli seed:create --seeders-path ./src/database/seeders --name ",
     "sequelize:seed": "npx sequelize-cli db:seed",
     "start:debug": "npx dotenv -e .env -- npx nest start --debug",
-    "start:dev": "npx dotenv -e .env -- npx nest start",
+    "start:dev": "npx dotenv -e .env -- npx nest start --path tsconfig.json",
     "start:prod": "npx node dist/main",
     "start:test": "npx dotenv -e .env.test -- npx nest start --path tsconfig.test.json",
     "test": "npx dotenv -e .env.test npx jest"
