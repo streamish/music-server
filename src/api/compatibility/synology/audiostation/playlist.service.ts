@@ -6,11 +6,9 @@ import {
   SmartPlaylistIntervalTagEnum,
   SmartPlaylistOperationEnum,
 } from 'src/types/enums';
-import { InjectModel } from '@nestjs/sequelize';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
-import { Op } from 'sequelize';
-import { PlaylistEntity, PlaylistItemEntity, PlaylistSmartRuleEntity } from 'src/database/entities';
+import { PlaylistsService } from 'src/playlists/playlists.service';
 import {
   SynologyPlaylistAddOrRemoveItemBodyDto,
   SynologyPlaylistCreateNormalBodyDto,
@@ -23,10 +21,12 @@ import {
   SynologyPlaylistTrackListBodyDto,
   SynologyPlaylistUpdateSmartBodyDto,
   SynologyPlaylistWithItemsDataDto,
+  SynologySmartListRule,
 } from './dtos';
 import { replaceDoubleQuotes } from 'src/utils/strings';
+import type { PlaylistItem, SmartPlaylistRule } from 'src/playlists/types';
 
-function ruleToRow(rule: PlaylistSmartRuleEntity): SynologyPlaylistRuleDto {
+function ruleToRow(rule: SmartPlaylistRule): SynologyPlaylistRuleDto {
   let interval: number;
   switch (rule.interval) {
     case SmartPlaylistIntervalTagEnum.DAYS:
@@ -119,105 +119,59 @@ function ruleToRow(rule: PlaylistSmartRuleEntity): SynologyPlaylistRuleDto {
   };
 }
 
+function toRuleInputs(rules: SynologySmartListRule[]): SmartPlaylistRule[] {
+  return rules.map((rule) => ({
+    id: 0,
+    field: rule.fieldName as SmartPlaylistFieldEnum,
+    interval: rule.intervalName,
+    operation: rule.operationName as SmartPlaylistOperationEnum,
+    value: rule.tagval,
+  }));
+}
+
 @Injectable()
 export class SynologyPlaylistService {
   constructor(
     private readonly libraryService: LibraryService,
-    @InjectModel(PlaylistEntity)
-    private readonly playlistEntity: typeof PlaylistEntity,
-    @InjectModel(PlaylistItemEntity)
-    private readonly playlistItemEntity: typeof PlaylistItemEntity,
-    @InjectModel(PlaylistSmartRuleEntity)
-    private readonly playlistSmartRuleEntity: typeof PlaylistSmartRuleEntity,
+    private readonly playlistsService: PlaylistsService,
   ) {}
 
-  private async getPlaylist(accountId: number, playlistId: string) {
-    const playlist = await this.playlistEntity.findOne({
-      where: {
-        accountId,
-        name: playlistId,
-      },
-    });
-    if (!playlist) {
-      throw new Error(`Playlist with id ${playlistId} not found`);
-    }
-    return playlist;
+  private async getPlaylist(accountId: number, playlistName: string) {
+    return this.playlistsService.getPlaylistByName(accountId, playlistName);
   }
 
   async addItem(accountId: number, body: SynologyPlaylistAddOrRemoveItemBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    if (playlist.type === PlaylistTypeEnum.SMART) {
-      throw new Error('Cannot add items to a smart playlist');
-    }
-    const insertData: PlaylistItemEntity[] = [];
-    let position = body.offset > -1 ? body.offset : 0;
-    body.songs.forEach(async (id) => {
-      position += 1;
+    const items: PlaylistItem[] = [];
+    body.songs.forEach((id) => {
       // if the id is a number then it is a file
       if (typeof id === 'number') {
-        insertData.push({
-          playlistId: playlist.id,
-          trackId: id,
-          position,
-        } as PlaylistItemEntity);
+        items.push({ trackId: id });
       } else if (typeof id === 'string' && id.startsWith('radio_')) {
-        const url = id.substring(id.lastIndexOf(' ') + 1);
-        const title = id.substring(6).split(' ').slice(0, -1).join(' ');
-        insertData.push({
-          playlistId: playlist.id,
-          radioStationTitle: title,
-          radioStationUrl: url,
-          position,
-        } as PlaylistItemEntity);
+        items.push({
+          radioStationTitle: id.substring(6).split(' ').slice(0, -1).join(' '),
+          radioStationUrl: id.substring(id.lastIndexOf(' ') + 1),
+        });
       }
     });
-    await this.playlistItemEntity.update(
-      {
-        position: this.playlistItemEntity.sequelize?.literal(`position + ${insertData.length}`),
-      },
-      {
-        where: {
-          playlistId: playlist.id,
-          position: {
-            [Op.gte]: body.offset,
-          },
-        },
-      },
-    );
-    await this.playlistItemEntity.bulkCreate(insertData);
+    await this.playlistsService.addItems(accountId, playlist.id, items, body.offset);
   }
 
   async createPlaylist(accountId: number, body: SynologyPlaylistCreateNormalBodyDto) {
-    const playlist = await this.playlistEntity.create({
-      accountId,
-      name: replaceDoubleQuotes(body.name),
-      type: PlaylistTypeEnum.NORMAL,
-    } as PlaylistEntity);
+    const playlist = await this.playlistsService.createPlaylist(accountId, body.name, PlaylistTypeEnum.NORMAL);
     return {
       id: `playlist_personal_normal/${playlist.name}`,
     };
   }
 
   async createSmartPlaylist(accountId: number, body: SynologyPlaylistCreateSmartBodyDto) {
-    const playlist = await this.playlistEntity.create({
+    await this.playlistsService.createPlaylist(
       accountId,
-      name: replaceDoubleQuotes(body.name),
-      rulesConjugal: body.conj_rule,
-      type: PlaylistTypeEnum.SMART,
-    } as PlaylistEntity);
-    for (let i = 0, len = body.rules_json.length; i < len; i += 1) {
-      const rule = body.rules_json[i];
-      if (rule) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.playlistSmartRuleEntity.create({
-          playlistId: playlist.id,
-          field: rule.fieldName,
-          operation: rule.operationName,
-          value: rule.tagval,
-          interval: rule.intervalName,
-        } as PlaylistSmartRuleEntity);
-      }
-    }
+      body.name,
+      PlaylistTypeEnum.SMART,
+      body.conj_rule,
+      toRuleInputs(body.rules_json),
+    );
     return {
       id: `playlist_personal_smart/${body.name}`,
     };
@@ -225,62 +179,38 @@ export class SynologyPlaylistService {
 
   async deletePlaylist(accountId: number, body: SynologyPlaylistDeleteBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    await this.playlistEntity.destroy({
-      where: {
-        id: playlist.id,
-      },
-    });
+    await this.playlistsService.deletePlaylist(accountId, playlist.id);
   }
 
   async getPlaylists(accountId: number): Promise<SynologyPlaylistDataDto> {
-    const playlists = await this.playlistEntity.findAndCountAll({
-      where: {
-        accountId,
-      },
-      order: [['name', 'ASC']],
-    });
-    const rules = await this.playlistSmartRuleEntity.findAll({
-      where: {
-        playlistId: playlists.rows.map((p) => p.id),
-      },
-      order: [['id', 'ASC']],
-    });
+    const playlists = await this.playlistsService.listPlaylists(accountId);
     return {
       offset: 0,
-      total: playlists.count,
-      playlists: playlists.rows.map((playlist) => {
-        const playlistRules = rules.filter((rule) => rule.playlistId === playlist.id);
-        return {
-          id: `playlist_personal_${playlist.type}/${playlist.name}`,
-          library: 'personal',
-          name: playlist.name,
-          sharing_status: 'none',
-          type: playlist.type,
-          additional: {
-            rules: playlistRules.map(ruleToRow),
-            rules_conjunction: playlist.rulesConjugal,
-            sharing_info: {
-              date_available: 0,
-              date_expired: 0,
-              id: '',
-              url: '',
-              status: 'none',
-            },
+      total: playlists.total,
+      playlists: playlists.playlists.map((playlist) => ({
+        id: `playlist_personal_${playlist.type}/${playlist.name}`,
+        library: 'personal',
+        name: playlist.name,
+        sharing_status: 'none',
+        type: playlist.type,
+        additional: {
+          rules: (playlist.rules || []).map(ruleToRow),
+          rules_conjunction: playlist.rulesConjugal,
+          sharing_info: {
+            date_available: 0,
+            date_expired: 0,
+            id: '',
+            url: '',
+            status: 'none',
           },
-        };
-      }),
+        },
+      })),
     };
   }
 
   async getItems(accountId: number, body: SynologyPlaylistTrackListBodyDto): Promise<SynologyPlaylistWithItemsDataDto> {
     const playlist = await this.getPlaylist(accountId, body.id);
-    const itemIds = await this.playlistItemEntity.findAll({
-      attributes: ['id', 'trackId', 'position', 'radioStationTitle', 'radioStationUrl'],
-      where: {
-        playlistId: playlist.id,
-      },
-      order: [['position', 'ASC']],
-    });
+    const itemIds = (await this.playlistsService.listItems(accountId, playlist.id)).items;
     const tracks = await this.libraryService.listTracks(accountId, {}, 0, 100_000);
     const radioStationTrack = {
       albumArtists: [],
@@ -368,36 +298,7 @@ export class SynologyPlaylistService {
 
   async getPlaylistInfo(accountId: number, body: SynologyPlaylistRetrieveBodyDto): Promise<SynologyPlaylistDataDto> {
     const playlist = await this.getPlaylist(accountId, body.id);
-    if (playlist.type === PlaylistTypeEnum.NORMAL) {
-      return {
-        offset: 0,
-        total: 1,
-        playlists: [
-          {
-            id: `playlist_personal_${playlist.type}/${playlist.name}`,
-            library: 'personal',
-            name: playlist.name,
-            sharing_status: 'none',
-            type: playlist.type,
-            additional: {
-              sharing_info: {
-                date_available: 0,
-                date_expired: 0,
-                id: '',
-                url: '',
-                status: 'none',
-              },
-            },
-          },
-        ],
-      };
-    }
-    const rules = await this.playlistSmartRuleEntity.findAll({
-      where: {
-        playlistId: playlist.id,
-      },
-      order: [['id', 'ASC']],
-    });
+    const isSmart = playlist.type === PlaylistTypeEnum.SMART;
     return {
       offset: 0,
       total: 1,
@@ -409,8 +310,12 @@ export class SynologyPlaylistService {
           sharing_status: 'none',
           type: playlist.type,
           additional: {
-            rules: rules.map(ruleToRow),
-            rules_conjunction: playlist.rulesConjugal,
+            ...(isSmart
+              ? {
+                  rules: (playlist.rules || []).map(ruleToRow),
+                  rules_conjunction: playlist.rulesConjugal,
+                }
+              : {}),
             sharing_info: {
               date_available: 0,
               date_expired: 0,
@@ -426,143 +331,46 @@ export class SynologyPlaylistService {
 
   async moveItem(accountId: number, body: SynologyPlaylistAddOrRemoveItemBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    if (playlist.type === PlaylistTypeEnum.SMART) {
-      throw new Error('Cannot move items in a smart playlist');
-    }
-    const items = await this.playlistItemEntity.findAll({
-      attributes: ['id', 'trackId', 'radioStationUrl', 'radioStationTitle', 'position'],
-      where: {
-        playlistId: playlist.id,
-      },
-      order: [['position', 'ASC']],
-    });
-    const movingItems = items.filter((item) => {
-      const idValue = item.trackId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
-      return body.songs.includes(idValue);
-    });
-    const remainingItems = items.filter((item) => {
-      const idValue = item.trackId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
-      return !body.songs.includes(idValue);
-    });
-    const insertAt = Math.min(Math.max(body.offset, 0), remainingItems.length);
-    const newOrder = [...remainingItems.slice(0, insertAt), ...movingItems, ...remainingItems.slice(insertAt)];
-    for (let i = 0; i < newOrder.length; i += 1) {
-      const item = newOrder[i];
-      if (item) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.playlistItemEntity.update(
-          {
-            position: i + 1,
-          },
-          {
-            where: {
-              id: item.id,
-              playlistId: playlist.id,
-            },
-          },
-        );
-      }
-    }
+    const { items } = await this.playlistsService.listItems(accountId, playlist.id);
+    const movingItemIds = items
+      .filter((item) => {
+        const idValue = item.trackId || `radio_${item.radioStationTitle} ${item.radioStationUrl}`;
+        return body.songs.includes(idValue);
+      })
+      .map((item) => item.id);
+    await this.playlistsService.moveItems(accountId, playlist.id, movingItemIds, body.offset);
   }
 
   async removeItem(accountId: number, body: SynologyPlaylistAddOrRemoveItemBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    const items = await this.playlistItemEntity.findAll({
-      attributes: ['id'],
-      where: {
-        playlistId: playlist.id,
-      },
-    });
-    if (!items || items.length < body.offset) {
-      throw new Error(`Playlist item with offset ${body.offset} not found in playlist ${body.id}`);
-    }
-    const deleteItems: number[] = [];
-    for (let i = body.offset; i < body.offset + body.limit; i += 1) {
-      const item = items[i];
-      if (item) {
-        deleteItems.push(item.id);
-      }
-    }
-    if (deleteItems.length === 0) {
-      throw new Error(`Playlist item with offset ${body.offset} not found in playlist ${body.id}`);
-    }
-    await this.playlistItemEntity.destroy({
-      where: {
-        id: {
-          [Op.in]: deleteItems,
-        },
-      },
-    });
-    for (let i = body.offset - 1 + body.limit; i < items.length; i += 1) {
-      const nextItem = items[i];
-      if (nextItem) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.playlistItemEntity.update(
-          {
-            position: i - body.limit + 1,
-          },
-          {
-            where: {
-              id: nextItem.id,
-            },
-          },
-        );
-      }
-    }
+    const contents = await this.playlistsService.listItems(accountId, playlist.id);
+    const removingItemIds = contents.items.slice(body.offset, body.offset + body.limit).map((item) => item.id);
+    await this.playlistsService.removeItems(accountId, playlist.id, removingItemIds);
   }
 
   async renamePlaylist(accountId: number, body: SynologyPlaylistRenameBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    await this.playlistEntity.update(
-      {
-        name: replaceDoubleQuotes(body.new_name),
-      },
-      {
-        where: {
-          id: playlist.id,
-        },
-      },
-    );
+    if (playlist.name !== body.new_name) {
+      await this.playlistsService.updatePlaylist(accountId, playlist.id, body.new_name);
+    }
     return {
-      id: `playlist_personal/${replaceDoubleQuotes(body.new_name)}`,
+      id: `playlist_personal_${PlaylistTypeEnum.NORMAL}/${replaceDoubleQuotes(body.new_name)}`,
     };
   }
 
   async updateSmartPlaylist(accountId: number, body: SynologyPlaylistUpdateSmartBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    await this.playlistEntity.update(
-      {
-        name: replaceDoubleQuotes(body.name),
-        rulesConjugal: body.conj_rule,
-        type: PlaylistTypeEnum.SMART,
-      } as PlaylistEntity,
-      {
-        where: {
-          id: playlist.id,
-        },
-      },
-    );
-    await this.playlistSmartRuleEntity.destroy({
-      where: {
-        playlistId: playlist.id,
-      },
-    });
-    for (let i = 0, len = body.rules_json.length; i < len; i += 1) {
-      const rule = body.rules_json[i];
-      if (rule) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.playlistSmartRuleEntity.create({
-          playlistId: playlist.id,
-          field: rule.fieldName,
-          operation: rule.operationName,
-          value: rule.tagval,
-          interval: rule.intervalName,
-        } as PlaylistSmartRuleEntity);
-      }
+    if (playlist.name !== body.name) {
+      await this.playlistsService.updatePlaylist(accountId, playlist.id, body.name);
     }
-
+    await this.playlistsService.updatePlaylistRules(
+      accountId,
+      playlist.id,
+      body.conj_rule,
+      toRuleInputs(body.rules_json),
+    );
     return {
-      id: `playlist_personal_smart/${body.name}`,
+      id: `playlist_personal_${PlaylistTypeEnum.SMART}/${replaceDoubleQuotes(body.name)}`,
     };
   }
 }

@@ -47,7 +47,7 @@ export class SynologyPlaylistCreateNormalBodyDto extends SynologyBody({
   declare name: string;
 }
 
-class SynologySmartListRule {
+export class SynologySmartListRule {
   @IsInt()
   declare interval: number;
 

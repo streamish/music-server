@@ -2,6 +2,7 @@ import { CoverImagesModule } from 'src/cover-images/cover-images.module';
 import { FavoritesModule } from 'src/favorites/favorites.module';
 import { LibraryModule } from 'src/library/library.module';
 import { Module } from '@nestjs/common';
+import { PlaylistsModule } from 'src/playlists/playlists.module';
 import { RatingsModule } from 'src/ratings/ratings.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ShoutcastModule } from 'src/shoutcast/shoutcast.module';
@@ -44,6 +45,7 @@ import { entitiesList } from 'src/database/entities';
     CoverImagesModule,
     FavoritesModule,
     LibraryModule,
+    PlaylistsModule,
     RatingsModule,
     SequelizeModule.forFeature(entitiesList),
     ShoutcastModule,
