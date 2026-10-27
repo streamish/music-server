@@ -74,7 +74,7 @@ export class QnapAuthLoginService {
         query.user,
         query.pwd,
         userAgent,
-        SessionRestrictionEnum.QNAP_MUSICSTATION,
+        SessionRestrictionEnum.QNAP_MUSIC_STATION,
         3650,
       );
     } catch (error) {

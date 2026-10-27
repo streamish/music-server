@@ -2,7 +2,7 @@ import {
   ADMIN_APIS,
   GUEST_APIS,
   JWT_BEARER_AUTH,
-  QNAP_MUSICSTATION_APIS,
+  QNAP_MUSIC_STATION_APIS,
   SYNOLOGY_AUDIOSTATION_APIS,
   USER_APIS,
 } from './constants/swagger';
@@ -101,7 +101,7 @@ async function bootstrap() {
         'Compatibility layer emulating Synology AudioStation, for Synology DS Audio smartphone apps.',
       )
       .addTag(
-        QNAP_MUSICSTATION_APIS,
+        QNAP_MUSIC_STATION_APIS,
         'Compatibility layer emulating QNAP Music Station, for QNAP QMusic smartphone apps.',
       )
       .setVersion('1.0')
