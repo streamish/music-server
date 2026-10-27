@@ -14,7 +14,7 @@ import {
   InternalServerErrorResponseDto,
 } from '../../../response.dto';
 import { Controller, Header, HttpCode, HttpStatus, Type, UseGuards, applyDecorators } from '@nestjs/common';
-import { QNAP_AUTHENTICATED_REQUEST_DESCRIPTION, QNAP_MUSICSTATION_APIS, XML_MIME_TYPE } from 'src/constants/swagger';
+import { QNAP_AUTHENTICATED_REQUEST_DESCRIPTION, QNAP_MUSIC_STATION_APIS, XML_MIME_TYPE } from 'src/constants/swagger';
 import { QnapGuard } from './qnap.guard';
 import { ResponseTypes } from '../../../api.decorator';
 import { UserRoleEnum } from 'src/types/enums';
@@ -23,7 +23,7 @@ import { UserRoleEnum } from 'src/types/enums';
  * Applies a common set of decorators to QNAP endpoint controllers:
  * - set the path with \@Controller
  * - restrict access to users and administrators with \@UseGuards and \@AllowedRoles
- * - groups under the QNAP_MUSICSTATION_APIS for Swagger with \@ApiTags
+ * - groups under the QNAP_MUSIC_STATION_APIS for Swagger with \@ApiTags
  *
  * This decorator consolidates common setup for QNAP endpoint controllers, ensuring
  * consistent security and documentation across the API.
@@ -36,7 +36,7 @@ export function QnapController(
     Controller({
       path: path || '/cgi-bin',
     }),
-    ApiTags(QNAP_MUSICSTATION_APIS),
+    ApiTags(QNAP_MUSIC_STATION_APIS),
     ApiProduces(XML_MIME_TYPE),
     UseGuards(QnapGuard),
     ...(allowGuest ? [AllowGuest()] : [AllowedRoles([UserRoleEnum.ADMIN, UserRoleEnum.USER])]),

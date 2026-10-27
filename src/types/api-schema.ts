@@ -1479,70 +1479,6 @@ export type paths = {
     patch: operations['ApiRootPathsController_patch'];
     trace?: never;
   };
-  '/cgi-bin/as_get_file_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Streams a music file to QMusic clients
-     * @description Streams a music file for playback.
-     *
-     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
-     */
-    get: operations['QnapAsGetFileController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/cgi-bin/as_localplayback.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Handles local playback requests from QMusic clients
-     * @description This endpoint manages local playback status for QMusic clients.
-     */
-    post: operations['QnapAsLocalPlaybackController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/cgi-bin/as_login_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * System configuration for iPhone
-     * @description Part of the QNAP authentication chain
-     *     This endpoint returns information to the iPhone and Android apps as part of the authentication process.
-     *     The JWT token is sent as `ssid` in the querystring by the Android app and in the POST body by the iOS app.
-     */
-    post: operations['QnapAsLoginController_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/cgi-bin/authLogin.cgi': {
     parameters: {
       query?: never;
@@ -1561,50 +1497,6 @@ export type paths = {
      * @description Handles various QNAP Music Station authentication requests. Preauthentication requests return password configuration and system information. Authentication requests validate the username and password, which is sent base-64 encoded. Validating sessions confirms a JWT token and returns system configuration information. Resuming sessions does not validate the JWT token and returns system configuration information. This is the same as the GET handler except the data is provided in the POST body by the iPhone app. The backend consolidates handling these requests.
      */
     post: operations['QnapAuthLoginController_postRequest'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/cgi-bin/mediacover_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Retrieves cover images
-     * @description This endpoint retrieves the cover image for a specified album, artist, or folder. The image comes from the first song in the album that contains an embedded image. If the album has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance. The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.
-     *
-     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
-     */
-    get: operations['QnapMediaCoverController_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/cgi-bin/mediatool_api.php': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Reports IP addresses to mobile apps
-     * @description This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.
-     *
-     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
-     */
-    post: operations['QnapMediaToolController_get'];
     delete?: never;
     options?: never;
     head?: never;
@@ -1632,6 +1524,92 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/musicstation/api/as_get_file_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Streams a music file to QMusic clients
+     * @description Streams a music file for playback.
+     *
+     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
+     */
+    get: operations['QnapAsGetFileController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/musicstation/api/as_localplayback.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Handles local playback requests from QMusic clients
+     * @description This endpoint manages local playback status for QMusic clients.
+     */
+    post: operations['QnapAsLocalPlaybackController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/musicstation/api/as_login_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * System configuration for iPhone
+     * @description Part of the QNAP authentication chain
+     *     This endpoint returns information to the iPhone and Android apps as part of the authentication process.
+     *     The JWT token is sent as `ssid` in the querystring by the Android app and in the POST body by the iOS app.
+     */
+    post: operations['QnapAsLoginController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/musicstation/api/mediacover_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Retrieves cover images
+     * @description This endpoint retrieves the cover image for a specified album, artist, or folder. The image comes from the first song in the album that contains an embedded image. If the album has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance. The asset ID may be provided as an `imagepath` value like `api/mediacover_api.php?id=123` or as an ID value.
+     *
+     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
+     */
+    get: operations['QnapMediaCoverController_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/musicstation/api/medialist_api.php': {
     parameters: {
       query?: never;
@@ -1648,6 +1626,28 @@ export type paths = {
      *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
      */
     post: operations['QnapMediaListController_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/musicstation/api/mediatool_api.php': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Reports IP addresses to mobile apps
+     * @description This endpoint reports the LAN and WAN IP addresses and ports to mobile clients.
+     *
+     *     The request must be authenticated using a valid JWT token passed as a URL parameter `sid`.
+     */
+    post: operations['QnapMediaToolController_get'];
     delete?: never;
     options?: never;
     head?: never;
@@ -14844,6 +14844,169 @@ export interface operations {
       };
     };
   };
+  QnapAuthLoginController_routeRequest: {
+    parameters: {
+      query?: {
+        /** @description The client browser or app user agent */
+        client_agent?: string;
+        /** @description The client app */
+        client_app?: string;
+        /** @description An ID value sent by the client, probably randomly-generated or a fingerprint */
+        client_id?: string;
+        force_to_check_2sv?: number;
+        pwd?: string;
+        qtoken?: string;
+        /** @description Flag for remembering signin */
+        remme?: number;
+        service?: number;
+        serviceKey?: number;
+        /**
+         * @description On a QNAP NAS this value is a 8-digit short string that authenticates the user
+         *     session.  In this software the JWT token is used instead.
+         */
+        sid?: string;
+        user?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml':
+            | components['schemas']['QnapPreauthenticateDto']
+            | components['schemas']['QnapAuthLoginDto']
+            | components['schemas']['QnapAuthLoginFailedDto']
+            | components['schemas']['QnapAuthResumeSessionDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapAuthLoginController_postRequest: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['QnapAuthLoginQueryDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml':
+            | components['schemas']['QnapPreauthenticateDto']
+            | components['schemas']['QnapAuthLoginDto']
+            | components['schemas']['QnapAuthLoginFailedDto']
+            | components['schemas']['QnapAuthResumeSessionDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapSysRequestController_routeRequest: {
+    parameters: {
+      query: {
+        sid: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['QnapSysRequestDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   QnapAsGetFileController_get: {
     parameters: {
       query: {
@@ -14987,124 +15150,6 @@ export interface operations {
       };
     };
   };
-  QnapAuthLoginController_routeRequest: {
-    parameters: {
-      query?: {
-        /** @description The client browser or app user agent */
-        client_agent?: string;
-        /** @description The client app */
-        client_app?: string;
-        /** @description An ID value sent by the client, probably randomly-generated or a fingerprint */
-        client_id?: string;
-        force_to_check_2sv?: number;
-        pwd?: string;
-        qtoken?: string;
-        /** @description Flag for remembering signin */
-        remme?: number;
-        service?: number;
-        serviceKey?: number;
-        /**
-         * @description On a QNAP NAS this value is a 8-digit short string that authenticates the user
-         *     session.  In this software the JWT token is used instead.
-         */
-        sid?: string;
-        user?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml':
-            | components['schemas']['QnapPreauthenticateDto']
-            | components['schemas']['QnapAuthLoginDto']
-            | components['schemas']['QnapAuthLoginFailedDto']
-            | components['schemas']['QnapAuthResumeSessionDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  QnapAuthLoginController_postRequest: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['QnapAuthLoginQueryDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml':
-            | components['schemas']['QnapPreauthenticateDto']
-            | components['schemas']['QnapAuthLoginDto']
-            | components['schemas']['QnapAuthLoginFailedDto']
-            | components['schemas']['QnapAuthResumeSessionDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
   QnapMediaCoverController_get: {
     parameters: {
       query?: {
@@ -15125,94 +15170,6 @@ export interface operations {
         };
         content: {
           'text/xml': string;
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  QnapMediaToolController_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['QnapMediaToolResponseDto'];
-        };
-      };
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['BadRequestResponseDto'];
-        };
-      };
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
-        };
-      };
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
-        };
-      };
-    };
-  };
-  QnapSysRequestController_routeRequest: {
-    parameters: {
-      query: {
-        sid: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/xml': components['schemas']['QnapSysRequestDto'];
         };
       };
       400: {
@@ -15266,6 +15223,49 @@ export interface operations {
             | components['schemas']['QnapMediaListGenresResponseDto']
             | components['schemas']['QnapMediaListFolderContentsResponseDto']
             | components['schemas']['QnapMediaListTracksResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  QnapMediaToolController_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'text/xml': components['schemas']['QnapMediaToolResponseDto'];
         };
       };
       400: {

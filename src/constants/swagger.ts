@@ -25,7 +25,7 @@ export const SYNOLOGY_AUDIOSTATION_APIS = 'Synology AudioStation APIs';
 /**
  * The compatibility layer for QNAP Music Station and their QMusic smartphone apps.
  */
-export const QNAP_MUSICSTATION_APIS = 'QNAP Music Station APIs';
+export const QNAP_MUSIC_STATION_APIS = 'QNAP Music Station APIs';
 
 /**
  * The compatibility layer for SSubsonic and their Subsonic-compatible smartphone apps.

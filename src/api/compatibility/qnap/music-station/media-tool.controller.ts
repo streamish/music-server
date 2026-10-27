@@ -5,7 +5,7 @@ import { QnapMediaToolQueryDto, QnapMediaToolResponseDto } from './dtos/media-to
 import { QnapMediaToolService } from './media-tool.service';
 import { objectToXml } from 'src/utils/xml';
 
-@QnapController()
+@QnapController({ path: '/musicstation/api' })
 export class QnapMediaToolController {
   constructor(private readonly mediaToolApiService: QnapMediaToolService) {}
 
