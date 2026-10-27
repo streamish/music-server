@@ -99,7 +99,6 @@ export class IndexerService {
    * Performs a full scan of a root path and its nested contents and then examines
    * files for additions or modifications and synchronizes the database
    * @param rootPath The indexer root path being scanned
-   * @returns {Promise<void>}
    */
   async scanRootPath(rootPath: RootPathEntity) {
     if (await this.isDisabled()) {
@@ -111,7 +110,12 @@ export class IndexerService {
     const filesToUpdate: FileUpdateItem[] = [];
     const uniqueFolderPaths: string[] = [rootPath.rootPath];
     // start the path scanning to recursively identify all the files within the root path
-    await this.scanFolderContents(rootPath, [rootPath.rootPath], filesToScan, uniqueFolderPaths);
+    const scanCompleted = await this.scanFolderContents(rootPath, [rootPath.rootPath], filesToScan, uniqueFolderPaths);
+    // an interrupted scan has an incomplete file list, so deleting "missing" tracks would remove valid ones
+    if (!scanCompleted) {
+      await this.addLogEntry(rootPath.accountId, rootPath.id, 'folder scan was interrupted, skipping synchronization');
+      return;
+    }
     await this.addLogEntry(
       rootPath.accountId,
       rootPath.id,
@@ -205,24 +209,24 @@ export class IndexerService {
    * @param foldersToScan Array of folders identified during the scan
    * @param filesToScan Array of files identified during the scan
    * @param uniqueFolderPaths Array of unique folder paths identified during the scan
-   * @returns {Promise<void>}
+   * @returns `true` if every folder was scanned, `false` if the scan was interrupted
    */
   async scanFolderContents(
     rootPath: RootPathEntity,
     foldersToScan: string[],
     filesToScan: FileItem[],
     uniqueFolderPaths: string[],
-  ) {
+  ): Promise<boolean> {
     if (await this.isDisabled()) {
       await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
-      return;
+      return false;
     }
     if (!foldersToScan.length) {
-      return;
+      return true;
     }
     const folderPath = foldersToScan.shift();
     if (!folderPath) {
-      return;
+      return true;
     }
     const folderContents = await readDirAsync(folderPath);
     for (let i = 0, len = folderContents.length; i < len; i += 1) {
@@ -248,7 +252,7 @@ export class IndexerService {
         }
       }
     }
-    await this.scanFolderContents(rootPath, foldersToScan, filesToScan, uniqueFolderPaths);
+    return this.scanFolderContents(rootPath, foldersToScan, filesToScan, uniqueFolderPaths);
   }
 
   /**
@@ -257,7 +261,6 @@ export class IndexerService {
    * @param filesToScan Array of files to be scanned
    * @param filesToUpdate Array of files that have been added or modified
    * @param [overrideScannerStatus] Optional flag to ensure a scan occurs on manual changes
-   * @returns {Promise<void>}
    */
   async checkFile(
     rootPath: RootPathEntity,
@@ -293,6 +296,8 @@ export class IndexerService {
         }
       } catch (error) {
         this.logger.error(`error reading metadata ${filePath}`, error);
+        // skip only this file, the remaining files must still be checked
+        await this.checkFile(rootPath, filesToScan, filesToUpdate);
         return;
       }
       if (!existingFile) {
@@ -301,6 +306,7 @@ export class IndexerService {
         const album = await this.indexAlbumService.updateAlbum(rootPath, embeddedData, albumPath, rootPath.accountId);
         if (!album) {
           await this.addLogEntry(rootPath.accountId, rootPath.id, `album not found for file ${filePath}`);
+          await this.checkFile(rootPath, filesToScan, filesToUpdate);
           return;
         }
         // if it doesn't exist add it to the database
@@ -340,7 +346,6 @@ export class IndexerService {
    * for its IDv3 data and then synchronous the database with those values.
    * @param rootPath The indexer root path being scanned
    * @param filesToUpdate Array of files that have been added or modified
-   * @returns {Promise<void>}
    */
   async updateFile(rootPath: RootPathEntity, filesToUpdate: FileUpdateItem[]) {
     if (await this.isDisabled()) {
@@ -373,7 +378,6 @@ export class IndexerService {
    * @param relativePath The path to the file on disk
    * @param fileSize The size of the file
    * @param fileMtime The last-modified date of the file
-   * @returns {Promise<void>}
    */
   async synchronizeFile(
     rootPath: RootPathEntity,
