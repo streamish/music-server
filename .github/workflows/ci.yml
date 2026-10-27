@@ -33,10 +33,10 @@ jobs:
       #   run: npm audit
 
       - name: Run linter
-        run: npm run lint
+        run: npx eslint . --max-warnings=0
 
       - name: Run prettier
-        run: npm run prettier -- --check
+        run: npx prettier . --check
 
       - name: Start backend
         run: npm run start:test > "$RUNNER_TEMP/backend.log" 2>&1 &
