@@ -1,3 +1,4 @@
+import { IndexerLogService } from './indexer-log.service';
 import { IndexerService } from './indexer.service';
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
@@ -33,9 +34,10 @@ describe('IndexerService', () => {
     parseMetaData = jest.fn<() => Promise<IAudioMetadata>>().mockResolvedValue({} as IAudioMetadata);
     service = new IndexerService(
       indexAlbumService as never,
-      {} as never,
       indexFileService as never,
       indexFolderService as never,
+      new IndexerLogService(),
+      {} as never,
       trackEntity as never,
       {} as never,
       {} as never,

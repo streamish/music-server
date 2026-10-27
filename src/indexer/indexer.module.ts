@@ -13,11 +13,13 @@ import { IndexAlbumService } from './index-album.service';
 import { IndexAssociationService } from './index-association.service';
 import { IndexFolderService } from './index-folders.service';
 import { IndexTrackService } from './index-track.service';
+import { IndexerLogService } from './indexer-log.service';
 import { IndexerSchedulerService } from './indexer-scheduler.service';
 import { IndexerService } from './indexer.service';
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { SystemConfigurationEntity } from 'src/database/entities/system-configurations.entity';
+import { TrackSynchronizerService } from './track-synchronizer.service';
 
 @Module({
   imports: [
@@ -41,7 +43,9 @@ import { SystemConfigurationEntity } from 'src/database/entities/system-configur
     IndexAssociationService,
     IndexFolderService,
     IndexTrackService,
+    IndexerLogService,
+    TrackSynchronizerService,
   ],
-  exports: [IndexerService],
+  exports: [IndexerService, IndexerLogService],
 })
 export class IndexerModule {}

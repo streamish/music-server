@@ -1,16 +1,16 @@
-import { AssociationTypeEnum } from 'src/types/enums';
 import { ErrorCodes } from 'src/constants/error-codes';
-import { FileItem, FileUpdateItem, LogEntry } from './types';
+import { FileItem, FileUpdateItem } from './types';
 import { IAudioMetadata, IOptions } from 'src/types/music-metadata';
 import { IndexAlbumService } from './index-album.service';
-import { IndexAssociationService } from './index-association.service';
 import { IndexFolderService } from './index-folders.service';
 import { IndexTrackService } from './index-track.service';
 import { IndexerConfigurationEntity, RootPathEntity, TrackEntity } from 'src/database/entities';
+import { IndexerLogService } from './indexer-log.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, Logger } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { SystemConfigurationEntity } from 'src/database/entities/system-configurations.entity';
+import { TrackSynchronizerService } from './track-synchronizer.service';
 import { basename, join, sep } from 'node:path';
 import { promisify } from 'util';
 import { readdir, stat } from 'node:fs';
@@ -23,17 +23,14 @@ const validFiles = ['mp3', 'flac', 'ogg', 'm4a'];
 export class IndexerService {
   private readonly logger: Logger = new Logger(IndexerService.name);
 
-  public readonly logs: LogEntry[] = [];
-
-  private logSizeLimit: number = 1000;
-
   private parseMetaData!: (filePath: string, options?: IOptions) => Promise<IAudioMetadata>;
 
   constructor(
     private readonly indexAlbumService: IndexAlbumService,
-    private readonly indexAssociationService: IndexAssociationService,
     private readonly indexFileService: IndexTrackService,
     private readonly indexFolderService: IndexFolderService,
+    private readonly indexerLog: IndexerLogService,
+    private readonly trackSynchronizer: TrackSynchronizerService,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
     @InjectModel(IndexerConfigurationEntity)
@@ -43,27 +40,6 @@ export class IndexerService {
     @InjectModel(SystemConfigurationEntity)
     private readonly systemConfigurationEntity: typeof SystemConfigurationEntity,
   ) {}
-
-  async addLogEntry(accountId: number, rootPathId: number, message: string) {
-    const logEntry: LogEntry = {
-      accountId,
-      rootPathId,
-      message,
-      date: new Date(),
-    };
-    this.logger.log(`[accountId: ${accountId} rootPathId: ${rootPathId}] ${message}`);
-    this.logs.push(logEntry);
-    while (this.logs.length > this.logSizeLimit) {
-      this.logs.shift();
-    }
-  }
-
-  setLogSizeLimit(limit: number): void {
-    this.logSizeLimit = limit;
-    while (this.logs.length > this.logSizeLimit) {
-      this.logs.shift();
-    }
-  }
 
   async getSystemConfiguration(): Promise<SystemConfigurationEntity> {
     const config = await this.systemConfigurationEntity.findOne({
@@ -102,10 +78,10 @@ export class IndexerService {
    */
   async scanRootPath(rootPath: RootPathEntity) {
     if (await this.isDisabled()) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
+      this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
     }
-    await this.addLogEntry(rootPath.accountId, rootPath.id, `scanning root path `);
+    this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, `scanning root path `);
     const filesToScan: FileItem[] = [];
     const filesToUpdate: FileUpdateItem[] = [];
     const uniqueFolderPaths: string[] = [rootPath.rootPath];
@@ -113,10 +89,14 @@ export class IndexerService {
     const scanCompleted = await this.scanFolderContents(rootPath, [rootPath.rootPath], filesToScan, uniqueFolderPaths);
     // an interrupted scan has an incomplete file list, so deleting "missing" tracks would remove valid ones
     if (!scanCompleted) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'folder scan was interrupted, skipping synchronization');
+      this.indexerLog.addLogEntry(
+        rootPath.accountId,
+        rootPath.id,
+        'folder scan was interrupted, skipping synchronization',
+      );
       return;
     }
-    await this.addLogEntry(
+    this.indexerLog.addLogEntry(
       rootPath.accountId,
       rootPath.id,
       `root path contains ${uniqueFolderPaths.length} folders with ${filesToScan.length} files`,
@@ -132,7 +112,7 @@ export class IndexerService {
       },
     });
     if (deletedFiles) {
-      await this.addLogEntry(
+      this.indexerLog.addLogEntry(
         rootPath.accountId,
         rootPath.id,
         `deleted ${deletedFiles} stale file references from the database`,
@@ -181,26 +161,7 @@ export class IndexerService {
     const { embeddedData } = fileToUpdate;
     const albumPath = filePath.replace(rootPath.rootPath, '').split(sep).slice(0, 3).join(sep);
     await this.indexAlbumService.updateAlbum(rootPath, embeddedData, albumPath, rootPath.accountId);
-    const track = await this.indexFileService.updateTrack(embeddedData, trackId, rootPath.accountId);
-    await this.indexAssociationService.updateAssociations(
-      embeddedData,
-      rootPath.accountId,
-      AssociationTypeEnum.ARTIST,
-      track,
-    );
-    await this.indexAssociationService.updateAssociations(
-      embeddedData,
-      rootPath.accountId,
-      AssociationTypeEnum.COMPOSER,
-      track,
-    );
-    await this.indexAssociationService.updateAssociations(
-      embeddedData,
-      rootPath.accountId,
-      AssociationTypeEnum.GENRE,
-      track,
-    );
-    await this.indexAssociationService.syncAlbumAssociations(track.albumId);
+    await this.trackSynchronizer.syncTrack(rootPath.accountId, trackId, embeddedData);
   }
 
   /**
@@ -218,7 +179,7 @@ export class IndexerService {
     uniqueFolderPaths: string[],
   ): Promise<boolean> {
     if (await this.isDisabled()) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
+      this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return false;
     }
     if (!foldersToScan.length) {
@@ -269,7 +230,7 @@ export class IndexerService {
     overrideScannerStatus?: boolean,
   ) {
     if (overrideScannerStatus !== true && (await this.isDisabled())) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
+      this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
     }
     if (!filesToScan.length) {
@@ -302,10 +263,10 @@ export class IndexerService {
       }
       if (!existingFile) {
         // add new track
-        await this.addLogEntry(rootPath.accountId, rootPath.id, `found new track ${filePath}`);
+        this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, `found new track ${filePath}`);
         const album = await this.indexAlbumService.updateAlbum(rootPath, embeddedData, albumPath, rootPath.accountId);
         if (!album) {
-          await this.addLogEntry(rootPath.accountId, rootPath.id, `album not found for file ${filePath}`);
+          this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, `album not found for file ${filePath}`);
           await this.checkFile(rootPath, filesToScan, filesToUpdate);
           return;
         }
@@ -327,7 +288,7 @@ export class IndexerService {
           size: fileItem.size,
         });
       } else if (existingFile.fileMtime.getTime() !== lastModified.getTime()) {
-        await this.addLogEntry(rootPath.accountId, rootPath.id, `found modified track ${relativePath}`);
+        this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, `found modified track ${relativePath}`);
         // if it exists but the last-modified is different update it
         filesToUpdate.push({
           embeddedData,
@@ -349,7 +310,7 @@ export class IndexerService {
    */
   async updateFile(rootPath: RootPathEntity, filesToUpdate: FileUpdateItem[]) {
     if (await this.isDisabled()) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
+      this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
     }
     if (!filesToUpdate.length) {
@@ -388,30 +349,11 @@ export class IndexerService {
     fileMtime: Date,
   ) {
     if (await this.isDisabled()) {
-      await this.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
+      this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, 'scanner is disabled, skipping scan');
       return;
     }
-    await this.addLogEntry(rootPath.accountId, rootPath.id, `saving track ${relativePath}`);
-    const track = await this.indexFileService.updateTrack(embeddedData, trackId, rootPath.accountId);
-    await this.indexAssociationService.updateAssociations(
-      embeddedData,
-      rootPath.accountId,
-      AssociationTypeEnum.ARTIST,
-      track,
-    );
-    await this.indexAssociationService.updateAssociations(
-      embeddedData,
-      rootPath.accountId,
-      AssociationTypeEnum.COMPOSER,
-      track,
-    );
-    await this.indexAssociationService.updateAssociations(
-      embeddedData,
-      rootPath.accountId,
-      AssociationTypeEnum.GENRE,
-      track,
-    );
-    await this.indexAssociationService.syncAlbumAssociations(track.albumId);
+    this.indexerLog.addLogEntry(rootPath.accountId, rootPath.id, `saving track ${relativePath}`);
+    await this.trackSynchronizer.syncTrack(rootPath.accountId, trackId, embeddedData);
     await this.trackEntity.update(
       {
         fileMtime,

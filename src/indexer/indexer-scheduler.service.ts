@@ -1,6 +1,7 @@
 import { ConfigService } from 'src/config/config.service';
 import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
 import { FSWatcher, watch } from 'node:fs';
+import { IndexerLogService } from './indexer-log.service';
 import { IndexerService } from './indexer.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
@@ -19,6 +20,7 @@ export class IndexerSchedulerService implements OnModuleDestroy {
   constructor(
     private readonly configService: ConfigService,
     private readonly indexerService: IndexerService,
+    private readonly indexerLog: IndexerLogService,
     @InjectModel(RootPathEntity)
     private readonly rootPathEntity: typeof RootPathEntity,
     @InjectModel(TrackEntity)
@@ -27,7 +29,7 @@ export class IndexerSchedulerService implements OnModuleDestroy {
 
   @Timeout(1000)
   async manualStart(): Promise<void> {
-    await this.indexerService.addLogEntry(0, 0, 'Queueing root paths (manualStart)');
+    this.indexerLog.addLogEntry(0, 0, 'Queueing root paths (manualStart)');
     await this.refreshFileWatchers();
     await this.processQueuedPath();
   }
@@ -45,12 +47,12 @@ export class IndexerSchedulerService implements OnModuleDestroy {
         await this.processQueuedPath();
       }
     }
-    await this.indexerService.addLogEntry(0, 0, 'Finished test indexing');
+    this.indexerLog.addLogEntry(0, 0, 'Finished test indexing');
   }
 
   @Cron(CronExpression.EVERY_HOUR)
   async periodicRefresh(): Promise<void> {
-    await this.indexerService.addLogEntry(0, 0, 'Queueing root paths (periodicRefresh)');
+    this.indexerLog.addLogEntry(0, 0, 'Queueing root paths (periodicRefresh)');
     const rootPaths = await this.rootPathEntity.findAll({
       attributes: ['id'],
     });
@@ -59,7 +61,7 @@ export class IndexerSchedulerService implements OnModuleDestroy {
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async vacuumDatabase(): Promise<void> {
-    await this.indexerService.addLogEntry(0, 0, 'Vacuuming database');
+    this.indexerLog.addLogEntry(0, 0, 'Vacuuming database');
     await this.trackEntity.sequelize?.query('VACUUM');
   }
 
@@ -72,15 +74,13 @@ export class IndexerSchedulerService implements OnModuleDestroy {
       const rootPath = rootPaths[i];
       if (rootPath && !this.watchedFolders[rootPath.id]) {
         // eslint-disable-next-line no-await-in-loop
-        await this.indexerService.addLogEntry(0, 0, `Setting up watcher for root path: ${rootPath.rootPath}`);
+        this.indexerLog.addLogEntry(0, 0, `Setting up watcher for root path: ${rootPath.rootPath}`);
         const watcher = watch(rootPath.rootPath, (eventType, filename) => {
-          this.indexerService
-            .addLogEntry(
-              0,
-              0,
-              `File system event detected: ${eventType} - ${filename} (root path: ${rootPath.rootPath})`,
-            )
-            .catch((error: unknown) => this.logger.error('Failed to log file system event', error));
+          this.indexerLog.addLogEntry(
+            0,
+            0,
+            `File system event detected: ${eventType} - ${filename} (root path: ${rootPath.rootPath})`,
+          );
           this.enqueueRootPath(rootPath.id);
         });
         this.watchedFolders[rootPath.id] = watcher;
@@ -89,9 +89,7 @@ export class IndexerSchedulerService implements OnModuleDestroy {
             `File system watcher failed for root path ${rootPath.rootPath}: ${error.message}`,
             error.stack,
           );
-          this.indexerService
-            .addLogEntry(0, rootPath.id, `File system watcher failed: ${error.message}`)
-            .catch((logError: unknown) => this.logger.error('Failed to log file system watcher failure', logError));
+          this.indexerLog.addLogEntry(0, rootPath.id, `File system watcher failed: ${error.message}`);
           watcher.close();
           delete this.watchedFolders[rootPath.id];
         });
@@ -126,10 +124,10 @@ export class IndexerSchedulerService implements OnModuleDestroy {
         return;
       }
       const systemConfiguration = await this.indexerService.getSystemConfiguration();
-      this.indexerService.setLogSizeLimit(systemConfiguration.indexerLogSize);
+      this.indexerLog.setLogSizeLimit(systemConfiguration.indexerLogSize);
       if (await this.indexerService.isDisabled()) {
         this.enqueueRootPath(rootPathId);
-        await this.indexerService.addLogEntry(
+        this.indexerLog.addLogEntry(
           0,
           0,
           `scanner is disabled, queue will be processed later (${this.scannerQueue.length})`,
@@ -137,11 +135,7 @@ export class IndexerSchedulerService implements OnModuleDestroy {
         return;
       }
 
-      await this.indexerService.addLogEntry(
-        0,
-        0,
-        `checking for queued root paths to scan (${this.scannerQueue.length})`,
-      );
+      this.indexerLog.addLogEntry(0, 0, `checking for queued root paths to scan (${this.scannerQueue.length})`);
       const rootPath = await this.rootPathEntity.findByPk(rootPathId);
       if (!rootPath) {
         return;
@@ -157,7 +151,7 @@ export class IndexerSchedulerService implements OnModuleDestroy {
       if (rootPathId !== undefined) {
         this.enqueueRootPath(rootPathId);
       }
-      await this.indexerService.addLogEntry(0, rootPathId ?? 0, `Failed to scan queued root path: ${message}`);
+      this.indexerLog.addLogEntry(0, rootPathId ?? 0, `Failed to scan queued root path: ${message}`);
     } finally {
       this.isIndexing = false;
     }
