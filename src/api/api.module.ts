@@ -6,6 +6,7 @@ import { ApiFavoritesModule } from './favorites/favorites.module';
 import { ApiHealthcheckModule } from './healthcheck/healthcheck.module';
 import { ApiIndexerModule } from './indexer/indexer.module';
 import { ApiMediaModule } from './media/media.module';
+import { ApiPlaylistsModule } from './playlists/playlists.module';
 import { ApiRatingsModule } from './ratings/ratings.module';
 import { ApiRootPathsModule } from './root-paths/root-paths.module';
 import { ApiSessionsModule } from './sessions/sessions.module';
@@ -22,6 +23,7 @@ import { Module } from '@nestjs/common';
     ApiHealthcheckModule,
     ApiIndexerModule,
     ApiMediaModule,
+    ApiPlaylistsModule,
     ApiRatingsModule,
     ApiRootPathsModule,
     ApiSessionsModule,
