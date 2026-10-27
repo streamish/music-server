@@ -63,7 +63,7 @@ export class LibraryService {
    * @param limit The limit for pagination
    * @param sortField The field to sort the results by
    * @param sortDirection The direction to sort the results (ASC or DESC)
-   * @returns {Promise<ListResult<LibraryAssociationDto>>}
+   * @returns Paginated result set of album-associated artists, composers or genres
    */
   async listAlbumAssociations(
     accountId: number,
@@ -437,7 +437,7 @@ export class LibraryService {
    * @param limit
    * @param sortField
    * @param sortDirection
-   * @returns {Promise<ListResult<LibraryAssociationDto>>}
+   * @returns Paginated result set of track-associated artists, composers or genres
    */
   async listTrackAssociations(
     accountId: number,
