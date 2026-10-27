@@ -1,7 +1,7 @@
 import { AccountEntity, IndexerConfigurationEntity, RootPathEntity } from 'src/database/entities';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { IndexerConfigurationDto, LogWithUserEntryDto } from './dtos';
-import { IndexerService } from 'src/indexer/indexer.service';
+import { IndexerLogService } from 'src/indexer/indexer-log.service';
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { LogEntry } from 'src/indexer/types';
@@ -37,7 +37,7 @@ export class ApiIndexerService {
     private readonly indexerConfigurationEntity: typeof IndexerConfigurationEntity,
     @InjectModel(RootPathEntity)
     private readonly rootPathEntity: typeof RootPathEntity,
-    @Inject(IndexerService) private readonly indexerService: IndexerService,
+    @Inject(IndexerLogService) private readonly indexerLog: IndexerLogService,
   ) {}
 
   private async getUsernameMap() {
@@ -87,7 +87,7 @@ export class ApiIndexerService {
     const usernameMap = await this.getUsernameMap();
     const rootPaths = await this.getRootPaths();
     const searchNormalized = search?.toLowerCase()?.trim() || '';
-    return this.indexerService.logs
+    return this.indexerLog.logs
       .filter(
         (item) =>
           (!accountId || item.accountId === accountId) &&
@@ -104,7 +104,7 @@ export class ApiIndexerService {
       throw new NotFoundException(ErrorCodes.INVALID_ROOT_PATH_ID_ERROR);
     }
     const searchNormalized = search?.toLowerCase()?.trim() || '';
-    return this.indexerService.logs
+    return this.indexerLog.logs
       .filter(
         (item) =>
           item.accountId === accountId &&

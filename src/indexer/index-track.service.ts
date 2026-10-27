@@ -4,6 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { TrackCustomDataEntity, TrackEntity } from 'src/database/entities';
 import { Transaction } from 'sequelize';
 import { normalizeString, sanitizeString } from 'src/utils/strings';
+import type { IndexedFile } from './types';
 
 @Injectable()
 export class IndexTrackService {
@@ -57,38 +58,31 @@ export class IndexTrackService {
   }
 
   /**
-   * Returns a file by path with the specified attributes, including any custom data overrides if available.
-   * @param userId The authenticated user ID
-   * @param filePath The path to the file on disk
-   * @param [transaction] Optional Sequelize transaction to use
-   * @returns The file entity with potential data overrides
+   * Returns every indexed file of a root path with the date used to detect changes.  A track with custom data
+   * reports the date its custom data was last saved instead of the file's date, which never matches the file on
+   * disk and so causes the track to be re-indexed.
+   * @param accountId The media owner account ID
+   * @param rootPathId The root path the files belong to
+   * @returns The ID, path and change-detection date of each indexed file
    */
-  async retrieveLastModified(userId: number, filePath: string, transaction?: Transaction) {
-    const track = await this.trackEntity.findOne({
-      where: {
-        filePath,
-        accountId: userId,
-      },
-      attributes: ['id', 'fileMtime'],
-      transaction,
+  async listIndexedFiles(accountId: number, rootPathId: number): Promise<IndexedFile[]> {
+    const tracks = await this.trackEntity.findAll({
+      where: { accountId, rootPathId },
+      attributes: ['id', 'filePath', 'fileMtime'],
+      raw: true,
     });
-    if (!track) {
-      return undefined;
-    }
-    const customData = await this.trackCustomDataEntity.findOne({
-      where: {
-        id: track.id,
-      },
-      attributes: ['id', 'updatedAt'],
-      transaction,
+    // custom data is a small set of user overrides, so it is loaded whole rather than with a very large `IN` filter
+    const customData = await this.trackCustomDataEntity.findAll({
+      attributes: ['id', 'createdAt', 'updatedAt'],
+      raw: true,
     });
-    if (!customData) {
-      return track;
-    }
-    return {
+    const customDataDates = new Map(customData.map((item) => [item.id, item.updatedAt || item.createdAt]));
+    // raw rows return dates as strings or numbers depending on the dialect, so they are normalized here
+    return tracks.map((track) => ({
       id: track.id,
-      fileMtime: customData?.updatedAt || customData?.createdAt || track.fileMtime,
-    };
+      filePath: track.filePath,
+      fileMtime: new Date(customDataDates.get(track.id) || track.fileMtime),
+    }));
   }
 
   async updateTrack(embeddedData: IAudioMetadata, trackId: number, accountId: number, transaction?: Transaction) {

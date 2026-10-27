@@ -84,16 +84,16 @@ export const testApi = {
       },
     });
   },
-  extraAdminsCleared: async () => {
+  extraAdminsCleared: async (): Promise<unknown> => {
     const accounts = await testApi.listAccounts();
     const adminUsers = accounts.filter((user) => user.roles.includes(UserRoleEnum.admin));
     if (adminUsers?.length === 1) {
-      return;
+      return undefined;
     }
     await new Promise((resolve) => {
       setTimeout(resolve, 1000);
     });
-    testApi.extraAdminsCleared();
+    return testApi.extraAdminsCleared();
   },
   listAccounts: async () => {
     const { data } = await unauthenticatedApi.GET(`/api/test/list-test-accounts`);
