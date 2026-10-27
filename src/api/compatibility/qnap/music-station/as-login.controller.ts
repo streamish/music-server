@@ -4,7 +4,7 @@ import { QnapAsLoginBodyDto, QnapAsLoginQueryDto, QnapUserAsLoginDto } from './d
 import { QnapAsLoginService } from './as-login.service';
 import { objectToXml } from 'src/utils/xml';
 
-@QnapController({ allowGuest: true })
+@QnapController({ allowGuest: true, path: '/musicstation/api' })
 export class QnapAsLoginController {
   constructor(private readonly qnapAsLoginApiService: QnapAsLoginService) {}
 

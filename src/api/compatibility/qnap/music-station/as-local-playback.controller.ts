@@ -4,7 +4,7 @@ import { QnapAsLocalPlaybackQueryDto } from './dtos/as-local-playback.dto';
 import { QnapAsLocalPlaybackService } from './as-local-playback.service';
 import { objectToXml } from 'src/utils/xml';
 
-@QnapController()
+@QnapController({ path: '/musicstation/api' })
 export class QnapAsLocalPlaybackController {
   constructor(private readonly qnapAsLocalPlaybackApiService: QnapAsLocalPlaybackService) {}
 

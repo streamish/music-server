@@ -10,7 +10,7 @@ import type { Request, Response } from 'express';
 
 const emptyBuffer = Buffer.alloc(0);
 
-@QnapController()
+@QnapController({ path: '/musicstation/api' })
 export class QnapMediaCoverController {
   constructor(private readonly mediaCoverApiService: QnapMediaCoverService) {}
 

@@ -7,7 +7,7 @@ import { StreamingService } from 'src/streaming/streaming.service';
 import { User } from '../../../user.decorator';
 import type { Request, Response } from 'express';
 
-@QnapController()
+@QnapController({ path: '/musicstation/api' })
 export class QnapAsGetFileController {
   constructor(private readonly streamingService: StreamingService) {}
 
