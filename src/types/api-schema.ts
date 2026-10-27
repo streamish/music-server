@@ -4,6 +4,23 @@
  */
 
 export type paths = {
+  '/api/add-playlist-items': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` request to `/api/add-playlist-items` */
+    post: operations['ApiPlaylistsController_addPlaylistItems'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/album-cover-image': {
     parameters: {
       query?: never;
@@ -56,6 +73,23 @@ export type paths = {
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     post: operations['ApiAccountsController_createAccount'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/create-playlist': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` request to `/api/create-playlist` */
+    post: operations['ApiPlaylistsController_createPlaylist'];
     delete?: never;
     options?: never;
     head?: never;
@@ -147,6 +181,23 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/create-smart-playlist': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description `POST` request to `/api/create-smart-playlist` */
+    post: operations['ApiPlaylistsController_createSmartPlaylist'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/create-user-root-path': {
     parameters: {
       query?: never;
@@ -217,6 +268,23 @@ export type paths = {
     post?: never;
     /** @description `DELETE` request to `/api/delete-favorite` */
     delete: operations['ApiFavoritesController_deleteFavorite'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/delete-playlist': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to `/api/delete-playlist` */
+    delete: operations['ApiPlaylistsController_deletePlaylist'];
     options?: never;
     head?: never;
     patch?: never;
@@ -539,6 +607,40 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/list-playlist-items': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-playlist-items` */
+    get: operations['ApiPlaylistsController_listPlaylistItems'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/list-playlists': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/list-playlists` */
+    get: operations['ApiPlaylistsController_listPlaylists'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/list-root-paths': {
     parameters: {
       query?: never;
@@ -697,6 +799,23 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/move-playlist-item': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` request to `/api/move-playlist-item` */
+    patch: operations['ApiPlaylistsController_movePlaylistItem'];
+    trace?: never;
+  };
   '/api/proxy-shoutcast-station': {
     parameters: {
       query?: never;
@@ -788,6 +907,23 @@ export type paths = {
      */
     post: operations['ApiSessionsController_regenerateUserSessionKey'];
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remove-playlist-items': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description `DELETE` request to `/api/remove-playlist-items` */
+    delete: operations['ApiPlaylistsController_removePlaylistItems'];
     options?: never;
     head?: never;
     patch?: never;
@@ -1220,6 +1356,23 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  '/api/update-playlist': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` request to `/api/update-playlist` */
+    patch: operations['ApiPlaylistsController_updatePlaylist'];
+    trace?: never;
+  };
   '/api/update-shoutcast-genre': {
     parameters: {
       query?: never;
@@ -1266,6 +1419,23 @@ export type paths = {
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
     patch: operations['ApiShoutcastController_updateStation'];
+    trace?: never;
+  };
+  '/api/update-smart-playlist-rules': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** @description `PATCH` request to `/api/update-smart-playlist-rules` */
+    patch: operations['ApiPlaylistsController_updateSmartPlaylistRules'];
     trace?: never;
   };
   '/api/update-user-roles': {
@@ -3221,6 +3391,22 @@ export type components = {
       roles: components['schemas']['UserRoleEnum'][];
       username: string;
     };
+    AddPlaylistItemsBodyDto: {
+      /** @description The tracks and/or radio stations to add. */
+      items: components['schemas']['PlaylistItemBodyDto'][];
+      /** @description The zero-based position to insert at.  If omitted or beyond the end the items are appended. */
+      offset?: number;
+    };
+    AddPlaylistItemsResponseDto: {
+      /** @description The IDs of the created playlist items in the order they were supplied. */
+      playlistItemIds: number[];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
     AdminAuthorizationBodyDto: {
       /** @description The administrator's password to authorize the operation. */
       adminPassword: string;
@@ -4124,6 +4310,329 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
+    ApiPlaylistsAddPlaylistItemsBadRequestErrors: ApiPlaylistsAddPlaylistItemsBadRequestErrors;
+    ApiPlaylistsAddPlaylistItemsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-type-error
+       */
+      message: components['schemas']['ApiPlaylistsAddPlaylistItemsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsAddPlaylistItemsNotFoundErrors: ApiPlaylistsAddPlaylistItemsNotFoundErrors;
+    ApiPlaylistsAddPlaylistItemsNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsAddPlaylistItemsNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsCreatePlaylistBadRequestErrors: ApiPlaylistsCreatePlaylistBadRequestErrors;
+    ApiPlaylistsCreatePlaylistBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-name-length-error
+       */
+      message: components['schemas']['ApiPlaylistsCreatePlaylistBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsCreateSmartPlaylistBadRequestErrors: ApiPlaylistsCreateSmartPlaylistBadRequestErrors;
+    ApiPlaylistsCreateSmartPlaylistBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-rules-conjugal-error
+       */
+      message: components['schemas']['ApiPlaylistsCreateSmartPlaylistBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsDeletePlaylistBadRequestErrors: ApiPlaylistsDeletePlaylistBadRequestErrors;
+    ApiPlaylistsDeletePlaylistBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-id-error
+       */
+      message: components['schemas']['ApiPlaylistsDeletePlaylistBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsDeletePlaylistNotFoundErrors: ApiPlaylistsDeletePlaylistNotFoundErrors;
+    ApiPlaylistsDeletePlaylistNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsDeletePlaylistNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsListPlaylistItemsBadRequestErrors: ApiPlaylistsListPlaylistItemsBadRequestErrors;
+    ApiPlaylistsListPlaylistItemsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-id-error
+       */
+      message: components['schemas']['ApiPlaylistsListPlaylistItemsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsListPlaylistItemsNotFoundErrors: ApiPlaylistsListPlaylistItemsNotFoundErrors;
+    ApiPlaylistsListPlaylistItemsNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsListPlaylistItemsNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsListPlaylistsBadRequestErrors: ApiPlaylistsListPlaylistsBadRequestErrors;
+    ApiPlaylistsListPlaylistsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-limit-error
+       */
+      message: components['schemas']['ApiPlaylistsListPlaylistsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsMovePlaylistItemBadRequestErrors: ApiPlaylistsMovePlaylistItemBadRequestErrors;
+    ApiPlaylistsMovePlaylistItemBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-type-error
+       */
+      message: components['schemas']['ApiPlaylistsMovePlaylistItemBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsMovePlaylistItemNotFoundErrors: ApiPlaylistsMovePlaylistItemNotFoundErrors;
+    ApiPlaylistsMovePlaylistItemNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsMovePlaylistItemNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsRemovePlaylistItemsBadRequestErrors: ApiPlaylistsRemovePlaylistItemsBadRequestErrors;
+    ApiPlaylistsRemovePlaylistItemsBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-id-error
+       */
+      message: components['schemas']['ApiPlaylistsRemovePlaylistItemsBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsRemovePlaylistItemsNotFoundErrors: ApiPlaylistsRemovePlaylistItemsNotFoundErrors;
+    ApiPlaylistsRemovePlaylistItemsNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsRemovePlaylistItemsNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsUpdatePlaylistBadRequestErrors: ApiPlaylistsUpdatePlaylistBadRequestErrors;
+    ApiPlaylistsUpdatePlaylistBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-id-error
+       */
+      message: components['schemas']['ApiPlaylistsUpdatePlaylistBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsUpdatePlaylistNotFoundErrors: ApiPlaylistsUpdatePlaylistNotFoundErrors;
+    ApiPlaylistsUpdatePlaylistNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsUpdatePlaylistNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiPlaylistsUpdateSmartPlaylistRulesBadRequestErrors: ApiPlaylistsUpdateSmartPlaylistRulesBadRequestErrors;
+    ApiPlaylistsUpdateSmartPlaylistRulesBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-playlist-type-error
+       */
+      message: components['schemas']['ApiPlaylistsUpdateSmartPlaylistRulesBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A resource ID was specified that does not exist or does not belong to your account.
+     * @enum {string}
+     */
+    ApiPlaylistsUpdateSmartPlaylistRulesNotFoundErrors: ApiPlaylistsUpdateSmartPlaylistRulesNotFoundErrors;
+    ApiPlaylistsUpdateSmartPlaylistRulesNotFoundResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A resource ID was specified that does not exist or does not belong to your account.
+       * @default playlist-not-found-error
+       */
+      message: components['schemas']['ApiPlaylistsUpdateSmartPlaylistRulesNotFoundErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
     ApiRatingsPutBadRequestErrors: ApiRatingsPutBadRequestErrors;
     ApiRatingsPutBadRequestResponse: {
       /** @description General description of the error class */
@@ -5000,6 +5509,19 @@ export type components = {
        */
       success: boolean;
     };
+    CreatePlaylistBodyDto: {
+      /** @description The name of the playlist. */
+      name: string;
+    };
+    CreatePlaylistResponseDto: {
+      playlistId: number;
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+    };
     CreateRootPathBodyDto: {
       /** @description The fully-qualified path to set for the root path */
       rootPath: string;
@@ -5047,6 +5569,14 @@ export type components = {
        * @default true
        */
       success: boolean;
+    };
+    CreateSmartPlaylistBodyDto: {
+      /** @description The name of the playlist. */
+      name: string;
+      /** @description The rules that determine which tracks belong to the playlist. */
+      rules: components['schemas']['PlaylistRuleBodyDto'][];
+      /** @description Whether tracks must match all rules (`and`) or any rule (`or`). */
+      rulesConjugal: components['schemas']['SmartPlaylistConjugalEnum'];
     };
     CreateTestAccountBodyDto: {
       /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
@@ -5490,6 +6020,30 @@ export type components = {
        */
       success: boolean;
     };
+    ListPlaylistItemsResponseDto: {
+      limit: number;
+      offset: number;
+      playlistItems: components['schemas']['PlaylistItemDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
+    ListPlaylistsResponseDto: {
+      limit: number;
+      offset: number;
+      playlists: components['schemas']['PlaylistDto'][];
+      /**
+       * Format: constant
+       * @description The success being "true" indicates that the request completed.
+       * @default true
+       */
+      success: boolean;
+      total: number;
+    };
     ListShoutcastGenresResponseDto: {
       genres: components['schemas']['ShoutcastGenreDto'][];
       /**
@@ -5545,9 +6099,69 @@ export type components = {
       /** @description The username the indexer action was for. */
       username: string;
     };
+    MovePlaylistItemBodyDto: {
+      /** @description The zero-based position the item will have after the move.  Values beyond the end move the item to the end. */
+      offset: number;
+      /** @description The ID of the playlist item to move. */
+      playlistItemId: number;
+    };
+    PlaylistDto: {
+      /** Format: date-time */
+      createdAt: string;
+      id: number;
+      name: string;
+      /** @description The rules of a smart playlist.  Only set for smart playlists. */
+      rules?: components['schemas']['PlaylistRuleDto'][];
+      /** @description Whether tracks must match all rules or any rule.  Only set for smart playlists. */
+      rulesConjugal?: components['schemas']['SmartPlaylistConjugalEnum'] | null;
+      type: components['schemas']['PlaylistTypeEnum'];
+      /** Format: date-time */
+      updatedAt?: string | null;
+    };
+    PlaylistItemBodyDto: {
+      /** @description The title of a radio station, required if there is no track ID. */
+      radioStationTitle?: string;
+      /**
+       * Format: uri
+       * @description The URL of a radio station, required if there is no track ID.
+       */
+      radioStationUrl?: string;
+      /** @description The ID of a library track.  If specified the radio station fields are ignored. */
+      trackId?: number;
+    };
+    PlaylistItemDto: {
+      /**
+       * @description The ID of the playlist item, used to move or remove it.  This is not set for the
+       *     tracks of smart playlists since they are not saved items.
+       */
+      id?: number;
+      /** @description The one-based position of the item in the playlist. */
+      position: number;
+      radioStationTitle?: string;
+      radioStationUrl?: string;
+      /** @description The library track.  This is not set for radio stations. */
+      track?: components['schemas']['LibraryTrackDto'];
+    };
     PlaylistPlaceholder: {
       id: number;
       name: string;
+    };
+    PlaylistRuleBodyDto: {
+      /** @description The track field the rule is evaluated against. */
+      field: components['schemas']['SmartPlaylistFieldEnum'];
+      /** @description The time interval for `in_the_last` and `not_in_the_last` operations. */
+      interval?: components['schemas']['SmartPlaylistIntervalTagEnum'];
+      /** @description The comparison applied between the track field and the rule value. */
+      operation: components['schemas']['SmartPlaylistOperationEnum'];
+      /** @description The value to compare against. */
+      value: string;
+    };
+    PlaylistRuleDto: {
+      field: components['schemas']['SmartPlaylistFieldEnum'];
+      id: number;
+      interval?: components['schemas']['SmartPlaylistIntervalTagEnum'] | null;
+      operation: components['schemas']['SmartPlaylistOperationEnum'];
+      value: string;
     };
     /** @enum {string} */
     PlaylistTypeEnum: PlaylistTypeEnum;
@@ -6250,6 +6864,10 @@ export type components = {
      * @enum {integer}
      */
     RatingOrUnset: RatingOrUnset;
+    RemovePlaylistItemsBodyDto: {
+      /** @description The IDs of the playlist items to remove. */
+      playlistItemIds: number[];
+    };
     ResetUserPasswordBodyDto: {
       /** @description The administrator's password to authorize the operation. */
       adminPassword: string;
@@ -6545,8 +7163,26 @@ export type components = {
        */
       url: string;
     };
-    /** @enum {string} */
+    /**
+     * @description Whether tracks must match all rules (`and`) or any rule (`or`).
+     * @enum {string}
+     */
     SmartPlaylistConjugalEnum: SmartPlaylistConjugalEnum;
+    /**
+     * @description The track field the rule is evaluated against.
+     * @enum {string}
+     */
+    SmartPlaylistFieldEnum: SmartPlaylistFieldEnum;
+    /**
+     * @description The time interval for `in_the_last` and `not_in_the_last` operations.
+     * @enum {string}
+     */
+    SmartPlaylistIntervalTagEnum: SmartPlaylistIntervalTagEnum;
+    /**
+     * @description The comparison applied between the track field and the rule value.
+     * @enum {string}
+     */
+    SmartPlaylistOperationEnum: SmartPlaylistOperationEnum;
     /** @enum {string} */
     SortDirectionEnum: SortDirectionEnum;
     SubsonicAlbumDataDto: {
@@ -9893,6 +10529,10 @@ export type components = {
     UpdatePasswordBodyDto: {
       newPassword: string;
     };
+    UpdatePlaylistBodyDto: {
+      /** @description The name of the playlist. */
+      name: string;
+    };
     UpdateRootPathBodyDto: {
       /** @description The new path to set for the root path */
       newPath: string;
@@ -9904,6 +10544,12 @@ export type components = {
       title: string;
       /** Format: uri */
       url: string;
+    };
+    UpdateSmartPlaylistRulesBodyDto: {
+      /** @description The rules that determine which tracks belong to the playlist. */
+      rules: components['schemas']['PlaylistRuleBodyDto'][];
+      /** @description Whether tracks must match all rules (`and`) or any rule (`or`). */
+      rulesConjugal: components['schemas']['SmartPlaylistConjugalEnum'];
     };
     UpdateUserRolesBodyDto: {
       /** @description The administrator's password to authorize the operation. */
@@ -9921,6 +10567,70 @@ export type components = {
 };
 export type $defs = Record<string, never>;
 export interface operations {
+  ApiPlaylistsController_addPlaylistItems: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AddPlaylistItemsBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AddPlaylistItemsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsAddPlaylistItemsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsAddPlaylistItemsNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiCoverImageController_getAlbumCover: {
     parameters: {
       query: {
@@ -10070,6 +10780,59 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiAccountsCreateAccountUnauthorizedResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiPlaylistsController_createPlaylist: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePlaylistBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreatePlaylistResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsCreatePlaylistBadRequestResponse'];
         };
       };
       403: {
@@ -10272,6 +11035,59 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiShoutcastCreateStationBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiPlaylistsController_createSmartPlaylist: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateSmartPlaylistBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreatePlaylistResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsCreateSmartPlaylistBadRequestResponse'];
         };
       };
       403: {
@@ -10520,6 +11336,60 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiFavoritesDeleteFavoriteNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiPlaylistsController_deletePlaylist: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsDeletePlaylistBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsDeletePlaylistNotFoundResponse'];
         };
       };
       500: {
@@ -11464,6 +12334,108 @@ export interface operations {
       };
     };
   };
+  ApiPlaylistsController_listPlaylistItems: {
+    parameters: {
+      query: {
+        /** @description The database ID of the playlist */
+        id: number;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListPlaylistItemsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsListPlaylistItemsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsListPlaylistItemsNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiPlaylistsController_listPlaylists: {
+    parameters: {
+      query?: {
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ListPlaylistsResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsListPlaylistsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiRootPathsController_listRootPaths: {
     parameters: {
       query?: never;
@@ -11941,6 +12913,64 @@ export interface operations {
       };
     };
   };
+  ApiPlaylistsController_movePlaylistItem: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MovePlaylistItemBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsMovePlaylistItemBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsMovePlaylistItemNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiShoutcastController_proxyStream: {
     parameters: {
       query: {
@@ -12122,6 +13152,64 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiSessionsRegenerateUserSessionKeyNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiPlaylistsController_removePlaylistItems: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RemovePlaylistItemsBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsRemovePlaylistItemsBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsRemovePlaylistItemsNotFoundResponse'];
         };
       };
       500: {
@@ -13400,6 +14488,64 @@ export interface operations {
       };
     };
   };
+  ApiPlaylistsController_updatePlaylist: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePlaylistBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsUpdatePlaylistBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsUpdatePlaylistNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
   ApiShoutcastController_updateGenre: {
     parameters: {
       query: {
@@ -13504,6 +14650,64 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiShoutcastUpdateStationNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiPlaylistsController_updateSmartPlaylistRules: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateSmartPlaylistRulesBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsUpdateSmartPlaylistRulesBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiPlaylistsUpdateSmartPlaylistRulesNotFoundResponse'];
         };
       };
       500: {
@@ -16722,6 +17926,81 @@ export enum ApiIndexerListIndexerLogsByUserBadRequestErrors {
   invalid_root_path_id_error = 'invalid-root-path-id-error',
   invalid_search_length_error = 'invalid-search-length-error',
 }
+export enum ApiPlaylistsAddPlaylistItemsBadRequestErrors {
+  invalid_playlist_type_error = 'invalid-playlist-type-error',
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+  each_value_in_nested_property_$property_must_be_either_object_or_array = 'each value in nested property $property must be either object or array',
+  invalid_playlist_items_error = 'invalid-playlist-items-error',
+  invalid_playlist_item_offset_error = 'invalid-playlist-item-offset-error',
+}
+export enum ApiPlaylistsAddPlaylistItemsNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+}
+export enum ApiPlaylistsCreatePlaylistBadRequestErrors {
+  invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
+}
+export enum ApiPlaylistsCreateSmartPlaylistBadRequestErrors {
+  invalid_playlist_rules_conjugal_error = 'invalid-playlist-rules-conjugal-error',
+  each_value_in_nested_property_$property_must_be_either_object_or_array = 'each value in nested property $property must be either object or array',
+  invalid_playlist_rules_error = 'invalid-playlist-rules-error',
+  invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
+}
+export enum ApiPlaylistsDeletePlaylistBadRequestErrors {
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+}
+export enum ApiPlaylistsDeletePlaylistNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+}
+export enum ApiPlaylistsListPlaylistItemsBadRequestErrors {
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiPlaylistsListPlaylistItemsNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+}
+export enum ApiPlaylistsListPlaylistsBadRequestErrors {
+  invalid_limit_error = 'invalid-limit-error',
+  invalid_offset_error = 'invalid-offset-error',
+}
+export enum ApiPlaylistsMovePlaylistItemBadRequestErrors {
+  invalid_playlist_type_error = 'invalid-playlist-type-error',
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+  invalid_playlist_item_id_error = 'invalid-playlist-item-id-error',
+  invalid_playlist_item_offset_error = 'invalid-playlist-item-offset-error',
+}
+export enum ApiPlaylistsMovePlaylistItemNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+  playlist_items_not_found_error = 'playlist-items-not-found-error',
+}
+export enum ApiPlaylistsRemovePlaylistItemsBadRequestErrors {
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+  invalid_playlist_item_id_error = 'invalid-playlist-item-id-error',
+}
+export enum ApiPlaylistsRemovePlaylistItemsNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+  playlist_items_not_found_error = 'playlist-items-not-found-error',
+}
+export enum ApiPlaylistsUpdatePlaylistBadRequestErrors {
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+  invalid_name_length_error = 'invalid-name-length-error',
+  invalid_name_error = 'invalid-name-error',
+}
+export enum ApiPlaylistsUpdatePlaylistNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+}
+export enum ApiPlaylistsUpdateSmartPlaylistRulesBadRequestErrors {
+  invalid_playlist_type_error = 'invalid-playlist-type-error',
+  invalid_playlist_id_error = 'invalid-playlist-id-error',
+  invalid_playlist_rules_conjugal_error = 'invalid-playlist-rules-conjugal-error',
+  each_value_in_nested_property_$property_must_be_either_object_or_array = 'each value in nested property $property must be either object or array',
+  invalid_playlist_rules_error = 'invalid-playlist-rules-error',
+}
+export enum ApiPlaylistsUpdateSmartPlaylistRulesNotFoundErrors {
+  playlist_not_found_error = 'playlist-not-found-error',
+}
 export enum ApiRatingsPutBadRequestErrors {
   invalid_track_id_error = 'invalid-track-id-error',
   invalid_max_rating_error = 'invalid-max-rating-error',
@@ -16982,6 +18261,35 @@ export enum ShoutcastItemTypeEnum {
 export enum SmartPlaylistConjugalEnum {
   and = 'and',
   or = 'or',
+}
+export enum SmartPlaylistFieldEnum {
+  album = 'album',
+  album_artist = 'album_artist',
+  artist = 'artist',
+  bit_rate = 'bit_rate',
+  composer = 'composer',
+  date_added = 'date_added',
+  file_path = 'file_path',
+  genre = 'genre',
+  rating = 'rating',
+  year = 'year',
+}
+export enum SmartPlaylistIntervalTagEnum {
+  days = 'days',
+  weeks = 'weeks',
+  months = 'months',
+}
+export enum SmartPlaylistOperationEnum {
+  after = 'after',
+  before = 'before',
+  contains = 'contains',
+  does_not_contain = 'does_not_contain',
+  greater_than_or_equal_to = 'greater_than_or_equal_to',
+  in_the_last = 'in_the_last',
+  is = 'is',
+  is_not = 'is_not',
+  less_than = 'less_than',
+  not_in_the_last = 'not_in_the_last',
 }
 export enum SortDirectionEnum {
   asc = 'asc',

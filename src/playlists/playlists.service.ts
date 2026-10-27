@@ -23,15 +23,16 @@ export class PlaylistsService {
    * @param playlistId The ID of the playlist
    * @param items The tracks and/or radio stations to add
    * @param offset The zero-based index to insert at, or omitted/negative to append to the end
+   * @returns The IDs of the created playlist items in order
    * @throws If the playlist is not found or is a smart playlist
    */
-  async addItems(accountId: number, playlistId: number, items: PlaylistItem[], offset?: number) {
+  async addItems(accountId: number, playlistId: number, items: PlaylistItem[], offset?: number): Promise<number[]> {
     const playlist = await this.getPlaylist(accountId, playlistId);
     if (playlist.type === PlaylistTypeEnum.SMART) {
       throw new BadRequestException(ErrorCodes.INVALID_PLAYLIST_TYPE_ERROR);
     }
     if (!items.length) {
-      return;
+      return [];
     }
     const count = await this.playlistItemEntity.count({ where: { playlistId: playlist.id } });
     const insertAt = offset === undefined || offset < 0 || offset > count ? count : offset;
@@ -50,7 +51,7 @@ export class PlaylistsService {
         },
       );
     }
-    await this.playlistItemEntity.bulkCreate(
+    const created = await this.playlistItemEntity.bulkCreate(
       items.map(
         (item, i) =>
           ({
@@ -62,6 +63,7 @@ export class PlaylistsService {
           }) as PlaylistItemEntity,
       ),
     );
+    return created.map((item) => item.id);
   }
 
   /**
