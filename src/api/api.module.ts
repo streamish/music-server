@@ -1,6 +1,7 @@
 import { ApiAccountsModule } from './accounts/accounts.module';
 import { ApiAlbumsModule } from './media/albums/albums.module';
 import { ApiCompatibilityModule } from './compatibility/compatibility.module';
+import { ApiCoverImageModule } from './cover-images/cover-images.module';
 import { ApiCustomDataModule } from './custom-data/custom-data.module';
 import { ApiFavoritesModule } from './favorites/favorites.module';
 import { ApiHealthcheckModule } from './healthcheck/healthcheck.module';
@@ -19,6 +20,7 @@ import { Module } from '@nestjs/common';
     ApiAccountsModule,
     ApiAlbumsModule,
     ApiCustomDataModule,
+    ApiCoverImageModule,
     ApiFavoritesModule,
     ApiHealthcheckModule,
     ApiIndexerModule,

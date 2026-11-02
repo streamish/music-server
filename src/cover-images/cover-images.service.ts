@@ -1,6 +1,6 @@
 import { AlbumEntity } from 'src/database/entities/album.entity';
-import { AssociationLinkEntity, TrackEntity } from 'src/database/entities';
-import { AssociationTypeEnum } from 'src/types/enums';
+import { AssociationLinkEntity, PlaylistEntity, PlaylistItemEntity, TrackEntity } from 'src/database/entities';
+import { AssociationTypeEnum, PlaylistTypeEnum } from 'src/types/enums';
 import { InjectModel } from '@nestjs/sequelize/dist/common/sequelize.decorators';
 import { Injectable } from '@nestjs/common';
 import { Op, col, where } from 'sequelize';
@@ -17,6 +17,10 @@ export class CoverImagesService {
     private readonly albumEntity: typeof AlbumEntity,
     @InjectModel(TrackEntity)
     private readonly trackEntity: typeof TrackEntity,
+    @InjectModel(PlaylistEntity)
+    private readonly playlistEntity: typeof PlaylistEntity,
+    @InjectModel(PlaylistItemEntity)
+    private readonly playlistItemEntity: typeof PlaylistItemEntity,
   ) {}
 
   /**
@@ -238,5 +242,56 @@ export class CoverImagesService {
       return CoverImagesService.getBlankCover();
     }
     return this.getAlbumCover(accountId, track.albumId, size);
+  }
+
+  /**
+   * Returns the first available track cover in a normal playlist, or the blank cover.
+   * Smart playlists intentionally use the blank cover.
+   */
+  async getPlaylistCover(accountId: number, playlistId: number, size: number) {
+    const playlist = await this.playlistEntity.findOne({
+      attributes: ['id'],
+      where: {
+        id: playlistId,
+        accountId,
+        type: PlaylistTypeEnum.NORMAL,
+      },
+    });
+    if (!playlist) {
+      return CoverImagesService.getBlankCover();
+    }
+
+    const playlistItem = await this.playlistItemEntity.findOne({
+      attributes: ['id'],
+      where: { playlistId: playlist.id },
+      include: [
+        {
+          model: TrackEntity,
+          attributes: ['id', 'albumId'],
+          required: true,
+          where: { accountId },
+          include: [
+            {
+              model: AlbumEntity,
+              attributes: ['id', 'coverImage', 'coverImageMimeType', 'createdAt', 'updatedAt'],
+              required: true,
+              where: {
+                accountId,
+                coverImage: { [Op.not]: null },
+                coverImageMimeType: { [Op.not]: null },
+              },
+            },
+          ],
+        },
+      ],
+      order: [
+        ['position', 'ASC'],
+        ['id', 'ASC'],
+      ],
+    });
+    if (!playlistItem?.track?.album) {
+      return CoverImagesService.getBlankCover();
+    }
+    return CoverImagesService.processImage(playlistItem.track.album, size);
   }
 }

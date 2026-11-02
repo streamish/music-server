@@ -1,5 +1,5 @@
 import { AccountEntity } from 'src/database/entities';
-import { AlbumCoverImageQueryDto, AssociationCoverImageQueryDto } from './dtos';
+import { AlbumCoverImageQueryDto, AssociationCoverImageQueryDto, PlaylistCoverImageQueryDto } from './dtos';
 import { ApiCoverImageService } from './cover-images.service';
 import { ApiEndpoint } from 'src/api/api.decorator';
 import { BINARY_RESPONSE, IMAGE_MIME_TYPES } from 'src/constants/swagger';
@@ -88,6 +88,33 @@ export class ApiCoverImageController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const coverImage = await this.coverImageService.getAssociationCover(user.id, query.id, query.size, query.type);
+    return ApiCoverImageController.serveImage(request, response, coverImage);
+  }
+
+  /**
+   * `GET` request to `/api/playlist-cover-image`
+   */
+  @ApiEndpoint(Get, 'playlist-cover-image', HttpStatus.OK, {
+    summary: 'Retrieves a cover image for a normal playlist',
+    description: [
+      'The image comes from the first playlist track with an available cover image.',
+      'Smart playlists and playlists without a track cover return the default blank cover.',
+      'The response supports Etag caching to optimize browser performance.',
+    ].join(' '),
+    allowUser: true,
+    allowAdministrator: true,
+    produces: [...IMAGE_MIME_TYPES],
+    responses: {
+      [HttpStatus.OK]: BINARY_RESPONSE,
+    },
+  })
+  async getPlaylistCover(
+    @User() user: AccountEntity,
+    @Query() query: PlaylistCoverImageQueryDto,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const coverImage = await this.coverImageService.getPlaylistCover(user.id, query.id, query.size);
     return ApiCoverImageController.serveImage(request, response, coverImage);
   }
 }
