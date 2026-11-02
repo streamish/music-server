@@ -2,9 +2,9 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { PlaylistDto, PlaylistItemInputDto, PlaylistRuleDto, PlaylistRuleInputDto } from './dtos';
 import { PlaylistEntity, PlaylistItemEntity, PlaylistSmartRuleEntity } from 'src/database/entities';
 import { PlaylistTypeEnum, SmartPlaylistConjugalEnum } from 'src/types/enums';
-import type { Playlist, PlaylistItem, SmartPlaylistRule } from './types';
 
 @Injectable()
 export class PlaylistsService {
@@ -26,7 +26,12 @@ export class PlaylistsService {
    * @returns The IDs of the created playlist items in order
    * @throws If the playlist is not found or is a smart playlist
    */
-  async addItems(accountId: number, playlistId: number, items: PlaylistItem[], offset?: number): Promise<number[]> {
+  async addItems(
+    accountId: number,
+    playlistId: number,
+    items: PlaylistItemInputDto[],
+    offset?: number,
+  ): Promise<number[]> {
     const playlist = await this.getPlaylist(accountId, playlistId);
     if (playlist.type === PlaylistTypeEnum.SMART) {
       throw new BadRequestException(ErrorCodes.INVALID_PLAYLIST_TYPE_ERROR);
@@ -80,7 +85,7 @@ export class PlaylistsService {
     name: string,
     type: PlaylistTypeEnum,
     rulesConjugal?: SmartPlaylistConjugalEnum | null,
-    rules?: SmartPlaylistRule[],
+    rules?: PlaylistRuleInputDto[],
   ) {
     const playlist = await this.playlistEntity.create({
       accountId,
@@ -127,7 +132,7 @@ export class PlaylistsService {
    * @returns The playlist including its rules for smart playlists
    * @throws If the playlist is not found
    */
-  async getPlaylist(accountId: number, playlistId: number): Promise<Playlist> {
+  async getPlaylist(accountId: number, playlistId: number): Promise<PlaylistDto> {
     const playlist = await this.playlistEntity.findOne({
       where: {
         accountId,
@@ -162,12 +167,11 @@ export class PlaylistsService {
       rules: rules.map((rule) => {
         return {
           id: rule.id,
-          playlistId: rule.playlistId,
           field: rule.field,
           operation: rule.operation,
           value: rule.value,
           interval: rule.interval || null,
-        };
+        } satisfies PlaylistRuleDto;
       }),
     };
   }
@@ -244,10 +248,31 @@ export class PlaylistsService {
       order: [['id', 'ASC']],
     });
     return {
-      playlists: playlists.rows.map((playlist) => ({
-        ...playlist.toJSON(),
-        rules: rules.filter((rule) => rule.playlistId === playlist.id).map((rule) => rule.toJSON()),
-      })),
+      playlists: playlists.rows.map((playlist) => {
+        const playlistRules = rules
+          .filter((rule) => rule.playlistId === playlist.id)
+          .map(
+            (rule) =>
+              ({
+                id: rule.id,
+                field: rule.field,
+                operation: rule.operation,
+                value: rule.value,
+                interval: rule.interval || null,
+              }) satisfies PlaylistRuleDto,
+          );
+        return {
+          id: playlist.id,
+          name: playlist.name,
+          type: playlist.type,
+          createdAt: playlist.createdAt,
+          updatedAt: playlist.updatedAt,
+          ...(playlist.type === PlaylistTypeEnum.SMART && {
+            rulesConjugal: playlist.rulesConjugal,
+            rules: playlistRules,
+          }),
+        } satisfies PlaylistDto;
+      }),
       total: playlists.count,
     };
   }
@@ -366,7 +391,7 @@ export class PlaylistsService {
     accountId: number,
     playlistId: number,
     rulesConjugal: SmartPlaylistConjugalEnum | null,
-    rules: SmartPlaylistRule[],
+    rules: PlaylistRuleInputDto[],
   ) {
     const playlist = await this.getPlaylist(accountId, playlistId);
     if (playlist.type !== PlaylistTypeEnum.SMART) {

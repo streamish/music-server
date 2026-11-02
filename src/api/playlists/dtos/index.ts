@@ -4,6 +4,7 @@ export * from './create-smart-playlist.dto';
 export * from './delete-playlist.dto';
 export * from './list-playlist-items.dto';
 export * from './list-playlists.dto';
+export { PlaylistDto, PlaylistItemDto, PlaylistRuleDto } from 'src/playlists/dtos';
 export * from './move-playlist-item.dto';
 export * from './playlist-rule.dto';
 export * from './remove-playlist-items.dto';
