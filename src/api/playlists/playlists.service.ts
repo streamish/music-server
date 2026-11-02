@@ -7,15 +7,9 @@ import {
 } from './dtos';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
-import { PlaylistDto, PlaylistItemDto, PlaylistRuleInputDto } from 'src/playlists/dtos';
-import {
-  PlaylistTypeEnum,
-  SmartPlaylistConjugalEnum,
-  SmartPlaylistFieldEnum,
-  TrackSortFieldEnum,
-} from 'src/types/enums';
+import { PlaylistDto, PlaylistItemDto } from 'src/playlists/dtos';
+import { PlaylistTypeEnum } from 'src/types/enums';
 import { PlaylistsService } from 'src/playlists/playlists.service';
-import { getDateAddedFilter, trackMatchesRule } from './smart-playlist-rules';
 
 @Injectable()
 export class ApiPlaylistsService {
@@ -23,89 +17,6 @@ export class ApiPlaylistsService {
     private readonly libraryService: LibraryService,
     private readonly playlistsService: PlaylistsService,
   ) {}
-
-  /**
-   * Finds the library tracks matching the rules of a smart playlist.
-   * @param userId The authenticated user ID
-   * @param rulesConjugal Whether tracks must match all rules or any rule
-   * @param rules The rules of the playlist.  With no rules every track matches.
-   * @returns The matching tracks sorted by title
-   */
-  private async listSmartPlaylistTracks(
-    userId: number,
-    rulesConjugal: SmartPlaylistConjugalEnum | null | undefined,
-    rules: PlaylistRuleInputDto[],
-  ) {
-    const { items: tracks } = await this.libraryService.listTracks(userId, {}, 0, 100_000, TrackSortFieldEnum.TITLE);
-    if (!rules.length) {
-      return tracks;
-    }
-    const matchSets = await Promise.all(
-      rules.map(async (rule) => {
-        if (rule.field !== SmartPlaylistFieldEnum.DATE_ADDED) {
-          return new Set(tracks.filter((track) => trackMatchesRule(track, rule)).map((track) => track.id));
-        }
-        const filter = getDateAddedFilter(rule);
-        if (!filter) {
-          return new Set<number>();
-        }
-        const matches = await this.libraryService.listTracks(userId, filter, 0, 100_000);
-        return new Set(matches.items.map((track) => track.id));
-      }),
-    );
-    return tracks.filter((track) =>
-      rulesConjugal === SmartPlaylistConjugalEnum.OR
-        ? matchSets.some((matches) => matches.has(track.id))
-        : matchSets.every((matches) => matches.has(track.id)),
-    );
-  }
-
-  /**
-   * Returns the contents of a playlist.  Normal playlists return their saved tracks and radio stations in position
-   * order, smart playlists return the library tracks that match their rules.
-   * @param userId The authenticated user ID
-   * @param query The playlist ID and pagination options
-   * @returns Paginated dataset of playlist items
-   * @throws If the playlist is not found
-   */
-  async listPlaylistItems(
-    userId: number,
-    query: ListPlaylistItemsQueryDto,
-  ): Promise<{ limit: number; offset: number; total: number; playlistItems: PlaylistItemDto[] }> {
-    const limit = query.limit || 100_000;
-    const offset = query.offset || 0;
-    const playlist = await this.playlistsService.getPlaylist(userId, query.id);
-    if (playlist.type === PlaylistTypeEnum.SMART) {
-      const tracks = await this.listSmartPlaylistTracks(userId, playlist.rulesConjugal, playlist.rules || []);
-      return {
-        limit,
-        offset,
-        total: tracks.length,
-        playlistItems: tracks.slice(offset, offset + limit).map((track, i) => ({
-          position: offset + i + 1,
-          track,
-        })) satisfies PlaylistItemDto[],
-      };
-    }
-    const { items, total } = await this.playlistsService.listItems(userId, playlist.id, offset, limit);
-    const trackIds = [...new Set(items.map((item) => item.trackId).filter((id): id is number => !!id))];
-    const tracks = trackIds.length ? await this.libraryService.retrieveTrack(userId, trackIds) : [];
-    return {
-      limit,
-      offset,
-      total,
-      playlistItems: items.map((item) => ({
-        id: item.id,
-        position: item.position,
-        ...(item.trackId
-          ? { track: tracks.find((track) => track.id === item.trackId) }
-          : {
-              radioStationTitle: item.radioStationTitle || undefined,
-              radioStationUrl: item.radioStationUrl || undefined,
-            }),
-      })) satisfies PlaylistItemDto[],
-    };
-  }
 
   /**
    * Adds tracks and/or radio stations to a normal playlist.
@@ -170,11 +81,66 @@ export class ApiPlaylistsService {
     const limit = query.limit || 100_000;
     const offset = query.offset || 0;
     const { playlists, total } = await this.playlistsService.listPlaylists(userId, offset, limit);
+    const playlistsWithCoverColors = await Promise.all(
+      playlists.map(async (playlist) => {
+        const coverColors = await this.playlistsService.getCoverColors(userId, playlist.id);
+        return { ...playlist, ...coverColors };
+      }),
+    );
     return {
       limit,
       offset,
       total,
-      playlists,
+      playlists: playlistsWithCoverColors,
+    };
+  }
+
+  /**
+   * Returns the contents of a playlist.  Normal playlists return their saved tracks and radio stations in position
+   * order, smart playlists return the library tracks that match their rules.
+   * @param userId The authenticated user ID
+   * @param query The playlist ID and pagination options
+   * @returns Paginated dataset of playlist items
+   * @throws If the playlist is not found
+   */
+  async listPlaylistItems(
+    userId: number,
+    query: ListPlaylistItemsQueryDto,
+  ): Promise<{ limit: number; offset: number; total: number; playlistItems: PlaylistItemDto[] }> {
+    const limit = query.limit || 100_000;
+    const offset = query.offset || 0;
+    const playlist = await this.playlistsService.getPlaylist(userId, query.id);
+    if (playlist.type === PlaylistTypeEnum.SMART) {
+      const trackIds = await this.playlistsService.getSmartPlaylistTrackIds(userId, playlist.id, limit, offset);
+      const tracks = trackIds.length ? await this.libraryService.retrieveTrack(userId, trackIds) : [];
+      const total = await this.playlistsService.countSmartPlaylistTracks(userId, playlist.id);
+      return {
+        limit,
+        offset,
+        total,
+        playlistItems: tracks.map((track, i) => ({
+          position: offset + i + 1,
+          track,
+        })),
+      };
+    }
+    const { items, total } = await this.playlistsService.listItems(userId, playlist.id, offset, limit);
+    const trackIds = [...new Set(items.map((item) => item.trackId).filter((id): id is number => !!id))];
+    const tracks = trackIds.length ? await this.libraryService.retrieveTrack(userId, trackIds) : [];
+    return {
+      limit,
+      offset,
+      total,
+      playlistItems: items.map((item) => ({
+        id: item.id,
+        position: item.position,
+        ...(item.trackId
+          ? { track: tracks.find((track) => track.id === item.trackId) }
+          : {
+              radioStationTitle: item.radioStationTitle || undefined,
+              radioStationUrl: item.radioStationUrl || undefined,
+            }),
+      })),
     };
   }
 

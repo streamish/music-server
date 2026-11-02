@@ -44,6 +44,54 @@ export class PlaylistDto {
   @IsString()
   declare name: string;
 
+  /**
+   * A color detected in the first available playlist cover image.
+   */
+  @ApiProperty({ required: false, nullable: true })
+  @IsString()
+  @IsOptional()
+  declare coverImageDarkMuted?: string | null;
+
+  /**
+   * A color detected in the first available playlist cover image.
+   */
+  @ApiProperty({ required: false, nullable: true })
+  @IsString()
+  @IsOptional()
+  declare coverImageDarkVibrant?: string | null;
+
+  /**
+   * A color detected in the first available playlist cover image.
+   */
+  @ApiProperty({ required: false, nullable: true })
+  @IsString()
+  @IsOptional()
+  declare coverImageLightMuted?: string | null;
+
+  /**
+   * A color detected in the first available playlist cover image.
+   */
+  @ApiProperty({ required: false, nullable: true })
+  @IsString()
+  @IsOptional()
+  declare coverImageLightVibrant?: string | null;
+
+  /**
+   * A color detected in the first available playlist cover image.
+   */
+  @ApiProperty({ required: false, nullable: true })
+  @IsString()
+  @IsOptional()
+  declare coverImageMuted?: string | null;
+
+  /**
+   * A color detected in the first available playlist cover image.
+   */
+  @ApiProperty({ required: false, nullable: true })
+  @IsString()
+  @IsOptional()
+  declare coverImageVibrant?: string | null;
+
   @ApiProperty({ enum: PlaylistTypeEnum, enumName: 'PlaylistTypeEnum' })
   @IsEnum(PlaylistTypeEnum)
   declare type: PlaylistTypeEnum;
@@ -76,3 +124,13 @@ export class PlaylistDto {
   @IsOptional()
   declare updatedAt?: Date | null;
 }
+
+export type PlaylistCoverColors = Pick<
+  PlaylistDto,
+  | 'coverImageDarkMuted'
+  | 'coverImageDarkVibrant'
+  | 'coverImageLightMuted'
+  | 'coverImageLightVibrant'
+  | 'coverImageMuted'
+  | 'coverImageVibrant'
+>;
