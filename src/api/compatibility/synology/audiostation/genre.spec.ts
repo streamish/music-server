@@ -22,7 +22,7 @@ describe('/webapi/AudioStation/genre.cgi', () => {
     });
     const typedData = data as components['schemas']['SynologyGenreResponseDto'];
     return {
-      data: typedData,
+      data,
       error,
       genres: typedData?.data.genres || [],
       total: typedData?.data.total || 0,

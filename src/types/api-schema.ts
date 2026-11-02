@@ -816,6 +816,23 @@ export type paths = {
     patch: operations['ApiPlaylistsController_movePlaylistItem'];
     trace?: never;
   };
+  '/api/playlist-cover-image': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description `GET` request to `/api/playlist-cover-image` */
+    get: operations['ApiCoverImageController_getPlaylistCover'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/proxy-shoutcast-station': {
     parameters: {
       query?: never;
@@ -12967,6 +12984,62 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiCoverImageController_getPlaylistCover: {
+    parameters: {
+      query: {
+        /** @description The database ID of the resource */
+        id: number;
+        /** @description The width/height size of the image in pixels */
+        size: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': string;
+          'image/png': string;
+          'image/webp': string;
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['BadRequestResponseDto'];
+          'image/png': components['schemas']['BadRequestResponseDto'];
+          'image/webp': components['schemas']['BadRequestResponseDto'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/png': components['schemas']['ForbiddenErrorResponseDto'];
+          'image/webp': components['schemas']['ForbiddenErrorResponseDto'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/jpeg': components['schemas']['InternalServerErrorResponseDto'];
+          'image/png': components['schemas']['InternalServerErrorResponseDto'];
+          'image/webp': components['schemas']['InternalServerErrorResponseDto'];
         };
       };
     };

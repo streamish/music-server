@@ -17,4 +17,8 @@ export class ApiCoverImageService {
   async getAssociationCover(userId: number, associationId: number, size: number, type: AssociationTypeEnum) {
     return this.coverImagesService.getAssociationCover(userId, associationId, size, type);
   }
+
+  async getPlaylistCover(userId: number, playlistId: number, size: number) {
+    return this.coverImagesService.getPlaylistCover(userId, playlistId, size);
+  }
 }
