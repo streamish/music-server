@@ -1,8 +1,8 @@
 import { LibraryTrackDto } from 'src/library/dtos/library.track.dto';
 import { SmartPlaylistFieldEnum, SmartPlaylistIntervalTagEnum, SmartPlaylistOperationEnum } from 'src/types/enums';
-import type { SmartPlaylistRule } from 'src/playlists/types';
+import type { PlaylistRuleInputDto } from 'src/playlists/dtos';
 
-type RuleLike = Pick<SmartPlaylistRule, 'field' | 'operation' | 'value' | 'interval'>;
+type RuleLike = Pick<PlaylistRuleInputDto, 'field' | 'operation' | 'value' | 'interval'>;
 
 /**
  * Gets the values of a track field, as multiple values are possible for associations like artists.

@@ -2,13 +2,12 @@ import {
   AddPlaylistItemsBodyDto,
   CreateSmartPlaylistBodyDto,
   ListPlaylistItemsQueryDto,
-  ListPlaylistItemsResponseDto,
   ListPlaylistsQueryDto,
-  ListPlaylistsResponseDto,
   UpdateSmartPlaylistRulesBodyDto,
 } from './dtos';
 import { Injectable } from '@nestjs/common';
 import { LibraryService } from 'src/library/library.service';
+import { PlaylistDto, PlaylistItemDto, PlaylistRuleInputDto } from 'src/playlists/dtos';
 import {
   PlaylistTypeEnum,
   SmartPlaylistConjugalEnum,
@@ -17,7 +16,6 @@ import {
 } from 'src/types/enums';
 import { PlaylistsService } from 'src/playlists/playlists.service';
 import { getDateAddedFilter, trackMatchesRule } from './smart-playlist-rules';
-import type { SmartPlaylistRule } from 'src/playlists/types';
 
 @Injectable()
 export class ApiPlaylistsService {
@@ -36,7 +34,7 @@ export class ApiPlaylistsService {
   private async listSmartPlaylistTracks(
     userId: number,
     rulesConjugal: SmartPlaylistConjugalEnum | null | undefined,
-    rules: SmartPlaylistRule[],
+    rules: PlaylistRuleInputDto[],
   ) {
     const { items: tracks } = await this.libraryService.listTracks(userId, {}, 0, 100_000, TrackSortFieldEnum.TITLE);
     if (!rules.length) {
@@ -70,7 +68,10 @@ export class ApiPlaylistsService {
    * @returns Paginated dataset of playlist items
    * @throws If the playlist is not found
    */
-  async listPlaylistItems(userId: number, query: ListPlaylistItemsQueryDto) {
+  async listPlaylistItems(
+    userId: number,
+    query: ListPlaylistItemsQueryDto,
+  ): Promise<{ limit: number; offset: number; total: number; playlistItems: PlaylistItemDto[] }> {
     const limit = query.limit || 100_000;
     const offset = query.offset || 0;
     const playlist = await this.playlistsService.getPlaylist(userId, query.id);
@@ -83,8 +84,8 @@ export class ApiPlaylistsService {
         playlistItems: tracks.slice(offset, offset + limit).map((track, i) => ({
           position: offset + i + 1,
           track,
-        })),
-      } as unknown as ListPlaylistItemsResponseDto;
+        })) satisfies PlaylistItemDto[],
+      };
     }
     const { items, total } = await this.playlistsService.listItems(userId, playlist.id, offset, limit);
     const trackIds = [...new Set(items.map((item) => item.trackId).filter((id): id is number => !!id))];
@@ -102,8 +103,8 @@ export class ApiPlaylistsService {
               radioStationTitle: item.radioStationTitle || undefined,
               radioStationUrl: item.radioStationUrl || undefined,
             }),
-      })),
-    } as unknown as ListPlaylistItemsResponseDto;
+      })) satisfies PlaylistItemDto[],
+    };
   }
 
   /**
@@ -141,7 +142,7 @@ export class ApiPlaylistsService {
       body.name,
       PlaylistTypeEnum.SMART,
       body.rulesConjugal,
-      body.rules as SmartPlaylistRule[],
+      body.rules,
     );
     return playlist.id;
   }
@@ -162,7 +163,10 @@ export class ApiPlaylistsService {
    * @param query Pagination options
    * @returns Paginated dataset of playlists
    */
-  async listPlaylists(userId: number, query: ListPlaylistsQueryDto) {
+  async listPlaylists(
+    userId: number,
+    query: ListPlaylistsQueryDto,
+  ): Promise<{ limit: number; offset: number; total: number; playlists: PlaylistDto[] }> {
     const limit = query.limit || 100_000;
     const offset = query.offset || 0;
     const { playlists, total } = await this.playlistsService.listPlaylists(userId, offset, limit);
@@ -170,24 +174,8 @@ export class ApiPlaylistsService {
       limit,
       offset,
       total,
-      playlists: playlists.map((playlist) => ({
-        id: playlist.id,
-        name: playlist.name,
-        type: playlist.type,
-        createdAt: playlist.createdAt,
-        updatedAt: playlist.updatedAt,
-        ...(playlist.type === PlaylistTypeEnum.SMART && {
-          rulesConjugal: playlist.rulesConjugal,
-          rules: playlist.rules.map((rule) => ({
-            id: rule.id,
-            field: rule.field,
-            operation: rule.operation,
-            value: rule.value,
-            interval: rule.interval || null,
-          })),
-        }),
-      })),
-    } as unknown as ListPlaylistsResponseDto;
+      playlists,
+    };
   }
 
   /**
@@ -232,11 +220,6 @@ export class ApiPlaylistsService {
    * @throws If the playlist is not found or is not a smart playlist
    */
   async updateSmartPlaylistRules(userId: number, playlistId: number, body: UpdateSmartPlaylistRulesBodyDto) {
-    return this.playlistsService.updatePlaylistRules(
-      userId,
-      playlistId,
-      body.rulesConjugal,
-      body.rules as SmartPlaylistRule[],
-    );
+    return this.playlistsService.updatePlaylistRules(userId, playlistId, body.rulesConjugal, body.rules);
   }
 }

@@ -24,9 +24,9 @@ import {
   SynologySmartListRule,
 } from './dtos';
 import { replaceDoubleQuotes } from 'src/utils/strings';
-import type { PlaylistItem, SmartPlaylistRule } from 'src/playlists/types';
+import type { PlaylistItemInputDto, PlaylistRuleDto, PlaylistRuleInputDto } from 'src/playlists/dtos';
 
-function ruleToRow(rule: SmartPlaylistRule): SynologyPlaylistRuleDto {
+function ruleToRow(rule: PlaylistRuleDto): SynologyPlaylistRuleDto {
   let interval: number;
   switch (rule.interval) {
     case SmartPlaylistIntervalTagEnum.DAYS:
@@ -119,9 +119,8 @@ function ruleToRow(rule: SmartPlaylistRule): SynologyPlaylistRuleDto {
   };
 }
 
-function toRuleInputs(rules: SynologySmartListRule[]): SmartPlaylistRule[] {
+function toRuleInputs(rules: SynologySmartListRule[]): PlaylistRuleInputDto[] {
   return rules.map((rule) => ({
-    id: 0,
     field: rule.fieldName as SmartPlaylistFieldEnum,
     interval: rule.intervalName,
     operation: rule.operationName as SmartPlaylistOperationEnum,
@@ -142,7 +141,7 @@ export class SynologyPlaylistService {
 
   async addItem(accountId: number, body: SynologyPlaylistAddOrRemoveItemBodyDto) {
     const playlist = await this.getPlaylist(accountId, body.id);
-    const items: PlaylistItem[] = [];
+    const items: PlaylistItemInputDto[] = [];
     body.songs.forEach((id) => {
       // if the id is a number then it is a file
       if (typeof id === 'number') {
