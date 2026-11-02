@@ -1,10 +1,18 @@
+import {
+  AlbumEntity,
+  PlaylistEntity,
+  PlaylistItemEntity,
+  PlaylistSmartRuleEntity,
+  TrackEntity,
+} from 'src/database/entities';
 import { Module } from '@nestjs/common';
-import { PlaylistEntity, PlaylistItemEntity, PlaylistSmartRuleEntity } from 'src/database/entities';
 import { PlaylistsService } from './playlists.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
-  imports: [SequelizeModule.forFeature([PlaylistEntity, PlaylistItemEntity, PlaylistSmartRuleEntity])],
+  imports: [
+    SequelizeModule.forFeature([AlbumEntity, PlaylistEntity, PlaylistItemEntity, PlaylistSmartRuleEntity, TrackEntity]),
+  ],
   providers: [PlaylistsService],
   exports: [PlaylistsService],
 })

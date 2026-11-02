@@ -1,10 +1,22 @@
+import {
+  AlbumEntity,
+  PlaylistEntity,
+  PlaylistItemEntity,
+  PlaylistSmartRuleEntity,
+  TrackEntity,
+} from 'src/database/entities';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
-import { PlaylistDto, PlaylistItemInputDto, PlaylistRuleDto, PlaylistRuleInputDto } from './dtos';
-import { PlaylistEntity, PlaylistItemEntity, PlaylistSmartRuleEntity } from 'src/database/entities';
-import { PlaylistTypeEnum, SmartPlaylistConjugalEnum } from 'src/types/enums';
+import { Op, Sequelize, WhereOptions } from 'sequelize';
+import { PlaylistCoverColors, PlaylistDto, PlaylistItemInputDto, PlaylistRuleDto, PlaylistRuleInputDto } from './dtos';
+import {
+  PlaylistTypeEnum,
+  SmartPlaylistConjugalEnum,
+  SmartPlaylistFieldEnum,
+  SmartPlaylistOperationEnum,
+} from 'src/types/enums';
+import { getDateAddedFilter } from 'src/api/playlists/smart-playlist-rules';
 
 @Injectable()
 export class PlaylistsService {
@@ -15,6 +27,8 @@ export class PlaylistsService {
     private readonly playlistItemEntity: typeof PlaylistItemEntity,
     @InjectModel(PlaylistSmartRuleEntity)
     private readonly playlistSmartRuleEntity: typeof PlaylistSmartRuleEntity,
+    @InjectModel(TrackEntity)
+    private readonly trackEntity: typeof TrackEntity,
   ) {}
 
   /**
@@ -151,12 +165,7 @@ export class PlaylistsService {
         updatedAt: playlist.updatedAt,
       };
     }
-    const rules = await this.playlistSmartRuleEntity.findAll({
-      where: {
-        playlistId: playlist.id,
-      },
-      order: [['id', 'ASC']],
-    });
+    const rules = await this.getSmartPlaylistRules(playlist.id);
     return {
       id: playlist.id,
       name: playlist.name,
@@ -164,15 +173,7 @@ export class PlaylistsService {
       type: playlist.type,
       createdAt: playlist.createdAt,
       updatedAt: playlist.updatedAt,
-      rules: rules.map((rule) => {
-        return {
-          id: rule.id,
-          field: rule.field,
-          operation: rule.operation,
-          value: rule.value,
-          interval: rule.interval || null,
-        } satisfies PlaylistRuleDto;
-      }),
+      rules,
     };
   }
 
@@ -197,7 +198,7 @@ export class PlaylistsService {
   }
 
   /**
-   * Lists the items of a playlist in position order.
+   * Lists the items of a "normal" playlist in position order.
    * @param accountId The playlist owner account ID
    * @param playlistId The ID of the playlist
    * @param offset The starting point for pagination
@@ -274,6 +275,273 @@ export class PlaylistsService {
         } satisfies PlaylistDto;
       }),
       total: playlists.count,
+    };
+  }
+
+  /**
+   * Finds the first cover-bearing album for the ordered track IDs and returns its palette.
+   * @param accountId The account ID
+   * @param playlistId The ID of the playlist
+   * @returns The palette of the first cover-bearing album found, or an empty object if none are found
+   */
+  async getCoverColors(accountId: number, playlistId: number): Promise<Partial<PlaylistCoverColors>> {
+    const playlist = await this.playlistEntity.findOne({
+      attributes: ['id', 'type'],
+      where: {
+        accountId,
+        id: playlistId,
+      },
+    });
+    if (!playlist) {
+      throw new NotFoundException(ErrorCodes.PLAYLIST_NOT_FOUND_ERROR);
+    }
+    // normal playlists
+    if (playlist.type === PlaylistTypeEnum.NORMAL) {
+      const firstTrackWithAlbum = await this.playlistItemEntity.findOne({
+        attributes: ['id', 'playlistId', 'trackId', 'position'],
+        where: {
+          playlistId: playlist.id,
+        },
+        include: [
+          {
+            model: this.trackEntity,
+            attributes: ['id'],
+            required: true,
+            include: [
+              {
+                attributes: [
+                  'id',
+                  'coverImage',
+                  'coverImageMimeType',
+                  'coverImageDarkMuted',
+                  'coverImageDarkVibrant',
+                  'coverImageLightMuted',
+                  'coverImageLightVibrant',
+                  'coverImageMuted',
+                  'coverImageVibrant',
+                ],
+                model: AlbumEntity,
+                required: true,
+                where: {
+                  accountId,
+                  coverImage: { [Op.not]: null },
+                  coverImageMimeType: { [Op.not]: null },
+                },
+              },
+            ],
+          },
+        ],
+        order: [['position', 'ASC']],
+      });
+      if (firstTrackWithAlbum) {
+        const album = firstTrackWithAlbum.track?.album;
+        if (album) {
+          return {
+            coverImageDarkMuted: album.coverImageDarkMuted,
+            coverImageDarkVibrant: album.coverImageDarkVibrant,
+            coverImageLightMuted: album.coverImageLightMuted,
+            coverImageLightVibrant: album.coverImageLightVibrant,
+            coverImageMuted: album.coverImageMuted,
+            coverImageVibrant: album.coverImageVibrant,
+          };
+        }
+      }
+      return {};
+    }
+    // smart playlists
+    const trackIds = await this.getSmartPlaylistTrackIds(accountId, playlistId);
+    if (trackIds.length === 0) {
+      return {};
+    }
+    const firstTrackWithAlbum = await this.trackEntity.findOne({
+      where: {
+        id: trackIds,
+      },
+      include: [
+        {
+          attributes: [
+            'id',
+            'coverImage',
+            'coverImageMimeType',
+            'coverImageDarkMuted',
+            'coverImageDarkVibrant',
+            'coverImageLightMuted',
+            'coverImageLightVibrant',
+            'coverImageMuted',
+            'coverImageVibrant',
+          ],
+          model: AlbumEntity,
+          required: true,
+          where: {
+            accountId,
+            coverImage: { [Op.not]: null },
+            coverImageMimeType: { [Op.not]: null },
+          },
+        },
+      ],
+    });
+    if (firstTrackWithAlbum?.album) {
+      const { album } = firstTrackWithAlbum;
+      return {
+        coverImageDarkMuted: album.coverImageDarkMuted,
+        coverImageDarkVibrant: album.coverImageDarkVibrant,
+        coverImageLightMuted: album.coverImageLightMuted,
+        coverImageLightVibrant: album.coverImageLightVibrant,
+        coverImageMuted: album.coverImageMuted,
+        coverImageVibrant: album.coverImageVibrant,
+      };
+    }
+    return {};
+  }
+
+  async getSmartPlaylistRules(playlistId: number): Promise<PlaylistRuleDto[]> {
+    const rules = await this.playlistSmartRuleEntity.findAll({
+      where: {
+        playlistId,
+      },
+      order: [['id', 'ASC']],
+    });
+    return rules.map((rule) => {
+      return {
+        id: rule.id,
+        field: rule.field,
+        operation: rule.operation,
+        value: rule.value,
+        interval: rule.interval || null,
+      } satisfies PlaylistRuleDto;
+    });
+  }
+
+  /**
+   * Converts a smart playlist rule into a where clause for the tracks table.  Negative operations match only if no
+   * value of the field matches the positive form of the operation, as fields like artists can have multiple values.
+   * @param rule The smart playlist rule
+   * @returns A where clause that matches nothing if the rule is invalid
+   */
+  private createSmartRuleClause(rule: PlaylistRuleDto): WhereOptions {
+    const noMatch = Sequelize.literal('1 = 0');
+    const escape = (text: string) => this.trackEntity.sequelize?.escape(text) ?? `'${text.replace(/'/g, `''`)}'`;
+    const { field, operation, value } = rule;
+    if (field === SmartPlaylistFieldEnum.DATE_ADDED) {
+      const filter = getDateAddedFilter(rule);
+      if (!filter) {
+        return noMatch;
+      }
+      return {
+        createdAt: {
+          [Op.gte]: filter.addedAfter ?? new Date(0),
+          [Op.lte]: filter.addedBefore ?? new Date(8.64e15),
+        },
+      };
+    }
+    const numericColumns: Partial<Record<SmartPlaylistFieldEnum, string>> = {
+      [SmartPlaylistFieldEnum.BIT_RATE]: '`TrackEntity`.`bit_rate`',
+      [SmartPlaylistFieldEnum.RATING]: 'COALESCE(`TrackEntity`.`rating`, 0)',
+      [SmartPlaylistFieldEnum.YEAR]: '`TrackEntity`.`year`',
+    };
+    const numericColumn = numericColumns[field];
+    if (numericColumn) {
+      const numericValue = Number(value);
+      const operators: Partial<Record<SmartPlaylistOperationEnum, string>> = {
+        [SmartPlaylistOperationEnum.IS]: '=',
+        [SmartPlaylistOperationEnum.IS_NOT]: '<>',
+        [SmartPlaylistOperationEnum.LESS_THAN]: '<',
+        [SmartPlaylistOperationEnum.GREATER_THAN_OR_EQUAL_TO]: '>=',
+      };
+      const operator = operators[operation];
+      if (!operator || value.trim() === '' || !Number.isFinite(numericValue)) {
+        return noMatch;
+      }
+      return Sequelize.literal(`${numericColumn} ${operator} ${numericValue}`);
+    }
+    const negated =
+      operation === SmartPlaylistOperationEnum.IS_NOT || operation === SmartPlaylistOperationEnum.DOES_NOT_CONTAIN;
+    const matchesText = (expression: string) => {
+      switch (operation) {
+        case SmartPlaylistOperationEnum.IS:
+        case SmartPlaylistOperationEnum.IS_NOT:
+          return `LOWER(${expression}) = LOWER(${escape(value)})`;
+        case SmartPlaylistOperationEnum.CONTAINS:
+        case SmartPlaylistOperationEnum.DOES_NOT_CONTAIN:
+          return `LOWER(${expression}) LIKE LOWER(${escape(`%${value}%`)})`;
+        default:
+          return undefined;
+      }
+    };
+    const associations: Partial<Record<SmartPlaylistFieldEnum, { flag: string; owner: string }>> = {
+      [SmartPlaylistFieldEnum.ALBUM_ARTIST]: { flag: 'is_artist', owner: '`al`.`album_id` = `TrackEntity`.`album_id`' },
+      [SmartPlaylistFieldEnum.ARTIST]: { flag: 'is_artist', owner: '`al`.`track_id` = `TrackEntity`.`id`' },
+      [SmartPlaylistFieldEnum.COMPOSER]: { flag: 'is_composer', owner: '`al`.`track_id` = `TrackEntity`.`id`' },
+      [SmartPlaylistFieldEnum.GENRE]: { flag: 'is_genre', owner: '`al`.`track_id` = `TrackEntity`.`id`' },
+    };
+    const association = associations[field];
+    let positive: string | undefined;
+    if (association) {
+      const nameMatch = matchesText('`a`.`name`');
+      positive =
+        nameMatch &&
+        `EXISTS (SELECT 1 FROM \`association_links\` AS \`al\` INNER JOIN \`associations\` AS \`a\` ` +
+          `ON \`a\`.\`id\` = \`al\`.\`association_id\` WHERE ${association.owner} ` +
+          `AND \`al\`.\`${association.flag}\` = true AND ${nameMatch})`;
+    } else if (field === SmartPlaylistFieldEnum.ALBUM) {
+      const titleMatch = matchesText('`al`.`title`');
+      positive =
+        titleMatch &&
+        `EXISTS (SELECT 1 FROM \`albums\` AS \`al\` WHERE \`al\`.\`id\` = \`TrackEntity\`.\`album_id\` ` +
+          `AND ${titleMatch})`;
+    } else if (field === SmartPlaylistFieldEnum.FILE_PATH) {
+      positive = matchesText('`TrackEntity`.`file_path`');
+    }
+    if (!positive) {
+      return noMatch;
+    }
+    return Sequelize.literal(negated ? `NOT (${positive})` : positive);
+  }
+
+  /**
+   * Queries the tracks for a smart playlist based on its rules
+   * @param accountId The playlist owner account ID
+   * @param playlistId The ID of the smart playlist to query
+   * @param limit The maximum number of track IDs to return
+   * @param offset The number of track IDs to skip before starting to collect the result set
+   * @returns An array of track IDs that match the smart playlist rules
+   */
+  async getSmartPlaylistTrackIds(
+    accountId: number,
+    playlistId: number,
+    limit?: number,
+    offset?: number,
+  ): Promise<number[]> {
+    const where = await this.createSmartPlaylistWhere(accountId, playlistId);
+    const tracks = await this.trackEntity.findAll({
+      attributes: ['id'],
+      where,
+      limit: limit || 100_000,
+      offset: offset || 0,
+    });
+    return tracks.map((track) => track.id);
+  }
+
+  /**
+   * Counts the tracks for a smart playlist based on its rules
+   * @param accountId The playlist owner account ID
+   * @param playlistId The ID of the smart playlist to query
+   * @returns The number of tracks that match the smart playlist rules
+   */
+  async countSmartPlaylistTracks(accountId: number, playlistId: number): Promise<number> {
+    const where = await this.createSmartPlaylistWhere(accountId, playlistId);
+    return this.trackEntity.count({ where });
+  }
+
+  private async createSmartPlaylistWhere(accountId: number, playlistId: number): Promise<WhereOptions> {
+    const playlist = await this.getPlaylist(accountId, playlistId);
+    const rules = await this.getSmartPlaylistRules(playlistId);
+    const ruleClauses = rules.map((rule) => this.createSmartRuleClause(rule));
+    return {
+      accountId,
+      ...(playlist.rulesConjugal === SmartPlaylistConjugalEnum.AND
+        ? { [Op.and]: ruleClauses }
+        : { [Op.or]: ruleClauses }),
     };
   }
 
