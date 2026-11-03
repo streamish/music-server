@@ -86,16 +86,16 @@ async function bootstrap() {
         [
           'API documentation for building your own audio client on Music Server.',
           // eslint-disable-next-line max-len
-          'This API consists of "Standard API" with User, Admin and Guest APIs that allow you to manage your music library and user accounts.  These APIs return JSON except where serving image/audio files and each have their successful and erroneous responses defined.\n',
-          'Each endpoint has a single input and response format and URL structure describing its functionality.',
-          '\nThe Synology and QNAP APIs are documented here to share learnings, you should not build on them.',
+          'This API consists of "Standard API" with User, Admin and Guest APIs that allow you to manage your music library and user accounts.  These APIs have a single input and response format and return JSON, except where serving image/audio files and each have their successful and erroneous responses defined.\n',
+          // eslint-disable-next-line max-len
+          '\nCompatibility APIs emulate existing music server APIs like Synology AudioStation and QNAP Music Station, allowing you to use their respective mobile apps with Music Server.  They are not intended for building new clients.',
         ].join('\n '),
       )
-      .setExternalDoc('View documentation online', 'https://musiclib.github.io/music-server')
-      .setLicense('Source code repository', 'https://github.com/musiclib/music-server')
+      .setExternalDoc('View documentation online', 'https://streamish.github.io/music-server')
+      .setLicense('Source code repository', 'https://github.com/streamish/music-server')
       .addTag(GUEST_APIS, 'Standard APIs for guests to sign in or any other unauthenticated actions.')
-      .addTag(USER_APIS, 'Standard APIs for users to create and manage their collections and other data.')
-      .addTag(ADMIN_APIS, 'Standard APIs for administrators to manage the platform and its users.')
+      .addTag(USER_APIS, 'Standard APIs for authenticated users to create and manage their collections and other data.')
+      .addTag(ADMIN_APIS, 'Standard APIs for authenticated administrators to manage users and libraries.')
       .addTag(
         SYNOLOGY_AUDIOSTATION_APIS,
         'Compatibility layer emulating Synology AudioStation, for Synology DS Audio smartphone apps.',
