@@ -3,7 +3,9 @@ import {
   GUEST_APIS,
   JWT_BEARER_AUTH,
   QNAP_MUSIC_STATION_APIS,
+  SUBSONIC_APIS,
   SYNOLOGY_AUDIOSTATION_APIS,
+  TEST_APIS,
   USER_APIS,
 } from './constants/swagger';
 import { AppModule } from './app.module';
@@ -81,7 +83,7 @@ async function bootstrap() {
   );
   if (process.env.SWAGGER_ENABLED) {
     const swaggerDocumentOptions = new DocumentBuilder()
-      .setTitle('Music Server API')
+      .setTitle('Streamish Music Server API')
       .setDescription(
         [
           'API documentation for building your own audio client on Music Server.',
@@ -104,6 +106,7 @@ async function bootstrap() {
         QNAP_MUSIC_STATION_APIS,
         'Compatibility layer emulating QNAP Music Station, for QNAP QMusic smartphone apps.',
       )
+      .addTag(SUBSONIC_APIS, 'Compatibility layer emulating Subsonic, for Subsonic-compatible smartphone and web apps.')
       .setVersion('1.0')
       .addBearerAuth(
         {
@@ -113,6 +116,10 @@ async function bootstrap() {
           description: 'Enter your session token.  These can be issued by the `create-session` endpoint.',
         },
         JWT_BEARER_AUTH,
+      )
+      .addTag(
+        TEST_APIS,
+        'Helper API endpoints only available in `NODE_ENV=test` used for managing Jest and Playwright test data.',
       )
       .build();
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentOptions, {
