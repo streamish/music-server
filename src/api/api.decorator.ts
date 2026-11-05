@@ -108,14 +108,14 @@ export function ApiEndpoint(
   if (isTest) {
     apiTags.push(TEST_APIS);
   } else {
-    if (allowAdministrator) {
-      allowedRoles.push(UserRoleEnum.ADMIN);
-      apiTags.push(ADMIN_APIS);
-    }
     if (allowUser) {
       allowedRoles.push(UserRoleEnum.USER);
-      if (!allowAdministrator) {
-        apiTags.push(USER_APIS);
+      apiTags.push(USER_APIS);
+    }
+    if (allowAdministrator) {
+      allowedRoles.push(UserRoleEnum.ADMIN);
+      if (!allowUser) {
+        apiTags.push(ADMIN_APIS);
       }
     }
     if (allowGuest) {
