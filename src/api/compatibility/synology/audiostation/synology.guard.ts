@@ -29,7 +29,7 @@ export class SynologyGuard implements CanActivate {
     ]);
     const request = context.switchToHttp().getRequest();
     const tokens = this.extractPayloadFromHeader(request);
-    if (tokens?.sessionToken && tokens?.deviceToken) {
+    if (tokens?.sessionToken) {
       try {
         // verify the session token
         const payload: {
@@ -38,14 +38,16 @@ export class SynologyGuard implements CanActivate {
           tokenHash: string;
         } = await this.jwtService.verifyAsync(tokens.sessionToken);
         if (payload) {
-          // verify the device token
-          const isDeviceTokenValid = await this.authenticationService.verifyDeviceToken(
-            payload.accountId,
-            tokens.userAgent,
-            tokens.deviceToken,
-          );
-          if (!isDeviceTokenValid) {
-            throw new UnauthorizedException(ErrorCodes.AUTHORIZATION_ERROR, 'session-error-6');
+          // verify the device token, on the `stream.cgi` requests this cookie is not provided
+          if (!request.url.endsWith('/stream.cgi')) {
+            const isDeviceTokenValid = await this.authenticationService.verifyDeviceToken(
+              payload.accountId,
+              tokens.userAgent,
+              tokens.deviceToken,
+            );
+            if (!isDeviceTokenValid) {
+              throw new UnauthorizedException(ErrorCodes.AUTHORIZATION_ERROR, 'session-error-6');
+            }
           }
           const user = await this.authenticationService.getAccount(payload.accountId);
           if (!user) {
@@ -82,13 +84,10 @@ export class SynologyGuard implements CanActivate {
     if (!request.headers.cookie) {
       return undefined;
     }
-    if (request.cookies?.id && request.cookies?.did) {
-      return {
-        sessionToken: request.cookies.id,
-        deviceToken: request.cookies.did,
-        userAgent: request.headers['user-agent'] || '',
-      };
-    }
-    return undefined;
+    return {
+      sessionToken: request.cookies.id,
+      deviceToken: request.cookies.did,
+      userAgent: request.headers['user-agent'] || '',
+    };
   }
 }
