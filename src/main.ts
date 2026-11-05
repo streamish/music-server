@@ -116,13 +116,14 @@ async function bootstrap() {
           description: 'Enter your session token.  These can be issued by the `create-session` endpoint.',
         },
         JWT_BEARER_AUTH,
-      )
-      .addTag(
+      );
+    if (process.env.NODE_ENV === 'test') {
+      swaggerDocumentOptions.addTag(
         TEST_APIS,
         'Helper API endpoints only available in `NODE_ENV=test` used for managing Jest and Playwright test data.',
-      )
-      .build();
-    const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentOptions, {
+      );
+    }
+    const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentOptions.build(), {
       autoTagControllers: false,
     });
     SwaggerModule.setup('swagger', app, swaggerDocument, {
