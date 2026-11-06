@@ -20,7 +20,7 @@ export class CreateSmartPlaylistBodyDto extends CreatePlaylistBodyDto {
   @ApiProperty({ type: [PlaylistRuleBodyDto] })
   @IsArray({ message: ErrorCodes.INVALID_PLAYLIST_RULES_ERROR })
   @ArrayMaxSize(100, { message: ErrorCodes.INVALID_PLAYLIST_RULES_ERROR })
-  @ValidateNested({ each: true })
+  @ValidateNested({ each: true, message: ErrorCodes.INVALID_PLAYLIST_RULES_ERROR })
   @Type(() => PlaylistRuleBodyDto)
   declare rules: PlaylistRuleBodyDto[];
 }
