@@ -21,9 +21,6 @@ import { User } from 'src/api/user.decorator';
 export class ApiCustomDataController {
   constructor(private readonly customDataService: ApiCustomDataService) {}
 
-  /**
-   * `DELETE` request to `/api/delete-custom-data`
-   */
   @ApiEndpoint(Delete, 'delete-custom-data', HttpStatus.OK, {
     summary: `Remove custom data from a track in the user's account`,
     description: [

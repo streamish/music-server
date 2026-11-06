@@ -35,9 +35,6 @@ export class ApiCoverImageController {
     return new StreamableFile(coverImage.coverImage);
   }
 
-  /**
-   * `GET` request to `/api/album-cover-image`
-   */
   @ApiEndpoint(Get, 'album-cover-image', HttpStatus.OK, {
     summary: 'Retrieves cover images for albums',
     description: [
@@ -62,9 +59,6 @@ export class ApiCoverImageController {
     return ApiCoverImageController.serveImage(request, response, coverImage);
   }
 
-  /**
-   * `GET` request to `/api/association-cover-image`
-   */
   @ApiEndpoint(Get, 'association-cover-image', HttpStatus.OK, {
     summary: 'Retrieves cover images for associated artists, composers and genres',
     description: [
@@ -91,9 +85,6 @@ export class ApiCoverImageController {
     return ApiCoverImageController.serveImage(request, response, coverImage);
   }
 
-  /**
-   * `GET` request to `/api/playlist-cover-image`
-   */
   @ApiEndpoint(Get, 'playlist-cover-image', HttpStatus.OK, {
     summary: 'Retrieves a cover image for a normal playlist',
     description: [

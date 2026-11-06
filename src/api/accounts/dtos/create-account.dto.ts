@@ -6,7 +6,7 @@ import { UserRoleEnum } from 'src/types/enums';
 
 export class CreateAccountBodyDto extends AdminAuthorizationBodyDto {
   /**
-   * The username for signing in
+   * The username for signing in.
    */
   @IsString()
   @Length(1, 255, { message: ErrorCodes.INVALID_USERNAME_LENGTH_ERROR })
@@ -21,6 +21,9 @@ export class CreateAccountBodyDto extends AdminAuthorizationBodyDto {
   @IsNotEmpty({ message: ErrorCodes.INVALID_PASSWORD_ERROR })
   declare password: string;
 
+  /**
+   * The roles assigned to the user defining their permissions and access levels within the platform.
+   */
   @ApiProperty({
     enum: UserRoleEnum,
     enumName: 'UserRoleEnum',

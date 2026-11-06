@@ -25,49 +25,49 @@ export class LibraryAlbumDto {
   declare composers: LibraryAssociationDto[];
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare coverImageLightVibrant?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare coverImageDarkVibrant?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare coverImageMuted?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare coverImageVibrant?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare coverImageDarkMuted?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare coverImageLightMuted?: string;
 
   /**
-   * The date the album was added to the library
+   * The date the album was added to the library.
    */
   @IsDate()
   declare createdAt: Date;
 
   /**
-   * The favorite data for the album if it exists
+   * The favorite data for the album if it exists.
    */
   @IsInt()
   declare favoriteId?: number;
@@ -82,7 +82,7 @@ export class LibraryAlbumDto {
   declare genres: LibraryAssociationDto[];
 
   /**
-   * The internally-generated unique ID of the album
+   * The internally-generated unique ID of the album.
    */
   @IsInt()
   declare id: number;
@@ -118,7 +118,7 @@ export class LibraryAlbumDto {
 
 export class LibraryAlbumWithTracksDto extends LibraryAlbumDto {
   /**
-   * The list of tracks for the album
+   * The list of tracks for the album.
    */
   @ApiProperty({
     type: LibraryTrackDto,

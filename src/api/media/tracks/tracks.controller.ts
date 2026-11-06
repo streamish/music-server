@@ -17,9 +17,6 @@ export class ApiTracksController {
     private readonly streamingService: StreamingService,
   ) {}
 
-  /**
-   * `GET` request to `/api/list-tracks`
-   */
   @ApiEndpoint(Get, 'list-tracks', HttpStatus.OK, {
     summary: 'List tracks',
     description: 'Tracks can be filtered by an extensive set of criteria and search terms.',
@@ -40,9 +37,6 @@ export class ApiTracksController {
     };
   }
 
-  /**
-   * `GET` request to `/api/stream-track`
-   */
   @ApiEndpoint(Get, 'stream-track', HttpStatus.OK, {
     summary: 'Serves track files',
     description: [

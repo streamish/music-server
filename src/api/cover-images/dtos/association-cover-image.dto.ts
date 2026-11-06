@@ -6,7 +6,7 @@ import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class AssociationCoverImageQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID_ASSOCIATION_ID_ERROR) {
   /**
-   * The width/height size of the image in pixels
+   * The width/height size of the image in pixels.
    */
   @IsInt({ message: ErrorCodes.INVALID_COVER_SIZE_ERROR })
   @Min(100, { message: ErrorCodes.INVALID_COVER_SIZE_ERROR })
@@ -14,7 +14,7 @@ export class AssociationCoverImageQueryDto extends IdQueryDtoFactory(ErrorCodes.
   declare size: number;
 
   /**
-   * The type of association
+   * The type of association.
    */
   @ApiProperty({
     enum: AssociationTypeEnum,

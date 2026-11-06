@@ -20,9 +20,6 @@ import { User } from '../user.decorator';
 export class ApiRootPathsController {
   constructor(private readonly rootPathsService: ApiRootPathsService) {}
 
-  /**
-   * `POST` request to `/api/create-user-root-path`
-   */
   @ApiEndpoint(Post, 'create-user-root-path', HttpStatus.CREATED, {
     summary: 'Add new root path to account',
     description: [
@@ -51,9 +48,6 @@ export class ApiRootPathsController {
     };
   }
 
-  /**
-   * `POST` request to `/api/create-root-path`
-   */
   @ApiEndpoint(Post, 'create-root-path', HttpStatus.CREATED, {
     summary: 'Add a new source of music to the user account',
     description: [
@@ -79,9 +73,6 @@ export class ApiRootPathsController {
     };
   }
 
-  /**
-   * `DELETE` request to `/api/delete-user-root-path`
-   */
   @ApiEndpoint(Delete, 'delete-user-root-path', HttpStatus.OK, {
     summary: 'Delete a root path',
     description: 'Deletes the specified root path for a user and any media information in the database.',
@@ -99,9 +90,6 @@ export class ApiRootPathsController {
     };
   }
 
-  /**
-   * `DELETE` request to `/api/delete-root-path`
-   */
   @ApiEndpoint(Delete, 'delete-root-path', HttpStatus.OK, {
     summary: 'Delete a root path',
     description:
@@ -121,9 +109,6 @@ export class ApiRootPathsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-root-paths`
-   */
   @ApiEndpoint(Get, 'list-root-paths', HttpStatus.OK, {
     summary: 'List all root paths of the authenticated user',
     description: [
@@ -167,9 +152,6 @@ export class ApiRootPathsController {
     };
   }
 
-  /**
-   * `PATCH` request to `/api/update-root-path`
-   */
   @ApiEndpoint(Patch, 'update-user-root-path', HttpStatus.OK, {
     summary: 'Update a root path',
     description: 'Updates the specified root path with a new path.',

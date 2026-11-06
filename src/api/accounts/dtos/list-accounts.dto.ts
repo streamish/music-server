@@ -5,12 +5,21 @@ import { UserRoleEnum } from 'src/types/enums';
 import { createArrayResponseDto } from 'src/api/response.dto';
 
 export class AccountDto {
+  /**
+   * The unique identifier for the account.
+   */
   @IsInt()
   declare id: number;
 
+  /**
+   * The username of the account.
+   */
   @IsString()
   declare username: string;
 
+  /**
+   * The roles assigned to the account.
+   */
   @ApiProperty({
     enum: UserRoleEnum,
     enumName: 'UserRoleEnum',

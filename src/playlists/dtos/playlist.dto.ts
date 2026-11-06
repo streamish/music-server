@@ -38,9 +38,15 @@ export class PlaylistRuleDto extends PlaylistRuleInputDto {
 }
 
 export class PlaylistDto {
+  /**
+   * The unique ID of the playlist.
+   */
   @IsInt()
   declare id: number;
 
+  /**
+   * The name of the playlist.
+   */
   @IsString()
   declare name: string;
 
@@ -92,6 +98,10 @@ export class PlaylistDto {
   @IsOptional()
   declare coverImageVibrant?: string | null;
 
+  /**
+   * The type of the playlist, "normal" being a manual compliation of items or "smart" being a playlist
+   * generated based on rules.
+   */
   @ApiProperty({ enum: PlaylistTypeEnum, enumName: 'PlaylistTypeEnum' })
   @IsEnum(PlaylistTypeEnum)
   declare type: PlaylistTypeEnum;
@@ -119,6 +129,9 @@ export class PlaylistDto {
   @IsDate()
   declare createdAt: Date;
 
+  /**
+   * The date and time when the playlist was last updated, if ever.
+   */
   @ApiProperty({ type: 'string', format: 'date-time', required: false, nullable: true })
   @IsDate()
   @IsOptional()

@@ -18,9 +18,6 @@ import { SuccessResponseDto, getValidationMessages } from '../response.dto';
 export class ApiTestController {
   constructor(private readonly testService: ApiTestService) {}
 
-  /**
-   * `POST` request to `/api/test/create-test-account`
-   */
   @ApiEndpoint(Post, 'create-test-account', HttpStatus.OK, {
     summary: 'Create an empty account for testing',
     description: [
@@ -64,9 +61,6 @@ export class ApiTestController {
     };
   }
 
-  /**
-   * `POST` request to `/api/test/duplicate-test-account`
-   */
   @ApiEndpoint(Post, 'duplicate-test-account', HttpStatus.CREATED, {
     summary: 'Duplicate account',
     description: [
@@ -113,9 +107,6 @@ export class ApiTestController {
     };
   }
 
-  /**
-   * `GET` request to `/api/test/retrieve-test-account`
-   */
   @ApiEndpoint(Get, 'retrieve-test-account', HttpStatus.OK, {
     summary: 'Delete account',
     description: [

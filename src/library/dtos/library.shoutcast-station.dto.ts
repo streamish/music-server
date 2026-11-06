@@ -3,9 +3,15 @@ import { IsEnum, IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
 import { ShoutcastItemTypeEnum } from 'src/types/enums';
 
 export class LibraryShoutcastStationDto {
+  /**
+   * The internally-generated unique ID of the SHOUTcast station.
+   */
   @IsInt()
   declare id: number;
 
+  /**
+   * The title of the SHOUTcast station.
+   */
   @IsString()
   declare title: string;
 

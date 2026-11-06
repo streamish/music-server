@@ -18,9 +18,6 @@ import { getValidationMessages } from 'src/api/response.dto';
 export class ApiAssociationsController {
   constructor(private readonly associationsService: ApiAssociationsService) {}
 
-  /**
-   * `GET` request to `/api/list-album-assocations`
-   */
   @ApiEndpoint(Get, 'list-album-associations', HttpStatus.OK, {
     summary: 'List associations credited to albums',
     description: 'Lists artists attributed directly to an album, and composers and genres aggregated from its tracks.',
@@ -42,9 +39,6 @@ export class ApiAssociationsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-album-assocations-with-tracks`
-   */
   @ApiEndpoint(Get, 'list-album-associations-with-tracks', HttpStatus.OK, {
     summary: 'List artists credited to albums including their track-lists',
     description:
@@ -66,9 +60,6 @@ export class ApiAssociationsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-track-assocations`
-   */
   @ApiEndpoint(Get, 'list-track-associations', HttpStatus.OK, {
     summary: 'List track-associated artists, composers and genres',
     description: 'Track associations are artists, composers and genres attributed directly to individual tracks.',
@@ -90,9 +81,6 @@ export class ApiAssociationsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-track-assocations-with-tracks`
-   */
   @ApiEndpoint(Get, 'list-track-associations-with-tracks', HttpStatus.OK, {
     summary: 'List track-associated artists, composers and genres including their track-lists',
     description: 'Track associations are artists, composers and genres attributed directly to individual tracks.',
@@ -114,9 +102,6 @@ export class ApiAssociationsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/retrieve-association`
-   */
   @ApiEndpoint(Get, 'retrieve-association', HttpStatus.OK, {
     summary: 'Retrieves single association',
     description: [
