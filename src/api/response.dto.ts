@@ -47,7 +47,7 @@ export class PaginatedResponseDataDto extends SuccessResponseDto {
   })
   @IsNumber()
   declare offset: number;
-  
+
   @ApiProperty({
     description: 'The total number of results.',
     type: 'integer',

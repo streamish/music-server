@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import { IsBoolean, IsDate, IsInt, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsDate, IsInt, IsString } from 'class-validator';
 import { createItemResponseDto } from 'src/api/response.dto';
 
 export class IndexerConfigurationDto {
