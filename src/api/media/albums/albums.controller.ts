@@ -65,9 +65,6 @@ export class ApiAlbumsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/retrieve-album`
-   */
   @ApiEndpoint(Get, 'retrieve-album', HttpStatus.OK, {
     summary: 'Retrieves single albums',
     description:

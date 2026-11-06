@@ -28,37 +28,37 @@ export class LibraryTrackDto {
   declare albumTitle: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare albumCoverImageLightVibrant?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare albumCoverImageDarkVibrant?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare albumCoverImageMuted?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare albumCoverImageVibrant?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare albumCoverImageDarkMuted?: string;
 
   /**
-   * A color detected in the cover art image
+   * A color detected in the cover art image.
    */
   @IsString()
   declare albumCoverImageLightMuted?: string;
@@ -100,7 +100,7 @@ export class LibraryTrackDto {
   declare duration: number;
 
   /**
-   * The favorite data for the track if it exists
+   * The favorite data for the track if it exists.
    */
   @IsInt()
   declare favoriteId?: number;
@@ -130,7 +130,7 @@ export class LibraryTrackDto {
   declare filePath: string;
 
   /**
-   * The size of the file in bytes
+   * The size of the file in bytes.
    */
   @IsInt()
   declare fileSize: number;
@@ -156,7 +156,7 @@ export class LibraryTrackDto {
   declare genres: LibraryAssociationDto[];
 
   /**
-   * The internally-generated unique ID of the track
+   * The internally-generated unique ID of the track.
    */
   @IsInt()
   declare id: number;

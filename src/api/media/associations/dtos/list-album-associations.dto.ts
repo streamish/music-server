@@ -42,6 +42,9 @@ export class ListAlbumAssociationsQueryDto extends PaginationQueryDto {
   @IsOptional()
   addedBefore?: Date;
 
+  /**
+   * The type of association to the albums.
+   */
   @ApiProperty({
     enum: AssociationTypeEnum,
     enumName: 'AssociationTypeEnum',

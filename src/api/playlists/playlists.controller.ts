@@ -31,9 +31,6 @@ import { User } from 'src/api/user.decorator';
 export class ApiPlaylistsController {
   constructor(private readonly playlistsService: ApiPlaylistsService) {}
 
-  /**
-   * `POST` request to `/api/add-playlist-items`
-   */
   @ApiEndpoint(Post, 'add-playlist-items', HttpStatus.CREATED, {
     summary: 'Add items to a normal playlist',
     description: [
@@ -65,9 +62,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `POST` request to `/api/create-playlist`
-   */
   @ApiEndpoint(Post, 'create-playlist', HttpStatus.CREATED, {
     summary: 'Create a normal playlist',
     description: 'Creates an empty playlist that items can be added to and removed from.',
@@ -86,9 +80,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `POST` request to `/api/create-smart-playlist`
-   */
   @ApiEndpoint(Post, 'create-smart-playlist', HttpStatus.CREATED, {
     summary: 'Create a smart playlist',
     description: 'Creates a playlist whose tracks are determined by rules rather than added individually.',
@@ -107,9 +98,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `DELETE` request to `/api/delete-playlist`
-   */
   @ApiEndpoint(Delete, 'delete-playlist', HttpStatus.OK, {
     summary: 'Delete a playlist',
     description: 'Deletes the playlist along with its items or rules.  Library tracks are not affected.',
@@ -128,9 +116,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-playlist-items`
-   */
   @ApiEndpoint(Get, 'list-playlist-items', HttpStatus.OK, {
     summary: 'List the contents of a playlist',
     description: [
@@ -154,9 +139,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-playlists`
-   */
   @ApiEndpoint(Get, 'list-playlists', HttpStatus.OK, {
     summary: 'List playlists',
     description: 'Lists the normal and smart playlists of the user.  Smart playlists include their rules.',
@@ -176,9 +158,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `PATCH` request to `/api/move-playlist-item`
-   */
   @ApiEndpoint(Patch, 'move-playlist-item', HttpStatus.OK, {
     summary: 'Move an item within a normal playlist',
     description: 'Moves a playlist item to a new zero-based position, shifting the other items to make room.',
@@ -205,9 +184,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `DELETE` request to `/api/remove-playlist-items`
-   */
   @ApiEndpoint(Delete, 'remove-playlist-items', HttpStatus.OK, {
     summary: 'Remove items from a normal playlist',
     description: 'Removes the specified playlist items and closes the gap in the remaining positions.',
@@ -233,9 +209,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `PATCH` request to `/api/update-playlist`
-   */
   @ApiEndpoint(Patch, 'update-playlist', HttpStatus.OK, {
     summary: 'Rename a playlist',
     description: 'Updates the name of a normal or smart playlist.',
@@ -261,9 +234,6 @@ export class ApiPlaylistsController {
     };
   }
 
-  /**
-   * `PATCH` request to `/api/update-smart-playlist-rules`
-   */
   @ApiEndpoint(Patch, 'update-smart-playlist-rules', HttpStatus.OK, {
     summary: 'Update the rules of a smart playlist',
     description: 'Replaces all existing rules and the conjugal of a smart playlist.',

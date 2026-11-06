@@ -178,6 +178,7 @@ export class LibraryTransformerService {
         shoutcastStation: this.convertShoutcastStationEntityToLibraryShoutcastStation(favorite.shoutcastStation),
       };
     }
+    // Build a favorite playlist placeholder
     return {
       id: favorite.id || 0,
       allSongs: favorite.allSongs,

@@ -7,7 +7,7 @@ export class CreateRootPathQueryDto extends IdQueryDtoFactory(ErrorCodes.INVALID
 
 export class CreateRootPathBodyDto {
   /**
-   * The fully-qualified path to set for the root path
+   * The fully-qualified path to add as a library root path.
    */
   @IsString({ message: ErrorCodes.INVALID_ROOT_PATH_ERROR })
   declare rootPath: string;

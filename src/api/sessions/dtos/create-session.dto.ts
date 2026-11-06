@@ -5,7 +5,7 @@ import { createItemResponseDto } from 'src/api/response.dto';
 
 export class CreateSessionBodyDto {
   /**
-   * The username for the account
+   * The username for the account.
    */
   @IsString({ message: ErrorCodes.INVALID_USERNAME_ERROR })
   @Length(1, 255, { message: ErrorCodes.INVALID_USERNAME_LENGTH_ERROR })
@@ -13,7 +13,7 @@ export class CreateSessionBodyDto {
   declare username: string;
 
   /**
-   * The password for the account
+   * The password for the account.
    */
   @IsString({ message: ErrorCodes.INVALID_PASSWORD_ERROR })
   @Length(1, 255, { message: ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR })
@@ -21,7 +21,7 @@ export class CreateSessionBodyDto {
   declare password: string;
 
   /**
-   * The number of days until the session expires
+   * The number of days until the session expires.
    */
   @IsInt({ message: ErrorCodes.INVALID_EXPIRES_AT_ERROR })
   @Min(0, { message: ErrorCodes.INVALID_EXPIRES_AT_RANGE_ERROR })

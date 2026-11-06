@@ -15,10 +15,12 @@ export class AdminAuthorizationBodyDto {
 }
 
 export class PaginationQueryDto {
-  /*
-   * The number of results to return from the query.
-   */
-  @ApiProperty({ type: 'integer', required: false, default: 100_000 })
+  @ApiProperty({
+    description: 'The number of results to return from the query.',
+    type: 'integer',
+    required: false,
+    default: 100_000,
+  })
   @Transform(({ value }) => parseInt(value, 10))
   @IsInt({ message: ErrorCodes.INVALID_LIMIT_ERROR })
   @Min(1, { message: ErrorCodes.INVALID_LIMIT_ERROR })
@@ -26,11 +28,13 @@ export class PaginationQueryDto {
   @IsOptional()
   declare limit?: number;
 
-  /*
-   * The starting point of results returned for pagination within the total set of results.
-   */
+  @ApiProperty({
+    description: 'The starting point of results returned for pagination within the total set of results.',
+    type: 'integer',
+    required: false,
+    default: 0,
+  })
   @IsInt({ message: ErrorCodes.INVALID_OFFSET_ERROR })
-  @ApiProperty({ type: 'integer', required: false, default: 0 })
   @Transform(({ value }) => parseInt(value, 10))
   @Min(0, { message: ErrorCodes.INVALID_OFFSET_ERROR })
   @IsOptional()
@@ -40,7 +44,7 @@ export class PaginationQueryDto {
 export function IdQueryDtoFactory(message: ErrorCodes) {
   class IdQueryDto {
     /**
-     * The database ID of the resource
+     * The database ID of the resource.
      */
     @IsInt({ message })
     @Min(1, { message })

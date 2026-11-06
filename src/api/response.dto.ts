@@ -34,21 +34,24 @@ export class SuccessResponseDto {
  * The response data of a paginated query
  */
 export class PaginatedResponseDataDto extends SuccessResponseDto {
-  /*
-   * The number of results to return from the query.
-   */
+  @ApiProperty({
+    description: 'The number of results to return from the query.',
+    type: 'integer',
+  })
   @IsNumber()
   declare limit: number;
 
-  /*
-   * The starting point of results returned for pagination within the total set of results.
-   */
+  @ApiProperty({
+    description: 'The starting point of results returned for pagination within the total set of results.',
+    type: 'integer',
+  })
   @IsNumber()
   declare offset: number;
 
-  /*
-   * The total number of results
-   */
+  @ApiProperty({
+    description: 'The total number of results.',
+    type: 'integer',
+  })
   @IsNumber()
   declare total: number;
 }

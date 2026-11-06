@@ -83,7 +83,7 @@ export const QNAP_AUTHENTICATED_REQUEST_DESCRIPTION = `The request must be authe
 export const SUBSONIC_AUTHENTICATED_REQUEST_DESCRIPTION = `The request must be authenticated using a valid plain password for the user provided in the URL query parameters.`;
 
 export const JWT_AUTHENTICATED_REQUEST_DESCRIPTION =
-  'The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.';
+  'The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.';
 
 export const FILTERED_DATA_DESCRIPTION = `The data can be filtered based on various criteria and search terms allowing for more precise queries.`;
 

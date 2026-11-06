@@ -21,9 +21,6 @@ import { User } from 'src/api/user.decorator';
 export class ApiFavoritesController {
   constructor(private readonly favoritesService: ApiFavoritesService) {}
 
-  /**
-   * `DELETE` request to `/api/delete-favorite`
-   */
   @ApiEndpoint(Delete, 'delete-favorite', HttpStatus.OK, {
     summary: `Deletes a favorited item`,
     description: [
@@ -45,9 +42,6 @@ export class ApiFavoritesController {
     };
   }
 
-  /**
-   * `GET` request to `/api/list-favorites`
-   */
   @ApiEndpoint(Get, 'list-favorites', HttpStatus.OK, {
     summary: 'List favorites',
     description: 'Favorites can be albums, tracks, folders, or an associated artist, composer or genre.',
@@ -67,9 +61,6 @@ export class ApiFavoritesController {
     };
   }
 
-  /**
-   * `PUT` request to `/api/set-album-favorite`
-   */
   @ApiEndpoint(Put, 'set-album-favorite', HttpStatus.OK, {
     summary: `Mark an album as a favorite `,
     description: [`Favorites the specified album allowing easier access in the user's library.`].join('\n'),
@@ -89,9 +80,6 @@ export class ApiFavoritesController {
     };
   }
 
-  /**
-   * `PUT` request to `/api/set-association-favorite`
-   */
   @ApiEndpoint(Put, 'set-association-favorite', HttpStatus.OK, {
     summary: `Mark an association as a favorite`,
     description: [
@@ -113,9 +101,6 @@ export class ApiFavoritesController {
     };
   }
 
-  /**
-   * `PUT` request to `/api/set-folder-favorite`
-   */
   @ApiEndpoint(Put, 'set-folder-favorite', HttpStatus.OK, {
     summary: `Mark a folder as a favorite `,
     description: [`Favorites the specified folder allowing easier access in the user's library.`].join('\n'),
@@ -135,9 +120,6 @@ export class ApiFavoritesController {
     };
   }
 
-  /**
-   * `PUT` request to `/api/set-shoutcast-station-favorite`
-   */
   @ApiEndpoint(Put, 'set-shoutcast-station-favorite', HttpStatus.OK, {
     summary: `Mark a shoutcast station as a favorite `,
     description: [`Favorites the specified shoutcast station allowing easier access in the user's library.`].join('\n'),
@@ -162,9 +144,6 @@ export class ApiFavoritesController {
     };
   }
 
-  /**
-   * `PUT` request to `/api/set-track-favorite`
-   */
   @ApiEndpoint(Put, 'set-track-favorite', HttpStatus.OK, {
     summary: `Mark a track as a favorite `,
     description: [`Favorites the specified track allowing easier access in the user's library.`].join('\n'),
