@@ -73,6 +73,6 @@ export class AddPlaylistItemsResponseDto extends SuccessResponseDto {
    * The IDs of the created playlist items in the order they were supplied.
    */
   @ApiProperty({ type: 'array', items: { type: 'integer' } })
-  @IsArray()
+  @IsArray({ message: ErrorCodes.INVALID_PLAYLIST_ITEM_ID_ERROR })
   declare playlistItemIds: number[];
 }
