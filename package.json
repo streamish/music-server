@@ -120,5 +120,5 @@
     "start:test": "npx dotenv -e .env.test -- npx nest start --path tsconfig.test.json",
     "test": "npx dotenv -e .env.test npx jest"
   },
-  "version": "0.0.6"
+  "version": "1.0.0"
 }
