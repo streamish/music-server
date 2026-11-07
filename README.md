@@ -1,10 +1,24 @@
-# Streamish Music Server
+# Streamish Music
 
-This software indexes music files across one or more folders, for one or more users, and provides an API for accessing them that is compatible with 3rd-party mobile apps and a 1st-party web interface.
+Streamish is a self-hosted music server and browser interface that aims to provide compatibility with popular mobile music apps while allowing users to maintain control over their music library.
 
-The goal of this server is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary Synology or QNAP NAS. It provides an off-ramp if you use Synology AudioStation or QNAP Music Station, allowing you to continue using their accompanying DS Audio and QMusic smartphone apps with your own self-hosted backend.
+Screenshots: https://streamish.github.io
 
-The server also has preliminary support for Subsonic-compatible apps as a first-step towards becoming an all-in-one music server where your users can all use their preferred music apps.
+API documentation: https://streamish.github.io/api
+
+Server: https://github.com/streamish/music-server
+
+Web UI: https://github.com/streamish/music-webui
+
+Docker: https://hub.docker.com/r/streamish/music
+
+# About the Music Server
+
+This NodeJS server indexes music files across one or more folders, for one or more users, and provides an API for accessing them that is compatible with 3rd-party mobile apps and a 1st-party web interface.
+
+The goal of this server is to be a multi-client backend that allows everyone in your household to use their preferred music apps. It provides an off-ramp if you use Synology AudioStation or QNAP Music Station, allowing you to continue using their DS Audio and QMusic smartphone apps with your own self-hosted backend.
+
+If you are using the [docker image](https://hub.docker.com/r/streamish/music) this server is set up automatically.
 
 ## Synology apps
 
@@ -49,59 +63,9 @@ The server also has preliminary support for Subsonic-compatible apps as a first-
 
 ✖️ means unsupported by the app
 
-## Docker Image
-
-This is the official docker image combining [music-server](https://github.com/musiclib/music-server) and [music-webui](https://github.com/musiclib/music-webui). Internally it builds the `music-server` backend and the `music-webui` frontend and uses Nginx to serve the frontend and proxy the backend off the same port.
-
-```bash
-$ docker run \
-  -p 8000:8000 \
-  -v /my/music:/music:ro \
-  -v /my/data:/data:rw \
-  -e DEFAULT_ADMIN_USERNAME=admin \
-  -e DEFAULT_ADMIN_PASSWORD=admin \
-  -e DISABLE_DEFAULT_USER=true \
-  -e SYNOLOGY_AUDIOSTATION_ENABLED=true \
-  -e QNAP_MUSIC_STATION_ENABLED=true \
-  -e SUBSONIC_ENABLED=true \
-  streamish/music
-```
-
-| Variable                  | Default value | Description                                                         |
-| ------------------------- | ------------- | ------------------------------------------------------------------- |
-| `DEFAULT_ADMIN_USERNAME`  | `admin`       | The username for the default administrator account                  |
-| `DEFAULT_ADMIN_PASSWORD`  | `admin`       | The password for the default administrator account                  |
-| `DEFAULT_ADMIN_ROOT_PATH` |               | Comma-separated list of paths for the default administrator account |
-| `DISABLE_DEFAULT_USER`    | false         | Set to `true` to disable creating the default normal user account   |
-| `DEFAULT_USER_USERNAME`   | `user`        | The username for the default normal user account                    |
-| `DEFAULT_USER_PASSWORD`   | `user`        | The password for the default normal user account                    |
-| `DEFAULT_USER_ROOT_PATH`  |               | Comma-separated list of paths for the default normal user account   |
-
-You can enable API compatibility:
-
-| Variable                        | Default value | Description                                                      |
-| ------------------------------- | ------------- | ---------------------------------------------------------------- |
-| `SYNOLOGY_AUDIOSTATION_ENABLED` | false         | Set to `true` to enable Synology Audio Station API compatibility |
-| `QNAP_MUSIC_STATION_ENABLED`    | false         | Set to `true` to enable QNAP Music Station API compatibility     |
-| `SUBSONIC_ENABLED`              | false         | Set to `true` to enable Subsonic API compatibility               |
-
-You can enable Swagger API interface for the backend APIs:
-
-| Variable          | Default value | Description                                   |
-| ----------------- | ------------- | --------------------------------------------- |
-| `SWAGGER_ENABLED` | false         | Set to `true` to enable Swagger documentation |
-
-## Managing your metadata
-
-This software does not modify your music files in any way. It reads the metadata from your music files and stores it in a database for faster access. The quality of your library's presentation is going to depend on this information being structured, organized and correct. [MusicBrainz Picard](https://picard.musicbrainz.org/) can help you with that.
-
-## Managing users and root folders
-
-Use the [music-webui](https://github.com/musiclib/music-webui) project to manage users and root folders. The web interface is built with React and provides user, root path and session management.
-
 # Configuration and setup
 
-## Default account
+## Important settings to override
 
 The default administrator account is `admin` with password `admin`. You can change the default account by setting the `DEFAULT_ADMIN_USERNAME` and `DEFAULT_ADMIN_PASSWORD` environment variables in your environment settings.
 
@@ -109,43 +73,30 @@ The default user account is `user` with password `user`. You can change the defa
 
 The default library path is set with `DEFAULT_ROOT_PATH` environment variable which allows a comma-delimited string of multiple paths to be specified. You can make the music folder read-only to ensure your collection cannot be modified.
 
-## Running the server
+The default certificates are only used for Synology DS Audio. The docker image will automatically generate new certificates, but if you are running this server directly you should replace them yourself, eg for Linux and Mac:
 
-Run it directly:
+```bash
+$ cd certs
+$ openssl genrsa -out private.pem 4096
+$ openssl rsa -in private.pem -pubout -out public.pem
+```
 
-- Install NodeJS 24
-- Install dependencies with `npm install`
-- Build the server with `npm run build`
-- Start the server with `npm run start:prod`
-
-### Starting in production
+### Manually starting the server
 
 ```bash
 $ git clone https://github.com/musiclib/music-server.git
 $ cd music-server
 $ npm ci
 $ npm run build
-
-# to run in production first set up your environment variables
+# to run in production first set up your environment variables (see .env.localdev for example)
 $ npm run sequelize:migrate
 $ npm run sequelize:seed:all
 $ npm run start:prod
-# if you are using a .env file then prefix this command
-$ npx dotenv -e .your.env ...
-```
-
-### Starting in development
-
-```bash
-# to run in development mode copy the .env.localdev file to .env
-$ cat .env.localdev > .env
-# edit the .env file's IP address, default admin account
-$ npx dotenv -e .env npm run sequelize:migrate
-$ npx dotenv -e .env npm run sequelize:seed:all
-$ npm run start:dev
 ```
 
 ## Running tests
+
+The server uses an in-memory SQLite database for running tests with Jest. Most tests are E2E (end-to-end) tests that interact with the database and the test library through API requests.
 
 ```bash
 $ npm run start:test
@@ -153,12 +104,20 @@ $ npm run start:test
 $ npm run test
 ```
 
-## Technical details
-
-NodeJS with NestJS framework is used for the server, and Sequelize ORM is used for database access. The database is SQLite which is stored in a file in the server's data folder.
-
-Test suites are run with Jest using an in-memory SQLite database and a test library containing a small number of audio files with dummy metadata.
+## Swagger
 
 Swagger can be enabled for API documentation and can be accessed at `http://localhost:7000/swagger` when the server is running. The OpenAPI specification is available as JSON (`/swagger.json`) and YAML (`/swagger.yaml`).
 
+```bash
+$ SWAGGER_ENABLED=true \
+  npm run start:dev
+```
+
+## Linting
+
 The TypeScript configuration is deliberately strict, and the linting uses AirBNB's style guide as-is, complemented with import ordering and filename/folder naming conventions.
+
+```bash
+$ npm run lint
+$ npm run prettier
+```
