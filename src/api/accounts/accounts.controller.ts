@@ -12,6 +12,7 @@ import {
   UpdatePasswordBodyDto,
   UpdateUserRolesBodyDto,
   UpdateUserRolesQueryDto,
+  UpdateUsernameBodyDto,
 } from './dtos';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { SuccessResponseDto, getValidationMessages } from 'src/api/response.dto';
@@ -123,6 +124,23 @@ export class ApiAccountsController {
   })
   async updatePassword(@User() user: AccountEntity, @Body() body: UpdatePasswordBodyDto) {
     await this.accountsService.updatePassword(user.id, body.userPassword, body.newPassword);
+    return {
+      success: true,
+    };
+  }
+
+  @ApiEndpoint(Post, 'update-username', HttpStatus.OK, {
+    summary: 'Update username',
+    description: [`Updates the user's username to a new value.`].join('\n'),
+    allowAdministrator: true,
+    allowUser: true,
+    responses: {
+      [HttpStatus.OK]: SuccessResponseDto,
+      [HttpStatus.BAD_REQUEST]: getValidationMessages(UpdateUsernameBodyDto),
+    },
+  })
+  async updateUsername(@User() user: AccountEntity, @Body() body: UpdateUsernameBodyDto) {
+    await this.accountsService.updateUsername(user.id, body.userPassword, body.newUsername);
     return {
       success: true,
     };

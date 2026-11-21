@@ -169,6 +169,22 @@ export class ApiAccountsService {
   }
 
   /**
+   * Updates a user username
+   * @param userId The authenticated user ID
+   * @param userPassword The user's password to authorize the update
+   * @param newUsername The new username
+   */
+  async updateUsername(userId: number, userPassword: string, newUsername: string) {
+    // verify user password
+    const isUserPasswordValid = await this.authenticationService.verifyPassword(userId, userPassword);
+    if (!isUserPasswordValid) {
+      throw new UnauthorizedException(ErrorCodes.INVALID_USER_PASSWORD_ERROR);
+    }
+    // update username
+    await this.accountEntity.update({ username: newUsername }, { where: { id: userId } });
+  }
+
+  /**
    * Update the user roles.  The last administrator cannot have the `admin` role removed.
    * @param adminId The administrator performing the update
    * @param adminPassword The administrator's password to authorize the update

@@ -4,3 +4,4 @@ export * from './list-accounts.dto';
 export * from './reset-user-password.dto';
 export * from './update-password.dto';
 export * from './update-user-roles.dto';
+export * from './update-username.dto';
