@@ -26,6 +26,7 @@ export class ApiAccountsController {
     summary: 'Create a new account',
     description: 'Add a user account with the specified roles.',
     allowAdministrator: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.CREATED]: SuccessResponseDto,
       [HttpStatus.BAD_REQUEST]: [
@@ -37,7 +38,7 @@ export class ApiAccountsController {
   })
   @HttpCode(HttpStatus.CREATED)
   async createAccount(@User() user: AccountEntity, @Body() body: CreateAccountBodyDto) {
-    await this.accountsService.createAccount(user.id, body.adminPassword, body.username, body.password, body.roles);
+    await this.accountsService.createAccount(body.username, body.password, body.roles);
     return {
       success: true,
     };
@@ -48,12 +49,12 @@ export class ApiAccountsController {
     description:
       'Deletes the specified account. If it is the only admin account a new one account must be created first.',
     allowAdministrator: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
       [HttpStatus.BAD_REQUEST]: [
         ErrorCodes.ACCOUNT_ONLY_ADMIN_ERROR,
-        ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR,
         ...getValidationMessages(DeleteAccountQueryDto),
         ...getValidationMessages(AdminAuthorizationBodyDto),
       ],
@@ -63,9 +64,10 @@ export class ApiAccountsController {
   async deleteAccount(
     @User() user: AccountEntity,
     @Query() query: DeleteAccountQueryDto,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() body: AdminAuthorizationBodyDto,
   ) {
-    await this.accountsService.deleteAccount(user.id, body.adminPassword, query.id);
+    await this.accountsService.deleteAccount(user.id, query.id);
     return {
       success: true,
     };
@@ -88,6 +90,7 @@ export class ApiAccountsController {
     summary: 'Reset user password',
     description: 'Resets the password for a specified user account and invalidates their prior sessions.',
     allowAdministrator: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
@@ -103,7 +106,7 @@ export class ApiAccountsController {
     @Query() query: ResetUserPasswordQueryDto,
     @Body() body: ResetUserPasswordBodyDto,
   ) {
-    await this.accountsService.resetUserPassword(user.id, body.adminPassword, query.id, body.newPassword);
+    await this.accountsService.resetUserPassword(query.id, body.newPassword);
     return {
       success: true,
     };
@@ -117,13 +120,14 @@ export class ApiAccountsController {
     ].join('\n'),
     allowAdministrator: true,
     allowUser: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
       [HttpStatus.BAD_REQUEST]: getValidationMessages(UpdatePasswordBodyDto),
     },
   })
   async updatePassword(@User() user: AccountEntity, @Body() body: UpdatePasswordBodyDto) {
-    await this.accountsService.updatePassword(user.id, body.userPassword, body.newPassword);
+    await this.accountsService.updatePassword(user.id, body.newPassword);
     return {
       success: true,
     };
@@ -134,13 +138,14 @@ export class ApiAccountsController {
     description: [`Updates the user's username to a new value.`].join('\n'),
     allowAdministrator: true,
     allowUser: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
       [HttpStatus.BAD_REQUEST]: getValidationMessages(UpdateUsernameBodyDto),
     },
   })
   async updateUsername(@User() user: AccountEntity, @Body() body: UpdateUsernameBodyDto) {
-    await this.accountsService.updateUsername(user.id, body.userPassword, body.newUsername);
+    await this.accountsService.updateUsername(user.id, body.newUsername);
     return {
       success: true,
     };
@@ -150,6 +155,7 @@ export class ApiAccountsController {
     summary: 'Update user roles',
     description: 'Updates the roles of a specified user account.',
     allowAdministrator: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
@@ -167,7 +173,7 @@ export class ApiAccountsController {
     @Query() query: UpdateUserRolesQueryDto,
     @Body() body: UpdateUserRolesBodyDto,
   ) {
-    await this.accountsService.updateUserRoles(user.id, body.adminPassword, query.id, body.roles);
+    await this.accountsService.updateUserRoles(user.id, query.id, body.roles);
     return {
       success: true,
     };

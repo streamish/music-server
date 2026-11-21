@@ -1,7 +1,7 @@
 import { AccountDto } from './dtos/list-accounts.dto';
 import { AccountEntity } from 'src/database/entities';
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { Guid } from 'typescript-guid';
 import { InjectModel } from '@nestjs/sequelize';
@@ -45,26 +45,13 @@ export class ApiAccountsService {
 
   /**
    * Creates a user account
-   * @param adminAccountId The administrator performing the update
-   * @param adminPassword The administrator's password to authorize the creation
    * @param username The username of the new account
    * @param password The password of the new account
    * @param roles The user roles for the new account
    * @throws If the administrator password is incorrect
    * @throws If the username is not unique
    */
-  async createAccount(
-    adminAccountId: number,
-    adminPassword: string,
-    username: string,
-    password: string,
-    roles: UserRoleEnum[],
-  ) {
-    // verify administrator password
-    const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
-    if (!isAdminPasswordValid) {
-      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
-    }
+  async createAccount(username: string, password: string, roles: UserRoleEnum[]) {
     // verify username is unique
     const exists = await this.accountEntity.findOne({
       attributes: ['id'],
@@ -88,18 +75,11 @@ export class ApiAccountsService {
   /**
    * Deletes a user account
    * @param adminAccountId The administrator performing the update
-   * @param adminPassword The administrator's password to authorize the deletion
    * @param deleteAccountId The target account to delete
    * @throws If the specified account is not found
-   * @throws If the administrator password is incorrect
    * @throws If the operation results in no administrator accounts
    */
-  async deleteAccount(adminAccountId: number, adminPassword: string, deleteAccountId: number) {
-    // verify own password
-    const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
-    if (!isAdminPasswordValid) {
-      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
-    }
+  async deleteAccount(adminAccountId: number, deleteAccountId: number) {
     // Prevent an admin from deleting their own account if there is no other administrator
     if (adminAccountId === deleteAccountId) {
       const isLastAdmin = await this.isLastAdministrator(adminAccountId);
@@ -128,42 +108,26 @@ export class ApiAccountsService {
 
   /**
    * Resets a user password
-   * @param adminAccountId The administrator performing the update
-   * @param adminPassword The administrator's password to authorize the update
    * @param updateAccountId The target account to update
    * @param newPassword The new password
-   * @throws If the administrator password is incorrect
    * @throws If the specified account is not found
    */
-  async resetUserPassword(adminAccountId: number, adminPassword: string, updateAccountId: number, newPassword: string) {
-    // verify administrator password
-    const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminAccountId, adminPassword);
-    if (!isAdminPasswordValid) {
-      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
-    }
+  async resetUserPassword(updateAccountId: number, newPassword: string) {
     // verify user account exists
     const userAccount = await this.accountEntity.findByPk(updateAccountId);
     if (!userAccount) {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
     // apply new password
-    const passwordHash = await this.authenticationService.generatePasswordHash(newPassword);
-    await this.accountEntity.update({ passwordHash }, { where: { id: updateAccountId } });
+    await this.updatePassword(updateAccountId, newPassword);
   }
 
   /**
    * Updates a user password
    * @param userId The authenticated user ID
-   * @param userPassword The user's password to authorize the update
    * @param newPassword The new password
    */
-  async updatePassword(userId: number, userPassword: string, newPassword: string) {
-    // verify user password
-    const isUserPasswordValid = await this.authenticationService.verifyPassword(userId, userPassword);
-    if (!isUserPasswordValid) {
-      throw new UnauthorizedException(ErrorCodes.INVALID_USER_PASSWORD_ERROR);
-    }
-    // update password
+  async updatePassword(userId: number, newPassword: string) {
     const passwordHash = await this.authenticationService.generatePasswordHash(newPassword);
     await this.accountEntity.update({ passwordHash }, { where: { id: userId } });
   }
@@ -171,34 +135,21 @@ export class ApiAccountsService {
   /**
    * Updates a user username
    * @param userId The authenticated user ID
-   * @param userPassword The user's password to authorize the update
    * @param newUsername The new username
    */
-  async updateUsername(userId: number, userPassword: string, newUsername: string) {
-    // verify user password
-    const isUserPasswordValid = await this.authenticationService.verifyPassword(userId, userPassword);
-    if (!isUserPasswordValid) {
-      throw new UnauthorizedException(ErrorCodes.INVALID_USER_PASSWORD_ERROR);
-    }
-    // update username
+  async updateUsername(userId: number, newUsername: string) {
     await this.accountEntity.update({ username: newUsername }, { where: { id: userId } });
   }
 
   /**
    * Update the user roles.  The last administrator cannot have the `admin` role removed.
    * @param adminId The administrator performing the update
-   * @param adminPassword The administrator's password to authorize the update
    * @param accountId The target account to update
    * @param roles The new roles for the user
    * @throws If the administrator password is incorrect
    * @throws If the specified account is not found
    */
-  async updateUserRoles(adminId: number, adminPassword: string, accountId: number, roles: UserRoleEnum[]) {
-    // verify administrator password
-    const isAdminPasswordValid = await this.authenticationService.verifyPassword(adminId, adminPassword);
-    if (!isAdminPasswordValid) {
-      throw new UnauthorizedException(ErrorCodes.INVALID_ADMIN_PASSWORD_ERROR);
-    }
+  async updateUserRoles(adminId: number, accountId: number, roles: UserRoleEnum[]) {
     // verify user account exists
     const account = await this.accountEntity.findByPk(accountId);
     if (!account) {

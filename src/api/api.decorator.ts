@@ -11,7 +11,7 @@ import {
   TRACK_INFORMATION_INCLUDED,
   USER_APIS,
 } from 'src/constants/swagger';
-import { AllowGuest, AllowedRoles, RoleGuard } from './role.guard';
+import { AllowGuest, AllowedRoles, RequireAuthorization, RoleGuard } from './role.guard';
 import {
   ApiBadRequestErrors,
   ApiNotFoundErrors,
@@ -31,6 +31,7 @@ import {
   ContentObject,
   SchemaObject,
 } from '@nestjs/swagger';
+import { AuthorizationGuard } from './authorization.guard';
 import { ErrorCodes } from 'src/constants/error-codes';
 import { HttpCode, HttpStatus, Type, UseGuards, applyDecorators } from '@nestjs/common';
 import { UserRoleEnum } from 'src/types/enums';
@@ -76,6 +77,7 @@ export function ApiEndpoint(
     isPaginated,
     isTest,
     produces,
+    requireAuthorization,
     responses,
     summary,
   }: {
@@ -90,6 +92,7 @@ export function ApiEndpoint(
     isPaginated?: boolean;
     isTest?: boolean;
     produces?: string[];
+    requireAuthorization?: boolean;
     responses?: ResponseTypes;
     summary: string;
   },
@@ -123,10 +126,18 @@ export function ApiEndpoint(
     }
   }
   const isAuthenticated = allowAdministrator || allowUser;
+  const guards = [];
+  if (isAuthenticated) {
+    guards.push(RoleGuard);
+  }
+  if (requireAuthorization) {
+    guards.push(AuthorizationGuard);
+  }
   return applyDecorators(
     // security
     ...(allowGuest ? [AllowGuest] : []),
-    ...(isAuthenticated ? [ApiBearerAuth(JWT_BEARER_AUTH), UseGuards(RoleGuard), AllowedRoles(allowedRoles)] : []),
+    ...(requireAuthorization ? [RequireAuthorization()] : []),
+    ...(isAuthenticated ? [ApiBearerAuth(JWT_BEARER_AUTH), UseGuards(...guards), AllowedRoles(allowedRoles)] : []),
     // swagger information
     ApiTags(...apiTags),
     ApiOperation({

@@ -81,6 +81,7 @@ export class ApiSessionsController {
       'The user will need to authenticate again to continue accessing protected APIs.',
     ].join(' '),
     allowAdministrator: true,
+    requireAuthorization: true,
     responses: {
       [HttpStatus.OK]: SuccessResponseDto,
       [HttpStatus.NOT_FOUND]: [ErrorCodes.ACCOUNT_NOT_FOUND_ERROR],
