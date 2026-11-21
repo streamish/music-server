@@ -109,9 +109,9 @@ export class ApiAccountsController {
   }
 
   @ApiEndpoint(Post, 'update-password', HttpStatus.OK, {
-    summary: 'Reset password',
+    summary: 'Update password',
     description: [
-      `Resets the user's password to a new value and invalidates all previous sessions.`,
+      `Updates the user's password to a new value and invalidates all previous sessions.`,
       'The user will need to authenticate again to continue accessing protected APIs.',
     ].join('\n'),
     allowAdministrator: true,
@@ -121,8 +121,8 @@ export class ApiAccountsController {
       [HttpStatus.BAD_REQUEST]: getValidationMessages(UpdatePasswordBodyDto),
     },
   })
-  async post(@User() user: AccountEntity, @Body() body: UpdatePasswordBodyDto) {
-    await this.accountsService.updatePassword(user.id, body.newPassword);
+  async updatePassword(@User() user: AccountEntity, @Body() body: UpdatePasswordBodyDto) {
+    await this.accountsService.updatePassword(user.id, body.userPassword, body.newPassword);
     return {
       success: true,
     };

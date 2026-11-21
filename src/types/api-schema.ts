@@ -13,7 +13,14 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/add-playlist-items` */
+    /**
+     * Add items to a normal playlist
+     * @description Adds library tracks and/or radio stations to a normal playlist. Items are appended unless an offset is specified. Smart playlists cannot have items added.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     post: operations['ApiPlaylistsController_addPlaylistItems'];
     delete?: never;
     options?: never;
@@ -28,7 +35,14 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/album-cover-image` */
+    /**
+     * Retrieves cover images for albums
+     * @description This endpoint retrieves the cover image for a specified album. The image comes from the first track that contains a cover or a default blank cover. The response supports Etag caching to optimize browser performance.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiCoverImageController_getAlbumCover'];
     put?: never;
     post?: never;
@@ -45,7 +59,14 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/association-cover-image` */
+    /**
+     * Retrieves cover images for associated artists, composers and genres
+     * @description This endpoint retrieves the cover image for a specified artist, composer or genre, or an album if unspecified. The image comes from the first track that contains a cover and credits them as an album artist. If no album cover is found, it falls back to the first track crediting them as a track artist. If the artist has no cover image a default blank cover is returned. The response supports Etag caching to optimize browser performance.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiCoverImageController_getAssociationCover'];
     put?: never;
     post?: never;
@@ -68,7 +89,7 @@ export type paths = {
      * Create a new account
      * @description Add a user account with the specified roles.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -88,7 +109,14 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/create-playlist` */
+    /**
+     * Create a normal playlist
+     * @description Creates an empty playlist that items can be added to and removed from.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     post: operations['ApiPlaylistsController_createPlaylist'];
     delete?: never;
     options?: never;
@@ -105,7 +133,14 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/create-root-path` */
+    /**
+     * Add a new source of music to the user account
+     * @description Add a library root path to the authenticated account. This will add media in the path when the indexer reaches it. This folder must exist and be accessible, allowing any music it contains to be indexed.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     post: operations['ApiRootPathsController_post'];
     delete?: never;
     options?: never;
@@ -146,7 +181,7 @@ export type paths = {
      * Add a SHOUTcast genre
      * @description Add another SHOUTcast genre.  The genre must be a real genre as-recognized by SHOUTcast.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -170,7 +205,7 @@ export type paths = {
      * Add a SHOUTcast station
      * @description Add a custom station by its name and URL/IP address, optionally setting it as a favorite.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -190,7 +225,14 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/create-smart-playlist` */
+    /**
+     * Create a smart playlist
+     * @description Creates a playlist whose tracks are determined by rules rather than added individually.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     post: operations['ApiPlaylistsController_createSmartPlaylist'];
     delete?: never;
     options?: never;
@@ -207,7 +249,14 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/create-user-root-path` */
+    /**
+     * Add new root path to account
+     * @description Add a library root path to the specified account. This will add media in the path when the indexer reaches it. This folder must exist and be accessible, allowing any music it contains to be indexed.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     post: operations['ApiRootPathsController_createRootPath'];
     delete?: never;
     options?: never;
@@ -232,7 +281,7 @@ export type paths = {
      * Delete an account
      * @description Deletes the specified account. If it is the only admin account a new one account must be created first.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -249,7 +298,14 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
-    /** @description `DELETE` request to `/api/delete-custom-data` */
+    /**
+     * Remove custom data from a track in the user's account
+     * @description Deletes the specified custom data for the track in the database immediately. The indexer will immediately recan the track to revert its changes in your library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiCustomDataController_deleteCustomData'];
     options?: never;
     head?: never;
@@ -266,7 +322,15 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
-    /** @description `DELETE` request to `/api/delete-favorite` */
+    /**
+     * Deletes a favorited item
+     * @description Immediately deletes the specified favorite from the authenticated user's accounimmediately.
+     *     The album, association or track will no longer be a favorite but will still exist in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiFavoritesController_deleteFavorite'];
     options?: never;
     head?: never;
@@ -283,7 +347,14 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
-    /** @description `DELETE` request to `/api/delete-playlist` */
+    /**
+     * Delete a playlist
+     * @description Deletes the playlist along with its items or rules.  Library tracks are not affected.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiPlaylistsController_deletePlaylist'];
     options?: never;
     head?: never;
@@ -300,7 +371,14 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
-    /** @description `DELETE` request to `/api/delete-root-path` */
+    /**
+     * Delete a root path
+     * @description Deletes the specified root path for the authenticated user and any media information in the database.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiRootPathsController_deleteRootPath'];
     options?: never;
     head?: never;
@@ -321,7 +399,7 @@ export type paths = {
      * Delete a SHOUTcast genre
      * @description Delete a SHOUTcast genre by its ID
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -345,7 +423,7 @@ export type paths = {
      * Delete a custom station
      * @description Delete a custom SHOUTcast station by its ID
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -365,7 +443,14 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
-    /** @description `DELETE` request to `/api/delete-user-root-path` */
+    /**
+     * Delete a root path
+     * @description Deletes the specified root path for a user and any media information in the database.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiRootPathsController_deleteUserRootPath'];
     options?: never;
     head?: never;
@@ -386,7 +471,7 @@ export type paths = {
      * Terminate the session
      * @description Ends a user session and invalidates the JWT token provided in the `Authorization` header.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -444,7 +529,7 @@ export type paths = {
      * List all accounts
      * @description Retrieves a list of all accounts in the system.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -464,7 +549,20 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-album-assocations` */
+    /**
+     * List associations credited to albums
+     * @description Lists artists attributed directly to an album, and composers and genres aggregated from its tracks.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
+     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiAssociationsController_listAssociations'];
     put?: never;
     post?: never;
@@ -481,7 +579,18 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-album-assocations-with-tracks` */
+    /**
+     * List artists credited to albums including their track-lists
+     * @description Lists artists attributed directly to an album, and the composers and genres aggregated from its tracks.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
+     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
+     */
     get: operations['ApiAssociationsController_listAssociationsWithTracks'];
     put?: never;
     post?: never;
@@ -532,7 +641,16 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-favorites` */
+    /**
+     * List favorites
+     * @description Favorites can be albums, tracks, folders, or an associated artist, composer or genre.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiFavoritesController_listFavorites'];
     put?: never;
     post?: never;
@@ -553,7 +671,7 @@ export type paths = {
      * Retrieve library folder structure
      * @description Returns a tree structure starting with the root folders and nesting their folder and music file contents. This is used for browsing libraries by folder which can be helpful when metadata is ambiguous or incomplete.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -594,7 +712,7 @@ export type paths = {
      * List online SHOUTcast stations
      * @description Lists all online SHOUTcast stations for the specified genre. This is a short list fetched from `shoutcast.com` so it is not paginated or filtered.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -614,7 +732,16 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-playlist-items` */
+    /**
+     * List the contents of a playlist
+     * @description Normal playlists return their saved tracks and radio stations in playlist order. Smart playlists return the library tracks matching their rules, or every track if they have no rules.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiPlaylistsController_listPlaylistItems'];
     put?: never;
     post?: never;
@@ -631,7 +758,16 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-playlists` */
+    /**
+     * List playlists
+     * @description Lists the normal and smart playlists of the user.  Smart playlists include their rules.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiPlaylistsController_listPlaylists'];
     put?: never;
     post?: never;
@@ -648,7 +784,14 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-root-paths` */
+    /**
+     * List all root paths of the authenticated user
+     * @description Retrieves a list of all root paths for all user accounts, eg `/home/<username>/music`. These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiRootPathsController_listRootPaths'];
     put?: never;
     post?: never;
@@ -669,7 +812,7 @@ export type paths = {
      * List SHOUTcast genres
      * @description Lists all SHOUTcast genres for the authenticated user. This is a hard-coded list of genres in the database.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -693,7 +836,7 @@ export type paths = {
      * List SHOUTcast stations
      * @description Lists all custom SHOUTcast stations for the authenticated user. This is likely a short list so it is not paginated or filtered.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -713,7 +856,20 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-track-assocations` */
+    /**
+     * List track-associated artists, composers and genres
+     * @description Track associations are artists, composers and genres attributed directly to individual tracks.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
+     *     The track information is not included in the response, if necessary use the sibling `-with-tracks` version of this endpoint.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiAssociationsController_listTrackAssociations'];
     put?: never;
     post?: never;
@@ -730,7 +886,20 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-track-assocations-with-tracks` */
+    /**
+     * List track-associated artists, composers and genres including their track-lists
+     * @description Track associations are artists, composers and genres attributed directly to individual tracks.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
+     *     The track information includes all the data required for your media player to display or play the music.  This can add significant data to the response but saves additional requests being made.  If the track data is unnecessary use the sibling version of this endpoint that omits it.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiAssociationsController_listTrackAssociationsWithTracks'];
     put?: never;
     post?: never;
@@ -747,7 +916,18 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/list-tracks` */
+    /**
+     * List tracks
+     * @description Tracks can be filtered by an extensive set of criteria and search terms.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     *
+     *     The data can be filtered based on various criteria and search terms allowing for more precise queries.
+     *
+     *     The data is returned in a paginated format with the ability to specify an offset and limit for the results, where the offset indicates the starting point in the raw results and the limit specifies the maximum number of items to return.
+     */
     get: operations['ApiTracksController_listTracks'];
     put?: never;
     post?: never;
@@ -786,7 +966,7 @@ export type paths = {
      * @description Retrieves a list of all root paths optionally associated with a user, eg `/home/<username>/music`.',
      *           'These paths are indexed periodically or when files are changed to build the music library. The indexer works from a single queue so the more root paths the longer the delay between scanning.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -812,7 +992,14 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
-    /** @description `PATCH` request to `/api/move-playlist-item` */
+    /**
+     * Move an item within a normal playlist
+     * @description Moves a playlist item to a new zero-based position, shifting the other items to make room.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     patch: operations['ApiPlaylistsController_movePlaylistItem'];
     trace?: never;
   };
@@ -823,7 +1010,14 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/playlist-cover-image` */
+    /**
+     * Retrieves a cover image for a normal playlist
+     * @description The image comes from the first playlist track with an available cover image. Smart playlists and playlists without a track cover return the default blank cover. The response supports Etag caching to optimize browser performance.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiCoverImageController_getPlaylistCover'];
     put?: never;
     post?: never;
@@ -844,7 +1038,7 @@ export type paths = {
      * Proxies a SHOUTcast station
      * @description Creates a basic HTTP proxy stream to a SHOUTcast radio station stream.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -870,7 +1064,7 @@ export type paths = {
      * Invalidate all user sessions
      * @description Regenerates the master session key for the entire platform, used to sign all session tokens. When a new master key is generated every single session immediately becomes invalid.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -894,7 +1088,7 @@ export type paths = {
      * Invalidate a user's sessions
      * @description Regenerates the session key for the user, used to sign their session tokens. When a new key is generated all sessions of the user immediately invalidate, including their current session. The user will need to authenticate again to continue accessing protected APIs.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -918,7 +1112,7 @@ export type paths = {
      * Invalidate a user's sessions
      * @description Regenerates the session key for the specified user, used to sign their session tokens. When a new key is generated all sessions of the user immediately invalidate, including their current session. The user will need to authenticate again to continue accessing protected APIs.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -939,7 +1133,14 @@ export type paths = {
     get?: never;
     put?: never;
     post?: never;
-    /** @description `DELETE` request to `/api/remove-playlist-items` */
+    /**
+     * Remove items from a normal playlist
+     * @description Removes the specified playlist items and closes the gap in the remaining positions.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     delete: operations['ApiPlaylistsController_removePlaylistItems'];
     options?: never;
     head?: never;
@@ -959,7 +1160,7 @@ export type paths = {
      * Reset user password
      * @description Resets the password for a specified user account and invalidates their prior sessions.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -977,7 +1178,14 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/retrieve-album` */
+    /**
+     * Retrieves single albums
+     * @description Retrieves an album and its complete track list with all information necessary for viewing and playback.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiAlbumsController_retrieveAlbum'];
     put?: never;
     post?: never;
@@ -994,7 +1202,14 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/retrieve-association` */
+    /**
+     * Retrieves single association
+     * @description Retrieves an association and its complete track list with all information necessary for viewing and playback.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiAssociationsController_retrieveAssociation'];
     put?: never;
     post?: never;
@@ -1015,7 +1230,7 @@ export type paths = {
      * Retrieve current track for a SHOUTcast station
      * @description Fetches the currently playing track information from a SHOUTcast radio stream.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -1053,7 +1268,14 @@ export type paths = {
       cookie?: never;
     };
     get?: never;
-    /** @description `PUT` request to `/api/set-album-favorite` */
+    /**
+     * Mark an album as a favorite
+     * @description Favorites the specified album allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     put: operations['ApiFavoritesController_setAlbumFavorite'];
     post?: never;
     delete?: never;
@@ -1074,7 +1296,7 @@ export type paths = {
      * Sets or unsets ratings for an album
      * @description Sets or unsets a 1-5 star rating for the tracks within an album. If a value of 0 is specified the album rating is reset to `NULL`. Album ratings are applied to each track within the album, overriding any prior value.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -1094,7 +1316,14 @@ export type paths = {
       cookie?: never;
     };
     get?: never;
-    /** @description `PUT` request to `/api/set-association-favorite` */
+    /**
+     * Mark an association as a favorite
+     * @description Favorites an associated artist, composer or genre allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     put: operations['ApiFavoritesController_setAssociationFavorite'];
     post?: never;
     delete?: never;
@@ -1145,7 +1374,14 @@ export type paths = {
       cookie?: never;
     };
     get?: never;
-    /** @description `PUT` request to `/api/set-folder-favorite` */
+    /**
+     * Mark a folder as a favorite
+     * @description Favorites the specified folder allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     put: operations['ApiFavoritesController_setFolderFavorite'];
     post?: never;
     delete?: never;
@@ -1179,7 +1415,14 @@ export type paths = {
       cookie?: never;
     };
     get?: never;
-    /** @description `PUT` request to `/api/set-shoutcast-station-favorite` */
+    /**
+     * Mark a shoutcast station as a favorite
+     * @description Favorites the specified shoutcast station allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     put: operations['ApiFavoritesController_setShoutcastStationFavorite'];
     post?: never;
     delete?: never;
@@ -1213,7 +1456,14 @@ export type paths = {
       cookie?: never;
     };
     get?: never;
-    /** @description `PUT` request to `/api/set-track-favorite` */
+    /**
+     * Mark a track as a favorite
+     * @description Favorites the specified track allowing easier access in the user's library.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     put: operations['ApiFavoritesController_setTrackFavorite'];
     post?: never;
     delete?: never;
@@ -1234,7 +1484,7 @@ export type paths = {
      * Sets or unsets rating for a track
      * @description Sets or unsets a 1-5 star rating for a single track. If a value of 0 is specified the track rating is reset to `NULL`.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -1253,7 +1503,16 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/stream-track` */
+    /**
+     * Serves track files
+     * @description Downloads track files from the music library to the client.',
+     *           'This is used to stream audio files for playback or to download for offline usage.',
+     *           'The audio files are streamed in their original format and the client is responsible for decoding and playback.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     get: operations['ApiTracksController_get'];
     put?: never;
     post?: never;
@@ -1272,7 +1531,12 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/test/create-test-account` */
+    /**
+     * Create an empty account for testing
+     * @description Creates a new account with no root paths or content This endpoint only exists when the `NODE_ENV` is `test`.
+     *
+     *     This API endpoint only exists when `NODE_ENV` is set to `test`.
+     */
     post: operations['ApiTestController_createTestAccount'];
     delete?: never;
     options?: never;
@@ -1306,7 +1570,12 @@ export type paths = {
     };
     get?: never;
     put?: never;
-    /** @description `POST` request to `/api/test/duplicate-test-account` */
+    /**
+     * Duplicate account
+     * @description Duplicates an existing user account with a new username. All files associated with the original account will be copied to the new account. The new account will be re-indexed after duplication.
+     *
+     *     This API endpoint only exists when `NODE_ENV` is set to `test`.
+     */
     post: operations['ApiTestController_duplicateTestAccount'];
     delete?: never;
     options?: never;
@@ -1338,7 +1607,12 @@ export type paths = {
       path?: never;
       cookie?: never;
     };
-    /** @description `GET` request to `/api/test/retrieve-test-account` */
+    /**
+     * Delete account
+     * @description Deletes an existing user account. All files associated with the account will be removed. The account will be permanently deleted.
+     *
+     *     This API endpoint only exists when `NODE_ENV` is set to `test`.
+     */
     get: operations['ApiTestController_get'];
     put?: never;
     post?: never;
@@ -1358,15 +1632,15 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Reset password
-     * @description Resets the user's password to a new value and invalidates all previous sessions.
+     * Update password
+     * @description Updates the user's password to a new value and invalidates all previous sessions.
      *     The user will need to authenticate again to continue accessing protected APIs.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
-    post: operations['ApiAccountsController_post'];
+    post: operations['ApiAccountsController_updatePassword'];
     delete?: never;
     options?: never;
     head?: never;
@@ -1386,7 +1660,14 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
-    /** @description `PATCH` request to `/api/update-playlist` */
+    /**
+     * Rename a playlist
+     * @description Updates the name of a normal or smart playlist.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     patch: operations['ApiPlaylistsController_updatePlaylist'];
     trace?: never;
   };
@@ -1407,7 +1688,7 @@ export type paths = {
      * Update a custom genre
      * @description Update the details of a custom SHOUTcast genre by its ID.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -1431,7 +1712,7 @@ export type paths = {
      * Update a custom station
      * @description Update the details of a custom SHOUTcast station by its ID.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -1451,7 +1732,14 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
-    /** @description `PATCH` request to `/api/update-smart-playlist-rules` */
+    /**
+     * Update the rules of a smart playlist
+     * @description Replaces all existing rules and the conjugal of a smart playlist.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     patch: operations['ApiPlaylistsController_updateSmartPlaylistRules'];
     trace?: never;
   };
@@ -1472,7 +1760,7 @@ export type paths = {
      * Update user roles
      * @description Updates the roles of a specified user account.
      *
-     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/guest/create-session` endpoint.
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
      *
      *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
      */
@@ -1492,8 +1780,39 @@ export type paths = {
     delete?: never;
     options?: never;
     head?: never;
-    /** @description `PATCH` request to `/api/update-root-path` */
+    /**
+     * Update a root path
+     * @description Updates the specified root path with a new path.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
     patch: operations['ApiRootPathsController_patch'];
+    trace?: never;
+  };
+  '/api/update-username': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Update username
+     * @description Updates the user's username.  This will take effect the next time they sign in.
+     *
+     *     The request must include a valid JWT token for the user, which can be created by authenticating via the `/api/create-session` endpoint.
+     *
+     *     Only administrator users can access this route.  An administrator can assign this role to an account in the system settings.
+     */
+    post: operations['ApiAccountsController_updateUsername'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   '/cgi-bin/authLogin.cgi': {
@@ -3404,8 +3723,11 @@ export type webhooks = Record<string, never>;
 export type components = {
   schemas: {
     AccountDto: {
+      /** @description The unique identifier for the account. */
       id: number;
+      /** @description The roles assigned to the account. */
       roles: components['schemas']['UserRoleEnum'][];
+      /** @description The username of the account. */
       username: string;
     };
     AddPlaylistItemsBodyDto: {
@@ -3529,25 +3851,6 @@ export type components = {
      * @description A validation or other error occurred during the processing of the request.
      * @enum {string}
      */
-    ApiAccountsPostBadRequestErrors: ApiAccountsPostBadRequestErrors;
-    ApiAccountsPostBadRequestResponse: {
-      /** @description General description of the error class */
-      error: string;
-      /**
-       * @description A validation or other error occurred during the processing of the request.
-       * @default invalid-password-error
-       */
-      message: components['schemas']['ApiAccountsPostBadRequestErrors'][];
-      /**
-       * @description The success being "false" indicates that the request failed to complete.
-       * @default false
-       */
-      success: boolean;
-    };
-    /**
-     * @description A validation or other error occurred during the processing of the request.
-     * @enum {string}
-     */
     ApiAccountsResetUserPasswordBadRequestErrors: ApiAccountsResetUserPasswordBadRequestErrors;
     ApiAccountsResetUserPasswordBadRequestResponse: {
       /** @description General description of the error class */
@@ -3595,6 +3898,44 @@ export type components = {
        * @default invalid-admin-password-error
        */
       message: components['schemas']['ApiAccountsResetUserPasswordUnauthorizedErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAccountsUpdatePasswordBadRequestErrors: ApiAccountsUpdatePasswordBadRequestErrors;
+    ApiAccountsUpdatePasswordBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-password-error
+       */
+      message: components['schemas']['ApiAccountsUpdatePasswordBadRequestErrors'][];
+      /**
+       * @description The success being "false" indicates that the request failed to complete.
+       * @default false
+       */
+      success: boolean;
+    };
+    /**
+     * @description A validation or other error occurred during the processing of the request.
+     * @enum {string}
+     */
+    ApiAccountsUpdateUsernameBadRequestErrors: ApiAccountsUpdateUsernameBadRequestErrors;
+    ApiAccountsUpdateUsernameBadRequestResponse: {
+      /** @description General description of the error class */
+      error: string;
+      /**
+       * @description A validation or other error occurred during the processing of the request.
+       * @default invalid-username-error
+       */
+      message: components['schemas']['ApiAccountsUpdateUsernameBadRequestErrors'][];
       /**
        * @description The success being "false" indicates that the request failed to complete.
        * @default false
@@ -5473,15 +5814,15 @@ export type components = {
       composerCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
       /**
        * Format: date-time
-       * @description The date the person or group was added to the library
+       * @description The date the person, group or genre was added to the library.
        */
       createdAt: string;
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite ID reference for the album if it exists. */
       favoriteId?: number;
       genreCredits: components['schemas']['LibraryAlbumWithTracksDto'][];
-      /** @description The internally-generated unique ID of the person or group */
+      /** @description The internally-generated unique ID of the person, group or genre. */
       id: number;
-      /** @description The name of the associated person or group. */
+      /** @description The name of the associated person, group or genre. */
       name: string;
     };
     /**
@@ -5513,8 +5854,9 @@ export type components = {
       adminPassword: string;
       /** @description The plain-text password the user will enter to sign in.  It will be hashed and securely-stored in the database. */
       password: string;
+      /** @description The roles assigned to the user defining their permissions and access levels within the platform. */
       roles: components['schemas']['UserRoleEnum'][];
-      /** @description The username for signing in */
+      /** @description The username for signing in. */
       username: string;
     };
     CreateFavoriteResponseDto: {
@@ -5540,15 +5882,15 @@ export type components = {
       success: boolean;
     };
     CreateRootPathBodyDto: {
-      /** @description The fully-qualified path to set for the root path */
+      /** @description The fully-qualified path to add as a library root path. */
       rootPath: string;
     };
     CreateSessionBodyDto: {
-      /** @description The number of days until the session expires */
+      /** @description The number of days until the session expires. */
       expiresDays?: number;
-      /** @description The password for the account */
+      /** @description The password for the account. */
       password: string;
-      /** @description The username for the account */
+      /** @description The username for the account. */
       username: string;
     };
     CreateSessionResponseDto: {
@@ -5561,6 +5903,10 @@ export type components = {
       success: boolean;
     };
     CreateShoutcastGenreBodyDto: {
+      /**
+       * @description The name of the SHOUTcast genre, this is not freeform text it must match
+       *     a genre referenced from the official SHOUTcast genre list.
+       */
       name: string;
     };
     CreateShoutcastGenreResponseDto: {
@@ -5573,9 +5919,14 @@ export type components = {
       success: boolean;
     };
     CreateShoutcastStationBodyDto: {
+      /** @description Flag to mark the SHOUTcast station as a favorite. */
       favorite: boolean;
+      /** @description The title of the SHOUTcast station that will appear in your stations list. */
       title: string;
-      /** Format: uri */
+      /**
+       * Format: uri
+       * @description The URL of the station, which must be a valid HTTP or HTTPS URL.
+       */
       url: string;
     };
     CreateShoutcastStationResponseDto: {
@@ -5650,11 +6001,18 @@ export type components = {
     };
     HealthcheckResponseDto: Record<string, never>;
     IndexerConfigurationDto: {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description The date and time when this configuration was created.
+       */
       createdAt: string;
+      /** @description The ID of the account that created this configuration. */
       createdByAccountId: number;
+      /** @description The username of the account that created this configuration. */
       createdByUsername: string;
+      /** @description The unique identifier for this indexer configuration. */
       id: number;
+      /** @description Flag for whether this configuration has the indexer active or inactive. */
       isEnabled: boolean;
     };
     IndexerConfigurationResponseDto: {
@@ -5692,28 +6050,28 @@ export type components = {
       artists: components['schemas']['LibraryAssociationDto'][];
       /** @description The album composers aggregated from the track compilers data. */
       composers: components['schemas']['LibraryAssociationDto'][];
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageDarkMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageDarkVibrant?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageLightMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageLightVibrant?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageVibrant?: string;
       /**
        * Format: date-time
-       * @description The date the album was added to the library
+       * @description The date the album was added to the library.
        */
       createdAt: string;
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite data for the album if it exists. */
       favoriteId?: number;
       /** @description The album genres aggregated from the track genres. */
       genres: components['schemas']['LibraryAssociationDto'][];
-      /** @description The internally-generated unique ID of the album */
+      /** @description The internally-generated unique ID of the album. */
       id: number;
       /**
        * @description The aggregate rating for the album, which is the average of the rating values
@@ -5734,28 +6092,28 @@ export type components = {
       artists: components['schemas']['LibraryAssociationDto'][];
       /** @description The album composers aggregated from the track compilers data. */
       composers: components['schemas']['LibraryAssociationDto'][];
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageDarkMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageDarkVibrant?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageLightMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageLightVibrant?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       coverImageVibrant?: string;
       /**
        * Format: date-time
-       * @description The date the album was added to the library
+       * @description The date the album was added to the library.
        */
       createdAt: string;
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite data for the album if it exists. */
       favoriteId?: number;
       /** @description The album genres aggregated from the track genres. */
       genres: components['schemas']['LibraryAssociationDto'][];
-      /** @description The internally-generated unique ID of the album */
+      /** @description The internally-generated unique ID of the album. */
       id: number;
       /**
        * @description The aggregate rating for the album, which is the average of the rating values
@@ -5768,7 +6126,7 @@ export type components = {
        *     or Discogs.
        */
       title: string;
-      /** @description The list of tracks for the album */
+      /** @description The list of tracks for the album. */
       tracks: components['schemas']['LibraryTrackDto'][];
       /** @description The year the album was released. */
       year: number;
@@ -5776,55 +6134,63 @@ export type components = {
     LibraryAssociationDto: {
       /**
        * Format: date-time
-       * @description The date the person or group was added to the library
+       * @description The date the person, group or genre was added to the library.
        */
       createdAt: string;
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite ID reference for the album if it exists. */
       favoriteId?: number;
-      /** @description The internally-generated unique ID of the person or group */
+      /** @description The internally-generated unique ID of the person, group or genre. */
       id: number;
-      /** @description The name of the associated person or group. */
+      /** @description The name of the associated person, group or genre. */
       name: string;
     };
     LibraryAssociationWithTracksDto: {
-      /** @description The list of albums including tracks for the artist */
+      /** @description The list of albums including tracks for the artist. */
       albums: components['schemas']['LibraryAlbumWithTracksDto'][];
       /**
        * Format: date-time
-       * @description The date the person or group was added to the library
+       * @description The date the person, group or genre was added to the library.
        */
       createdAt: string;
-      /** @description The favorite data for the album if it exists */
+      /** @description The favorite ID reference for the album if it exists. */
       favoriteId?: number;
-      /** @description The internally-generated unique ID of the person or group */
+      /** @description The internally-generated unique ID of the person, group or genre. */
       id: number;
-      /** @description The name of the associated person or group. */
+      /** @description The name of the associated person, group or genre. */
       name: string;
     };
     LibraryFavoriteDto: {
+      /** @description If the favorite is referencing an album this field will contain the album details. */
       album?: components['schemas']['LibraryAlbumDto'];
-      /** @description Flag used by Synology */
+      /** @description Flag used by Synology to indicate the "all songs" playlist was favorited. */
       allSongs?: boolean;
+      /** @description If the favorite is referencing an association this field will contain the association details. */
       association?: components['schemas']['LibraryAssociationWithTracksDto'];
+      /** @description If the favorite is referencing an association this field will describe the type of association. */
       associationType?: components['schemas']['AssociationTypeEnum'];
       /**
        * Format: date-time
-       * @description The date the artist was added to the library
+       * @description The date the favorite was added to the library.
        */
       createdAt: string;
+      /** @description If the favorite is referencing a folder this field will contain the folder details. */
       folder?: components['schemas']['LibraryFolderDto'];
-      /** @description The internally-generated unique ID of the artist */
+      /** @description The internally-generated unique ID of the favorite. */
       id: number;
+      /** @description If the favorite is referencing a playlist this field will contain the playlist details. */
       playlist?: components['schemas']['PlaylistPlaceholder'];
-      /** @description Flag used by Synology for a random-100 playlist */
+      /** @description Flag used by Synology to indicate the "random hundred" playlist was favorited. */
       randomHundred?: boolean;
-      /** @description Flag used by Synology for recently added items */
+      /** @description Flag used by Synology to indicate the "recently added" playlist was favorited. */
       recentlyAdded?: boolean;
+      /** @description If the favorite is referencing a Shoutcast station this field will contain the station details. */
       shoutcastStation?: components['schemas']['LibraryShoutcastStationDto'];
+      /** @description If the favorite is referencing a track this field will contain the track details. */
       track?: components['schemas']['LibraryTrackDto'];
     };
     LibraryFolderDto: {
       /**
+       * @description If this item is a folder this property contains its child folders or files.
        * @example [
        *       {
        *         "folder": "sub-folder",
@@ -5834,17 +6200,25 @@ export type components = {
        *     ]
        */
       children?: components['schemas']['LibraryFolderDto'][];
-      /** @description The favorite data for the folder if it exists */
+      /** @description The favorite data for the folder if it exists. */
       favoriteId?: number;
+      /** @description The file name if this item is a file. */
       file?: string;
+      /** @description The folder name if this item is a folder. */
       folder?: string;
+      /** @description The full path of the folder or file. */
       fullPath: string;
+      /** @description The unique ID of the folder or file. */
       id: number;
+      /** @description The relative path of the folder or file. */
       relativePath: string;
+      /** @description If the item is a file referring to a track, the track data will be contained here. */
       track?: components['schemas']['LibraryTrackDto'];
     };
     LibraryShoutcastStationDto: {
+      /** @description The internally-generated unique ID of the SHOUTcast station. */
       id: number;
+      /** @description The title of the SHOUTcast station. */
       title: string;
       /**
        * @description The `type` value is `container` for SHOUTcast genres, and
@@ -5860,17 +6234,17 @@ export type components = {
     LibraryTrackDto: {
       /** @description The list of artists for the track. */
       albumArtists: components['schemas']['LibraryAssociationDto'][];
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       albumCoverImageDarkMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       albumCoverImageDarkVibrant?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       albumCoverImageLightMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       albumCoverImageLightVibrant?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       albumCoverImageMuted?: string;
-      /** @description A color detected in the cover art image */
+      /** @description A color detected in the cover art image. */
       albumCoverImageVibrant?: string;
       /** @description The title of the album to which the track belongs. */
       albumId: number;
@@ -5889,7 +6263,7 @@ export type components = {
       discNumber: number;
       /** @description The duration of the track in seconds. */
       duration: number;
-      /** @description The favorite data for the track if it exists */
+      /** @description The favorite data for the track if it exists. */
       favoriteId?: number;
       /** @description The bitrate of the audio file for the track, in Kb/s. */
       fileBitRate: number;
@@ -5899,7 +6273,7 @@ export type components = {
       fileFrequency: number;
       /** @description The file path of the file for the track. */
       filePath: string;
-      /** @description The size of the file in bytes */
+      /** @description The size of the file in bytes. */
       fileSize: number;
       /**
        * @description The type of the file for the track, such as MP3, FLAC, etc.
@@ -5908,7 +6282,7 @@ export type components = {
       fileType: components['schemas']['FileTypeEnum'];
       /** @description The list of genres for the track. */
       genres: components['schemas']['LibraryAssociationDto'][];
-      /** @description The internally-generated unique ID of the track */
+      /** @description The internally-generated unique ID of the track. */
       id: number;
       /**
        * @description The number of times the track has been streamed.
@@ -5943,7 +6317,9 @@ export type components = {
     };
     ListAlbumsResponseDto: {
       albums: components['schemas']['LibraryAlbumDto'][];
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       /**
        * Format: constant
@@ -5951,11 +6327,14 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListAlbumsWithTracksResponseDto: {
       albums: components['schemas']['LibraryAlbumWithTracksDto'][];
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       /**
        * Format: constant
@@ -5963,11 +6342,14 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListAssociationsResponseDto: {
       associations: components['schemas']['LibraryAssociationDto'][];
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       /**
        * Format: constant
@@ -5975,11 +6357,14 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListAssociationsWithTracksResponseDto: {
       associations: components['schemas']['LibraryAssociationWithTracksDto'][];
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       /**
        * Format: constant
@@ -5987,11 +6372,14 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListFavoritesResponseDto: {
       favorites: components['schemas']['LibraryFavoriteDto'][];
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       /**
        * Format: constant
@@ -5999,6 +6387,7 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListFolderContentsResponseDto: {
@@ -6038,7 +6427,9 @@ export type components = {
       success: boolean;
     };
     ListPlaylistItemsResponseDto: {
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       playlistItems: components['schemas']['PlaylistItemDto'][];
       /**
@@ -6047,10 +6438,13 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListPlaylistsResponseDto: {
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       playlists: components['schemas']['PlaylistDto'][];
       /**
@@ -6059,6 +6453,7 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
     };
     ListShoutcastGenresResponseDto: {
@@ -6089,7 +6484,9 @@ export type components = {
       success: boolean;
     };
     ListTracksResponseDto: {
+      /** @description The number of results to return from the query. */
       limit: number;
+      /** @description The starting point of results returned for pagination within the total set of results. */
       offset: number;
       /**
        * Format: constant
@@ -6097,6 +6494,7 @@ export type components = {
        * @default true
        */
       success: boolean;
+      /** @description The total number of results. */
       total: number;
       tracks: components['schemas']['LibraryTrackDto'][];
     };
@@ -6137,14 +6535,23 @@ export type components = {
       coverImageVibrant?: string | null;
       /** Format: date-time */
       createdAt: string;
+      /** @description The unique ID of the playlist. */
       id: number;
+      /** @description The name of the playlist. */
       name: string;
       /** @description The rules of a smart playlist. Only set for smart playlists. */
       rules?: components['schemas']['PlaylistRuleDto'][];
       /** @description Whether tracks must match all rules or any rule. Only set for smart playlists. */
       rulesConjugal?: components['schemas']['SmartPlaylistConjugalEnum'] | null;
+      /**
+       * @description The type of the playlist, "normal" being a manual compliation of items or "smart" being a playlist
+       *     generated based on rules.
+       */
       type: components['schemas']['PlaylistTypeEnum'];
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description The date and time when the playlist was last updated, if ever.
+       */
       updatedAt?: string | null;
     };
     PlaylistItemBodyDto: {
@@ -6169,7 +6576,9 @@ export type components = {
       track?: components['schemas']['LibraryTrackDto'];
     };
     PlaylistPlaceholder: {
+      /** @description The internally-generated unique ID of the playlist. */
       id: number;
+      /** @description The name of the playlist. */
       name: string;
     };
     PlaylistRuleBodyDto: {
@@ -6189,7 +6598,11 @@ export type components = {
       operation: components['schemas']['SmartPlaylistOperationEnum'];
       value: string;
     };
-    /** @enum {string} */
+    /**
+     * @description The type of the playlist, "normal" being a manual compliation of items or "smart" being a playlist
+     *     generated based on rules.
+     * @enum {string}
+     */
     PlaylistTypeEnum: PlaylistTypeEnum;
     QnapAlbumDto: {
       Albumartist: string;
@@ -10554,6 +10967,8 @@ export type components = {
     TrackSortFieldEnum: TrackSortFieldEnum;
     UpdatePasswordBodyDto: {
       newPassword: string;
+      /** @description The user's password to authorize the operation. */
+      userPassword: string;
     };
     UpdatePlaylistBodyDto: {
       /** @description The name of the playlist. */
@@ -10577,12 +10992,20 @@ export type components = {
       /** @description Whether tracks must match all rules (`and`) or any rule (`or`). */
       rulesConjugal: components['schemas']['SmartPlaylistConjugalEnum'];
     };
+    UpdateUsernameBodyDto: {
+      newUsername: string;
+      /** @description The user's password to authorize the operation. */
+      userPassword: string;
+    };
     UpdateUserRolesBodyDto: {
       /** @description The administrator's password to authorize the operation. */
       adminPassword: string;
       roles: components['schemas']['UserRoleEnum'][];
     };
-    /** @enum {string} */
+    /**
+     * @description The roles assigned to the user defining their permissions and access levels within the platform.
+     * @enum {string}
+     */
     UserRoleEnum: UserRoleEnum;
   };
   responses: never;
@@ -10596,7 +11019,7 @@ export interface operations {
   ApiPlaylistsController_addPlaylistItems: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -10660,9 +11083,9 @@ export interface operations {
   ApiCoverImageController_getAlbumCover: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
-        /** @description The width/height size of the image in pixels */
+        /** @description The width/height size of the image in pixels. */
         size: number;
       };
       header?: never;
@@ -10716,11 +11139,11 @@ export interface operations {
   ApiCoverImageController_getAssociationCover: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
-        /** @description The width/height size of the image in pixels */
+        /** @description The width/height size of the image in pixels. */
         size: number;
-        /** @description The type of association */
+        /** @description The type of association. */
         type?: components['schemas']['AssociationTypeEnum'];
       };
       header?: never;
@@ -11137,7 +11560,7 @@ export interface operations {
   ApiRootPathsController_createRootPath: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11203,7 +11626,7 @@ export interface operations {
   ApiAccountsController_deleteAccount: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11269,7 +11692,7 @@ export interface operations {
   ApiCustomDataController_deleteCustomData: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11323,7 +11746,7 @@ export interface operations {
   ApiFavoritesController_deleteFavorite: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11377,7 +11800,7 @@ export interface operations {
   ApiPlaylistsController_deletePlaylist: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11431,7 +11854,7 @@ export interface operations {
   ApiRootPathsController_deleteRootPath: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11485,7 +11908,7 @@ export interface operations {
   ApiShoutcastController_deleteGenre: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11539,7 +11962,7 @@ export interface operations {
   ApiShoutcastController_deleteStation: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11593,7 +12016,7 @@ export interface operations {
   ApiRootPathsController_deleteUserRootPath: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -11829,6 +12252,7 @@ export interface operations {
          *     the date the association was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
+        /** @description The type of association to the albums. */
         associationType: components['schemas']['AssociationTypeEnum'];
         /**
          * @description Optional search filter that will do a case-insensitive partial-match against the artist
@@ -11840,7 +12264,9 @@ export interface operations {
          *     genres associated with an artist.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
@@ -11900,6 +12326,7 @@ export interface operations {
          *     the date the association was added to the library.  The date must be in ISO 8601 format (YYYY-MM-DD).
          */
         addedBefore?: string;
+        /** @description The type of association to the albums. */
         associationType: components['schemas']['AssociationTypeEnum'];
         /**
          * @description Optional search filter that will do a case-insensitive partial-match against the artist
@@ -11911,7 +12338,9 @@ export interface operations {
          *     genres associated with an artist.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
@@ -11991,6 +12420,7 @@ export interface operations {
          *     genres associated with an album.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
         /**
          * @description Maximum rating value, which will do an exact match against the rating associated with an album.  The
@@ -12002,6 +12432,7 @@ export interface operations {
          *     rating is a value between 0 and 5, inclusive.
          */
         minRating?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /**
          * @description Optional filter for the date the album was released, which will do an exact match against
@@ -12096,6 +12527,7 @@ export interface operations {
          *     genres associated with an album.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
         /**
          * @description Maximum rating value, which will do an exact match against the rating associated with an album.  The
@@ -12107,6 +12539,7 @@ export interface operations {
          *     rating is a value between 0 and 5, inclusive.
          */
         minRating?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /**
          * @description Optional filter for the date the album was released, which will do an exact match against
@@ -12171,7 +12604,9 @@ export interface operations {
   ApiFavoritesController_listFavorites: {
     parameters: {
       query?: {
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
       };
       header?: never;
@@ -12309,7 +12744,7 @@ export interface operations {
   ApiShoutcastController_listOnlineStations: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -12365,7 +12800,9 @@ export interface operations {
       query: {
         /** @description The database ID of the playlist */
         id: number;
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
       };
       header?: never;
@@ -12419,7 +12856,9 @@ export interface operations {
   ApiPlaylistsController_listPlaylists: {
     parameters: {
       query?: {
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
       };
       header?: never;
@@ -12615,7 +13054,9 @@ export interface operations {
          *     genres associated with an artist.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
@@ -12686,7 +13127,9 @@ export interface operations {
          *     genres associated with an artist.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
@@ -12776,6 +13219,7 @@ export interface operations {
          *     genres associated with an album.
          */
         genre?: string[];
+        /** @description The number of results to return from the query. */
         limit?: number;
         /**
          * @description Maximum rating value, which will do an exact match against the rating associated with an album.  The
@@ -12787,6 +13231,7 @@ export interface operations {
          *     rating is a value between 0 and 5, inclusive.
          */
         minRating?: number;
+        /** @description The starting point of results returned for pagination within the total set of results. */
         offset?: number;
         /** @description Optional filter for the direction to sort the results by. */
         sortDirection?: components['schemas']['SortDirectionEnum'];
@@ -12888,7 +13333,7 @@ export interface operations {
   ApiRootPathsController_listUserRootPaths: {
     parameters: {
       query?: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id?: number;
       };
       header?: never;
@@ -12942,7 +13387,7 @@ export interface operations {
   ApiPlaylistsController_movePlaylistItem: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13000,9 +13445,9 @@ export interface operations {
   ApiCoverImageController_getPlaylistCover: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
-        /** @description The width/height size of the image in pixels */
+        /** @description The width/height size of the image in pixels. */
         size: number;
       };
       header?: never;
@@ -13191,7 +13636,7 @@ export interface operations {
   ApiSessionsController_regenerateUserSessionKey: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13249,7 +13694,7 @@ export interface operations {
   ApiPlaylistsController_removePlaylistItems: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13307,7 +13752,7 @@ export interface operations {
   ApiAccountsController_resetUserPassword: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13373,7 +13818,7 @@ export interface operations {
   ApiAlbumsController_retrieveAlbum: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13427,7 +13872,7 @@ export interface operations {
   ApiAssociationsController_retrieveAssociation: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13530,7 +13975,7 @@ export interface operations {
   ApiCustomDataController_setAlbumData: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13588,7 +14033,7 @@ export interface operations {
   ApiFavoritesController_setAlbumFavorite: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13642,7 +14087,7 @@ export interface operations {
   ApiRatingsController_setAlbumRating: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13701,7 +14146,7 @@ export interface operations {
     parameters: {
       query: {
         associationType: components['schemas']['AssociationTypeEnum'];
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13755,7 +14200,7 @@ export interface operations {
   ApiCustomDataController_setArtistName: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13813,7 +14258,7 @@ export interface operations {
   ApiCustomDataController_put: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -13871,7 +14316,7 @@ export interface operations {
   ApiFavoritesController_setFolderFavorite: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14039,7 +14484,7 @@ export interface operations {
   ApiCustomDataController_patch: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14097,7 +14542,7 @@ export interface operations {
   ApiFavoritesController_setTrackFavorite: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14151,7 +14596,7 @@ export interface operations {
   ApiRatingsController_put: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14209,7 +14654,7 @@ export interface operations {
   ApiTracksController_get: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14325,7 +14770,7 @@ export interface operations {
   ApiTestController_deleeteTestAccount: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14523,7 +14968,7 @@ export interface operations {
       };
     };
   };
-  ApiAccountsController_post: {
+  ApiAccountsController_updatePassword: {
     parameters: {
       query?: never;
       header?: never;
@@ -14549,7 +14994,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['ApiAccountsPostBadRequestResponse'];
+          'application/json': components['schemas']['ApiAccountsUpdatePasswordBadRequestResponse'];
         };
       };
       403: {
@@ -14573,7 +15018,7 @@ export interface operations {
   ApiPlaylistsController_updatePlaylist: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14631,7 +15076,7 @@ export interface operations {
   ApiShoutcastController_updateGenre: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14689,7 +15134,7 @@ export interface operations {
   ApiShoutcastController_updateStation: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14747,7 +15192,7 @@ export interface operations {
   ApiPlaylistsController_updateSmartPlaylistRules: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14805,7 +15250,7 @@ export interface operations {
   ApiAccountsController_updateUserRoles: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14871,7 +15316,7 @@ export interface operations {
   ApiRootPathsController_patch: {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -14914,6 +15359,53 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ApiRootPathsPatchNotFoundResponse'];
+        };
+      };
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InternalServerErrorResponseDto'];
+        };
+      };
+    };
+  };
+  ApiAccountsController_updateUsername: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateUsernameBodyDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SuccessResponseDto'];
+        };
+      };
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ApiAccountsUpdateUsernameBadRequestResponse'];
+        };
+      };
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ForbiddenErrorResponseDto'];
         };
       };
       500: {
@@ -16017,7 +16509,7 @@ export interface operations {
   'SubsonicMusicDirectoryController_getMusicDirectory[0]': {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -16040,7 +16532,7 @@ export interface operations {
   'SubsonicMusicDirectoryController_getMusicDirectory[1]': {
     parameters: {
       query: {
-        /** @description The database ID of the resource */
+        /** @description The database ID of the resource. */
         id: number;
       };
       header?: never;
@@ -17747,10 +18239,6 @@ export enum ApiAccountsDeleteAccountNotFoundErrors {
 export enum ApiAccountsDeleteAccountUnauthorizedErrors {
   invalid_admin_password_error = 'invalid-admin-password-error',
 }
-export enum ApiAccountsPostBadRequestErrors {
-  invalid_password_error = 'invalid-password-error',
-  invalid_password_length_error = 'invalid-password-length-error',
-}
 export enum ApiAccountsResetUserPasswordBadRequestErrors {
   invalid_account_id_error = 'invalid-account-id-error',
   invalid_new_password_error = 'invalid-new-password-error',
@@ -17763,6 +18251,18 @@ export enum ApiAccountsResetUserPasswordNotFoundErrors {
 }
 export enum ApiAccountsResetUserPasswordUnauthorizedErrors {
   invalid_admin_password_error = 'invalid-admin-password-error',
+}
+export enum ApiAccountsUpdatePasswordBadRequestErrors {
+  invalid_password_error = 'invalid-password-error',
+  invalid_password_length_error = 'invalid-password-length-error',
+  invalid_user_password_error = 'invalid-user-password-error',
+  invalid_user_password_length_error = 'invalid-user-password-length-error',
+}
+export enum ApiAccountsUpdateUsernameBadRequestErrors {
+  invalid_username_error = 'invalid-username-error',
+  invalid_username_length_error = 'invalid-username-length-error',
+  invalid_user_password_error = 'invalid-user-password-error',
+  invalid_user_password_length_error = 'invalid-user-password-length-error',
 }
 export enum ApiAccountsUpdateUserRolesBadRequestErrors {
   account_only_admin_error = 'account-only-admin-error',
@@ -18024,7 +18524,6 @@ export enum ApiPlaylistsCreatePlaylistBadRequestErrors {
 }
 export enum ApiPlaylistsCreateSmartPlaylistBadRequestErrors {
   invalid_playlist_rules_conjugal_error = 'invalid-playlist-rules-conjugal-error',
-  each_value_in_nested_property_$property_must_be_either_object_or_array = 'each value in nested property $property must be either object or array',
   invalid_playlist_rules_error = 'invalid-playlist-rules-error',
   invalid_name_length_error = 'invalid-name-length-error',
   invalid_name_error = 'invalid-name-error',
@@ -18077,7 +18576,6 @@ export enum ApiPlaylistsUpdateSmartPlaylistRulesBadRequestErrors {
   invalid_playlist_type_error = 'invalid-playlist-type-error',
   invalid_playlist_id_error = 'invalid-playlist-id-error',
   invalid_playlist_rules_conjugal_error = 'invalid-playlist-rules-conjugal-error',
-  each_value_in_nested_property_$property_must_be_either_object_or_array = 'each value in nested property $property must be either object or array',
   invalid_playlist_rules_error = 'invalid-playlist-rules-error',
 }
 export enum ApiPlaylistsUpdateSmartPlaylistRulesNotFoundErrors {

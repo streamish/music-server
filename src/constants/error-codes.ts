@@ -61,6 +61,8 @@ export enum ErrorCodes {
   INVALID_ACCOUNT_ERROR = 'invalid-account-error',
   INVALID_ADMIN_PASSWORD_ERROR = 'invalid-admin-password-error',
   INVALID_ADMIN_PASSWORD_LENGTH_ERROR = 'invalid-admin-password-length-error',
+  INVALID_USER_PASSWORD_ERROR = 'invalid-user-password-error',
+  INVALID_USER_PASSWORD_LENGTH_ERROR = 'invalid-user-password-length-error',
   INVALID_ENABLED_ERROR = 'invalid-enabled-error',
   INVALID_ENDED_AT_ERROR = 'invalid-ended-at-error',
   INVALID_EXPIRES_AT_ERROR = 'invalid-expires-at-error',
