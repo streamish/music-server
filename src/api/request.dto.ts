@@ -14,6 +14,16 @@ export class AdminAuthorizationBodyDto {
   declare adminPassword: string;
 }
 
+export class UserAuthorizationBodyDto {
+  /**
+   * The user's password to authorize the operation.
+   */
+  @IsString({ message: ErrorCodes.INVALID_USER_PASSWORD_ERROR })
+  @Length(1, 255, { message: ErrorCodes.INVALID_USER_PASSWORD_LENGTH_ERROR })
+  @IsNotEmpty({ message: ErrorCodes.INVALID_USER_PASSWORD_ERROR })
+  declare userPassword: string;
+}
+
 export class PaginationQueryDto {
   @ApiProperty({
     description: 'The number of results to return from the query.',

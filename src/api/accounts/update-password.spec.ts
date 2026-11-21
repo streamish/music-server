@@ -27,10 +27,11 @@ describe('/api/update-password', () => {
     await testApi.deleteAccounts(deleteAccounts);
   });
 
-  async function updatePassword(newPassword: string) {
+  async function updatePassword(userPassword: string, newPassword: string) {
     return userApi.POST('/api/update-password', {
       body: {
         newPassword,
+        userPassword,
       },
     });
   }
@@ -48,20 +49,35 @@ describe('/api/update-password', () => {
 
   describe('errors', () => {
     it('should reject missing password', async () => {
-      const { error } = await updatePassword('');
+      const { error } = await updatePassword(password, '');
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_ERROR);
     });
 
     it('should reject invalid password length', async () => {
-      const { error } = await updatePassword('x'.repeat(256));
+      const { error } = await updatePassword(password, 'x'.repeat(256));
       expect(error?.message[0]).toBe(ErrorCodes.INVALID_PASSWORD_LENGTH_ERROR);
+    });
+
+    it('should reject missing authorization password', async () => {
+      const { error } = await updatePassword('', 'new-password');
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_USER_PASSWORD_ERROR);
+    });
+
+    it('should reject invalid authorization password length', async () => {
+      const { error } = await updatePassword('x'.repeat(256), 'new-password');
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_USER_PASSWORD_LENGTH_ERROR);
+    });
+
+    it('should reject invalid authorization password', async () => {
+      const { error } = await updatePassword('wrong-password', 'new-password');
+      expect(error?.message[0]).toBe(ErrorCodes.INVALID_USER_PASSWORD_ERROR);
     });
   });
 
   describe('success', () => {
     it('should reset user password', async () => {
       // reset their password
-      const { data } = await updatePassword('newpassword');
+      const { data } = await updatePassword(password, 'newpassword');
       expect(data?.success).toBe(true);
       // verify old does not work
       const { error: oldSessionError } = await guestApi.createSession(username, password);

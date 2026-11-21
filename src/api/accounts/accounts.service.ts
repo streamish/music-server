@@ -147,15 +147,23 @@ export class ApiAccountsService {
       throw new NotFoundException(ErrorCodes.ACCOUNT_NOT_FOUND_ERROR);
     }
     // apply new password
-    await this.updatePassword(updateAccountId, newPassword);
+    const passwordHash = await this.authenticationService.generatePasswordHash(newPassword);
+    await this.accountEntity.update({ passwordHash }, { where: { id: updateAccountId } });
   }
 
   /**
    * Updates a user password
    * @param userId The authenticated user ID
+   * @param userPassword The user's password to authorize the update
    * @param newPassword The new password
    */
-  async updatePassword(userId: number, newPassword: string) {
+  async updatePassword(userId: number, userPassword: string, newPassword: string) {
+    // verify user password
+    const isUserPasswordValid = await this.authenticationService.verifyPassword(userId, userPassword);
+    if (!isUserPasswordValid) {
+      throw new UnauthorizedException(ErrorCodes.INVALID_USER_PASSWORD_ERROR);
+    }
+    // update password
     const passwordHash = await this.authenticationService.generatePasswordHash(newPassword);
     await this.accountEntity.update({ passwordHash }, { where: { id: userId } });
   }
