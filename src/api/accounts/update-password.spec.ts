@@ -41,6 +41,7 @@ describe('/api/update-password', () => {
       const { error } = await unauthenticatedApi.POST(`/api/update-password`, {
         body: {
           newPassword: 'testpassword',
+          userPassword: 'testpassword',
         },
       });
       expect(error?.error).toBe(ErrorCodes.FORBIDDEN_ERROR);
