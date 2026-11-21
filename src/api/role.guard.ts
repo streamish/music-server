@@ -10,6 +10,7 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
 
 export const AllowedRoles = (roles: UserRoleEnum[]) => SetMetadata('roles', roles);
 export const AllowGuest = () => SetMetadata('allowGuest', true);
+export const RequireAuthorization = () => SetMetadata('requireAuthorization', true);
 
 @Injectable()
 export class RoleGuard implements CanActivate {
